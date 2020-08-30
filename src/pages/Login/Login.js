@@ -101,6 +101,11 @@ class LoginPage extends Component {
   render() {
     const { login, submitting } = this.props;
     const { type, autoLogin, loading } = this.state;
+    let num ="";
+    for(let i=0; i<2; i++){
+      num = num +""+Math.ceil(Math.random()*10);
+    }
+    console.log(num)
     return (
       <div className={styles.main}>
         <Login
@@ -119,7 +124,7 @@ class LoginPage extends Component {
             {tenantMode ? (
               <TenantId
                 name="tenantId"
-                defaultValue=""
+                defaultValue="000000"
                 placeholder={`${formatMessage({ id: 'app.login.tenantId' })}`}
                 rules={[
                   {
@@ -131,7 +136,7 @@ class LoginPage extends Component {
             ) : null}
             <UserName
               name="account"
-              defaultValue=""
+              defaultValue="admin"
               placeholder={`${formatMessage({ id: 'app.login.userName' })}`}
               rules={[
                 {
@@ -142,7 +147,7 @@ class LoginPage extends Component {
             />
             <Password
               name="password"
-              defaultValue=""
+              defaultValue="admin"
               placeholder={`${formatMessage({ id: 'app.login.password' })}`}
               rules={[
                 {
@@ -152,7 +157,7 @@ class LoginPage extends Component {
               ]}
               onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
             />
-            {captchaMode ? <Captcha name="code" mode="image" /> : null}
+            {captchaMode ? <Captcha name="code" mode="image" defaultValue={num} /> : null}
           </Tab>
           <Tab key="social" tab={formatMessage({ id: 'app.login.tab-login-social' })}>
             <Card className={styles.card} bordered={false}>

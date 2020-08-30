@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Table, Alert, Divider } from 'antd';
+import { Button, Col, Form, Input, Row, Table, Alert, Divider, Select  } from 'antd';
 import Panel from '../../../components/Panel';
 import styles from './index.less'
 const FormItem = Form.Item;
@@ -15,9 +15,18 @@ class AllOrdersList extends PureComponent {
         super(props);
         this.state = {
           selectedRowKeys:[],
+          orderStatus:[
+            {name:"全部",key:null},
+            {name:"待审核",key:1},
+            {name:"已审核",key:2},
+            {name:"已发货",key:3},
+            {name:"在途中",key:4},
+            {name:"已签收",key:5},
+            {name:"跟进中",key:6},
+            {name:"已激活",key:7}
+          ]
         };
       }
-
 
     onSelectChange = selectedRowKeys => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -147,7 +156,7 @@ class AllOrdersList extends PureComponent {
       },
     ];
 
-    const { selectedRowKeys } = this.state;
+    const { selectedRowKeys, orderStatus } = this.state;
 
     const rowSelection = {
         selectedRowKeys,
@@ -162,8 +171,14 @@ class AllOrdersList extends PureComponent {
       <Panel>
           <div className={styles.default_table_serch_box}>
           <Form layout="inline">
-            <Form.Item label="菜单编号">
-                {getFieldDecorator('code')(<Input placeholder="请输入菜单编号" />)}
+            <Form.Item label="关键词">
+                {getFieldDecorator('code')(
+                  <Select defaultValue="lucy" style={{ width: 120 }}>
+                    {orderStatus.map(item=>{
+                      return (<Option value="jack">Jack</Option>)
+                    })}
+                  </Select>
+                )}
             </Form.Item>
             <Form.Item label="订单状态">
                 {getFieldDecorator('name')(<Input placeholder="请输入菜单名称" />)}
