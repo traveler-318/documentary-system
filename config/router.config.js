@@ -300,7 +300,7 @@ export default [
             path: '/order/allOrders',
             routes: [
               { path: '/order/allOrders', redirect: '/order/allOrders/list' },
-              { path: '/order/allOrders/list', component: './order/AllOrders/index' },
+              { path: '/order/allOrders/list', component: './Order/AllOrders/index' },
               // { path: '/sale/afterSale/add', component: './Sales/AfterSale/add' },
             ],
           },
@@ -308,7 +308,7 @@ export default [
             path: '/order/myOrder',
             routes: [
               { path: '/order/myOrder', redirect: '/order/myOrder/list' },
-              { path: '/order/myOrder/list', component: './order/MyOrder/index' },
+              { path: '/order/myOrder/list', component: './Order/MyOrder/index' },
               // { path: '/sale/afterSale/add', component: './Sales/AfterSale/add' },
             ],
           },
@@ -316,7 +316,7 @@ export default [
             path: '/order/mySubordinates',
             routes: [
               { path: '/order/mySubordinates', redirect: '/order/mySubordinates/list' },
-              { path: '/order/mySubordinates/list', component: './order/MySubordinates/index' },
+              { path: '/order/mySubordinates/list', component: './Order/MySubordinates/index' },
               // { path: '/sale/afterSale/add', component: './Sales/AfterSale/add' },
             ],
           },
