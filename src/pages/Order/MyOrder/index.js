@@ -10,7 +10,7 @@ const FormItem = Form.Item;
   loading: loading.models.menu,
 }))
 @Form.create()
-class AllOrdersList extends PureComponent {
+class MyOrderList extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -213,4 +213,4 @@ class AllOrdersList extends PureComponent {
     );
   }
 }
-export default AllOrdersList;
+export default MyOrderList;
