@@ -173,9 +173,9 @@ class MySubordinatesList extends PureComponent {
           <Form layout="inline">
             <Form.Item label="关键词">
                 {getFieldDecorator('code')(
-                  <Select defaultValue="lucy" style={{ width: 120 }}>
+                  <Select defaultValue="" style={{ width: 120 }}>
                     {orderStatus.map(item=>{
-                      return (<Option value="jack">Jack</Option>)
+                      return (<Option value={item.key}>{item.name}</Option>)
                     })}
                   </Select>
                 )}

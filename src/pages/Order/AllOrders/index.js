@@ -1,9 +1,14 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Table, Alert, Divider, Select  } from 'antd';
+import { Button, Col, Form, Input, Row, Table, Alert, Divider, Select , DatePicker } from 'antd';
 import Panel from '../../../components/Panel';
 import styles from './index.less'
+import {getSalesmanList} from '../../../services/newServices/order'
+
 const FormItem = Form.Item;
+const { RangePicker } = DatePicker;
+
+import {ORDERSTATUS, ORDERTYPPE} from './data.js'
 
 @connect(({ menu, loading }) => ({
   menu,
@@ -15,15 +20,8 @@ class AllOrdersList extends PureComponent {
         super(props);
         this.state = {
           selectedRowKeys:[],
-          orderStatus:[
-            {name:"全部",key:null},
-            {name:"待审核",key:1},
-            {name:"已审核",key:2},
-            {name:"已发货",key:3},
-            {name:"在途中",key:4},
-            {name:"已签收",key:5},
-            {name:"跟进中",key:6},
-            {name:"已激活",key:7}
+          salesmanList:[
+            {name:"业务员1",id:"1"}
           ]
         };
       }
@@ -37,14 +35,13 @@ class AllOrdersList extends PureComponent {
 
     }
 
-  render() {
-    // const code = 'menu';
+    componentDidMount (){
+      // getSalesmanList().then(res=>{
 
-    // const {
-    //   form,
-    //   loading,
-    //   menu: { data },
-    // } = this.props;
+      // })
+    }
+
+  render() {
 
     let dataSource = [
         {
@@ -156,7 +153,7 @@ class AllOrdersList extends PureComponent {
       },
     ];
 
-    const { selectedRowKeys, orderStatus } = this.state;
+    const { selectedRowKeys, salesmanList } = this.state;
 
     const rowSelection = {
         selectedRowKeys,
@@ -169,44 +166,81 @@ class AllOrdersList extends PureComponent {
 
     return (
       <Panel>
-          <div className={styles.default_table_serch_box}>
-          <Form layout="inline">
-            <Form.Item label="关键词">
+        <div className={styles.default_table_serch_box}>
+            <Form layout="inline">
+              <Form.Item label="关键词">
+                {getFieldDecorator('name')(<Input placeholder="请输入关键词" />)}
+              </Form.Item>
+              <Form.Item label="订单状态">
                 {getFieldDecorator('code')(
-                  <Select defaultValue="lucy" style={{ width: 120 }}>
-                    {orderStatus.map(item=>{
-                      return (<Option value="jack">Jack</Option>)
+                  <Select defaultValue={null} style={{ width: 120 }}>
+                    {ORDERSTATUS.map(item=>{
+                      return (<Option value={item.key}>{item.name}</Option>)
                     })}
                   </Select>
                 )}
-            </Form.Item>
-            <Form.Item label="订单状态">
-                {getFieldDecorator('name')(<Input placeholder="请输入菜单名称" />)}
-            </Form.Item>
-            <Form.Item label="订单类型">
-                {getFieldDecorator('name')(<Input placeholder="请输入菜单名称" />)}
-            </Form.Item>
-            <Form.Item label="销售">
-                {getFieldDecorator('name')(<Input placeholder="请输入菜单名称" />)}
-            </Form.Item>
-            <Form.Item label="最后跟进">
-                {getFieldDecorator('name')(<Input placeholder="请输入菜单名称" />)}
-            </Form.Item>
-          </Form>
+              </Form.Item>
+              <Form.Item label="订单类型">
+                  {getFieldDecorator('code')(
+                    <Select defaultValue={null} style={{ width: 120 }}>
+                      {ORDERTYPPE.map(item=>{
+                        return (<Option value={item.key}>{item.name}</Option>)
+                      })}
+                    </Select>
+                  )}
+              </Form.Item>
+              <Form.Item label="销售">
+                {getFieldDecorator('code')(
+                    <Select defaultValue={null} style={{ width: 120 }}>
+                      {salesmanList.map(item=>{
+                        return (<Option value={item.id}>{item.name}</Option>)
+                      })}
+                    </Select>
+                  )}
+              </Form.Item>
+              <Form.Item label="最后跟进">
+                <RangePicker size={"default"} />
+              </Form.Item>
+            </Form>
             
-          <div style={{ textAlign: 'right' }}>
-            <Button type="primary" htmlType="submit">
-            查询
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.onReset}>
-            重置
-            </Button>
-        </div>
+            <div style={{ textAlign: 'right' }}>
+              <Button type="primary" htmlType="submit">
+              查询
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={this.onReset}>
+              重置
+              </Button>
           </div>
-        <div className={styles.default_table_box}>
-            <div>
+          </div>
+        
+        
+        <div className={styles.default_operation_box}>
+        <Button type="primary" icon="plus" size="small">添加</Button>
+        <Divider type="vertical" />
+        <Button icon="download" size="small">导入</Button>
+        <Divider type="vertical" />
+        <Button icon="upload" size="small">导出</Button>
 
-            </div>
+        <Divider type="vertical" />
+        <Button icon="menu-unfold" size="small">批量审核</Button>
+        <Divider type="vertical" />
+        <Button icon="appstore" size="small">批量发货</Button>
+        <Divider type="vertical" />
+        <Button icon="bell" size="small">批量提醒</Button>
+        <Divider type="vertical" />
+        <Button icon="loading-3-quarters" size="small">转移客户</Button>
+
+        <Divider type="vertical" />
+        <Button icon="highlight" size="small">批量编辑</Button>
+        <Divider type="vertical" />
+        <Button icon="delete" size="small">批量删除</Button>
+
+        <Divider type="vertical" />
+        <Button icon="ordered-list" size="small">排序</Button>
+        <Divider type="vertical" />
+        <Button icon="unordered-list" size="small">列表</Button>
+        </div>
+        <div className={styles.default_table_box}>
           <Table 
             columns={columns} 
             scroll={{ x: 1000 }} 
