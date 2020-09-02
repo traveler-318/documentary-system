@@ -80,6 +80,17 @@ export default {
         });
       }
     },
+    *fetchTenantInit({ payload }, { call, put }) {
+      const responseTenant = yield call(tenants, payload);
+      if (responseTenant.success) {
+        yield put({
+          type: 'saveInit',
+          payload: {
+            tenantList: responseTenant.data,
+          },
+        });
+      }
+    },
     *fetchChangeInit({ payload }, { call, put }) {
       const responseRole = yield call(roles, payload);
       const responseDept = yield call(depts, payload);

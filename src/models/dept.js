@@ -1,6 +1,7 @@
 import { message } from 'antd';
 import router from 'umi/router';
 import { DEPT_NAMESPACE } from '../actions/dept';
+import { dict } from '../services/dict';
 import { list, submit, detail, remove, tree } from '../services/dept';
 
 export default {
@@ -12,6 +13,7 @@ export default {
     },
     init: {
       tree: [],
+      category: [],
     },
     detail: {},
   },
@@ -29,12 +31,14 @@ export default {
       }
     },
     *fetchInit({ payload }, { call, put }) {
-      const response = yield call(tree, payload);
-      if (response.success) {
+      const responseTree = yield call(tree, payload);
+      const responseDict = yield call(dict, payload);
+      if (responseTree.success && responseDict.success) {
         yield put({
           type: 'saveInit',
           payload: {
-            tree: response.data,
+            tree: responseTree.data,
+            category: responseDict.data,
           },
         });
       }

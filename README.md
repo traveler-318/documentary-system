@@ -1,189 +1,43 @@
- <p align="center">
-      <img src="https://img.shields.io/badge/Release-V2.7.2-green.svg" alt="Downloads">
-      <img src="https://img.shields.io/badge/JDK-1.8+-green.svg" alt="Build Status">
-  <img src="https://img.shields.io/badge/license-Apache%202-blue.svg" alt="Build Status">
-   <img src="https://img.shields.io/badge/Spring%20Cloud-Hoxton.SR7-blue.svg" alt="Coverage Status">
-   <img src="https://img.shields.io/badge/Spring%20Boot-2.2.9.RELEASE-blue.svg" alt="Downloads">
-   <a target="_blank" href="https://bladex.vip">
-   <img src="https://img.shields.io/badge/Author-Small%20Chill-ff69b4.svg" alt="Downloads">
- </a>
- <a target="_blank" href="https://bladex.vip">
-   <img src="https://img.shields.io/badge/Copyright%20-@BladeX-%23ff3f59.svg" alt="Downloads">
- </a>
- </p>  
+## 版权声明
+* BladeX是一个商业化软件，系列产品知识产权归**上海布雷德网络科技**独立所有
+* 您一旦开始复制、下载、安装或者使用本产品，即被视为完全理解并接受本协议的各项条款
+* 更多详情请看：[BladeX商业授权许可协议](/LICENSE)
 
-## SpringBlade微服务开发平台
-* 采用前后端分离的模式，前端开源两个框架：[Sword](https://gitee.com/smallc/Sword) (基于 React、Ant Design)、[Saber](https://gitee.com/smallc/Saber) (基于 Vue、Element-UI)
-* 后端采用SpringCloud全家桶，并同时对其基础组件做了高度的封装，单独开源出一个框架：[BladeTool](https://github.com/chillzhuang/blade-tool)
-* [BladeTool](https://github.com/chillzhuang/blade-tool)已推送至Maven中央库，直接引入即可，减少了工程的臃肿，也可更注重于业务开发
-* 集成Sentinel从流量控制、熔断降级、系统负载等多个维度保护服务的稳定性。
-* 注册中心、配置中心选型Nacos，为工程瘦身的同时加强各模块之间的联动。
-* 使用Traefik进行反向代理，监听后台变化自动化应用新的配置文件。
-* 极简封装了多租户底层，用更少的代码换来拓展性更强的SaaS多租户系统。
-* 借鉴OAuth2，实现了多终端认证系统，可控制子系统的token权限互相隔离。
-* 借鉴Security，封装了Secure模块，采用JWT做Token认证，可拓展集成Redis等细颗粒度控制方案。
-* 稳定生产了一年，经历了从Camden -> Hoxton的技术架构，也经历了从fat jar -> docker -> k8s + jenkins的部署架构
-* 项目分包明确，规范微服务的开发模式，使包与包之间的分工清晰。
+## 答疑流程
+>1. 遇到问题或Bug
+>2. 业务型问题打断点调试尝试找出问题所在
+>3. 系统型问题通过百度、谷歌、社区查找解决方案
+>4. 未解决问题则进入技术社区进行发帖提问：[https://sns.bladex.vip/](https://sns.bladex.vip/)
+>5. 将帖子地址发至商业群，特别简单三言两语就能描述清楚的也可在答疑时间内发至商业群提问
+>6. 发帖的时候一定要描述清楚，详细描述遇到问题的**重现步骤**、**报错详细信息**、**相关代码与逻辑**、**使用软件版本**以及**操作系统版本**，否则随意发帖提问将会提高我们的答疑难度。
 
-## 架构图
-<img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-framework.png"/>
+## 答疑时间
+* 工作日：9:00 ~ 17:00 提供答疑，周末、节假日休息，暂停答疑
+* 请勿**私聊提问**，以免被其他用户的消息覆盖从而无法获得答疑
+* 答疑时间外遇到问题可以将问题发帖至[技术社区](https://sns.bladex.vip/)，我们后续会逐个回复
 
-## 工程结构
-``` 
-SpringBlade
-├── blade-auth -- 授权服务提供
-├── blade-common -- 常用工具封装包
-├── blade-gateway -- Spring Cloud 网关
-├── blade-ops -- 运维中心
-├    ├── blade-admin -- spring-cloud后台管理
-├    ├── blade-develop -- 代码生成
-├    ├── blade-resource -- 资源管理
-├    ├── blade-seata-order -- seata分布式事务demo
-├    ├── blade-seata-storage -- seata分布式事务demo
-├── blade-service -- 业务模块
-├    ├── blade-desk -- 工作台模块 
-├    ├── blade-log -- 日志模块 
-├    ├── blade-system -- 系统模块 
-├    └── blade-user -- 用户模块 
-├── blade-service-api -- 业务模块api封装
-├    ├── blade-desk-api -- 工作台api 
-├    ├── blade-dict-api -- 字典api 
-├    ├── blade-system-api -- 系统api 
-└──  └── blade-user-api -- 用户api 
-```
+## 授权范围
+* 专业版：只可用于**个人学习**及**个人私活**项目，不可用于公司或团队，不可泄露给任何第三方
+* 企业版：可用于**企业名下**的任何项目，企业版员工在**未购买**专业版授权前，只授权开发**所在授权企业名下**的项目，**不得将BladeX用于个人私活**
+* 共同遵守：若甲方需要您提供项目源码，则需代为甲方购买BladeX企业授权，甲方购买后续的所有项目都无需再次购买授权
 
-## 官网
-* 官网地址：[https://bladex.vip](https://bladex.vip)
-* 问答社区：[https://sns.bladex.vip](https://sns.bladex.vip)
-* 会员计划：[SpringBlade会员计划](https://gitee.com/smallc/SpringBlade/wikis/SpringBlade会员计划)
-* 交流一群：`477853168`(满)
-* 交流二群：`751253339`(满)
-* 交流三群：`784729540`(满)
-* 交流四群：`1034621754`(满)
-* 交流五群：`946350912`
+## 商用权益
+* ✔️ 遵守[商业协议](/LICENSE)的前提下，将BladeX系列产品用于授权范围内的商用项目，并上线运营
+* ✔️ 遵守[商业协议](/LICENSE)的前提下，不限制项目数，不限制服务器数
+* ✔️ 遵守[商业协议](/LICENSE)的前提下，将自行编写的业务代码申请软件著作权
 
-## 在线演示
-* Saber-基于Vue：[https://saber.bladex.vip](https://saber.bladex.vip)
-* Sword-基于React：[https://sword.bladex.vip](https://sword.bladex.vip)
-* Archer-全能代码生成系统：[https://archer.bladex.vip](https://archer.bladex.vip)
-* Caster-数据大屏展示系统：[https://data.avuejs.com](https://data.avuejs.com)
+## 何为侵权
+* ❌ 不遵守商业协议，私自销售商业源码
+* ❌ 以任何理由将BladeX源码用于申请软件著作权
+* ❌ 将商业源码以任何途径任何理由泄露给未授权的单位或个人
+* ❌ 开发完毕项目，没有为甲方购买企业授权，向甲方提供了BladeX代码
+* ❌ 基于BladeX拓展研发与BladeX有竞争关系的衍生框架，并将其开源或销售
 
-## 技术文档
-* [开发手册一览](https://gitee.com/smallc/SpringBlade/wikis/SpringBlade开发手册)
-* [常见问题集锦](https://sns.bladex.vip/article-14966.html)
+## 侵权后果
+* 情节较轻：第一次发现警告处理
+* 情节较重：封禁账号，踢出商业群，并保留追究法律责任的权利
+* 情节严重：与本地律师事务所合作，以公司名义起诉侵犯计算机软件著作权
 
-## 项目地址
-* 后端Gitee地址：[https://gitee.com/smallc/SpringBlade](https://gitee.com/smallc/SpringBlade)
-* 后端Github地址：[https://github.com/chillzhuang/SpringBlade](https://github.com/chillzhuang/SpringBlade)
-* 后端SpringBoot版：[https://gitee.com/smallc/SpringBlade/tree/2.0-boot/](https://gitee.com/smallc/SpringBlade/tree/2.0-boot/)
-* 前端框架Sword(基于React)：[https://gitee.com/smallc/Sword](https://gitee.com/smallc/Sword)
-* 前端框架Saber(基于Vue)：[https://gitee.com/smallc/Saber](https://gitee.com/smallc/Saber)
-* 核心框架项目地址：[https://github.com/chillzhuang/blade-tool](https://github.com/chillzhuang/blade-tool)
-
-## 用户权益
-* 允许免费用于学习、毕设、公司项目、私活等。
-* 代码文件需保留相关license信息。
-* 禁止直接将本项目挂淘宝等商业平台出售。
-* 非界面代码50%以上相似度的二次开源，二次开源需先联系作者。
-
-## 如何启动
-```
-$ git clone https://gitee.com/smallc/Sword.git
-$ cd Sword
-$ yarn install 或者 npm install
-# mock模式
-$ yarn start 或者 npm start  
-# 服务模式
-$ yarn run start:no-mock 或者 npm run start:no-mock 
-# 访问 http://localhost:8888
-# 推荐使用yarn       
-```
-
-# 界面
-
-## [BladeX](https://bladex.vip/#/vip) 工作流一览
-<table>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/bladex-flow1.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/bladex-flow2.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/bladex-flow3.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/bladex-flow4.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/bladex-flow5.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/bladex-flow6.png"/></td>
-    </tr>
-</table>
-
-## [Sword](https://gitee.com/smallc/Sword) 界面一览
-<table>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/sword-main.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/sword-menu.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/sword-menu-edit.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/sword-menu-icon.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/sword-role.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/sword-user.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/sword-dict.png "/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/sword-log.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/sword-locale-cn.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/sword-locale-us.png"/></td>
-    </tr>
-</table>
-
-## [Saber](https://gitee.com/smallc/Saber) 界面一览
-<table>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/saber-user.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/saber-role.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/saber-dict.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/saber-dict-select.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/saber-log.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/saber-code.png"/></td>
-    </tr>
-</table>
-
-## 监控界面一览
-<table>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-k8s1.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-k8s2.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-grafana.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-harbor.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-traefik.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-traefik-health.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-nacos.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-sentinel.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-admin1.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-admin2.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-swagger1.png"/></td>
-        <td><img src="https://gitee.com/smallc/SpringBlade/raw/master/pic/springblade-swagger2.png"/></td>
-    </tr>
-</table>
-
-## 关注我们
-![](https://images.gitee.com/uploads/images/2019/0330/065148_f0ada806_410595.jpeg)
+## 举报有奖
+* 向官方提供有用线索并成功捣毁盗版个人或窝点，将会看成果给予 500～10000 不等的现金奖励
+* 官方唯一指定QQ：1272154962

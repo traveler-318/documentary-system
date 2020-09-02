@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Card, Col, Collapse, Row, Divider, Tag } from 'antd';
 import styles from '../../layouts/Sword.less';
-
-import PageHeaderWrapper from '../../components/PageHeaderWrapper';
 import ThirdRegister from '../../components/ThirdRegister';
+
+// eslint-disable-next-line import/extensions
+import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 const { Panel } = Collapse;
 
@@ -20,14 +21,14 @@ class Workplace extends PureComponent {
           <Row gutter={24}>
             <Col span={24}>
               <div style={{ textAlign: 'center' }}>
-                <img src="https://img.shields.io/badge/Release-V2.7.1-green.svg" alt="Downloads" />
+                <img src="https://img.shields.io/badge/Release-V2.6.0-green.svg" alt="Downloads" />
                 <img src="https://img.shields.io/badge/JDK-1.8+-green.svg" alt="Build Status" />
                 <img
-                  src="https://img.shields.io/badge/Spring%20Cloud-Hoxton.SR5-blue.svg"
+                  src="https://img.shields.io/badge/Spring%20Cloud-Greenwich.SR6-blue.svg"
                   alt="Coverage Status"
                 />
                 <img
-                  src="https://img.shields.io/badge/Spring%20Boot-2.2.7.RELEASE-blue.svg"
+                  src="https://img.shields.io/badge/Spring%20Boot-2.1.16.RELEASE-blue.svg"
                   alt="Downloads"
                 />
                 <a href="https://bladex.vip">
@@ -51,7 +52,7 @@ class Workplace extends PureComponent {
             <Card className={styles.card} bordered={false}>
               <Collapse bordered={false} defaultActiveKey={['1', '2', '3', '5']}>
                 <Panel header="欢迎使用Sword" key="1">
-                  <div>1.Sword是SpringBlade前端UI系统</div>
+                  <div>1.Sword是BladeX前端UI系统</div>
                   <div>2.对现有的ant design pro库进行二次封装</div>
                   <div>3.100%兼容原生ant design pro库</div>
                   <div>4.配合后端代码生成系统可以快速搭建完整的功能模块</div>
@@ -68,22 +69,22 @@ class Workplace extends PureComponent {
                   </div>
                 </Panel>
                 <Panel header="为何需要BladeX" key="3">
-                  <div>1.经历过较长的线上生产，积累了很多企业痛点的解决方案。</div>
-                  <div>2.一套代码兼容MySql、Oracle、PostgreSQL，适应企业各种不同场景的需求。</div>
+                  <div>1.经历过较长的线上生产，积累了很多企业痛点的解决方案</div>
+                  <div>2.一套代码兼容MySql、Oracle、PostgreSQL，适应企业各种不同场景的需。</div>
                   <div>
-                    3.集成了很多企业急切所需的例如多租户、Oauth2授权认证、工作流、分布式事务等等功能。
+                    3.集成了很多企业急切所需的例如多租户、Oauth2授权认证、工作流、分布式事务等等功能
                   </div>
                   <div>
-                    4.深度定制了Flowable工作流，完美支持SpringCloud分布式服务的场景，以远程调用的方式进行操作。
+                    4.深度定制了Flowable工作流，完美支持SpringCloud分布式服务的场景，以远程调用的方式进行操作
                   </div>
                   <div>
-                    5.升级了核心驱动，新功能完全可以开箱即用，而开源版需要自己再花时间进行集成，需要花掉更多的时间成本。
+                    5.升级了核心驱动，新功能完全可以开箱即用，而开源版需要自己再花时间进行集成，需要花掉更多的时间成本
                   </div>
                   <div>
                     6.拥抱微服务时代，很多企业由于项目转型或升级，传统的技术已然不能满足，反而会花更多成本，而BladeX就是为此而生。
                   </div>
                   <div>
-                    7.同时提供SpringCloud版本和SpringBoot版本，两个版本的api可以与Sword和Saber无缝对接，为小型项目至大型项目保驾护航。
+                    7.同时提供SpringCloud版本和SpringBoot版本，两个版本的api可以与Sword和Saber无缝对接，为小型项目至大型项目保驾护航
                   </div>
                   <div>
                     8.授权购买即永久，源码没有混淆，后续升级完全免费。企业只需花很少的钱即可获得一整套成熟的解决方案，你还在等什么？
@@ -141,7 +142,7 @@ class Workplace extends PureComponent {
                   <div>22.动态网关鉴权-基于Nacos的动态网关鉴权，可在线配置，实时生效</div>
                   <div>
                     23.全能代码生成器-支持自定义模型、模版
-                    、业务建模，支持多种模板引擎，在线配置。大幅度提升开发效率，不再为重复工作发愁。
+                    、业务建模，支持多种模板引擎，在线配置。大幅度提升开发效率，不再为重复工作发愁
                   </div>
                   <div>
                     24.Seata分布式事务-定制集成Seata，支持分布式事务，无代码侵入，不失灵活与简洁
@@ -163,11 +164,15 @@ class Workplace extends PureComponent {
               <Card className={styles.card} bordered={false}>
                 <span>产品名称</span>
                 <Divider type="vertical" />
-                <Tag color="#108ee9">SpringBlade企业级微服务开发平台</Tag>
+                <Tag color="#108ee9">BladeX企业级微服务开发平台</Tag>
                 <Divider style={{ margin: '12px 0' }} />
                 <span>账号密码</span>
                 <Divider type="vertical" />
-                <Tag color="magenta">管理员(admin)</Tag>
+                <Tag color="magenta">人事(hr)</Tag>
+                <Divider type="vertical" />
+                <Tag color="green">经理(manager)</Tag>
+                <Divider type="vertical" />
+                <Tag color="orange">老板(boss)</Tag>
                 <Divider style={{ margin: '12px 0' }} />
                 <span>官网地址</span>
                 <Divider type="vertical" />
@@ -212,197 +217,342 @@ class Workplace extends PureComponent {
             </Row>
             <Row gutter={24}>
               <Card className={styles.card} bordered={false}>
-                <Collapse bordered={false} defaultActiveKey={['19']}>
-                  <Panel header="2.7.2发布 集成JustAuth支持第三方登录" key="19">
-                    <div>1.升级至 SpringCloud Hoxton.SR7</div>
-                    <div>2.升级至 SpringBoot 2.2.9.RELEASE</div>
-                    <div>3.升级至 Seata 1.3.0</div>
-                    <div>4.升级至 SpringBootAdmin 2.3.0</div>
-                    <div>5.升级至 Kinfe4j 2.0.4</div>
-                    <div>6.升级至 FastJson 1.2.73</div>
-                    <div>7.集成JustAuth支持第三方登录</div>
-                    <div>8.优化请求日志打印工具</div>
-                    <div>9.优化Token返回字段集合</div>
-                    <div>10.修复菜单列表API报空指针的问题</div>
-                    <div>11.修复角色配置数据量较大导致失败的问题</div>
+                <Collapse bordered={false} defaultActiveKey={['17']}>
+                  <Panel
+                    header="2.6.0.RELEASE发布，增加租户数据库隔离、报表管理、SqlServer兼容"
+                    key="17"
+                  >
+                    <div>1.升级 Avue 至 2.6.15</div>
+                    <div>2.升级 SpringBoot 至 2.1.16.RELEASE</div>
+                    <div>3.升级 Seata 至 1.3.0</div>
+                    <div>4.升级 Nacos 至 1.3.2</div>
+                    <div>5.升级 FastJson 至 1.2.73</div>
+                    <div>6.升级 Knife4j 至 2.0.4</div>
+                    <div>7.升级 EasyExcel 至 2.2.6</div>
+                    <div>8.升级 JustAuth 至 1.15.6</div>
+                    <div>9.新增多租户数据库隔离、动态数据源特性</div>
+                    <div>10.新增SqlServer兼容</div>
+                    <div>11.新增UReport2报表管理模块</div>
+                    <div>12.新增对象存储附件表功能</div>
+                    <div>13.优化LocalFile支持序列化</div>
+                    <div>14.优化MinioTemplate增加ContentType配置</div>
+                    <div>15.优化LogBack-Elk的配置</div>
+                    <div>16.优化流程状态变更的返回信息</div>
+                    <div>17.优化顶部菜单配置接口，支持大容量数据传输</div>
+                    <div>18.优化User密码字段序列化</div>
+                    <div>19.优化序列化additionalInformation，解决非null值报错的问题</div>
+                    <div>20.修复启用Token有状态模式下刷新Token的问题</div>
+                    <div>21.修复日志表无法入库TenantId的问题</div>
+                    <div>22.修复flowable-oracle脚本运行错误的问题</div>
                   </Panel>
-                  <Panel header="2.7.1发布 增加行政区划管理，支持seata1.2" key="18">
-                    <div>1.升级至 SpringCloud Hoxton.SR5</div>
-                    <div>2.升级至 SpringBoot 2.2.7.RELEASE</div>
-                    <div>3.升级至 Seata 1.2.0</div>
-                    <div>4.升级至 MybatisPlus 3.3.2</div>
-                    <div>5.升级至 Kinfe4j 2.0.3</div>
-                    <div>6.升级至 FastJson 1.2.70</div>
-                    <div>7.升级至 Avue 2.5.3</div>
-                    <div>8.新增行政区划管理模块</div>
-                    <div>9.优化用户导入的密码配置逻辑</div>
-                    <div>10.优化INode结构支持懒加载数据格式</div>
-                    <div>11.优化代码生成模板，支持最新版Saber结构</div>
-                    <div>12.修复Log模块在多线程、异步场景下报错的问题</div>
+                  <Panel header="2.5.1.RELEASE发布，增加第三方登录、行政区划、API报文加密" key="16">
+                    <div>1.升级 Avue 至 2.6.1、ElementUI 至 2.13.2</div>
+                    <div>2.升级 SpringBoot 至 2.1.14.RELEASE</div>
+                    <div>3.升级 SpringCloud 至 Greenwich.SR6</div>
+                    <div>4.升级 SpringCloud Alibaba 至 2.1.2.RELEASE</div>
+                    <div>5.升级 Seata 至 1.2.0</div>
+                    <div>6.升级 FastJson 至 1.2.70</div>
+                    <div>7.升级 Knife4j 至 2.0.3</div>
+                    <div>8.升级 MybatisPlus 至3.3.2</div>
+                    <div>9.升级 EasyExcel 至 2.2.4</div>
+                    <div>10.新增第三方系统登录，集成拓展JustAuth</div>
+                    <div>11.新增行政区划功能模块</div>
+                    <div>12.新增API报文加密工具</div>
+                    <div>13.新增Token配置，支持有状态模式，支持一人在线或多人在线</div>
+                    <div>14.新增Secure配置，支持配置请求方法类型、请求路径、请求表达式匹配</div>
+                    <div>15.新增Jackson配置，支持大数字转字符串模式，支持null转空值模式</div>
+                    <div>16.新增租户账号授权码保护机制，防止私有部署客户篡改数据库越权</div>
+                    <div>17.优化字典模块，增加树形结构</div>
+                    <div>18.优化新增租户逻辑，新增时同步超管配置的默认业务字典数据</div>
+                    <div>19.优化用户导入逻辑，只有超管才可以定义租户编号</div>
+                    <div>20.优化部门列表逻辑，非超管角色只可看到本级及以下部门数据</div>
+                    <div>21.优化字典模块，增加枚举类，统一入口</div>
+                    <div>22.优化DictCache缓存加载逻辑</div>
+                    <div>23.优化租户缓存刷新逻辑</div>
+                    <div>24.优化角色配置逻辑，同步取消子角色对应的菜单权限</div>
+                    <div>25.优化顶部菜单，增加排序功能</div>
+                    <div>26.优化INode，支持泛型</div>
+                    <div>27.优化代码结构，为bean统一加上final关键字修饰</div>
+                    <div>28.优化Nacos动态刷新配置</div>
+                    <div>29.优化Dockerfile，采用Openj9基础镜像，大幅度降低内存占用</div>
+                    <div>30.优化工程启动逻辑，关闭Flowable自动建表功能，需要手动导入流程sql</div>
+                    <div>31.修复SpringBootAdmin读取actuator路径配置</div>
+                    <div>32.修复用户导入逻辑，修正密码加密规则</div>
+                    <div>33.修复Boot版本Xss默认配置路径</div>
                   </Panel>
-                  <Panel header="2.7.0发布 内核全面升级，增加岗位管理，用户导入导出" key="17">
-                    <div>1.升级至 SpringCloud Hoxton.SR3</div>
-                    <div>2.升级至 SpringBoot 2.2.6.RELEASE</div>
-                    <div>3.升级至 Avue 2.5.0</div>
-                    <div>4.升级Saber内核，采用最新版本API，优化交互体验</div>
-                    <div>5.新增岗位管理模块</div>
-                    <div>6.新增用户导入导出模块</div>
-                    <div>7.数据库主键统一改成bigint并采用snowflake算法</div>
-                    <div>8.优化INode类，主键跟随修改为Long类型</div>
-                    <div>9.优化鉴权逻辑，支持header以及parameter两种方式</div>
-                    <div>10.优化代码生成模板以支持最新版API</div>
+                  <Panel header="2.5.0.RELEASE发布，增加岗位管理，增加用户导入导出" key="15">
+                    <div>1.升级Avue 至 2.5.0</div>
+                    <div>2.升级SpringBoot 至 2.1.13</div>
+                    <div>3.升级FastJson 至 1.2.68</div>
+                    <div>4.升级Druid 至 1.1.22</div>
+                    <div>5.升级Knife4j 至 2.0.2</div>
+                    <div>6.升级Taobao-Sdk 至 20200415</div>
+                    <div>7.升级docker-maven-plugin 至 dockerfile-maven-plugin</div>
+                    <div>8.新增验证码开关</div>
+                    <div>9.新增数据权限全局开关</div>
+                    <div>10.新增岗位管理模块</div>
+                    <div>11.新增用户Excel导入导出功能</div>
+                    <div>12.新增用户绑定岗位功能</div>
+                    <div>13.新增EasyExcel封装工具ExcelUtil</div>
+                    <div>14.新增Feign内部线程传递</div>
+                    <div>15.新增Mybatis-Plus配置，支持配置最大分页数</div>
+                    <div>16.新增Gateway在多团队协作模式灵活指向本地服务的配置</div>
+                    <div>17.新增Sms模块的sendMessage接口及SmsResponse响应类</div>
+                    <div>18.新增CacheUtil租户缓存隔离功能</div>
+                    <div>19.优化CacheUtil缓存重载逻辑，bean不为null但数据全为空将不入缓存</div>
+                    <div>20.优化缓存清除逻辑，@CacheEvict统一修改为CacheUtil.clear</div>
+                    <div>21.优化登陆逻辑，前端对密码加密后再传递至鉴权接口</div>
+                    <div>22.优化Oss上传接口，返回domain字段</div>
+                    <div>23.优化BladeRedisCache命名为BladeRedis</div>
+                    <div>24.优化控制台日志打印功能，规避MultipartFile读取报错</div>
+                    <div>25.优化配置关键字enable统一为enabled</div>
+                    <div>26.优化keyword日期处理</div>
+                    <div>27.优化代码生成sql脚本默认在工作台菜单下</div>
+                    <div>28.优化Jwt获取Token逻辑</div>
+                    <div>29.优化Token返回，增加岗位ID</div>
+                    <div>30.优化TokenGranter，采用更简洁的拓展方式</div>
+                    <div>31.优化日志管理展现方式</div>
+                    <div>32.优化新建租户逻辑，增加参数读取来设置新建租户的配置</div>
+                    <div>33.优化流程签收接口，支持多角色操作</div>
+                    <div>34.优化动态网关，支持读取自定义namespace配置</div>
+                    <div>35.优化删除租户逻辑，同时删除对应的用户</div>
+                    <div>36.优化树形懒加载，支持局部实时刷新功能</div>
+                    <div>37.优化多租户插件新增修改逻辑，若指定tenantId为空则不进行操作</div>
+                    <div>38.优化SmsBuilder、OssBuilder</div>
+                    <div>39.优化Sentinel配置</div>
+                    <div>40.优化XssFilter为全局的BladeRequestFilte</div>
+                    <div>41.优化BladeX开发手册Linux部署章节讲解</div>
+                    <div>42.优化Saber相关配置，以适配Avue最新版API</div>
+                    <div>43.优化Saber相关配置内done与loading的顺序</div>
+                    <div>44.修复用户基本信息修改的bug</div>
+                    <div>45.修复QiniuTemplate的putFile循环调用的bug</div>
+                    <div>46.修复日志框架获取RequestBody为空的bug</div>
+                    <div>47.修复Saber组件被复用导致没有刷新的bug</div>
+                    <div>48.删除过时的BladeSecureUrlProperties</div>
+                    <div>49.删除过时的XssUrlProperties</div>
+                    <div>50.删除过时的RedisUtil</div>
                   </Panel>
-                  <Panel header="2.6.1发布 增加登陆验证码，支持seata1.0" key="16">
-                    <div>1.升级SpringBoot 2.2.5.RELEASE</div>
-                    <div>2.升级SpringCloud Hoxton.SR2</div>
-                    <div>3.升级Seata 1.1.0</div>
-                    <div>4.增加阿里云对象存储封装</div>
-                    <div>5.优化BladeFeignTargeter的加载逻辑</div>
-                    <div>6.优化系统配置</div>
+                  <Panel header="2.4.0.RELEASE发布，增加多租户短信服务，升级Seata1.1" key="14">
+                    <div>1.新增集成七牛、阿里云、腾讯云、云片等短信服务，支持多租户配置</div>
+                    <div>2.新增对象存储模块的资源编号字段，可根据编号指定oss配置的服务</div>
+                    <div>3.新增对象存储、短信配置模块的调试功能，可在线调试配置是否可用</div>
+                    <div>4.新增超管启用租户过滤的配置</div>
+                    <div>5.升级 SpringBoot 2.1.12，SpringCloud SR5</div>
+                    <div>6.升级兼容 Seata 1.1</div>
+                    <div>7.优化对象存储的模块使用体验</div>
+                    <div>8.优化兼容Oracle模糊查询的写法</div>
+                    <div>9.优化超管权限，不受租户过期时间影响</div>
+                    <div>10.优化mybatis-plus相关过期注解</div>
+                    <div>11.优化xxl-job模块的配置文件</div>
+                    <div>12.优化INode支持序列化接口</div>
+                    <div>13.优化统一Oss模块命名</div>
+                    <div>14.优化部署脚本，升级相关版本</div>
+                    <div>15.修复数据权限部门过滤已删除对象</div>
+                    <div>16.修复业务字典缓存bug，增加租户过滤</div>
+                    <div>17.修复占位符解析器的bug</div>
                   </Panel>
-                  <Panel header="2.6.1发布 增加登陆验证码，支持seata1.0" key="15">
-                    <div>1.升级SpringBoot 2.2.4.RELEASE</div>
-                    <div>2.升级Alibaba Cloud 2.2.0.RELEASE</div>
-                    <div>3.升级Mybatis-Plus 3.3.1</div>
-                    <div>4.增加登陆验证码功能</div>
-                    <div>5.增加验证码对应的CaptchaTokenGranter</div>
-                    <div>6.增加RedisUtil，方便业务操作</div>
-                    <div>7.增加Condition类getQueryWrapper自定义排除参数的入口</div>
-                    <div>8.优化Seata封装，完美支持1.0.0版本</div>
+                  <Panel header="2.3.1.RELEASE发布，流程增加租户定制，登陆增加验证码" key="13">
+                    <div>1.新增登陆验证码功能</div>
+                    <div>2.新增Oauth2自定义TokenGranter</div>
+                    <div>3.新增工作流绑定租户功能，支持通用流程和定制流程</div>
+                    <div>4.新增Condition类的自定义参数排除入口</div>
+                    <div>5.增强租户插件功能，新增操作可根据自定义的tenantId值进行覆盖</div>
+                    <div>6.增强超管权限，不受数据权限插件影响</div>
+                    <div>7.升级mybatis-plus至3.3.1</div>
+                    <div>8.优化mybatis-plus封装，提升分页可拓展性</div>
+                    <div>9.优化lib分离打包逻辑</div>
+                    <div>10.优化CacheUtil初始化逻辑</div>
+                    <div>11.优化HttpUtil，采用最新封装逻辑</div>
+                    <div>12.优化角色信息获取逻辑为实时，不受开源版、单体版缓存影响</div>
+                    <div>13.优化日志打印工具判断空逻辑</div>
+                    <div>14.修复BeanUtil的class类型判断逻辑</div>
+                    <div>15.删除基于zookeeper体验不佳的分布式锁</div>
                   </Panel>
-                  <Panel header="2.6.0发布 升级Hoxton.SR1 适配最新架构" key="14">
-                    <div>1.升级SpringCloud Hoxton.SR1</div>
-                    <div>2.升级SpringBoot 2.2.2.RELEASE</div>
-                    <div>3.升级Alibaba Cloud 2.1.1.RELEASE</div>
-                    <div>4.升级Seata 1.0.0</div>
-                    <div>5.升级Swagger-Bootstrap-UI为最新的Knife4j 2.0.1</div>
-                    <div>6.升级Xss过滤机制以适配最新架构</div>
-                    <div>7.升级前端请求机制以适配最新架构</div>
-                    <div>8.修复blade-resource无法进行docker打包的问题</div>
-                    <div>9.修复blade-demo没有配置LauncherService导致启动失败的问题</div>
+                  <Panel header="2.3.0.RELEASE发布，租户增强，底层架构插件全面增强" key="12">
+                    <div>1.swagger-bootstrap-ui全新升级为knife4j</div>
+                    <div>2.saber升级至avue2.3.7版本</div>
+                    <div>3.新增saber树表懒加载模式</div>
+                    <div>4.新增腾讯云存储封装</div>
+                    <div>5.新增xxl-job集成，支持分布式任务调度</div>
+                    <div>6.新增kafka、rabbitmq、cloudstream集成</div>
+                    <div>7.新增redis分布式锁插件</div>
+                    <div>8.新增高性能http调用模块</div>
+                    <div>9.新增PropertySource注册逻辑，提高安全性</div>
+                    <div>10.新增Param参数缓存工具类</div>
+                    <div>11.新增租户操作，增加创建对应的租户管理员账号、菜单权限</div>
+                    <div>12.新增租户插件，超管可查看所有租户数据的逻辑</div>
+                    <div>13.新增租户功能，绑定域名、系统背景、账号额度、过期时间</div>
+                    <div>14.新增登录、创建用户操作绑定租户配置</div>
+                    <div>15.优化租户插件判断逻辑，增加flowable相关表的租户过滤排除</div>
+                    <div>16.优化xss过滤逻辑，提高性能</div>
+                    <div>17.优化本地文件上传逻辑</div>
+                    <div>18.优化oss配置，修改后及时生效无需点击启用</div>
+                    <div>19.优化请求日志展示功能</div>
+                    <div>20.修复前端关闭租户模式导致的新增用户失效问题</div>
+                    <div>21.修复OSS相关bucket命名的问题</div>
+                    <div>22.修复ribbon组件由降级引起的问题</div>
                   </Panel>
-                  <Panel header="2.5.4发布 增加多数据源示例工程" key="13">
-                    <div>1.增加示例工程，增加多种常见场景的解决方案</div>
-                    <div>2.增加不同包名运行的示例</div>
-                    <div>3.增加多数据源调用运行的示例</div>
-                    <div>4.增加自定义加载Naocs配置文件的示例</div>
-                    <div>5.增加根据Nacos命名空间读取配置、注册服务的示例</div>
-                    <div>6.修复Condition类没有过滤分页字段的问题</div>
-                    <div>7.拆分CommonConstant出LauncherConstant</div>
+                  <Panel header="2.2.2.RELEASE发布，增强字典管理，用户管理增加左树右表" key="11">
+                    <div>1.拆分出系统字典表与业务字典表，字典键值改为string类型</div>
+                    <div>2.用户管理增加左树右表功能</div>
+                    <div>3.租户新增增加租户默认类型</div>
+                    <div>4.多租户表对应实体继承TenantEntity</div>
+                    <div>5.用于本地上传的BladeFile类更名为LocalFile防止冲突</div>
+                    <div>6.优化菜单新增逻辑</div>
+                    <div>7.优化mybatis-plus默认配置的处理</div>
+                    <div>8.优化租户过滤判断逻辑，删除多余的类</div>
+                    <div>9.优化alioss生成地址的逻辑</div>
+                    <div>10.优化redisTemplate加载逻辑</div>
+                    <div>11.优化租户处理，简化配置，自动识别需要过滤的租户表</div>
+                    <div>12.优化数据权限表单用户体验</div>
+                    <div>13.修复数据权限插件不兼容的问题</div>
+                    <div>14.修复数据权限树勾选显示问题</div>
+                    <div>15.修复windows平台elk开关失效的问题</div>
+                    <div>16.修复租户bean加载逻辑</div>
+                    <div>17.修复saber代码生成驼峰路径导致的问题</div>
+                    <div>18.修复docker脚本nginx端口匹配问题</div>
+                    <div>19.修复机构模块提交未删除缓存的问题</div>
+                    <div>20.修复oss缓存获取未加租户判断的问题</div>
+                    <div>21.修复blade-auth在java11下无法运行的问题</div>
                   </Panel>
-                  <Panel header="2.5.3发布 集成分布式链路追踪" key="12">
-                    <div>1.封装集成zipkin，支持分布式链路追踪</div>
-                    <div>2.seata升级至0.9.0，解决部分分布式事务遇到的bug</div>
-                    <div>3.springboot版本升级至2.1.9</div>
+                  <Panel header="2.2.1.RELEASE发布，集成ELK，增加分布式日志追踪" key="10">
+                    <div>1.集成最新版ELK，增加分布式日志追踪功能</div>
+                    <div>2.增加ELK一键部署docker脚本</div>
+                    <div>3.抽象封装日志管理逻辑</div>
+                    <div>4.BladeX-Biz增加easypoi的demo工程</div>
+                    <div>5.BladeX-Biz增加websocket的demo工程</div>
+                    <div>6.优化minio文件策略</div>
+                    <div>7.Sql条件构建类去除分页字段</div>
+                    <div>8.优化sql打印功能</div>
+                    <div>9.优化wrapper逻辑</div>
+                    <div>10.CommonConstant拆分出LauncherConstant</div>
                   </Panel>
-                  <Panel header="2.5.2发布 增加个人中心" key="11">
-                    <div>1.增加个人中心，支持用户信息自定义修改</div>
-                    <div>2.增加网关鉴权配置示例</div>
-                    <div>3.token的SIGN_KEY修改为一致</div>
-                    <div>4.admin模块增加对seata服务的过滤</div>
-                    <div>5.blade-tool增加部分工具类方法</div>
+                  <Panel header="2.2.0.RELEASE发布，增加集群监控，链路追踪" key="9">
+                    <div>1.增加turbine集群监控服务</div>
+                    <div>2.增加zipkin分布式链路追踪</div>
+                    <div>3.升级seata版本至0.9.0，解决分布式事务遇到的bug</div>
+                    <div>4.Launcher的nacos配置改为sharedIds，提升子工程配置优先级</div>
+                    <div>5.增加changeStatus方法，方便修改业务状态字段</div>
+                    <div>6.saber代码模板增加刷新事件</div>
+                    <div>7.saber底层架构升级</div>
+                    <div>8.saber支持tab切换保存页面状态</div>
+                    <div>9.添加bom统一版本配置</div>
+                    <div>10.添加trace starter</div>
+                    <div>11.blade-admin排除seata服务</div>
+                    <div>12.oss敏感操作增加权限校验</div>
+                    <div>13.修复dict、role不选择父节点报错</div>
+                    <div>14.动态网关设置启动加载</div>
+                    <div>15.字典增加封存功能</div>
                   </Panel>
-                  <Panel header="2.5.1发布 增加网关动态鉴权" key="10">
-                    <div>1.增加网关动态鉴权</div>
-                    <div>2.secure安全模块token校验默认关闭，交由网关处理</div>
-                    <div>3.boot版本开启secure token校验功能</div>
-                    <div>4.优化blade-gateway代码逻辑</div>
-                    <div>5.修复blade-resource无法启动的问题</div>
+                  <Panel header="2.1.0.RELEASE发布，全面增强底层驱动" key="8">
+                    <div>1.升级springboot 2.1.8、springcloud greenwich sr3</div>
+                    <div>2.集成seata，提供最简集成方案</div>
+                    <div>3.blade-admin增加nacos动态监听</div>
+                    <div>4.增加alioss集成，强化oss返回信息</div>
+                    <div>5.获取令牌操作增加空判断</div>
+                    <div>6.拆分数据库依赖、增强mybatis、增加yml自定义配置读取</div>
+                    <div>7.各模块增加默认的yml配置，不占用application.yml</div>
+                    <div>8.增加ribbon组件，可自定义lb优先选择的ip段，解决团队网关调试需求</div>
+                    <div>9.优化feign的bean加载逻辑</div>
+                    <div>10.增强condition条件</div>
+                    <div>11.优化日志打印效果</div>
+                    <div>12.重构redis模块，增加redis限流功能</div>
+                    <div>13.优化beanutil性能</div>
+                    <div>14.去掉调试用的RouteEndpoint，增强安全性</div>
+                    <div>15.优化部门新增逻辑</div>
                   </Panel>
-                  <Panel header="2.5.0发布 集成seata支持分布式事务" key="9">
-                    <div>1.封装集成seata，支持分布式事务</div>
-                    <div>2.重写blade-core-cloud模块，增强cloud场景支持</div>
-                    <div>3.增加hystrix自动fallback功能</div>
-                    <div>4.升级springboot至2.1.8.RELEASE</div>
-                    <div>5.升级springcloud至Greenwich.SR3</div>
+                  <Panel header="2.0.7.RELEASE发布，增加网关鉴权，强化代码生成" key="7">
+                    <div>1.增加基于Nacos的动态网关鉴权</div>
+                    <div>2.代码生成增加多数据源选择，强化单表代码生成</div>
+                    <div>3.增加个人信息修改、头像上传、密码更新功能</div>
+                    <div>4.优化新建角色逻辑</div>
+                    <div>5.修复若干issue</div>
                   </Panel>
-                  <Panel header="2.4.1发布 代码生成增加多数据源，强化代码生成功能" key="8">
-                    <div>1.升级SpringBoot至2.1.7</div>
-                    <div>2.代码生成增加多数据源配置</div>
-                    <div>3.增强代码生成功能，支持可选基础业务、包装器配置</div>
-                    <div>4.优化代码生成模板</div>
+                  <Panel header="2.0.6.RELEASE发布，兼容三大主流数据库" key="6">
+                    <div>1.一套代码兼容Mysql、Oracle、PostgreSQL三大主流数据库</div>
+                    <div>2.升级flowable 6.4.2</div>
+                    <div>3.超管默认拥有所有菜单权限</div>
+                    <div>4.修复权限配置数据长度过大的bug</div>
+                    <div>5.增加租户信息获取</div>
+                    <div>6.优化命令行启动顺序</div>
+                    <div>7.升级alibaba cloud毕业版本</div>
+                    <div>8.日志监听增加自定义配置</div>
+                    <div>9.升级swagger-bootstrap-ui版本</div>
+                    <div>10.saber表格自适应、增加loading</div>
+                    <div>11.saber通知公告模块增加富文本编辑器</div>
                   </Panel>
-                  <Panel header="2.4.0发布 升级AlibabaCloud毕业版本" key="7">
-                    <div>1.升级AlibabaCloud毕业版本</div>
-                    <div>2.升级支持Naocs 1.1.0、Sentinel 1.6.3</div>
-                    <div>3.租户系统的tenantCode统一更改为tenantId</div>
-                    <div>4.优化代码生成模板</div>
-                    <div>5.优化mybatis-plus新版配置</div>
-                    <div>6.修复排序字段sql注入问题</div>
+                  <Panel header="2.0.5.RELEASE发布，升级分布式接口权限系统" key="5">
+                    <div>1.升级为分布式接口权限系统</div>
+                    <div>2.增加多租户自定义顶部菜单功能</div>
+                    <div>3.升级greenwich SR2，mybatis-plus 3.1.2</div>
+                    <div>4.swagger排序规则采用最新注解</div>
+                    <div>5.数据权限增加可见字段配置</div>
+                    <div>6.数据权限增加分布式服务支持</div>
+                    <div>7.增加远程调用分页的例子，解决mybatis-plus传递IPage反序化出现的bug</div>
+                    <div>8.优化租户接口权限规则</div>
+                    <div>9.SqlKeyword增加条件判断</div>
+                    <div>10.修复部分模块包名分层的问题</div>
                   </Panel>
-                  <Panel header="2.3.3发布 重构令牌逻辑, 增强令牌功能" key="6">
-                    <div>1.重构令牌发放逻辑，可自定义令牌类型，增强可拓展性</div>
-                    <div>2.增加动态配置token过期时间、令牌续期功能</div>
-                    <div>3.增加GateWay动态聚合文档功能，简化配置</div>
-                    <div>4.优化Wrapper定义，代码更加简洁</div>
-                    <div>5.Swagger增加多包扫描</div>
-                    <div>6.使用 Swagger-Bootstrap-UI 最新版排序注解</div>
-                    <div>7.升级 SpringBoot 2.1.6，SpringCloud Greenwich.SR2</div>
-                    <div>8.升级 Mybatis-Plus 3.1.2</div>
-                    <div>9.修复排序字段可能导致的sql注入问题</div>
-                    <div>10.修复部分缓存清除失效的问题</div>
+                  <Panel header="2.0.4.RELEASE发布，增加动态数据权限系统" key="4">
+                    <div>1.增加注解+web可视化配置的动态数据权限系统</div>
+                    <div>2.升级部门管理为机构管理，增加机构类型</div>
+                    <div>3.解决mybatis-plus排序字段的sql注入问题</div>
+                    <div>4.增加create_dept统一业务字段</div>
+                    <div>5.添加swagger ui页面设置Authorize 默认全局参数</div>
+                    <div>6.jsonutil增加封装方法,去掉devtools依赖</div>
+                    <div>7.数据库连接适配mysql8</div>
+                    <div>8.docker-compose脚本增加时区</div>
+                    <div>9.oauth申请token可支持自定义表</div>
+                    <div>10.修复代码生成sql缺失主键的问</div>
+                    <div>11.boot版本重构登录逻辑，增强可拓展性</div>
                   </Panel>
-                  <Panel header="2.3.2发布 增加 OSS 封装及单元测试封装" key="5">
-                    <div>1.增加七牛云oss-starter</div>
-                    <div>2.增加blade-resource模块，对外提供服务，支持分布式下的oss场景</div>
-                    <div>3.LauncherService增加排序功能</div>
-                    <div>4.增加单元测试starter，可在启动过程中便捷地指定profile以及启动参数</div>
-                    <div>5.增加指定启动参数的单元测试demo</div>
-                    <div>6.优化docker脚本配置</div>
+                  <Panel header="2.0.3.RELEASE发布，优化多租户oss系统，优化业务架构" key="3">
+                    <div>1.gateway增加动态文档配置，可通过配置nacos动态刷新</div>
+                    <div>2.修正blade_menu代码生成模块删除api的地址</div>
+                    <div>3.优化mysql依赖</div>
+                    <div>4.LauncherService增加排序功能</div>
+                    <div>5.优化hystrixfeign加载</div>
+                    <div>6.优化多租户oss系统逻辑，使之更加易用</div>
+                    <div>7.tenant_code字段统一为tenant_id</div>
                   </Panel>
-                  <Panel header="2.3.1发布 升级业务架构" key="4">
-                    <div>1.升级 SpringBoot 2.1.5</div>
-                    <div>2.前端框架Saber升级 element-ui 2.8.2</div>
-                    <div>3.Saber业务代码升级</div>
-                    <div>4.优化Saber代码生成模板</div>
-                    <div>5.统一日志业务表基础字段</div>
-                    <div>6.优化租户过滤逻辑</div>
-                    <div>7.BaseEntity放开主键限制，子类可自定义主键类型</div>
-                    <div>8.XssFilter增加放行配置，可配置放行微信api接口</div>
+                  <Panel header="2.0.2.RELEASE发布，增加多租户oss管理系统" key="2">
+                    <div>1.增加minio封装</div>
+                    <div>2.增加qiniu封装</div>
+                    <div>3.增加oss统一接口</div>
+                    <div>4.集成minio、qiniu，进行统一管理的多租户oss系统</div>
+                    <div>5.优化blade-core-cloud逻辑</div>
+                    <div>6.badex-biz增加不同包名的swagger、mybatis配置demo</div>
+                    <div>7.badex-biz增加nacos自定义注册文件demo</div>
+                    <div>8.bladex-biz增加nacos参数动态刷新demo</div>
                   </Panel>
-                  <Panel header="2.3.0发布 升级SpringCloud Greenwich与SpringBoot" key="3">
-                    <div>1.升级 SpringCloud Greenwich</div>
-                    <div>
-                      2.升级 SpringCloud Alibaba
-                      组件版本为0.9.0.RELEASE，支持最新版本的nacos与sentinel
-                    </div>
-                    <div>3.升级 SpringBoot 2.1.4</div>
-                    <div>4.升级 mysql 驱动版本</div>
-                    <div>5.优化 LauncherService 关于环境的判断逻辑</div>
-                    <div>6.修复 blade-core-log 在部分情况下获取request为空的问题</div>
-                    <div>7.修复多租户插件判断租户过滤的逻辑</div>
-                    <div>8.修复请求日志打印插件部分格式空指针的问题</div>
-                    <div>9.降低nacos心跳日志等级，关闭心跳日志显示</div>
+                  <Panel header="2.0.1.RELEASE发布，系统优化版本" key="1">
+                    <div>1.兼容jdk11</div>
+                    <div>2.支持refresh_token功能</div>
+                    <div>3.增加minio封装，支持多租户模式的oss对象存储</div>
+                    <div>4.集成dubbo最新版本，支持rpc远程调用</div>
+                    <div>5.定制基于nacos的gateway动态网关</div>
+                    <div>6.优化聚合网关配置，使之更加轻巧</div>
+                    <div>7.CacheUtil增加缓存清除方法</div>
+                    <div>8.优化日志文件格式</div>
+                    <div>9.Secure拦截器支持自定义加载</div>
                   </Panel>
-                  <Panel header="2.2.0发布 升级为多终端令牌认证系统" key="2">
-                    <div>1.增加多终端令牌认证系统</div>
-                    <div>2.增加多租户开关</div>
-                    <div>3.修复部分模块没有筛选已删除的问题</div>
-                    <div>4.调整角色分配会越权的问题</div>
-                    <div>5.优化部署脚本</div>
-                  </Panel>
-                  <Panel header="2.1.0发布 升级为SaaS多租户系统" key="1">
-                    <div>1.升级为SaaS多租户系统</div>
-                    <div>2.优化代码生成逻辑</div>
-                    <div>3.代码生成增加菜单sql</div>
-                    <div>4.增加SysClient，提供系统信息远程调用</div>
-                    <div>5.优化部署脚本，增加前端部署实例</div>
-                    <div>6.增加父子角色过滤，使得角色无法越权配置</div>
-                  </Panel>
-                  <Panel header="2.0.0发布 全面升级为SpringCloud微服务架构" key="0">
-                    <div>
-                      1.SpringBlade 2.0
-                      是由一个商业级项目升级优化而来的SpringCloud微服务架构，采用Java8
-                      API重构了业务代码，完全遵循阿里巴巴编码规范
-                    </div>
-                    <div>
-                      2.采用Spring Boot 2 、Spring Cloud Greenwich 、Mybatis
-                      等核心技术，用于快速搭建企业级的微服务系统平台
-                    </div>
-                    <div>
-                      3.SpringBlade
-                      致力于创造新颖的开发模式，将开发中遇到的痛点、生产中所踩的坑整理归纳，并将解决方案都融合到框架中
-                    </div>
+                  <Panel header="2.0.0.RELEASE发布，完美定制的微服务开发平台" key="0">
+                    <div>1.Swagger提供list形式配置扫描包</div>
+                    <div>2.增加DictCache、UserCache、SysCache缓存工具类</div>
+                    <div>3.重新设计EntityWrapper结构，使之更加简单易用</div>
+                    <div>4.强化部分敏感数据的删除校验</div>
+                    <div>5.增加Condition类的sql条件构造器</div>
+                    <div>6.修复工作流分页bug</div>
+                    <div>7.优化docker配置</div>
+                    <div>8.优化多租户逻辑</div>
+                    <div>9.优化request打印日志逻辑</div>
+                    <div>10.修复getIp的bug</div>
+                    <div>11.优化saber代码生成模板</div>
+                    <div>12.saber更新至element-ui 2.8.2版本</div>
+                    <div>13.修复saber分页bug</div>
+                    <div>14.crud组件提交报错后恢复按钮状态</div>
+                    <div>15.字典管理表单调整</div>
+                    <div>16.升级 springboot 2.1.5</div>
                   </Panel>
                 </Collapse>
               </Card>

@@ -177,6 +177,28 @@ export function formatWan(val) {
   return result;
 }
 
+export const importCDN = (url, name) =>
+  new Promise(resolve => {
+    const dom = document.createElement('script');
+    dom.src = url;
+    dom.type = 'text/javascript';
+    dom.onload = () => {
+      resolve(window[name]);
+    };
+    document.head.appendChild(dom);
+  });
+
+export function formatTopMenus(menus) {
+  return menus.map(item => {
+    return {
+      id: item.id,
+      name: item.name,
+      code: item.code,
+      source: item.source,
+    };
+  });
+}
+
 export function formatRoutes(routes) {
   function format(arr) {
     arr.forEach(node => {

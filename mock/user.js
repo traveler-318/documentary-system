@@ -64,6 +64,7 @@ function getFakeDetail(req, res) {
   };
   return res.json(json);
 }
+
 function fakeSuccess(req, res) {
   const json = { code: 200, success: true, msg: '操作成功' };
   return res.json(json);
@@ -73,6 +74,7 @@ function fakeSuccess(req, res) {
 const proxy = {
   'GET /api/blade-user/list': getFakeList,
   'GET /api/blade-user/detail': getFakeDetail,
+  'GET /api/blade-user/info': getFakeDetail,
   'POST /api/blade-user/grant': fakeSuccess,
   'POST /api/blade-user/reset-password': fakeSuccess,
   'POST /api/blade-user/submit': fakeSuccess,
@@ -82,7 +84,7 @@ const proxy = {
   // 支持值为 Object 和 Array
   'GET /api/currentUser': {
     name: 'Serati Ma',
-    avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+    avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
     userid: '00000001',
     email: 'antdesign@alipay.com',
     signature: '海纳百川，有容乃大',
@@ -151,32 +153,30 @@ const proxy = {
       address: 'Sidney No. 1 Lake Park',
     },
   ],
-  'POST /api/blade-auth/token': (req, res) => {
+  'POST /api/blade-auth/oauth/token': (req, res) => {
     res.send({
-      code: 200,
-      success: true,
-      data: {
-        accessToken:
-          'eyJ0eXAiOiJKc29uV2ViVG9rZW4iLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJpc3N1c2VyIiwiYXVkIjoiYXVkaWVuY2UiLCJyb2xlSWQiOiIxIiwicm9sZU5hbWUiOiJhZG1pbiIsInVzZXJOYW1lIjoi566h55CG5ZGYIiwidXNlcklkIjoiMSIsImFjY291bnQiOiJhZG1pbiIsImV4cCI6MTU0NDEyMjc5OSwibmJmIjoxNTQ0MDkxOTE3fQ.STze1uvHEoDI-FAAoFaOXufML_75MY6A_r6ZIzdYzYk',
-        tokenType: 'bearer',
-        authority: 'admin',
-        avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-        userName: '管理员',
-        account: 'admin',
-        license: 'made by blade',
-      },
-      msg: '操作成功',
+      access_token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiLnrqHnkIblkZgiLCJhdmF0YXIiOiJodHRwczovL2d3LmFsaXBheW9iamVjdHMuY29tL3pvcy9ybXNwb3J0YWwvQmlhemZhbnhtYW1OUm94eFZ4a2EucG5nIiwiYXV0aG9yaXRpZXMiOlsiYWRtaW5pc3RyYXRvciJdLCJjbGllbnRfaWQiOiJibGFkZSIsInJvbGVfbmFtZSI6ImFkbWluaXN0cmF0b3IiLCJsaWNlbnNlIjoicG93ZXJlZCBieSBibGFkZXgiLCJ1c2VyX2lkIjoxLCJyb2xlX2lkIjoiMSIsInNjb3BlIjpbImFsbCJdLCJleHAiOjE1NTMyNDQ4MDMsImp0aSI6Ijg3NTBkZTg1LTBiNmItNGUwYS1hZDg3LWMwZTcwZDg1N2RkYyIsImFjY291bnQiOiJhZG1pbiIsInRlbmFudF9jb2RlIjoiMDAwMDAwIn0.9zjvzJuQItdycmxCQ2XNCebfkkHC3zze2t4uwG4Kys8',
+      token_type: 'bearer',
+      refresh_token:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiLnrqHnkIblkZgiLCJhdmF0YXIiOiJodHRwczovL2d3LmFsaXBheW9iamVjdHMuY29tL3pvcy9ybXNwb3J0YWwvQmlhemZhbnhtYW1OUm94eFZ4a2EucG5nIiwiYXV0aG9yaXRpZXMiOlsiYWRtaW5pc3RyYXRvciJdLCJjbGllbnRfaWQiOiJibGFkZSIsInJvbGVfbmFtZSI6ImFkbWluaXN0cmF0b3IiLCJsaWNlbnNlIjoicG93ZXJlZCBieSBibGFkZXgiLCJ1c2VyX2lkIjoxLCJyb2xlX2lkIjoiMSIsInNjb3BlIjpbImFsbCJdLCJhdGkiOiI4NzUwZGU4NS0wYjZiLTRlMGEtYWQ4Ny1jMGU3MGQ4NTdkZGMiLCJleHAiOjE1NTQ1MzM2MDMsImp0aSI6IjBkYjBmMTRkLTlhMTgtNGFlOC1hZTE4LTJkNzAyYzY5NWRmZiIsImFjY291bnQiOiJhZG1pbiIsInRlbmFudF9jb2RlIjoiMDAwMDAwIn0.DaocFShM9iGjU05GUrtNKE6JKAeAJTKpdGPrC1bIi4w',
+      expires_in: 7199,
+      scope: 'all',
+      role_name: 'administrator',
+      license: 'powered by bladex',
+      user_id: 1,
+      role_id: '1',
+      user_name: '管理员',
+      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+      account: 'admin',
+      tenant_id: '000000',
+      jti: '8750de85-0b6b-4e0a-ad87-c0e70d857ddc',
     });
   },
-  'GET /api/blade-auth/captcha': (req, res) => {
+  'GET /api/blade-auth/oauth/captcha': (req, res) => {
     res.send({
-      code: 200,
-      success: true,
-      data: {
-        key: 'blade-captcha',
-        image: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-      },
-      msg: '操作成功',
+      key: 'blade-captcha',
+      image: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
     });
   },
   'POST /api/register': (req, res) => {

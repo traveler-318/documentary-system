@@ -5,7 +5,7 @@ import hash from 'hash.js';
 import { Base64 } from 'js-base64';
 import { clientId, clientSecret } from '../defaultSettings';
 import { getToken, removeAll } from './authority';
-import RequestForm from '@/utils/RequestForm';
+import RequestForm from './RequestForm';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -26,25 +26,19 @@ const codeMessage = {
 };
 
 const checkStatus = response => {
-  console.log(response,"11111111")
   if (
     (response.status >= 200 && response.status < 300) ||
     // 针对于要显示后端返回自定义详细信息的status, 配置跳过
-    (response.status === 400 || response.status === 500)
+    response.status === 400 ||
+    response.status === 500
   ) {
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
-  if(response.status != 401){
-    notification.error({
-      message: errortext,
-    });
-  }
-  
-  // notification.error({
-  //   message: `请求错误 ${response.status}: ${response.url}`,
-  //   description: errortext,
-  // });
+  notification.error({
+    message: `请求错误 ${response.status}: ${response.url}`,
+    description: errortext,
+  });
   const error = new Error(errortext);
   error.name = response.status;
   error.response = response;
@@ -52,7 +46,6 @@ const checkStatus = response => {
 };
 
 const checkServerCode = response => {
-  console.log("4444444444444")
   if (response.code >= 200 && response.code < 300) {
     return response;
   }
@@ -63,10 +56,10 @@ const checkServerCode = response => {
   } else if (response.code === 401) {
     if (window.location.hash.endsWith('/user/login')) return false;
     notification.error({
-      message: response.msg,
+      message: response.msg || codeMessage[response.code],
     });
     removeAll();
-    // router.push('/user/login');
+    router.push('/user/login');
   } else if (response.code === 404) {
     notification.error({
       message: response.msg || codeMessage[response.code],
@@ -80,7 +73,6 @@ const checkServerCode = response => {
 };
 
 const cachedSave = (response, hashcode) => {
-  console.log("222222222222")
   /**
    * Clone a response data and store it in sessionStorage
    * Does not support data other than json, Cache only json
@@ -131,30 +123,21 @@ export default function request(url, option) {
     Authorization: `Basic ${Base64.encode(`${clientId}:${clientSecret}`)}`,
   };
 
+  // headers中配置text请求
+  if (options.text === true) {
+    newOptions.headers = {
+      ...newOptions.headers,
+      'Content-Type': 'text/plain',
+    };
+  }
+
+  // token鉴权
   const token = getToken();
   if (token) {
     newOptions.headers = {
       ...newOptions.headers,
-      // token鉴权
       'Blade-Auth': token,
     };
-  }
-
-  
-  const expirys = options.expirys && 60;
-  // options.expirys !== false, return the cache,
-  if (options.expirys !== false) {
-    const cached = sessionStorage.getItem(hashcode);
-    const whenCached = sessionStorage.getItem(`${hashcode}:timestamp`);
-    if (cached !== null && whenCached !== null) {
-      const age = (Date.now() - whenCached) / 1000;
-      if (age < expirys) {
-        const response = new Response(new Blob([cached]));
-        return response.json();
-      }
-      sessionStorage.removeItem(hashcode);
-      sessionStorage.removeItem(`${hashcode}:timestamp`);
-    }
   }
 
   if (
@@ -177,7 +160,6 @@ export default function request(url, option) {
       };
       newOptions.body = newOptions.body.parse();
     } else {
-      console.log("application/json")
       // newOptions.body is FormData
       newOptions.headers = {
         Accept: 'application/json',
@@ -186,13 +168,25 @@ export default function request(url, option) {
     }
   }
 
-
-  console.log(newOptions,"newOptions")
+  const expirys = options.expirys && 60;
+  // options.expirys !== false, return the cache,
+  if (options.expirys !== false) {
+    const cached = sessionStorage.getItem(hashcode);
+    const whenCached = sessionStorage.getItem(`${hashcode}:timestamp`);
+    if (cached !== null && whenCached !== null) {
+      const age = (Date.now() - whenCached) / 1000;
+      if (age < expirys) {
+        const response = new Response(new Blob([cached]));
+        return response.json();
+      }
+      sessionStorage.removeItem(hashcode);
+      sessionStorage.removeItem(`${hashcode}:timestamp`);
+    }
+  }
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))
     .then(response => {
-      console.log("33333333333333")
       // DELETE and 204 do not return data by default
       // using .json will report an error.
       if (newOptions.method === 'DELETE' || response.status === 204) {
@@ -202,18 +196,13 @@ export default function request(url, option) {
     })
     .then(checkServerCode)
     .catch(e => {
-      console.log("555555555555")
       const status = e.name;
       if (status === 401) {
         // @HACK
         /* eslint-disable no-underscore-dangle */
-
-        notification.error({
-          message: "此用户没有操作权限",
+        window.g_app._store.dispatch({
+          type: 'login/logout',
         });
-        // window.g_app._store.dispatch({
-        //   type: 'login/logout',
-        // });
         return;
       }
       // environment should not be used

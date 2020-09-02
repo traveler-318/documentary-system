@@ -1,6 +1,19 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Upload, Icon, Button, Col, Form, Input, message, Modal, Row, Tree } from 'antd';
+import {
+  Upload,
+  Icon,
+  Switch,
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  message,
+  Modal,
+  Row,
+  Tree,
+} from 'antd';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { USER_INIT, USER_LIST, USER_ROLE_GRANT } from '../../../actions/user';
@@ -25,6 +38,8 @@ class User extends PureComponent {
     selectedRows: [],
     checkedTreeKeys: [],
     params: {},
+    deptId: 0,
+    isCovered: 0,
     onReset: () => {},
   };
 
@@ -46,9 +61,14 @@ class User extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
-    this.setState({ params });
     const { dispatch } = this.props;
-    dispatch(USER_LIST(params));
+    const { deptId } = this.state;
+    let value = params;
+    if (deptId > 0) {
+      value = { ...params, deptId };
+    }
+    dispatch(USER_LIST(value));
+    this.setState({ params });
   };
 
   // ============ 处理按钮点击回调事件 ===============
@@ -122,6 +142,20 @@ class User extends PureComponent {
 
   onCheck = checkedTreeKeys => this.setState({ checkedTreeKeys });
 
+  onSelect = checkedTreeKeys => {
+    const { params } = this.state;
+    const { dispatch } = this.props;
+    const value = { ...params, deptId: checkedTreeKeys[0] };
+    dispatch(USER_LIST(value));
+    this.setState({ deptId: checkedTreeKeys[0] });
+  };
+
+  onClickReset = () => {
+    const { onReset } = this.state;
+    this.setState({ deptId: 0 });
+    onReset();
+  };
+
   renderTreeNodes = data =>
     data.map(item => {
       if (item.children) {
@@ -138,7 +172,6 @@ class User extends PureComponent {
   renderSearchForm = onReset => {
     const { form } = this.props;
     const { getFieldDecorator } = form;
-
     this.setState({
       onReset,
     });
@@ -160,18 +193,13 @@ class User extends PureComponent {
             <Button type="primary" htmlType="submit">
               查询
             </Button>
-            <Button style={{ marginLeft: 8 }} onClick={onReset}>
+            <Button style={{ marginLeft: 8 }} onClick={this.onClickReset}>
               重置
             </Button>
           </div>
         </Col>
       </Row>
     );
-  };
-
-  onClickReset = () => {
-    const { onReset } = this.state;
-    onReset();
   };
 
   handleImport = () => {
@@ -202,7 +230,7 @@ class User extends PureComponent {
         const account = params.account || '';
         const realName = params.realName || '';
         window.open(
-          `/api/blade-user/export-user?blade-auth=${getAccessToken()}&account=${account}&realName=${realName}`
+          `/api/blade-user/export-user?Blade-Auth=${getAccessToken()}&account=${account}&realName=${realName}`
         );
       },
       onCancel() {},
@@ -210,13 +238,19 @@ class User extends PureComponent {
   };
 
   handleTemplate = () => {
-    window.open(`/api/blade-user/export-template?blade-auth=${getAccessToken()}`);
+    window.open(`/api/blade-user/export-template?Blade-Auth=${getAccessToken()}`);
+  };
+
+  onSwitchChange = checked => {
+    this.setState({
+      isCovered: checked ? 1 : 0,
+    });
   };
 
   onUpload = info => {
     const { status } = info.file;
     if (status !== 'uploading') {
-      window.console.log(info.file, info.fileList);
+      console.log(info.file, info.fileList);
     }
     if (status === 'done') {
       message.success(`${info.file.name} 数据导入成功!`);
@@ -241,14 +275,14 @@ class User extends PureComponent {
   render() {
     const code = 'user';
 
-    const { visible, excelVisible, confirmLoading, checkedTreeKeys } = this.state;
+    const { visible, excelVisible, confirmLoading, checkedTreeKeys, isCovered } = this.state;
 
     const {
       form,
       loading,
       user: {
         data,
-        init: { roleTree },
+        init: { roleTree, deptTree },
       },
     } = this.props;
 
@@ -257,7 +291,7 @@ class User extends PureComponent {
       headers: {
         'Blade-Auth': getToken(),
       },
-      action: '/api/blade-user/import-user',
+      action: `/api/blade-user/import-user?isCovered=${isCovered}`,
     };
 
     const formItemLayout = {
@@ -282,10 +316,6 @@ class User extends PureComponent {
         dataIndex: 'account',
       },
       {
-        title: '用户昵称',
-        dataIndex: 'name',
-      },
-      {
         title: '用户姓名',
         dataIndex: 'realName',
       },
@@ -294,16 +324,12 @@ class User extends PureComponent {
         dataIndex: 'roleName',
       },
       {
-        title: '所属部门',
+        title: '所属机构',
         dataIndex: 'deptName',
       },
       {
         title: '手机号码',
         dataIndex: 'phone',
-      },
-      {
-        title: '电子邮箱',
-        dataIndex: 'email',
       },
     ];
 
@@ -313,18 +339,27 @@ class User extends PureComponent {
 
     return (
       <Panel>
-        <Grid
-          code={code}
-          form={form}
-          onSearch={this.handleSearch}
-          onSelectRow={this.onSelectRow}
-          renderSearchForm={this.renderSearchForm}
-          renderRightButton={this.renderRightButton}
-          btnCallBack={this.handleBtnCallBack}
-          loading={loading}
-          data={data}
-          columns={columns}
-        />
+        <Row>
+          <Col span={5}>
+            <Card bordered={false} style={{ marginRight: '10px' }}>
+              <Tree onSelect={this.onSelect}>{this.renderTreeNodes(deptTree)}</Tree>
+            </Card>
+          </Col>
+          <Col span={19}>
+            <Grid
+              code={code}
+              form={form}
+              onSearch={this.handleSearch}
+              onSelectRow={this.onSelectRow}
+              renderSearchForm={this.renderSearchForm}
+              renderRightButton={this.renderRightButton}
+              btnCallBack={this.handleBtnCallBack}
+              loading={loading}
+              data={data}
+              columns={columns}
+            />
+          </Col>
+        </Row>
         <Modal
           title="权限配置"
           width={350}
@@ -358,6 +393,9 @@ class User extends PureComponent {
                 <p className="ant-upload-text">将文件拖到此处，或点击上传</p>
                 <p className="ant-upload-hint">请上传 .xls,.xlsx 格式的文件</p>
               </Dragger>
+            </FormItem>
+            <FormItem {...formItemLayout} label="数据覆盖">
+              <Switch checkedChildren="是" unCheckedChildren="否" onChange={this.onSwitchChange} />
             </FormItem>
             <FormItem {...formItemLayout} label="模板下载">
               <Button type="primary" icon="download" size="small" onClick={this.handleTemplate}>

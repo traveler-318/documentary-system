@@ -47,6 +47,7 @@ function getFakeList(req, res) {
       dictKey: '-1',
       dictValue: '性别',
       sort: '1',
+      isSealed: '0',
       children: [
         {
           id: '2',
@@ -54,6 +55,7 @@ function getFakeList(req, res) {
           dictKey: '1',
           dictValue: '男',
           sort: '1',
+          isSealed: '0',
         },
         {
           id: '3',
@@ -61,6 +63,7 @@ function getFakeList(req, res) {
           dictKey: '2',
           dictValue: '女',
           sort: '2',
+          isSealed: '0',
         },
       ],
     },
@@ -70,6 +73,7 @@ function getFakeList(req, res) {
       dictKey: '-1',
       dictValue: '通知类型',
       sort: '1',
+      isSealed: '0',
       children: [
         {
           id: '5',
@@ -77,6 +81,7 @@ function getFakeList(req, res) {
           dictKey: '1',
           dictValue: '发布通知',
           sort: '1',
+          isSealed: '0',
         },
         {
           id: '6',
@@ -84,6 +89,7 @@ function getFakeList(req, res) {
           dictKey: '2',
           dictValue: '批转通知',
           sort: '2',
+          isSealed: '0',
         },
         {
           id: '7',
@@ -91,6 +97,7 @@ function getFakeList(req, res) {
           dictKey: '3',
           dictValue: '转发通知',
           sort: '3',
+          isSealed: '0',
         },
         {
           id: '8',
@@ -98,6 +105,7 @@ function getFakeList(req, res) {
           dictKey: '4',
           dictValue: '指示通知',
           sort: '4',
+          isSealed: '0',
         },
         {
           id: '9',
@@ -105,6 +113,7 @@ function getFakeList(req, res) {
           dictKey: '5',
           dictValue: '任免通知',
           sort: '5',
+          isSealed: '0',
         },
         {
           id: '10',
@@ -112,6 +121,7 @@ function getFakeList(req, res) {
           dictKey: '6',
           dictValue: '事务通知',
           sort: '6',
+          isSealed: '0',
         },
       ],
     }
@@ -130,6 +140,7 @@ function getFakeDetail(req, res) {
     dictKey: 1,
     dictValue: '男',
     sort: 1,
+    isSealed: '0',
     remark: '测试备注',
     nextKey: 3,
     nextSort: 3,

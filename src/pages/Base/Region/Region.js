@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
+  Upload,
   Button,
   Card,
   Col,
@@ -12,17 +13,20 @@ import {
   Radio,
   message,
   Modal,
+  Icon,
+  Switch,
 } from 'antd';
 import Panel from '../../../components/Panel';
 import styles from '@/layouts/Sword.less';
 import { getLazyTree, detail, submit, remove } from '../../../services/region';
-import { getButton, hasButton } from '../../../utils/authority';
+import { getAccessToken, getButton, getToken, hasButton } from '../../../utils/authority';
 import Func from '../../../utils/Func';
 
 const FormItem = Form.Item;
 const { TreeNode } = Tree;
 const { TextArea } = Input;
 const ButtonGroup = Button.Group;
+const { Dragger } = Upload;
 
 @Form.create()
 class Region extends PureComponent {
@@ -30,7 +34,10 @@ class Region extends PureComponent {
     topCode: '00',
     treeData: [],
     treeCascader: [],
+    excelVisible: false,
     debugVisible: false,
+    confirmLoading: false,
+    isCovered: 0,
   };
 
   // ============ 初始化数据 ===============
@@ -177,6 +184,44 @@ class Region extends PureComponent {
     });
   };
 
+  handleImport = () => {
+    this.setState({ excelVisible: true });
+  };
+
+  handleExcelImport = () =>
+    this.setState({
+      excelVisible: false,
+    });
+
+  handleExcelCancel = () =>
+    this.setState({
+      excelVisible: false,
+    });
+
+  handleExport = () => {
+    Modal.confirm({
+      title: '行政区划导出确认',
+      content: '是否导出行政区划数据?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        window.open(`/api/blade-system/region/export-region?Blade-Auth=${getAccessToken()}`);
+      },
+      onCancel() {},
+    });
+  };
+
+  handleTemplate = () => {
+    window.open(`/api/blade-system/region/export-template?Blade-Auth=${getAccessToken()}`);
+  };
+
+  onSwitchChange = checked => {
+    this.setState({
+      isCovered: checked ? 1 : 0,
+    });
+  };
+
   handleDebug = () => {
     this.setState({ debugVisible: true });
   };
@@ -236,7 +281,22 @@ class Region extends PureComponent {
 
     const buttons = getButton('region');
 
-    const { treeData, treeCascader, debugVisible } = this.state;
+    const {
+      treeData,
+      treeCascader,
+      excelVisible,
+      debugVisible,
+      confirmLoading,
+      isCovered,
+    } = this.state;
+
+    const uploadProps = {
+      name: 'file',
+      headers: {
+        'Blade-Auth': getToken(),
+      },
+      action: `/api/blade-system/region/import-region?isCovered=${isCovered}`,
+    };
 
     const formItemLayout = {
       labelCol: {
@@ -273,6 +333,16 @@ class Region extends PureComponent {
                     {hasButton(buttons, 'region_delete') ? (
                       <Button type="danger" icon="delete" onClick={this.handleDelete}>
                         删除
+                      </Button>
+                    ) : null}
+                    {hasButton(buttons, 'region_import') ? (
+                      <Button icon="upload" onClick={this.handleImport}>
+                        导入
+                      </Button>
+                    ) : null}
+                    {hasButton(buttons, 'region_export') ? (
+                      <Button icon="download" onClick={this.handleExport}>
+                        导出
                       </Button>
                     ) : null}
                     {hasButton(buttons, 'region_debug') ? (
@@ -372,6 +442,36 @@ class Region extends PureComponent {
             </Row>
           </Col>
         </Row>
+        <Modal
+          title="行政区划数据导入"
+          width={500}
+          visible={excelVisible}
+          confirmLoading={confirmLoading}
+          onOk={this.handleExcelImport}
+          onCancel={this.handleExcelCancel}
+          okText="确认"
+          cancelText="取消"
+        >
+          <Form style={{ marginTop: 8 }} hideRequiredMark>
+            <FormItem {...formItemLayout} label="模板上传">
+              <Dragger {...uploadProps} onChange={this.onUpload}>
+                <p className="ant-upload-drag-icon">
+                  <Icon type="inbox" />
+                </p>
+                <p className="ant-upload-text">将文件拖到此处，或点击上传</p>
+                <p className="ant-upload-hint">请上传 .xls,.xlsx 格式的文件</p>
+              </Dragger>
+            </FormItem>
+            <FormItem {...formItemLayout} label="数据覆盖">
+              <Switch checkedChildren="是" unCheckedChildren="否" onChange={this.onSwitchChange} />
+            </FormItem>
+            <FormItem {...formItemLayout} label="模板下载">
+              <Button type="primary" icon="download" size="small" onClick={this.handleTemplate}>
+                点击下载
+              </Button>
+            </FormItem>
+          </Form>
+        </Modal>
         <Modal
           title="行政区划数据调试"
           width={500}

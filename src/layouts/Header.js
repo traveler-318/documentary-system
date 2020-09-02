@@ -7,6 +7,7 @@ import router from 'umi/router';
 import GlobalHeader from '@/components/GlobalHeader';
 import TopNavHeader from '@/components/TopNavHeader';
 import styles from './Header.less';
+import { clearCache } from '@/services/user';
 
 const { Header } = Layout;
 
@@ -67,6 +68,12 @@ class HeaderView extends React.Component {
     }
     if (key === 'password') {
       router.push('/account/settings/password');
+      return;
+    }
+    if (key === 'clearCache') {
+      clearCache().then(() => {
+        message.success('清除成功');
+      });
       return;
     }
     if (key === 'triggerError') {
@@ -170,7 +177,6 @@ export default connect(({ user, global, setting, loading }) => ({
   collapsed: global.collapsed,
   fetchingMoreNotices: loading.effects['global/fetchMoreNotices'],
   fetchingNotices: loading.effects['global/fetchNotices'],
-  loadedAllNotices: global.loadedAllNotices,
   notices: global.notices,
   setting,
 }))(HeaderView);

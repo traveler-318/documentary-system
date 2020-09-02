@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect } from 'antd';
+import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect, Select } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
@@ -45,7 +45,7 @@ class DeptAdd extends PureComponent {
       form: { getFieldDecorator },
       dept: {
         detail,
-        init: { tree },
+        init: { tree, category },
       },
       submitting,
     } = this.props;
@@ -76,37 +76,37 @@ class DeptAdd extends PureComponent {
 
     return (
       <Panel title="新增" back="/system/dept" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="部门简称">
+                <FormItem {...formItemLayout} label="机构简称">
                   {getFieldDecorator('deptName', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入部门简称',
+                        message: '请输入机构简称',
                       },
                     ],
-                  })(<Input placeholder="请输入部门简称" />)}
+                  })(<Input placeholder="请输入机构简称" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="部门全称">
+                <FormItem {...formItemLayout} label="机构全称">
                   {getFieldDecorator('fullName', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入部门全称',
+                        message: '请输入机构全称',
                       },
                     ],
-                  })(<Input placeholder="请输入部门全称" />)}
+                  })(<Input placeholder="请输入机构全称" />)}
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="上级部门">
+                <FormItem {...formItemLayout} label="上级机构">
                   {getFieldDecorator('parentId', {
                     initialValue: detail.id,
                   })(
@@ -117,22 +117,29 @@ class DeptAdd extends PureComponent {
                       allowClear
                       showSearch
                       treeNodeFilterProp="title"
-                      placeholder="请选择上级部门"
+                      placeholder="请选择上级机构"
                     />
                   )}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} className={styles.inputItem} label="部门排序">
-                  {getFieldDecorator('sort', {
+                <FormItem {...formItemLayout} className={styles.inputItem} label="机构类型">
+                  {getFieldDecorator('deptCategory', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入部门排序',
+                        message: '请选择机构类型',
                       },
                     ],
-                    initialValue: detail.nextSort,
-                  })(<InputNumber placeholder="请输入部门排序" />)}
+                  })(
+                    <Select placeholder="请选择机构类型">
+                      {category.map(d => (
+                        <Select.Option key={d.dictKey} value={d.dictKey}>
+                          {d.dictValue}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  )}
                 </FormItem>
               </Col>
             </Row>
@@ -140,8 +147,21 @@ class DeptAdd extends PureComponent {
           <Card title="其他信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={20}>
-                <FormItem {...formAllItemLayout} label="部门备注">
-                  {getFieldDecorator('remark')(<TextArea rows={4} placeholder="请输入部门备注" />)}
+                <FormItem {...formAllItemLayout} className={styles.inputItem} label="机构排序">
+                  {getFieldDecorator('sort', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请输入机构排序',
+                      },
+                    ],
+                    initialValue: detail.nextSort,
+                  })(<InputNumber placeholder="请输入机构排序" />)}
+                </FormItem>
+              </Col>
+              <Col span={20}>
+                <FormItem {...formAllItemLayout} label="机构备注">
+                  {getFieldDecorator('remark')(<TextArea rows={4} placeholder="请输入机构备注" />)}
                 </FormItem>
               </Col>
             </Row>

@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Checkbox, Alert, Icon, Row, Col, Card, Spin } from 'antd';
+import { Checkbox, Alert, Icon, Row, Col, Card } from 'antd';
 import Login from '../../components/Login';
 import styles from './Login.less';
 import { tenantMode, captchaMode, authUrl } from '../../defaultSettings';
-import { getQueryString, getTopUrl, validateNull } from '@/utils/utils';
 
 const { Tab, TenantId, UserName, Password, Captcha, Submit } = Login;
 
-@connect(({ login, loading }) => ({
+@connect(({ login, tenant, loading }) => ({
   login,
+  tenant,
   submitting: loading.effects['login/login'],
 }))
 class LoginPage extends Component {
@@ -19,35 +19,7 @@ class LoginPage extends Component {
     autoLogin: true,
   };
 
-  componentDidMount() {
-    const domain = getTopUrl();
-    const redirectUrl = '/oauth/redirect/';
-    const {
-      dispatch,
-      route: { routes, authority },
-    } = this.props;
-
-    let source = getQueryString('source');
-    const code = getQueryString('code');
-    const state = getQueryString('state');
-    if (validateNull(source) && domain.includes(redirectUrl)) {
-      // eslint-disable-next-line prefer-destructuring
-      source = domain.split('?')[0];
-      // eslint-disable-next-line prefer-destructuring
-      source = source.split(redirectUrl)[1];
-    }
-    if (!validateNull(source) && !validateNull(code) && !validateNull(state)) {
-      dispatch({
-        type: 'login/socialLogin',
-        payload: { source, code, state, tenantId: '000000' },
-      });
-    } else {
-      dispatch({
-        type: 'menu/fetchMenuData',
-        payload: { routes, authority },
-      });
-    }
-  }
+  componentWillMount() {}
 
   onTabChange = type => {
     this.setState({ type });
@@ -73,10 +45,15 @@ class LoginPage extends Component {
   handleSubmit = (err, values) => {
     const { type } = this.state;
     if (!err) {
-      const { dispatch } = this.props;
+      const {
+        dispatch,
+        tenant: { info },
+      } = this.props;
+      const { tenantId } = info;
       dispatch({
         type: 'login/login',
         payload: {
+          tenantId,
           ...values,
           type,
         },
@@ -99,13 +76,21 @@ class LoginPage extends Component {
   );
 
   render() {
-    const { login, submitting } = this.props;
-    const { type, autoLogin, loading } = this.state;
+    const {
+      login,
+      submitting,
+      tenant: { info },
+    } = this.props;
+    const { type, autoLogin } = this.state;
+    const { tenantId } = info;
+    const tenantVisible = tenantMode && tenantId === '000000';
+
     let num ="";
     for(let i=0; i<2; i++){
       num = num +""+Math.ceil(Math.random()*10);
     }
     console.log(num)
+    
     return (
       <div className={styles.main}>
         <Login
@@ -121,11 +106,11 @@ class LoginPage extends Component {
               login.type === 'account' &&
               !submitting &&
               this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
-            {tenantMode ? (
+            {tenantVisible ? (
               <TenantId
+                defaultValue={`${tenantId}`}
                 name="tenantId"
-                defaultValue="000000"
-                placeholder={`${formatMessage({ id: 'app.login.tenantId' })}`}
+                placeholder={`${formatMessage({ id: 'app.login.tenantId' })}: 000000`}
                 rules={[
                   {
                     required: true,
@@ -135,9 +120,9 @@ class LoginPage extends Component {
               />
             ) : null}
             <UserName
-              name="account"
               defaultValue="admin"
-              placeholder={`${formatMessage({ id: 'app.login.userName' })}`}
+              name="username"
+              placeholder={`${formatMessage({ id: 'app.login.userName' })}: admin`}
               rules={[
                 {
                   required: true,
@@ -146,16 +131,19 @@ class LoginPage extends Component {
               ]}
             />
             <Password
-              name="password"
               defaultValue="admin"
-              placeholder={`${formatMessage({ id: 'app.login.password' })}`}
+              name="password"
+              placeholder={`${formatMessage({ id: 'app.login.password' })}: admin`}
               rules={[
                 {
                   required: true,
                   message: formatMessage({ id: 'validation.password.required' }),
                 },
               ]}
-              onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
+              onPressEnter={e => {
+                e.preventDefault();
+                this.loginForm.validateFields(this.handleSubmit);
+              }}
             />
             {captchaMode ? <Captcha name="code" mode="image" defaultValue={num} /> : null}
           </Tab>

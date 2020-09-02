@@ -10,7 +10,7 @@ export function DEPT_LIST(payload) {
 export function DEPT_INIT() {
   return {
     type: `${DEPT_NAMESPACE}/fetchInit`,
-    payload: {},
+    payload: { code: 'org_category' },
   };
 }
 

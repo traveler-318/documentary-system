@@ -58,7 +58,7 @@ class NoticeAdd extends PureComponent {
     return (
       <Panel title={<FormattedMessage id="button.view.name" />} back="/desk/notice" action={action}>
         <Card bordered={false}>
-          <Form hideRequiredMark style={{ marginTop: 8 }}>
+          <Form style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label={<FormattedMessage id="desk.notice.title" />}>
               <span>{detail.title}</span>
             </FormItem>

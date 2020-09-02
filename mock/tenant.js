@@ -69,6 +69,7 @@ const proxy = {
   'GET /api/blade-system/tenant/list': getFakeList,
   'GET /api/blade-system/tenant/select': getFakeTenantSelect,
   'GET /api/blade-system/tenant/detail': getFakeDetail,
+  'GET /api/blade-system/tenant/info': fakeSuccess,
   'POST /api/blade-system/tenant/submit': fakeSuccess,
   'POST /api/blade-system/tenant/remove': fakeSuccess,
 };

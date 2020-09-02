@@ -127,7 +127,7 @@ class MenuEdit extends PureComponent {
 
     return (
       <Panel title="修改" back="/system/menu" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
@@ -247,7 +247,7 @@ class MenuEdit extends PureComponent {
                         message: '请选择按钮功能',
                       },
                     ],
-                    initialValue: 4,
+                    initialValue: detail.action,
                   })(
                     <RadioGroup name="action">
                       <Radio value={1}>工具栏</Radio>

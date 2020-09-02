@@ -13,7 +13,7 @@ export function getAuthority(str) {
   if (typeof authority === 'string') {
     return [authority];
   }
-  return authority || ['guest'];
+  return authority;
 }
 
 export function setAuthority(authority) {
@@ -27,7 +27,7 @@ export function setAuthority(authority) {
 }
 
 export function getToken() {
-  return localStorage.getItem('sword-token');
+  return localStorage.getItem('sword-token') || '';
 }
 
 export function setToken(token) {
@@ -42,6 +42,15 @@ export function setAccessToken(accessToken) {
   localStorage.setItem('sword-access-token', accessToken);
 }
 
+export function getTopMenus() {
+  return JSON.parse(localStorage.getItem('sword-top-menus')) || [];
+}
+
+export function setTopMenus(menus) {
+  localStorage.removeItem('sword-top-menus');
+  localStorage.setItem('sword-top-menus', JSON.stringify(menus));
+}
+
 export function getRoutes() {
   return JSON.parse(localStorage.getItem('sword-routes')) || [];
 }
@@ -49,10 +58,6 @@ export function getRoutes() {
 export function setRoutes(routes) {
   localStorage.removeItem('sword-routes');
   localStorage.setItem('sword-routes', JSON.stringify(routes));
-}
-
-export function hasButton(buttons, code) {
-  return buttons.filter(button => button.code === code).length > 0;
 }
 
 export function getButtons() {
@@ -65,6 +70,10 @@ export function getButton(code) {
     return d.code === code;
   });
   return data.length === 0 ? [] : data[0].buttons;
+}
+
+export function hasButton(buttons, code) {
+  return buttons.filter(button => button.code === code).length > 0;
 }
 
 export function setButtons(buttons) {
@@ -92,6 +101,7 @@ export function getCaptchaKey() {
 export function removeAll() {
   localStorage.removeItem('sword-authority');
   localStorage.removeItem('sword-token');
+  localStorage.removeItem('sword-top-menus');
   localStorage.removeItem('sword-routes');
   localStorage.removeItem('sword-buttons');
   localStorage.removeItem('sword-current-user');

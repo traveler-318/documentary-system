@@ -64,7 +64,7 @@ class UserView extends PureComponent {
 
     return (
       <Panel title="查看" back="/system/user" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={20}>
@@ -82,6 +82,8 @@ class UserView extends PureComponent {
                 </Col>
               </Row>
             ) : null}
+          </Card>
+          <Card title="详细信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="用户昵称">
@@ -91,30 +93,6 @@ class UserView extends PureComponent {
               <Col span={10}>
                 <FormItem {...formItemLayout} label="用户姓名">
                   <span>{detail.realName}</span>
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="所属角色">
-                  <span>{detail.roleName}</span>
-                </FormItem>
-              </Col>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="所属部门">
-                  <span>{detail.deptName}</span>
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="用户编号">
-                  <span>{detail.code}</span>
-                </FormItem>
-              </Col>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="所属岗位">
-                  <span>{detail.postName}</span>
                 </FormItem>
               </Col>
             </Row>
@@ -139,6 +117,32 @@ class UserView extends PureComponent {
               <Col span={10}>
                 <FormItem {...formItemLayout} label="用户生日">
                   <span>{detail.birthday}</span>
+                </FormItem>
+              </Col>
+            </Row>
+          </Card>
+          <Card title="职责信息" className={styles.card} bordered={false}>
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="用户编号">
+                  <span>{detail.code}</span>
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="所属角色">
+                  <span>{detail.roleName}</span>
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="所属机构">
+                  <span>{detail.deptName}</span>
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="所属岗位">
+                  <span>{detail.postName}</span>
                 </FormItem>
               </Col>
             </Row>

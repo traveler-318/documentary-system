@@ -27,3 +27,21 @@ export async function remove(params) {
     body: func.toFormData(params),
   });
 }
+
+export async function setting(params) {
+  return request('/api/blade-system/tenant/setting', {
+    method: 'POST',
+    body: func.toFormData(params),
+  });
+}
+
+export async function datasource(params) {
+  return request('/api/blade-system/tenant/datasource', {
+    method: 'POST',
+    body: func.toFormData(params),
+  });
+}
+
+export async function info(params) {
+  return request(`/api/blade-system/tenant/info?${stringify(params)}`);
+}

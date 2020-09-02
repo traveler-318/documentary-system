@@ -5,9 +5,8 @@ import webpackPlugin from './plugin.config';
 import defaultSettings from '../src/defaultSettings';
 import slash from 'slash2';
 
-console.log(pageRoutes,"pageRoutes")
-
 const { pwa, primaryColor } = defaultSettings;
+const { APP_TYPE, TEST } = process.env;
 
 const plugins = [
   [
@@ -25,6 +24,7 @@ const plugins = [
       dynamicImport: {
         loadingComponent: './components/PageLoading/index',
         webpackChunkName: true,
+        level: 3,
       },
       pwa: pwa
         ? {
@@ -33,8 +33,8 @@ const plugins = [
               importWorkboxFrom: 'local',
             },
           }
-        : {},
-      ...(!process.env.TEST && os.platform() === 'darwin'
+        : false,
+      ...(!TEST && os.platform() === 'darwin'
         ? {
             dll: {
               include: ['dva', 'dva/router', 'dva/saga', 'dva/fetch'],
@@ -49,7 +49,7 @@ const plugins = [
 
 // 针对 preview.pro.ant.design 的 GA 统计代码
 // 业务上不需要这个
-if (process.env.APP_TYPE === 'site') {
+if (APP_TYPE === 'site') {
   plugins.push([
     'umi-plugin-ga',
     {
@@ -63,7 +63,7 @@ export default {
   plugins,
   history: 'hash',
   define: {
-    APP_TYPE: process.env.APP_TYPE || '',
+    APP_TYPE: APP_TYPE || '',
   },
   treeShaking: true,
   targets: {
@@ -75,9 +75,6 @@ export default {
   // https://ant.design/docs/react/customize-theme-cn
   theme: {
     'primary-color': primaryColor,
-  },
-  externals: {
-    '@antv/data-set': 'DataSet',
   },
   proxy: {
     '/api': {

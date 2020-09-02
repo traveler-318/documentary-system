@@ -7,6 +7,20 @@ export function DICT_LIST(payload) {
   };
 }
 
+export function DICT_PARENT_LIST(payload) {
+  return {
+    type: `${DICT_NAMESPACE}/fetchParentList`,
+    payload,
+  };
+}
+
+export function DICT_CHILD_LIST(payload) {
+  return {
+    type: `${DICT_NAMESPACE}/fetchChildList`,
+    payload,
+  };
+}
+
 export function DICT_INIT() {
   return {
     type: `${DICT_NAMESPACE}/fetchInit`,
@@ -39,5 +53,18 @@ export function DICT_REMOVE(payload) {
   return {
     type: `${DICT_NAMESPACE}/remove`,
     payload,
+  };
+}
+
+export function DICT_PARENT_SET(parentId) {
+  return {
+    type: `${DICT_NAMESPACE}/setParent`,
+    payload: { parentId },
+  };
+}
+
+export function DICT_PARENT_CLEAR() {
+  return {
+    type: `${DICT_NAMESPACE}/clearParent`,
   };
 }

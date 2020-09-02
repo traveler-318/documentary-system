@@ -12,6 +12,14 @@ export async function list(params) {
   return request(`/api/blade-system/dict/list?${stringify(params)}`);
 }
 
+export async function parentList(params) {
+  return request(`/api/blade-system/dict/parent-list?${stringify(params)}`);
+}
+
+export async function childList(params) {
+  return request(`/api/blade-system/dict/child-list?${stringify(params)}`);
+}
+
 export async function tree(params) {
   return request(`/api/blade-system/dict/tree?${stringify(params)}`);
 }

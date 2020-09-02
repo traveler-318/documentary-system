@@ -1,9 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row } from 'antd';
+import router from 'umi/router';
+import { Button, Col, Divider, Form, Input, Row, Tag } from 'antd';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import { DICT_LIST } from '../../../actions/dict';
+import { DICT_PARENT_LIST, DICT_PARENT_CLEAR } from '../../../actions/dict';
 
 const FormItem = Form.Item;
 
@@ -13,10 +14,15 @@ const FormItem = Form.Item;
 }))
 @Form.create()
 class Dict extends PureComponent {
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(DICT_PARENT_CLEAR());
+  }
+
   // ============ 查询 ===============
   handleSearch = params => {
     const { dispatch } = this.props;
-    dispatch(DICT_LIST(params));
+    dispatch(DICT_PARENT_LIST(params));
   };
 
   // ============ 查询表单 ===============
@@ -50,13 +56,29 @@ class Dict extends PureComponent {
     );
   };
 
-  render() {
-    const code = 'dict';
+  handleClick = parentId => {
+    router.push(`/system/dict/sub/${parentId}`);
+  };
 
+  renderActionButton = (keys, rows) => (
+    <Fragment>
+      <Divider type="vertical" />
+      <a
+        title="列表"
+        onClick={() => {
+          this.handleClick(rows[0].id);
+        }}
+      >
+        列表
+      </a>
+    </Fragment>
+  );
+
+  render() {
     const {
       form,
       loading,
-      dict: { data },
+      dict: { parentData },
     } = this.props;
 
     const columns = [
@@ -67,10 +89,31 @@ class Dict extends PureComponent {
       {
         title: '字典编号',
         dataIndex: 'code',
+        render: (text, record) => (
+          <span>
+            <Tag
+              color="blue"
+              style={{ cursor: 'pointer' }}
+              key={record.id}
+              onClick={() => {
+                this.handleClick(record.id);
+              }}
+            >
+              {text}
+            </Tag>
+          </span>
+        ),
       },
       {
-        title: '字典键值',
-        dataIndex: 'dictKey',
+        title: '是否封存',
+        dataIndex: 'isSealed',
+        render: isSealed => (
+          <span>
+            <Tag color="geekblue" key={isSealed}>
+              {isSealed === 0 ? '否' : '是'}
+            </Tag>
+          </span>
+        ),
       },
       {
         title: '排序',
@@ -81,12 +124,13 @@ class Dict extends PureComponent {
     return (
       <Panel>
         <Grid
-          code={code}
+          code="dict"
           form={form}
           onSearch={this.handleSearch}
           renderSearchForm={this.renderSearchForm}
+          renderActionButton={this.renderActionButton}
           loading={loading}
-          data={data}
+          data={parentData}
           columns={columns}
         />
       </Panel>

@@ -34,7 +34,7 @@ class DictView extends PureComponent {
 
   render() {
     const {
-      dict: { detail },
+      dict: { detail, parentId },
     } = this.props;
 
     const formItemLayout = {
@@ -55,6 +55,10 @@ class DictView extends PureComponent {
       },
     };
 
+    const parentMode = parentId > 0;
+
+    const backUrl = parentMode ? `/system/dict/sub/${parentId}` : '/system/dict';
+
     const action = (
       <Button type="primary" onClick={this.handleEdit}>
         修改
@@ -62,13 +66,18 @@ class DictView extends PureComponent {
     );
 
     return (
-      <Panel title="查看" back="/system/dict" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+      <Panel title="查看" back={backUrl} action={action}>
+        <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
-              <Col span={20}>
-                <FormItem {...formAllItemLayout} label="字典编号">
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="字典编号">
                   <span>{detail.code}</span>
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="字典名称">
+                  <span>{detail.dictValue}</span>
                 </FormItem>
               </Col>
             </Row>
@@ -79,20 +88,20 @@ class DictView extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="字典排序">
-                  <span>{detail.sort}</span>
+                <FormItem {...formItemLayout} label="字典键值">
+                  <span>{detail.dictKey}</span>
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="字典名称">
-                  <span>{detail.dictValue}</span>
+                  <span>{detail.isSealed === 0 ? '否' : '是'}</span>
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="字典键值">
-                  <span>{detail.dictKey}</span>
+                <FormItem {...formItemLayout} label="字典排序">
+                  <span>{detail.sort}</span>
                 </FormItem>
               </Col>
             </Row>

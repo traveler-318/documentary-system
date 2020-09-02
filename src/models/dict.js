@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import router from 'umi/router';
 import { DICT_NAMESPACE } from '../actions/dict';
-import { list, submit, detail, remove, tree } from '../services/dict';
+import { list, parentList, childList, submit, detail, remove, tree } from '../services/dict';
 
 export default {
   namespace: DICT_NAMESPACE,
@@ -10,10 +10,19 @@ export default {
       list: [],
       pagination: false,
     },
+    parentData: {
+      list: [],
+      pagination: {},
+    },
+    childData: {
+      list: [],
+      pagination: false,
+    },
     init: {
       tree: [],
     },
     detail: {},
+    parentId: 0,
   },
   effects: {
     *fetchList({ payload }, { call, put }) {
@@ -21,6 +30,34 @@ export default {
       if (response.success) {
         yield put({
           type: 'saveList',
+          payload: {
+            list: response.data,
+            pagination: false,
+          },
+        });
+      }
+    },
+    *fetchParentList({ payload }, { call, put }) {
+      const response = yield call(parentList, payload);
+      if (response.success) {
+        yield put({
+          type: 'saveParentList',
+          payload: {
+            list: response.data.records,
+            pagination: {
+              total: response.data.total,
+              current: response.data.current,
+              pageSize: response.data.size,
+            },
+          },
+        });
+      }
+    },
+    *fetchChildList({ payload }, { call, put }) {
+      const response = yield call(childList, payload);
+      if (response.success) {
+        yield put({
+          type: 'saveChildList',
           payload: {
             list: response.data,
             pagination: false,
@@ -53,14 +90,16 @@ export default {
     *clearDetail({ payload }, { put }) {
       yield put({
         type: 'removeDetail',
-        payload: { payload },
+        payload,
       });
     },
-    *submit({ payload }, { call }) {
+    *submit({ payload }, { call, select }) {
       const response = yield call(submit, payload);
       if (response.success) {
         message.success('提交成功');
-        router.push('/system/dict');
+        const parentId = yield select(state => state.dict.parentId);
+        const backUrl = parentId > 0 ? `/system/dict/sub/${parentId}` : '/system/dict';
+        router.push(backUrl);
       }
     },
     *remove({ payload }, { call }) {
@@ -73,12 +112,36 @@ export default {
         success();
       }
     },
+    *setParent({ payload }, { put }) {
+      yield put({
+        type: 'submitParent',
+        payload,
+      });
+    },
+    *clearParent({ payload }, { put }) {
+      yield put({
+        type: 'removeParent',
+        payload,
+      });
+    },
   },
   reducers: {
     saveList(state, action) {
       return {
         ...state,
         data: action.payload,
+      };
+    },
+    saveParentList(state, action) {
+      return {
+        ...state,
+        parentData: action.payload,
+      };
+    },
+    saveChildList(state, action) {
+      return {
+        ...state,
+        childData: action.payload,
       };
     },
     saveInit(state, action) {
@@ -97,6 +160,18 @@ export default {
       return {
         ...state,
         detail: {},
+      };
+    },
+    submitParent(state, action) {
+      return {
+        ...state,
+        parentId: action.payload.parentId,
+      };
+    },
+    removeParent(state) {
+      return {
+        ...state,
+        parentId: 0,
       };
     },
   },

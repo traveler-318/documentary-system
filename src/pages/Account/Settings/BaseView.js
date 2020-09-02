@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { formatMessage } from 'umi/locale';
 import { Form, Input, Upload, Button, message, Icon, Card } from 'antd';
 import Panel from '../../../components/Panel';
-import { getUserInfo, update } from '../../../services/user';
+import { getUserInfo, updateInfo } from '../../../services/user';
 import { getToken } from '../../../utils/authority';
 
 const FormItem = Form.Item;
@@ -69,7 +69,7 @@ class BaseView extends Component {
           ...values,
           avatar,
         };
-        update(params).then(resp => {
+        updateInfo(params).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
           } else {

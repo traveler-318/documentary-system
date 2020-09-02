@@ -11,7 +11,7 @@ const { TabPane } = Tabs;
   menu,
 }))
 class IconPreview extends PureComponent {
-  handelClick = type => {
+  handleClick = type => {
     const { onCancel, dispatch } = this.props;
     dispatch(MENU_SELECT_ICON(type.icon));
     onCancel();
@@ -29,7 +29,7 @@ class IconPreview extends PureComponent {
                     <Icon
                       type={icon}
                       onClick={() => {
-                        this.handelClick({ icon });
+                        this.handleClick({ icon });
                       }}
                     />
                   </Col>

@@ -100,7 +100,6 @@ class LogError extends PureComponent {
           loading={loading}
           data={errorData}
           columns={columns}
-          pkField="strId"
         />
       </Panel>
     );

@@ -63,7 +63,7 @@ class MenuView extends PureComponent {
 
     return (
       <Panel title="查看" back="/system/menu" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>

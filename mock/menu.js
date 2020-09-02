@@ -19,6 +19,19 @@ function getFakeRoutes(req, res) {
         ],
       },
       {
+        path: '/authority',
+        code: 'authority',
+        name: '权限管理',
+        source: 'safety-certificate',
+        children: [
+          {
+            path: '/authority/role',
+            code: 'role',
+            name: '角色管理',
+          },
+        ],
+      },
+      {
         path: '/system',
         code: 'system',
         name: '系统管理',
@@ -32,7 +45,7 @@ function getFakeRoutes(req, res) {
           {
             path: '/system/dept',
             code: 'dept',
-            name: '部门管理',
+            name: '机构管理',
           },
           {
             path: '/system/dict',
@@ -45,11 +58,6 @@ function getFakeRoutes(req, res) {
             name: '菜单管理',
           },
           {
-            path: '/system/role',
-            code: 'role',
-            name: '角色管理',
-          },
-          {
             path: '/system/param',
             code: 'param',
             name: '参数管理',
@@ -58,6 +66,11 @@ function getFakeRoutes(req, res) {
             path: '/system/tenant',
             code: 'tenant',
             name: '租户管理',
+          },
+          {
+            path: '/system/client',
+            code: 'client',
+            name: '应用管理',
           },
         ],
       },
@@ -334,7 +347,7 @@ function getFakeButtons(req, res) {
           {
             code: 'role_add',
             name: '新增',
-            path: '/system/role/add',
+            path: '/authority/role/add',
             source: 'plus',
             action: 1,
             alias: 'add',
@@ -342,7 +355,7 @@ function getFakeButtons(req, res) {
           {
             code: 'role_edit',
             name: '修改',
-            path: '/system/role/edit',
+            path: '/authority/role/edit',
             source: 'form',
             action: 2,
             alias: 'edit',
@@ -358,7 +371,7 @@ function getFakeButtons(req, res) {
           {
             code: 'role_view',
             name: '查看',
-            path: '/system/role/view',
+            path: '/authority/role/view',
             source: 'file-text',
             action: 2,
             alias: 'view',
@@ -433,6 +446,43 @@ function getFakeButtons(req, res) {
             code: 'tenant_view',
             name: '查看',
             path: '/system/tenant/view',
+            source: 'file-text',
+            action: 2,
+            alias: 'view',
+          },
+        ],
+      },
+      {
+        code: 'client',
+        children: [
+          {
+            code: 'client_add',
+            name: '新增',
+            path: '/system/client/add',
+            source: 'plus',
+            action: 1,
+            alias: 'add',
+          },
+          {
+            code: 'client_edit',
+            name: '修改',
+            path: '/system/client/edit',
+            source: 'form',
+            action: 2,
+            alias: 'edit',
+          },
+          {
+            code: 'client_delete',
+            name: '删除',
+            path: '/api/blade-system/client/remove',
+            source: 'delete',
+            action: 3,
+            alias: 'delete',
+          },
+          {
+            code: 'client_view',
+            name: '查看',
+            path: '/system/client/view',
             source: 'file-text',
             action: 2,
             alias: 'view',
@@ -575,7 +625,7 @@ function getFakeList(req, res) {
           id: '5',
           code: 'dept',
           parentId: 'system',
-          name: '部门管理',
+          name: '机构管理',
           path: '/system/dept',
           source: 'setting',
           category: '1',
@@ -609,7 +659,7 @@ function getFakeList(req, res) {
           code: 'role',
           parentId: 'system',
           name: '角色管理',
-          path: '/system/role',
+          path: '/authority/role',
           source: 'setting',
           category: '1',
           categoryName: '菜单',
@@ -696,7 +746,7 @@ function getFakeTree(req, res) {
         {
           value: 'dept',
           key: 'dept',
-          title: '部门管理',
+          title: '机构管理',
         },
         {
           value: 'dict',
@@ -732,6 +782,7 @@ function getFakeTree(req, res) {
 
 function getFakeGrantTree(req, res) {
   const json = { code: 200, success: true, msg: '操作成功' };
+  let data = {};
   const list = [];
   list.push(
     {
@@ -790,7 +841,7 @@ function getFakeGrantTree(req, res) {
         },
         {
           key: 'dept',
-          title: '部门管理',
+          title: '机构管理',
           children: [
             {
               key: 'dept_add',
@@ -901,7 +952,10 @@ function getFakeGrantTree(req, res) {
       ],
     }
   );
-  json.data = list;
+  data.menu = list;
+  data.apiScope = [];
+  data.dataScope = [];
+  json.data = data;
   return res.json(json);
 }
 
@@ -913,17 +967,28 @@ function getFakeAuthRoutes(req, res) {
   return res.json(json);
 }
 
+function fakeTopMenu(req, res) {
+  const json = { code: 200, data: [], success: true, msg: '操作成功' };
+  return res.json(json);
+}
+
 function fakeSuccess(req, res) {
   const json = { code: 200, success: true, msg: '操作成功' };
   return res.json(json);
 }
 
 function getFakeRoleTreeKeys(req, res) {
-  const json = { code: 200, success: true, data: ['1'], msg: '操作成功' };
+  const json = {
+    code: 200,
+    success: true,
+    data: { menu: [], dataScope: [], apiScope: [] },
+    msg: '操作成功',
+  };
   return res.json(json);
 }
 
 const proxy = {
+  'GET /api/blade-system/menu/top-menu': fakeTopMenu,
   'GET /api/blade-system/menu/routes': getFakeRoutes,
   'GET /api/blade-system/menu/buttons': getFakeButtons,
   'GET /api/blade-system/menu/list': getFakeList,

@@ -6,8 +6,8 @@ import { accountLogin, socialLogin } from '../services/user';
 import { dynamicRoutes, dynamicButtons } from '../services/menu';
 import {
   setAuthority,
-  setAccessToken,
   setToken,
+  setAccessToken,
   setCurrentUser,
   setRoutes,
   setButtons,
@@ -27,14 +27,17 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(accountLogin, payload);
-      if (response.success) {
-        const { success, data } = response;
+      if (response.error_description) {
+        notification.error({
+          message: response.error_description,
+        });
+      } else {
         yield put({
           type: 'changeLoginStatus',
           payload: {
-            status: success,
+            status: true,
             type: 'login',
-            data: { ...data },
+            data: { ...response },
           },
         });
         const responseRoutes = yield call(dynamicRoutes);
@@ -58,22 +61,25 @@ export default {
               redirect = redirect.substr(redirect.indexOf('#') + 1);
             }
           } else {
-            window.location.href = redirect;
-            return;
+            redirect = null;
           }
         }
-        yield put(routerRedux.replace(redirect || '/dashboard/workplace'));
+        yield put(routerRedux.replace('/'));
       }
     },
     *socialLogin({ payload }, { call, put }) {
       const response = yield call(socialLogin, payload);
-      if (response.success) {
+      if (response.error_description) {
+        notification.error({
+          message: response.error_description,
+        });
+      } else {
         yield put({
           type: 'changeLoginStatus',
           payload: {
             status: true,
             type: 'login',
-            data: { ...response.data },
+            data: { ...response },
           },
         });
         reloadAuthorized();
@@ -81,17 +87,12 @@ export default {
         const redirectUrl = '/oauth/redirect/';
         // eslint-disable-next-line prefer-destructuring
         window.location.href = topUrl.split(redirectUrl)[0];
-        yield put(routerRedux.replace('/')); 
-      } else {
-        notification.error({
-          message: response.msg,
-        });
+        yield put(routerRedux.replace('/'));
       }
     },
     *getCaptcha({ payload }, { call }) {
       yield call(getFakeCaptcha, payload);
     },
-
     *logout(_, { put }) {
       yield put({
         type: 'changeLoginStatus',
@@ -106,11 +107,11 @@ export default {
       });
       reloadAuthorized();
       yield put(
-        routerRedux.push({
+        routerRedux.replace({
           pathname: '/user/login',
-          search: stringify({
-            redirect: window.location.href,
-          }),
+          // search: stringify({
+          //   redirect: window.location.href,
+          // }),
         })
       );
     },
@@ -119,15 +120,32 @@ export default {
   reducers: {
     changeLoginStatus(state, { payload }) {
       const { status, type } = payload;
+
       if (status) {
         const {
-          data: { tokenType, accessToken, authority, account, userId, oauthId, userName, avatar },
+          data: {
+            token_type,
+            access_token,
+            role_name,
+            account,
+            user_id,
+            oauth_id,
+            user_name,
+            avatar,
+          },
         } = payload;
-        const token = `${tokenType} ${accessToken}`;
+        const token = `${token_type} ${access_token}`;
         setToken(token);
-        setAccessToken(accessToken);
-        setAuthority(authority);
-        setCurrentUser({ avatar, userId, oauthId, account, name: userName, authority });
+        setAccessToken(access_token);
+        setAuthority(role_name);
+        setCurrentUser({
+          userId: user_id,
+          oauthId: oauth_id,
+          avatar,
+          account,
+          name: user_name,
+          authority: role_name,
+        });
       } else {
         removeAll();
       }
@@ -140,7 +158,6 @@ export default {
     },
     saveMenuData(state, { payload }) {
       const { routes, buttons } = payload;
-      console.log(routes,"routes")
       setRoutes(formatRoutes(routes));
       setButtons(formatButtons(buttons));
       return {

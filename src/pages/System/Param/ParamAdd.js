@@ -49,7 +49,7 @@ class ParamAdd extends PureComponent {
 
     return (
       <Panel title="新增" back="/system/param" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <FormItem {...formItemLayout} label="参数名称">
               {getFieldDecorator('paramName', {

@@ -93,7 +93,7 @@ class PostEdit extends PureComponent {
                         message: '请选择岗位类型',
                       },
                     ],
-                    initialValue: detail.category,
+                    initialValue: String(detail.category),
                   })(
                     <Select placeholder="请选择岗位类型">
                       {category.map(d => (

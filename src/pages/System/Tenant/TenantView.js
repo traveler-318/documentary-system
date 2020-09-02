@@ -57,7 +57,7 @@ class TenantView extends PureComponent {
 
     return (
       <Panel title="查看" back="/system/tenant" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card className={styles.card} bordered={false}>
             <FormItem {...formItemLayout} label="租户ID">
               <span>{detail.tenantId}</span>
@@ -73,6 +73,21 @@ class TenantView extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayout} label="联系地址">
               <span>{detail.address}</span>
+            </FormItem>
+            <FormItem {...formItemLayout} label="账号额度">
+              <span>{detail.accountNumber}</span>
+            </FormItem>
+            <FormItem {...formItemLayout} label="过期时间">
+              <span>{detail.expireTime}</span>
+            </FormItem>
+            <FormItem {...formItemLayout} label="绑定域名">
+              <span>{detail.domain}</span>
+            </FormItem>
+            <FormItem {...formItemLayout} label="系统背景">
+              <span>
+                {' '}
+                <img src={detail.backgroundUrl} alt="backgroundUrl" style={{ width: '100%' }} />
+              </span>
             </FormItem>
           </Card>
         </Form>

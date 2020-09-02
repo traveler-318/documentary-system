@@ -97,7 +97,7 @@ class UserEdit extends PureComponent {
 
     return (
       <Panel title="修改" back="/system/user" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={20}>
@@ -147,6 +147,8 @@ class UserEdit extends PureComponent {
                 </Col>
               </Row>
             ) : null}
+          </Card>
+          <Card title="详细信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="用户昵称">
@@ -172,92 +174,6 @@ class UserEdit extends PureComponent {
                     ],
                     initialValue: detail.realName,
                   })(<Input placeholder="请输入用户姓名" />)}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="所属角色">
-                  {getFieldDecorator('roleId', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择所属角色',
-                      },
-                    ],
-                    initialValue: func.split(detail.roleId),
-                  })(
-                    <TreeSelect
-                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                      treeData={roleTree}
-                      allowClear
-                      showSearch
-                      treeNodeFilterProp="title"
-                      multiple
-                      placeholder="请选择所属角色"
-                    />
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="所属部门">
-                  {getFieldDecorator('deptId', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择所属部门',
-                      },
-                    ],
-                    initialValue: func.split(detail.deptId),
-                  })(
-                    <TreeSelect
-                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                      treeData={deptTree}
-                      allowClear
-                      showSearch
-                      treeNodeFilterProp="title"
-                      multiple
-                      placeholder="请选择所属部门"
-                    />
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="用户编号">
-                  {getFieldDecorator('code', {
-                    initialValue: detail.code,
-                  })(<Input placeholder="请输入用户编号" />)}
-                </FormItem>
-              </Col>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="所属岗位">
-                  {getFieldDecorator('postId', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择所属岗位',
-                      },
-                    ],
-                    initialValue: func.split(detail.postId),
-                  })(
-                    <Select
-                      mode="multiple"
-                      showSearch
-                      filterOption={(input, option) =>
-                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                      }
-                      allowClear
-                      placeholder="请选择所属岗位"
-                    >
-                      {postList.map(d => (
-                        <Select.Option key={d.id} value={d.id}>
-                          {d.postName}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  )}
                 </FormItem>
               </Col>
             </Row>
@@ -308,6 +224,94 @@ class UserEdit extends PureComponent {
                       showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
                       placeholder="请选择用户生日"
                     />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+          </Card>
+          <Card title="职责信息" className={styles.card} bordered={false}>
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="用户编号">
+                  {getFieldDecorator('code', {
+                    initialValue: detail.code,
+                  })(<Input placeholder="请输入用户编号" />)}
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="所属角色">
+                  {getFieldDecorator('roleId', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择所属角色',
+                      },
+                    ],
+                    initialValue: func.split(detail.roleId),
+                  })(
+                    <TreeSelect
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      treeData={roleTree}
+                      allowClear
+                      showSearch
+                      treeNodeFilterProp="title"
+                      multiple
+                      placeholder="请选择所属角色"
+                    />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="所属机构">
+                  {getFieldDecorator('deptId', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择所属机构',
+                      },
+                    ],
+                    initialValue: func.split(detail.deptId),
+                  })(
+                    <TreeSelect
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      treeData={deptTree}
+                      allowClear
+                      showSearch
+                      treeNodeFilterProp="title"
+                      multiple
+                      placeholder="请选择所属机构"
+                    />
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="所属岗位">
+                  {getFieldDecorator('postId', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择所属岗位',
+                      },
+                    ],
+                    initialValue: func.split(detail.postId),
+                  })(
+                    <Select
+                      mode="multiple"
+                      showSearch
+                      filterOption={(input, option) =>
+                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      }
+                      allowClear
+                      placeholder="请选择所属岗位"
+                    >
+                      {postList.map(d => (
+                        <Select.Option key={d.id} value={d.id}>
+                          {d.postName}
+                        </Select.Option>
+                      ))}
+                    </Select>
                   )}
                 </FormItem>
               </Col>

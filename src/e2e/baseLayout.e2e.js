@@ -28,7 +28,6 @@ describe('Homepage', async () => {
     await page.setCacheEnabled(false);
   });
   const routers = formatter(RouterConfig[1].routes);
-  console.log(routers,"routers")
   routers.forEach(route => {
     it(`test pages ${route}`, testPage(route));
   });

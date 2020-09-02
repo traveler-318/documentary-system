@@ -17,8 +17,12 @@ export default {
       tree: [],
     },
     detail: {},
-    grantTree: [],
-    roleCheckedTreeKeys: [],
+    menuGrantTree: [],
+    menuTreeKeys: [],
+    dataScopeGrantTree: [],
+    dataScopeTreeKeys: [],
+    apiScopeGrantTree: [],
+    apiScopeTreeKeys: [],
   },
   effects: {
     *fetchList({ payload }, { call, put }) {
@@ -66,7 +70,9 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          grantTree: response.data,
+          menuGrantTree: response.data.menu,
+          dataScopeGrantTree: response.data.dataScope,
+          apiScopeGrantTree: response.data.apiScope,
         },
       });
     },
@@ -75,7 +81,9 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          roleCheckedTreeKeys: response.data,
+          menuTreeKeys: response.data.menu,
+          dataScopeTreeKeys: response.data.dataScope,
+          apiScopeTreeKeys: response.data.apiScope,
         },
       });
     },
@@ -83,7 +91,9 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          roleCheckedTreeKeys: payload.roleCheckedTreeKeys,
+          menuTreeKeys: payload.menuTreeKeys,
+          dataScopeTreeKeys: payload.dataScopeTreeKeys,
+          apiScopeTreeKeys: payload.apiScopeTreeKeys,
         },
       });
     },
@@ -103,7 +113,7 @@ export default {
       const response = yield call(submit, payload);
       if (response.success) {
         message.success('提交成功');
-        router.push('/system/role');
+        router.push('/authority/role');
       }
     },
     *remove({ payload }, { call }) {

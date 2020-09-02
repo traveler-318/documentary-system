@@ -1,6 +1,7 @@
-import React, { PureComponent } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row } from 'antd';
+import router from 'umi/router';
+import { Button, Col, Divider, Form, Input, Row, Tag } from 'antd';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { DEPT_LIST } from '../../../actions/dept';
@@ -28,8 +29,8 @@ class Dept extends PureComponent {
     return (
       <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
         <Col md={6} sm={24}>
-          <FormItem label="部门名称">
-            {getFieldDecorator('deptName')(<Input placeholder="请输入部门名称" />)}
+          <FormItem label="机构名称">
+            {getFieldDecorator('deptName')(<Input placeholder="请输入机构名称" />)}
           </FormItem>
         </Col>
         <Col md={6} sm={24}>
@@ -38,8 +39,8 @@ class Dept extends PureComponent {
           </FormItem>
         </Col>
         <Col md={6} sm={24}>
-          <FormItem label="部门全称">
-            {getFieldDecorator('fullName')(<Input placeholder="请输入部门全称" />)}
+          <FormItem label="机构全称">
+            {getFieldDecorator('fullName')(<Input placeholder="请输入机构全称" />)}
           </FormItem>
         </Col>
         <Col>
@@ -56,6 +57,24 @@ class Dept extends PureComponent {
     );
   };
 
+  handleClick = parentId => {
+    router.push(`/system/dept/add/${parentId}`);
+  };
+
+  renderActionButton = (keys, rows) => (
+    <Fragment>
+      <Divider type="vertical" />
+      <a
+        title="新增下级"
+        onClick={() => {
+          this.handleClick(rows[0].id);
+        }}
+      >
+        新增下级
+      </a>
+    </Fragment>
+  );
+
   render() {
     const code = 'dept';
 
@@ -71,12 +90,23 @@ class Dept extends PureComponent {
         dataIndex: 'tenantId',
       },
       {
-        title: '部门名称',
+        title: '机构名称',
         dataIndex: 'deptName',
       },
       {
-        title: '部门全称',
+        title: '机构全称',
         dataIndex: 'fullName',
+      },
+      {
+        title: '机构类型',
+        dataIndex: 'deptCategoryName',
+        render: deptCategoryName => (
+          <span>
+            <Tag color="geekblue" key={deptCategoryName}>
+              {deptCategoryName}
+            </Tag>
+          </span>
+        ),
       },
       {
         title: '排序',
@@ -95,6 +125,8 @@ class Dept extends PureComponent {
           form={form}
           onSearch={this.handleSearch}
           renderSearchForm={this.renderSearchForm}
+          renderActionButton={this.renderActionButton}
+          actionColumnWidth={250}
           loading={loading}
           data={data}
           columns={columns}

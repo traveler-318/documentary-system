@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage, formatMessage } from 'umi/locale';
-import { Spin, Tag, Menu, Icon, Avatar, Tooltip } from 'antd';
+import { Spin, Tag, Menu, Icon, Avatar, Tooltip, message } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import NoticeIcon from '../NoticeIcon';
@@ -63,39 +63,17 @@ export default class GlobalHeaderRight extends PureComponent {
     });
   };
 
-  fetchMoreNotices = tabProps => {
-    const { list, name } = tabProps;
-    const { dispatch, notices = [] } = this.props;
-    const lastItemId = notices[notices.length - 1].id;
-    dispatch({
-      type: 'global/fetchMoreNotices',
-      payload: {
-        lastItemId,
-        type: name,
-        offset: list.length,
-      },
-    });
-  };
-
   render() {
     const {
       currentUser,
-      fetchingMoreNotices,
       fetchingNotices,
-      loadedAllNotices,
       onNoticeVisibleChange,
       onMenuClick,
       onNoticeClear,
-      skeletonCount,
       theme,
     } = this.props;
     const menu = (
-      <Menu
-        className={styles.menu}
-        style={{ marginRight: 1 }}
-        selectedKeys={[]}
-        onClick={onMenuClick}
-      >
+      <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
         <Menu.Item key="userinfo">
           <Icon type="setting" />
           <FormattedMessage id="menu.account.settings" defaultMessage="account settings" />
@@ -104,6 +82,10 @@ export default class GlobalHeaderRight extends PureComponent {
           <Icon type="user" />
           <FormattedMessage id="menu.account.password" defaultMessage="password settings" />
         </Menu.Item>
+        <Menu.Item key="clearCache">
+          <Icon type="close-circle" />
+          <FormattedMessage id="menu.account.clear" defaultMessage="clear cache" />
+        </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="logout">
           <Icon type="logout" />
@@ -111,11 +93,6 @@ export default class GlobalHeaderRight extends PureComponent {
         </Menu.Item>
       </Menu>
     );
-    const loadMoreProps = {
-      skeletonCount,
-      loadedAll: loadedAllNotices,
-      loading: fetchingMoreNotices,
-    };
     const noticeData = this.getNoticeData();
     const unreadMsg = this.getUnreadData(noticeData);
     let className = styles.right;
@@ -123,7 +100,7 @@ export default class GlobalHeaderRight extends PureComponent {
       className = `${styles.right}  ${styles.dark}`;
     }
     return (
-      <div className={className} style={{ marginRight: 8 }}>
+      <div className={className}>
         <HeaderSearch
           className={`${styles.action} ${styles.search}`}
           placeholder={formatMessage({ id: 'component.globalHeader.search' })}
@@ -142,7 +119,7 @@ export default class GlobalHeaderRight extends PureComponent {
         <Tooltip title={formatMessage({ id: 'component.globalHeader.help' })}>
           <a
             target="_blank"
-            href="https://ant.design/docs/react/introduce-cn"
+            href="https://pro.ant.design/docs/getting-started"
             rel="noopener noreferrer"
             className={styles.action}
           >
@@ -156,48 +133,47 @@ export default class GlobalHeaderRight extends PureComponent {
             console.log(item, tabProps); // eslint-disable-line
             this.changeReadState(item, tabProps);
           }}
+          loading={fetchingNotices}
           locale={{
             emptyText: formatMessage({ id: 'component.noticeIcon.empty' }),
             clear: formatMessage({ id: 'component.noticeIcon.clear' }),
-            loadedAll: formatMessage({ id: 'component.noticeIcon.loaded' }),
-            loadMore: formatMessage({ id: 'component.noticeIcon.loading-more' }),
+            viewMore: formatMessage({ id: 'component.noticeIcon.view-more' }),
+            notification: formatMessage({ id: 'component.globalHeader.notification' }),
+            message: formatMessage({ id: 'component.globalHeader.message' }),
+            event: formatMessage({ id: 'component.globalHeader.event' }),
           }}
           onClear={onNoticeClear}
-          onLoadMore={this.fetchMoreNotices}
           onPopupVisibleChange={onNoticeVisibleChange}
-          loading={fetchingNotices}
+          onViewMore={() => message.info('Click on view more')}
           clearClose
         >
           <NoticeIcon.Tab
             count={unreadMsg.notification}
             list={noticeData.notification}
-            title={formatMessage({ id: 'component.globalHeader.notification' })}
-            name="notification"
+            title="notification"
             emptyText={formatMessage({ id: 'component.globalHeader.notification.empty' })}
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
-            {...loadMoreProps}
+            showViewMore
           />
           <NoticeIcon.Tab
             count={unreadMsg.message}
             list={noticeData.message}
-            title={formatMessage({ id: 'component.globalHeader.message' })}
-            name="message"
+            title="message"
             emptyText={formatMessage({ id: 'component.globalHeader.message.empty' })}
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
-            {...loadMoreProps}
+            showViewMore
           />
           <NoticeIcon.Tab
             count={unreadMsg.event}
             list={noticeData.event}
-            title={formatMessage({ id: 'component.globalHeader.event' })}
-            name="event"
+            title="event"
             emptyText={formatMessage({ id: 'component.globalHeader.event.empty' })}
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
-            {...loadMoreProps}
+            showViewMore
           />
         </NoticeIcon>
         {currentUser.name ? (
-          <HeaderDropdown overlay={menu} style={{ marginRight: 8 }}>
+          <HeaderDropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>
               <Avatar
                 size="small"

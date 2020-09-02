@@ -6,22 +6,37 @@ import { formatMessage } from 'umi/locale';
 import Authorized from '../utils/Authorized';
 import { menu } from '../defaultSettings';
 import {
+  dynamicTopMenus,
   dynamicRoutes,
   dynamicButtons,
   list,
+  parentList,
   submit,
   detail,
   remove,
   tree,
+  dataScopeList,
+  apiScopeList,
 } from '../services/menu';
-import { getRoutes, setRoutes, getButtons, setButtons } from '../utils/authority';
+import { dict } from '../services/dict';
+import {
+  getTopMenus,
+  setTopMenus,
+  getRoutes,
+  setRoutes,
+  getButtons,
+  setButtons,
+} from '../utils/authority';
 import { MENU_NAMESPACE } from '../actions/menu';
-import { formatRoutes, formatButtons } from '../utils/utils';
+import { formatTopMenus, formatRoutes, formatButtons } from '../utils/utils';
 
 const { check } = Authorized;
 
 // Conversion router to menu.
 function formatter(data, parentAuthority, parentName) {
+  if (!data) {
+    return undefined;
+  }
   return data
     .map(item => {
       if (!item.name || !item.path) {
@@ -29,7 +44,7 @@ function formatter(data, parentAuthority, parentName) {
       }
 
       let locale = 'menu';
-      if (parentName) {
+      if (parentName && parentName !== '/') {
         locale = `${parentName}.${item.name}`;
       } else {
         locale = `menu.${item.name}`;
@@ -89,6 +104,9 @@ const filterMenuData = menuData => {
  * @param {Object} menuData 菜单配置
  */
 const getBreadcrumbNameMap = menuData => {
+  if (!menuData) {
+    return {};
+  }
   const routerMap = {};
 
   const flattenMenuData = data => {
@@ -110,7 +128,9 @@ export default {
   namespace: MENU_NAMESPACE,
 
   state: {
+    topMenuData: [],
     menuData: [],
+    routerData: [],
     breadcrumbNameMap: {},
     data: {
       list: [],
@@ -119,12 +139,36 @@ export default {
     init: {
       tree: [],
     },
+    dict: {
+      dataScopeType: [],
+      apiScopeType: [],
+    },
     detail: {},
+    drawer: {
+      visible: false,
+      menuId: '',
+      menuName: '',
+      dataScope: {
+        list: [],
+        pagination: false,
+      },
+      apiScope: {
+        list: [],
+        pagination: false,
+      },
+    },
   },
 
   effects: {
     *fetchMenuData({ payload }, { call, put }) {
-      const { authority } = payload;
+      const { authority, path } = payload;
+      // 设置顶部菜单
+      let topMenus = getTopMenus();
+      if (topMenus.length === 0) {
+        const response = yield call(dynamicTopMenus);
+        topMenus = formatTopMenus(response.data);
+        setTopMenus(topMenus);
+      }
       // 设置菜单数据
       let routes = getRoutes();
       if (routes.length === 0) {
@@ -139,15 +183,35 @@ export default {
         buttons = formatButtons(response.data);
         setButtons(buttons);
       }
-      const menuData = filterMenuData(memoizeOneFormatter(routes, authority));
-      const breadcrumbNameMap = memoizeOneGetBreadcrumbNameMap(menuData);
+      const originalMenuData = memoizeOneFormatter(routes, authority, path);
+      const menuData = filterMenuData(originalMenuData);
+      const breadcrumbNameMap = memoizeOneGetBreadcrumbNameMap(originalMenuData);
       yield put({
         type: 'save',
-        payload: { menuData, breadcrumbNameMap },
+        payload: { menuData, breadcrumbNameMap, routerData: routes, topMenuData: topMenus },
       });
+    },
+    *refreshMenuData({ payload, callback }, { call }) {
+      const routes = yield call(dynamicRoutes, payload);
+      setRoutes(formatRoutes(routes.data));
+      if (callback) {
+        callback();
+      }
     },
     *fetchList({ payload }, { call, put }) {
       const response = yield call(list, payload);
+      if (response.success) {
+        yield put({
+          type: 'saveList',
+          payload: {
+            list: response.data,
+            pagination: false,
+          },
+        });
+      }
+    },
+    *fetchParentList({ payload }, { call, put }) {
+      const response = yield call(parentList, payload);
       if (response.success) {
         yield put({
           type: 'saveList',
@@ -193,6 +257,70 @@ export default {
           detail: payload,
         },
       });
+    },
+    *showDrawer({ payload }, { put }) {
+      yield put({
+        type: 'saveDrawer',
+        payload,
+      });
+    },
+    *loadDataScopeDrawer({ payload }, { call, put }) {
+      const response = yield call(dataScopeList, payload);
+      if (response.success) {
+        yield put({
+          type: 'saveLoadDataScopeDrawer',
+          payload: {
+            dataScope: {
+              list: response.data.records,
+              pagination: {
+                total: response.data.total,
+                current: response.data.current,
+                pageSize: response.data.size,
+              },
+            },
+          },
+        });
+      }
+    },
+    *loadApiScopeDrawer({ payload }, { call, put }) {
+      const response = yield call(apiScopeList, payload);
+      if (response.success) {
+        yield put({
+          type: 'saveLoadApiScopeDrawer',
+          payload: {
+            apiScope: {
+              list: response.data.records,
+              pagination: {
+                total: response.data.total,
+                current: response.data.current,
+                pageSize: response.data.size,
+              },
+            },
+          },
+        });
+      }
+    },
+    *loadDataScopeDict({ payload }, { call, put }) {
+      const response = yield call(dict, payload);
+      if (response.success) {
+        yield put({
+          type: 'saveDataScopeDict',
+          payload: {
+            dataScopeType: response.data,
+          },
+        });
+      }
+    },
+    *loadApiScopeDict({ payload }, { call, put }) {
+      const response = yield call(dict, payload);
+      if (response.success) {
+        yield put({
+          type: 'saveApiScopeDict',
+          payload: {
+            apiScopeType: response.data,
+          },
+        });
+      }
     },
     *submit({ payload }, { call }) {
       const response = yield call(submit, payload);
@@ -241,6 +369,40 @@ export default {
     saveIcon(state, action) {
       const newState = state;
       newState.detail.source = action.payload.detail.source;
+      return {
+        ...newState,
+      };
+    },
+    saveDrawer(state, action) {
+      return {
+        ...state,
+        drawer: action.payload,
+      };
+    },
+    saveLoadDataScopeDrawer(state, action) {
+      const newState = state;
+      newState.drawer.dataScope = action.payload.dataScope;
+      return {
+        ...newState,
+      };
+    },
+    saveLoadApiScopeDrawer(state, action) {
+      const newState = state;
+      newState.drawer.apiScope = action.payload.apiScope;
+      return {
+        ...newState,
+      };
+    },
+    saveDataScopeDict(state, action) {
+      const newState = state;
+      newState.dict.dataScopeType = action.payload.dataScopeType;
+      return {
+        ...newState,
+      };
+    },
+    saveApiScopeDict(state, action) {
+      const newState = state;
+      newState.dict.apiScopeType = action.payload.apiScopeType;
       return {
         ...newState,
       };

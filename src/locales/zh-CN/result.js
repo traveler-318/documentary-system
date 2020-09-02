@@ -16,7 +16,7 @@ export default {
   'app.result.success.operate-time': '生效时间：',
   'app.result.success.step1-title': '创建项目',
   'app.result.success.step1-operator': '曲丽丽',
-  'app.result.success.step2-title': '部门初审',
+  'app.result.success.step2-title': '机构初审',
   'app.result.success.step2-operator': '周毛毛',
   'app.result.success.step2-extra': '催一下',
   'app.result.success.step3-title': '财务复核',

@@ -2,7 +2,7 @@ import { stringify } from 'qs';
 import func from '../utils/Func';
 import request from '../utils/request';
 
-// =====================部门===========================
+// =====================机构===========================
 
 export async function list(params) {
   return request(`/api/blade-system/dept/list?${stringify(params)}`);

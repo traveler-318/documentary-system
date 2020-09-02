@@ -57,7 +57,7 @@ class DataSourceView extends PureComponent {
 
     return (
       <Panel title="查看" back="/tool/datasource" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card className={styles.card} bordered={false}>
             <FormItem {...formItemLayout} label="名称">
               <span>{detail.name}</span>

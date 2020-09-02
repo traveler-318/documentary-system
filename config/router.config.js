@@ -5,9 +5,13 @@ export default [
     component: '../layouts/UserLayout',
     routes: [
       { path: '/user', redirect: '/user/login' },
-      { path: '/user/login', component: './Login/Login' },
-      { path: '/user/register', component: './Login/Register' },
-      { path: '/user/register-result', component: './Login/RegisterResult' },
+      { path: '/user/login', name: 'login', component: './Login/Login' },
+      { path: '/user/register', name: 'register', component: './Login/Register' },
+      {
+        path: '/user/register-result',
+        name: 'register.result',
+        component: './Login/RegisterResult',
+      },
     ],
   },
   // app
@@ -15,10 +19,12 @@ export default [
     path: '/',
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'],
-    authority: ['administrator', 'admin', 'user', 'test', 'guest'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/user/login' },
+      {
+        path: '/',
+        redirect: '/dashboard/workplace',
+      },
       {
         path: '/result',
         routes: [
@@ -31,10 +37,14 @@ export default [
         path: '/exception',
         routes: [
           // exception
-          { path: '/exception/403', component: './Exception/403' },
-          { path: '/exception/404', component: './Exception/404' },
-          { path: '/exception/500', component: './Exception/500' },
-          { path: '/exception/trigger', component: './Exception/TriggerException' },
+          { path: '/exception/403', name: 'not-permission', component: './Exception/403' },
+          { path: '/exception/404', name: 'not-find', component: './Exception/404' },
+          { path: '/exception/500', name: 'server-error', component: './Exception/500' },
+          {
+            path: '/exception/trigger',
+            name: 'trigger',
+            component: './Exception/TriggerException',
+          },
         ],
       },
       {
@@ -67,6 +77,29 @@ export default [
           },
         ],
       },
+      //  editor
+      {
+        name: 'editor',
+        icon: 'highlight',
+        path: '/editor',
+        routes: [
+          {
+            path: '/editor/flow',
+            name: 'flow',
+            component: './Editor/GGEditor/Flow',
+          },
+          {
+            path: '/editor/mind',
+            name: 'mind',
+            component: './Editor/GGEditor/Mind',
+          },
+          {
+            path: '/editor/koni',
+            name: 'koni',
+            component: './Editor/GGEditor/Koni',
+          },
+        ],
+      },
       {
         path: '/dashboard',
         routes: [
@@ -91,6 +124,72 @@ export default [
         ],
       },
       {
+        path: '/work',
+        routes: [
+          {
+            path: '/work/start',
+            routes: [
+              { path: '/work/start', redirect: '/work/start/list' },
+              { path: '/work/start/list', component: './Work/WorkStart' },
+            ],
+          },
+          {
+            path: '/work/claim',
+            routes: [
+              { path: '/work/claim', redirect: '/work/claim/list' },
+              { path: '/work/claim/list', component: './Work/WorkClaim' },
+            ],
+          },
+          {
+            path: '/work/todo',
+            routes: [
+              { path: '/work/todo', redirect: '/work/todo/list' },
+              { path: '/work/todo/list', component: './Work/WorkTodo' },
+            ],
+          },
+          {
+            path: '/work/send',
+            routes: [
+              { path: '/work/send', redirect: '/work/send/list' },
+              { path: '/work/send/list', component: './Work/WorkSend' },
+            ],
+          },
+          {
+            path: '/work/done',
+            routes: [
+              { path: '/work/done', redirect: '/work/done/list' },
+              { path: '/work/done/list', component: './Work/WorkDone' },
+            ],
+          },
+          {
+            path: '/work/process',
+            routes: [
+              {
+                path: '/work/process/leave/form/:processDefinitionId',
+                component: './Work/Process/Leave/LeaveStart',
+              },
+              {
+                path: '/work/process/leave/handle/:taskId/:processInstanceId/:businessId',
+                component: './Work/Process/Leave/LeaveHandle',
+              },
+              {
+                path: '/work/process/leave/detail/:processInstanceId/:businessId',
+                component: './Work/Process/Leave/LeaveDetail',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: '/report',
+        routes: [
+          {
+            path: '/report/reportlist',
+            routes: [{ path: '/report/reportlist', component: './Report/Report' }],
+          },
+        ],
+      },
+      {
         path: '/base',
         routes: [
           {
@@ -98,6 +197,36 @@ export default [
             routes: [
               { path: '/base/region', redirect: '/base/region/detail' },
               { path: '/base/region/detail', component: './Base/Region/Region' },
+            ],
+          },
+        ],
+      },
+      {
+        path: '/authority',
+        routes: [
+          {
+            path: '/authority/role',
+            routes: [
+              { path: '/authority/role', redirect: '/authority/role/list' },
+              { path: '/authority/role/list', component: './Authority/Role/Role' },
+              { path: '/authority/role/add', component: './Authority/Role/RoleAdd' },
+              { path: '/authority/role/add/:id', component: './Authority/Role/RoleAdd' },
+              { path: '/authority/role/edit/:id', component: './Authority/Role/RoleEdit' },
+              { path: '/authority/role/view/:id', component: './Authority/Role/RoleView' },
+            ],
+          },
+          {
+            path: '/authority/datascope',
+            routes: [
+              { path: '/authority/datascope', redirect: '/authority/datascope/list' },
+              { path: '/authority/datascope/list', component: './Authority/DataScope/DataScope' },
+            ],
+          },
+          {
+            path: '/authority/apiscope',
+            routes: [
+              { path: '/authority/apiscope', redirect: '/authority/apiscope/list' },
+              { path: '/authority/apiscope/list', component: './Authority/ApiScope/ApiScope' },
             ],
           },
         ],
@@ -124,6 +253,19 @@ export default [
               { path: '/system/dict/add/:id', component: './System/Dict/DictAdd' },
               { path: '/system/dict/edit/:id', component: './System/Dict/DictEdit' },
               { path: '/system/dict/view/:id', component: './System/Dict/DictView' },
+              { path: '/system/dict/sub/:parentId', component: './System/Dict/DictSub' },
+            ],
+          },
+          {
+            path: '/system/dictbiz',
+            routes: [
+              { path: '/system/dictbiz', redirect: '/system/dictbiz/list' },
+              { path: '/system/dictbiz/list', component: './System/DictBiz/DictBiz' },
+              { path: '/system/dictbiz/add', component: './System/DictBiz/DictBizAdd' },
+              { path: '/system/dictbiz/add/:id', component: './System/DictBiz/DictBizAdd' },
+              { path: '/system/dictbiz/edit/:id', component: './System/DictBiz/DictBizEdit' },
+              { path: '/system/dictbiz/view/:id', component: './System/DictBiz/DictBizView' },
+              { path: '/system/dictbiz/sub/:parentId', component: './System/DictBiz/DictBizSub' },
             ],
           },
           {
@@ -149,17 +291,6 @@ export default [
             ],
           },
           {
-            path: '/system/role',
-            routes: [
-              { path: '/system/role', redirect: '/system/role/list' },
-              { path: '/system/role/list', component: './System/Role/Role' },
-              { path: '/system/role/add', component: './System/Role/RoleAdd' },
-              { path: '/system/role/add/:id', component: './System/Role/RoleAdd' },
-              { path: '/system/role/edit/:id', component: './System/Role/RoleEdit' },
-              { path: '/system/role/view/:id', component: './System/Role/RoleView' },
-            ],
-          },
-          {
             path: '/system/menu',
             routes: [
               { path: '/system/menu', redirect: '/system/menu/list' },
@@ -168,6 +299,17 @@ export default [
               { path: '/system/menu/add/:id', component: './System/Menu/MenuAdd' },
               { path: '/system/menu/edit/:id', component: './System/Menu/MenuEdit' },
               { path: '/system/menu/view/:id', component: './System/Menu/MenuView' },
+            ],
+          },
+          {
+            path: '/system/topmenu',
+            routes: [
+              { path: '/system/topmenu', redirect: '/system/topmenu/list' },
+              { path: '/system/topmenu/list', component: './System/TopMenu/TopMenu' },
+              { path: '/system/topmenu/add', component: './System/TopMenu/TopMenuAdd' },
+              { path: '/system/topmenu/add/:id', component: './System/TopMenu/TopMenuAdd' },
+              { path: '/system/topmenu/edit/:id', component: './System/TopMenu/TopMenuEdit' },
+              { path: '/system/topmenu/view/:id', component: './System/TopMenu/TopMenuView' },
             ],
           },
           {
@@ -270,6 +412,71 @@ export default [
         ],
       },
       {
+        path: '/flow',
+        routes: [
+          {
+            path: '/flow/model',
+            routes: [
+              { path: '/flow/model', redirect: '/flow/model/list' },
+              { path: '/flow/model/list', component: './Flow/FlowModel' },
+            ],
+          },
+          {
+            path: '/flow/deploy',
+            routes: [
+              { path: '/flow/deploy', redirect: '/flow/deploy/upload' },
+              { path: '/flow/deploy/upload', component: './Flow/FlowDeploy' },
+            ],
+          },
+          {
+            path: '/flow/manager',
+            routes: [
+              { path: '/flow/manager', redirect: '/flow/manager/list' },
+              { path: '/flow/manager/list', component: './Flow/FlowManager' },
+            ],
+          },
+          {
+            path: '/flow/follow',
+            routes: [
+              { path: '/flow/follow', redirect: '/flow/follow/list' },
+              { path: '/flow/follow/list', component: './Flow/FlowFollow' },
+            ],
+          },
+        ],
+      },
+      {
+        path: '/resource',
+        routes: [
+          {
+            path: '/resource/oss',
+            routes: [
+              { path: '/resource/oss', redirect: '/resource/oss/list' },
+              { path: '/resource/oss/list', component: './Resource/Oss/Oss' },
+              { path: '/resource/oss/add', component: './Resource/Oss/OssAdd' },
+              { path: '/resource/oss/edit/:id', component: './Resource/Oss/OssEdit' },
+              { path: '/resource/oss/view/:id', component: './Resource/Oss/OssView' },
+            ],
+          },
+          {
+            path: '/resource/sms',
+            routes: [
+              { path: '/resource/sms', redirect: '/resource/sms/list' },
+              { path: '/resource/sms/list', component: './Resource/Sms/Sms' },
+              { path: '/resource/sms/add', component: './Resource/Sms/SmsAdd' },
+              { path: '/resource/sms/edit/:id', component: './Resource/Sms/SmsEdit' },
+              { path: '/resource/sms/view/:id', component: './Resource/Sms/SmsView' },
+            ],
+          },
+          {
+            path: '/resource/attach',
+            routes: [
+              { path: '/resource/attach', redirect: '/resource/attach/list' },
+              { path: '/resource/attach/list', component: './Resource/Attach/Attach' },
+            ],
+          },
+        ],
+      },
+      {
         path: '/sale',
         routes: [
           {
@@ -321,9 +528,6 @@ export default [
             ],
           },
         ],
-      },
-      {
-        component: '404',
       },
     ],
   },

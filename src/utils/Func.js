@@ -88,9 +88,6 @@ export default class Func {
    * @returns {string}
    */
   static split(str) {
-    if (String(str) === '-1') {
-      return null;
-    }
     return str ? String(str).split(',') : '';
   }
 }

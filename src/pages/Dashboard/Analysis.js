@@ -1,10 +1,8 @@
 import React, { Component, Suspense } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Icon, Menu, Dropdown } from 'antd';
-
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import { getTimeDistance } from '@/utils/utils';
-
 import styles from './Analysis.less';
 import PageLoading from '@/components/PageLoading';
 
@@ -40,7 +38,6 @@ class Analysis extends Component {
       type: 'chart/clear',
     });
     cancelAnimationFrame(this.reqRef);
-    clearTimeout(this.timeoutId);
   }
 
   handleChangeSalesType = e => {

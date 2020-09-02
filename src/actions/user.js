@@ -14,6 +14,13 @@ export function USER_INIT() {
   };
 }
 
+export function USER_TENANT_INIT() {
+  return {
+    type: `${USER_NAMESPACE}/fetchTenantInit`,
+    payload: {},
+  };
+}
+
 export function USER_CHANGE_INIT(payload) {
   return {
     type: `${USER_NAMESPACE}/fetchChangeInit`,

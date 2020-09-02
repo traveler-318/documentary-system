@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row } from 'antd';
+import { Button, Col, Form, Icon, Input, Row } from 'antd';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { MENU_LIST } from '../../../actions/menu';
@@ -65,6 +65,12 @@ class Menu extends PureComponent {
         dataIndex: 'name',
       },
       {
+        title: '菜单图标',
+        dataIndex: 'source',
+        align: 'center',
+        render: source => <Icon type={source} style={{ paddingRight: '5px' }} />,
+      },
+      {
         title: '菜单编号',
         dataIndex: 'code',
       },
@@ -79,6 +85,7 @@ class Menu extends PureComponent {
       {
         title: '排序',
         dataIndex: 'sort',
+        align: 'right',
       },
     ];
 

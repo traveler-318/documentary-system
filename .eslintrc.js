@@ -34,6 +34,7 @@ module.exports = {
     'no-nested-ternary': 0,
     'linebreak-style': 0,
     'camelcase': 1,
+    "no-console": "off",
   },
   settings: {
     polyfills: ['fetch', 'promises', 'url', 'object-assign'],

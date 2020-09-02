@@ -54,7 +54,7 @@ class ClientAdd extends PureComponent {
 
     return (
       <Panel title="新增" back="/system/client" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
@@ -172,9 +172,10 @@ class ClientAdd extends PureComponent {
             <Row gutter={24}>
               <Col span={20}>
                 <FormItem {...formAllItemLayout} label="附加说明">
-                  {getFieldDecorator('additionalInformation', {})(
-                    <Input placeholder="请输入附加说明" />
-                  )}
+                  {getFieldDecorator(
+                    'additionalInformation',
+                    {}
+                  )(<Input placeholder="请输入附加说明" />)}
                 </FormItem>
               </Col>
             </Row>

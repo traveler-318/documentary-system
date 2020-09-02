@@ -26,7 +26,6 @@ describe('Homepage', () => {
   beforeAll(async () => {
     jest.setTimeout(1000000);
   });
-  console.log(RouterConfig[0].routes,"123")
   formatter(RouterConfig[0].routes).forEach(route => {
     it(`test pages ${route}`, testPage(route));
   });

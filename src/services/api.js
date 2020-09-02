@@ -128,7 +128,6 @@ export default async function queryError(code) {
 }
 
 export async function requestApi(path, params) {
-  console.log(path, params,"123")
   return request(path, {
     method: 'POST',
     body: func.toFormData(params),

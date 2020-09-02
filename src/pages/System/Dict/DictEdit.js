@@ -1,5 +1,16 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect, message } from 'antd';
+import {
+  Form,
+  Input,
+  Card,
+  Row,
+  Col,
+  Button,
+  InputNumber,
+  TreeSelect,
+  message,
+  Select,
+} from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
@@ -66,6 +77,7 @@ class DictEdit extends PureComponent {
       dict: {
         detail,
         init: { tree },
+        parentId,
       },
       submitting,
     } = this.props;
@@ -88,6 +100,10 @@ class DictEdit extends PureComponent {
       },
     };
 
+    const parentMode = parentId > 0;
+
+    const backUrl = parentMode ? `/system/dict/sub/${parentId}` : '/system/dict';
+
     const action = (
       <Button type="primary" onClick={this.handleSubmit} loading={submitting}>
         提交
@@ -95,12 +111,12 @@ class DictEdit extends PureComponent {
     );
 
     return (
-      <Panel title="修改" back="/system/dict" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+      <Panel title="修改" back={backUrl} action={action}>
+        <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
-              <Col span={20}>
-                <FormItem {...formAllItemLayout} label="字典编号">
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="字典编号">
                   {getFieldDecorator('code', {
                     rules: [
                       {
@@ -110,6 +126,26 @@ class DictEdit extends PureComponent {
                     ],
                     initialValue: detail.code,
                   })(<Input placeholder="请输入字典编号" />)}
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="字典名称">
+                  {getFieldDecorator('dictValue', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请输入字典名称',
+                      },
+                    ],
+                    initialValue: detail.dictValue,
+                  })(
+                    <Input
+                      ref={input => {
+                        this.dictValueRef = input;
+                      }}
+                      placeholder="请输入字典名称"
+                    />
+                  )}
                 </FormItem>
               </Col>
             </Row>
@@ -132,6 +168,43 @@ class DictEdit extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
+                <FormItem {...formItemLayout} className={styles.inputItem} label="字典键值">
+                  {getFieldDecorator('dictKey', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请输入字典键值',
+                      },
+                    ],
+                    initialValue: detail.dictKey,
+                  })(<Input placeholder="请输入字典键值" />)}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} className={styles.inputItem} label="是否封存">
+                  {getFieldDecorator('isSealed', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择是否封存',
+                      },
+                    ],
+                    initialValue: detail.isSealed,
+                  })(
+                    <Select placeholder="请选择是否封存">
+                      <Select.Option key={0} value={0}>
+                        否
+                      </Select.Option>
+                      <Select.Option key={1} value={1}>
+                        是
+                      </Select.Option>
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={10}>
                 <FormItem {...formItemLayout} className={styles.inputItem} label="字典排序">
                   {getFieldDecorator('sort', {
                     rules: [
@@ -142,41 +215,6 @@ class DictEdit extends PureComponent {
                     ],
                     initialValue: detail.sort,
                   })(<InputNumber placeholder="请输入字典排序" />)}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="字典名称">
-                  {getFieldDecorator('dictValue', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入字典名称',
-                      },
-                    ],
-                    initialValue: detail.dictValue,
-                  })(
-                    <Input
-                      ref={input => {
-                        this.dictValueRef = input;
-                      }}
-                      placeholder="请输入字典名称"
-                    />
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={10}>
-                <FormItem {...formItemLayout} className={styles.inputItem} label="字典键值">
-                  {getFieldDecorator('dictKey', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入字典键值',
-                      },
-                    ],
-                    initialValue: detail.dictKey,
-                  })(<InputNumber min={-1} placeholder="请输入字典键值" />)}
                 </FormItem>
               </Col>
             </Row>

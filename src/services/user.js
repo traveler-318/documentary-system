@@ -1,30 +1,33 @@
 import { stringify } from 'qs';
+import md5 from 'js-md5';
 import request from '../utils/request';
-import func from '../utils/Func';
 import { getCaptchaKey } from '../utils/authority';
+import func from '../utils/Func';
 import { captchaMode } from '../defaultSettings';
 
 // =====================用户===========================
 
 export async function accountLogin(params) {
   const values = params;
-  values.grantType = captchaMode ? 'captcha' : 'password';
+  values.grant_type = captchaMode ? 'captcha' : 'password';
   values.scope = 'all';
-  return request('/api/blade-auth/token', {
+  values.password = md5(values.password);
+  return request('/api/blade-auth/oauth/token', {
     headers: {
+      'Tenant-Id': values.tenantId,
       'Captcha-key': getCaptchaKey(),
       'Captcha-code': values.code,
     },
     method: 'POST',
-    body: func.toFormData(params),
+    body: func.toFormData(values),
   });
 }
 
 export async function socialLogin(params) {
   const values = params;
-  values.grantType = 'social';
+  values.grant_type = 'social';
   values.scope = 'all';
-  return request('/api/blade-auth/token', {
+  return request('/api/blade-auth/oauth/token', {
     method: 'POST',
     body: func.toFormData(values),
   });
@@ -48,7 +51,7 @@ export async function queryCurrent() {
 }
 
 export async function list(params) {
-  return request(`/api/blade-user/list?${stringify(params)}`);
+  return request(`/api/blade-user/page?${stringify(params)}`);
 }
 
 export async function grant(params) {
@@ -86,6 +89,13 @@ export async function update(params) {
   });
 }
 
+export async function updateInfo(params) {
+  return request('/api/blade-user/update-info', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function detail(params) {
   return request(`/api/blade-user/detail?${stringify(params)}`);
 }
@@ -95,12 +105,20 @@ export async function getUserInfo() {
 }
 
 export async function updatePassword(params) {
+  const values = params;
+  values.oldPassword = md5(values.oldPassword);
+  values.newPassword = md5(values.newPassword);
+  values.newPassword1 = md5(values.newPassword1);
   return request('/api/blade-user/update-password', {
     method: 'POST',
-    body: func.toFormData(params),
+    body: func.toFormData(values),
   });
 }
 
 export async function getCaptchaImage() {
-  return request('/api/blade-auth/captcha');
+  return request('/api/blade-auth/oauth/captcha');
+}
+
+export async function clearCache() {
+  return request('/api/blade-auth/oauth/clear-cache');
 }

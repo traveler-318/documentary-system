@@ -47,7 +47,7 @@ class LogApiView extends PureComponent {
 
     return (
       <Panel title="查看" back="/monitor/log/api">
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>

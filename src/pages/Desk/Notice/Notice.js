@@ -27,15 +27,17 @@ class Notice extends PureComponent {
     const { dispatch } = this.props;
 
     const { dateRange } = params;
-
-    const payload = {
+    let payload = {
       ...params,
-      begin_date: dateRange ? func.format(dateRange[0], 'YYYY-MM-DD') : null,
-      end_date: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD') : null,
     };
-
-    payload.dateRange = null;
-
+    if (dateRange) {
+      payload = {
+        ...params,
+        releaseTime_datege: dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
+        releaseTime_datelt: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null,
+      };
+      payload.dateRange = null;
+    }
     dispatch(NOTICE_LIST(payload));
   };
 

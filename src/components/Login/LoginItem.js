@@ -47,10 +47,9 @@ class WrapFormItem extends Component {
   refreshCaptcha = () => {
     // 获取验证码
     getCaptchaImage().then(resp => {
-      const { data } = resp;
-      if (data.key) {
-        this.setState({ image: data.image });
-        setCaptchaKey(data.key);
+      if (resp.key) {
+        this.setState({ image: resp.image });
+        setCaptchaKey(resp.key);
       }
     });
   };
@@ -148,7 +147,10 @@ class WrapFormItem extends Component {
           <FormItem>
             <Row gutter={8}>
               <Col span={16}>
-                {getFieldDecorator(name, options)(
+                {getFieldDecorator(
+                  name,
+                  options
+                )(
                   <Input
                     {...customprops}
                     placeholder={`${formatMessage({ id: 'validation.captcha.required' })}`}

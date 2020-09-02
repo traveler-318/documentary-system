@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect } from 'antd';
+import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect, Select } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
@@ -21,9 +21,11 @@ class DictAdd extends PureComponent {
       match: {
         params: { id },
       },
+      dict: { parentId },
     } = this.props;
-    if (func.notEmpty(id)) {
-      dispatch(DICT_DETAIL(id));
+    const detailId = id || (parentId > 0 ? parentId : null);
+    if (func.notEmpty(detailId)) {
+      dispatch(DICT_DETAIL(detailId));
     } else {
       dispatch(DICT_CLEAR_DETAIL());
     }
@@ -56,6 +58,7 @@ class DictAdd extends PureComponent {
       dict: {
         detail,
         init: { tree },
+        parentId,
       },
       submitting,
     } = this.props;
@@ -78,6 +81,10 @@ class DictAdd extends PureComponent {
       },
     };
 
+    const parentMode = parentId > 0;
+
+    const backUrl = parentMode ? `/system/dict/sub/${parentId}` : '/system/dict';
+
     const action = (
       <Button type="primary" onClick={this.handleSubmit} loading={submitting}>
         提交
@@ -85,12 +92,12 @@ class DictAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back="/system/dict" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+      <Panel title="新增" back={backUrl} action={action}>
+        <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
-              <Col span={20}>
-                <FormItem {...formAllItemLayout} label="字典编号">
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="字典编号">
                   {getFieldDecorator('code', {
                     rules: [
                       {
@@ -102,41 +109,6 @@ class DictAdd extends PureComponent {
                   })(<Input disabled={func.notEmpty(detail.code)} placeholder="请输入字典编号" />)}
                 </FormItem>
               </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="上级字典">
-                  {getFieldDecorator('parentId', {
-                    initialValue: detail.id,
-                  })(
-                    <TreeSelect
-                      disabled={func.notEmpty(detail.id)}
-                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                      treeData={tree}
-                      placeholder="请选择上级字典"
-                      allowClear
-                      showSearch
-                      treeNodeFilterProp="title"
-                      onChange={this.onParentIdChange}
-                    />
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={10}>
-                <FormItem {...formItemLayout} className={styles.inputItem} label="字典排序">
-                  {getFieldDecorator('sort', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入字典排序',
-                      },
-                    ],
-                    initialValue: detail.nextSort,
-                  })(<InputNumber placeholder="请输入字典排序" />)}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="字典名称">
                   {getFieldDecorator('dictValue', {
@@ -156,17 +128,76 @@ class DictAdd extends PureComponent {
                   )}
                 </FormItem>
               </Col>
+            </Row>
+            {parentMode ? (
+              <Row gutter={24}>
+                <Col span={10}>
+                  <FormItem {...formItemLayout} label="上级字典">
+                    {getFieldDecorator('parentId', {
+                      initialValue: detail.id,
+                    })(
+                      <TreeSelect
+                        disabled={func.notEmpty(detail.id)}
+                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                        treeData={tree}
+                        placeholder="请选择上级字典"
+                        allowClear
+                        showSearch
+                        treeNodeFilterProp="title"
+                        onChange={this.onParentIdChange}
+                      />
+                    )}
+                  </FormItem>
+                </Col>
+                <Col span={10}>
+                  <FormItem {...formItemLayout} className={styles.inputItem} label="字典键值">
+                    {getFieldDecorator('dictKey', {
+                      rules: [
+                        {
+                          required: true,
+                          message: '请输入字典键值',
+                        },
+                      ],
+                      initialValue: detail.nextKey,
+                    })(<Input placeholder="请输入字典键值" />)}
+                  </FormItem>
+                </Col>
+              </Row>
+            ) : null}
+            <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} className={styles.inputItem} label="字典键值">
-                  {getFieldDecorator('dictKey', {
+                <FormItem {...formItemLayout} className={styles.inputItem} label="是否封存">
+                  {getFieldDecorator('isSealed', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入字典键值',
+                        message: '请选择是否封存',
                       },
                     ],
-                    initialValue: detail.nextKey,
-                  })(<InputNumber min={-1} placeholder="请输入字典键值" />)}
+                    initialValue: 0,
+                  })(
+                    <Select placeholder="请选择是否封存">
+                      <Select.Option key={0} value={0}>
+                        否
+                      </Select.Option>
+                      <Select.Option key={1} value={1}>
+                        是
+                      </Select.Option>
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} className={styles.inputItem} label="字典排序">
+                  {getFieldDecorator('sort', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请输入字典排序',
+                      },
+                    ],
+                    initialValue: detail.nextSort,
+                  })(<InputNumber placeholder="请输入字典排序" />)}
                 </FormItem>
               </Col>
             </Row>

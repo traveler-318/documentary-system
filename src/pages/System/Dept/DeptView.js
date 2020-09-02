@@ -63,29 +63,29 @@ class DeptView extends PureComponent {
 
     return (
       <Panel title="查看" back="/system/dept" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="部门名称">
+                <FormItem {...formItemLayout} label="机构名称">
                   <span>{detail.deptName}</span>
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="部门全称">
+                <FormItem {...formItemLayout} label="机构全称">
                   <span>{detail.fullName}</span>
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="上级部门">
+                <FormItem {...formItemLayout} label="上级机构">
                   <span>{detail.parentName}</span>
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="部门排序">
-                  <span>{detail.sort}</span>
+                <FormItem {...formItemLayout} label="机构类型">
+                  <span>{detail.deptCategoryName}</span>
                 </FormItem>
               </Col>
             </Row>
@@ -93,7 +93,12 @@ class DeptView extends PureComponent {
           <Card title="其他信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={20}>
-                <FormItem {...formAllItemLayout} label="部门备注">
+                <FormItem {...formAllItemLayout} label="机构排序">
+                  <span>{detail.sort}</span>
+                </FormItem>
+              </Col>
+              <Col span={20}>
+                <FormItem {...formAllItemLayout} label="机构备注">
                   <span>{detail.remark}</span>
                 </FormItem>
               </Col>

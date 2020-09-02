@@ -1,5 +1,16 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect, message } from 'antd';
+import {
+  Form,
+  Input,
+  Card,
+  Row,
+  Col,
+  Button,
+  InputNumber,
+  TreeSelect,
+  message,
+  Select,
+} from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
@@ -36,7 +47,7 @@ class DeptEdit extends PureComponent {
     } = this.props;
     const parentId = form.getFieldValue('parentId');
     if (id === parentId.toString()) {
-      message.warn('上级部门不能选择自身!');
+      message.warn('上级机构不能选择自身!');
       return;
     }
     form.validateFieldsAndScroll((err, values) => {
@@ -60,7 +71,7 @@ class DeptEdit extends PureComponent {
       form: { getFieldDecorator },
       dept: {
         detail,
-        init: { tree },
+        init: { tree, category },
       },
       submitting,
     } = this.props;
@@ -91,46 +102,46 @@ class DeptEdit extends PureComponent {
 
     return (
       <Panel title="修改" back="/system/dept" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="部门名称">
+                <FormItem {...formItemLayout} label="机构名称">
                   {getFieldDecorator('deptName', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入部门名称',
+                        message: '请输入机构名称',
                       },
                     ],
                     initialValue: detail.deptName,
-                  })(<Input placeholder="请输入部门名称" />)}
+                  })(<Input placeholder="请输入机构名称" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="部门全称">
+                <FormItem {...formItemLayout} label="机构全称">
                   {getFieldDecorator('fullName', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入部门全称',
+                        message: '请输入机构全称',
                       },
                     ],
                     initialValue: detail.fullName,
-                  })(<Input placeholder="请输入部门全称" />)}
+                  })(<Input placeholder="请输入机构全称" />)}
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="上级部门">
+                <FormItem {...formItemLayout} label="上级机构">
                   {getFieldDecorator('parentId', {
                     initialValue: detail.parentId,
                   })(
                     <TreeSelect
                       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                       treeData={tree}
-                      placeholder="请选择上级部门"
+                      placeholder="请选择上级机构"
                       allowClear
                       showSearch
                       treeNodeFilterProp="title"
@@ -140,16 +151,24 @@ class DeptEdit extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} className={styles.inputItem} label="部门排序">
-                  {getFieldDecorator('sort', {
+                <FormItem {...formItemLayout} className={styles.inputItem} label="机构类型">
+                  {getFieldDecorator('deptCategory', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入部门排序',
+                        message: '请选择机构类型',
                       },
                     ],
-                    initialValue: detail.sort,
-                  })(<InputNumber placeholder="请输入部门排序" />)}
+                    initialValue: String(detail.deptCategory),
+                  })(
+                    <Select placeholder="请选择机构类型">
+                      {category.map(d => (
+                        <Select.Option key={d.dictKey} value={d.dictKey}>
+                          {d.dictValue}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  )}
                 </FormItem>
               </Col>
             </Row>
@@ -157,10 +176,23 @@ class DeptEdit extends PureComponent {
           <Card title="其他信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={20}>
-                <FormItem {...formAllItemLayout} label="部门备注">
+                <FormItem {...formAllItemLayout} className={styles.inputItem} label="机构排序">
+                  {getFieldDecorator('sort', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请输入机构排序',
+                      },
+                    ],
+                    initialValue: detail.sort,
+                  })(<InputNumber placeholder="请输入机构排序" />)}
+                </FormItem>
+              </Col>
+              <Col span={20}>
+                <FormItem {...formAllItemLayout} label="机构备注">
                   {getFieldDecorator('remark', {
                     initialValue: detail.remark,
-                  })(<TextArea rows={4} placeholder="请输入部门备注" />)}
+                  })(<TextArea rows={4} placeholder="请输入机构备注" />)}
                 </FormItem>
               </Col>
             </Row>

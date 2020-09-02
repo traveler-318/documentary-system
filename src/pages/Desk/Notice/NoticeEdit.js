@@ -81,7 +81,7 @@ class NoticeAdd extends PureComponent {
     return (
       <Panel title={<FormattedMessage id="button.edit.name" />} back="/desk/notice" action={action}>
         <Card bordered={false}>
-          <Form hideRequiredMark style={{ marginTop: 8 }}>
+          <Form style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label={<FormattedMessage id="desk.notice.title" />}>
               {getFieldDecorator('title', {
                 rules: [
@@ -101,7 +101,7 @@ class NoticeAdd extends PureComponent {
                     message: formatMessage({ id: 'desk.notice.category.validation' }),
                   },
                 ],
-                initialValue: detail.category,
+                initialValue: String(detail.category),
               })(
                 <Select placeholder={formatMessage({ id: 'desk.notice.category.placeholder' })}>
                   {category.map(d => (

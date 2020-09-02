@@ -76,7 +76,7 @@ class ClientEdit extends PureComponent {
 
     return (
       <Panel title="修改" back="/system/client" action={action}>
-        <Form hideRequiredMark style={{ marginTop: 8 }}>
+        <Form style={{ marginTop: 8 }}>
           <Card className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>

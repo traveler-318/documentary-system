@@ -149,7 +149,7 @@ const radarOriginData = [
     hot: 1,
   },
   {
-    name: '部门',
+    name: '机构',
     ref: 4,
     koubei: 1,
     output: 6,

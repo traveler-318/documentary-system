@@ -44,6 +44,17 @@
   }
 }
 
+.triggerSmall {
+  height: @layout-header-height;
+  padding: ~'calc((@{layout-header-height} - 16px) / 2)' 16px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s, padding 0s;
+  &:hover {
+    background: @pro-header-hover-bg;
+  }
+}
+
 .right {
   float: right;
   height: 100%;

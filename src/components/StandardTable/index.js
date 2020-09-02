@@ -125,6 +125,7 @@ class StandardTable extends PureComponent {
           pagination={paginationProps}
           onChange={this.handleTableChange}
           {...rest}
+          {...rest.tblProps}
           {...expandProps}
         />
       </div>

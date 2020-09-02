@@ -200,7 +200,7 @@ class CodeEdit extends PureComponent {
                         message: '请配置基础业务',
                       },
                     ],
-                    initialValue: detail.baseMode,
+                    initialValue: String(detail.baseMode),
                   })(
                     <RadioGroup name="baseMode">
                       {category.map(d => (
@@ -221,7 +221,7 @@ class CodeEdit extends PureComponent {
                         message: '请配置包装器',
                       },
                     ],
-                    initialValue: detail.wrapMode,
+                    initialValue: String(detail.wrapMode),
                   })(
                     <RadioGroup name="wrapMode">
                       {category.map(d => (

@@ -200,6 +200,7 @@ export default class Grid extends PureComponent {
       cardProps,
       actionColumnWidth,
       renderSearchForm,
+      renderButton,
       renderLeftButton,
       renderRightButton,
       renderActionButton,
@@ -240,16 +241,7 @@ export default class Grid extends PureComponent {
         },
       ];
     }
-    console.log(columns,"columns")
 
-    let newColumns = columns.map(item=>{
-      if(item.title === '操作'){
-        item.fixed='right'
-      }
-      return item
-    })
-    
-    
     return (
       <Card bordered={false} {...cardProps}>
         <div className={styles.swordPage}>
@@ -258,6 +250,7 @@ export default class Grid extends PureComponent {
           </SearchBox>
           <ToolBar
             buttons={buttons}
+            renderButton={renderButton}
             renderLeftButton={renderLeftButton}
             renderRightButton={renderRightButton}
             onClick={this.handleToolBarClick}
@@ -266,7 +259,7 @@ export default class Grid extends PureComponent {
             rowKey={rowKey || 'id'}
             selectedRows={selectedRows}
             loading={loading}
-            columns={newColumns}
+            columns={columns}
             data={data}
             onSelectRow={this.handleSelectRows}
             onChange={this.handleStandardTableChange}

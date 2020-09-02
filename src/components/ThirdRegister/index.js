@@ -3,10 +3,9 @@ import { connect } from 'dva';
 import { Card, Col, Form, Input, Modal, Button, Row, message } from 'antd';
 import styles from '@/layouts/Sword.less';
 import { getCurrentUser, removeAll } from '@/utils/authority';
-import { validateNull } from '@/utils/utils';
+import { getTopUrl, validateNull } from '@/utils/utils';
 import { tenantMode } from '@/defaultSettings';
 import { getUserInfo, registerGuest } from '@/services/user';
-import router from 'umi/router';
 
 const FormItem = Form.Item;
 
@@ -22,8 +21,14 @@ class ThirdRegister extends PureComponent {
   };
 
   componentDidMount() {
+    const domain = getTopUrl();
     const user = getCurrentUser();
-    if (validateNull(user) || validateNull(user.userId) || user.userId < 0) {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'tenant/fetchInfo',
+      payload: { domain },
+    });
+    if (validateNull(user.userId) || user.userId < 0) {
       // 第三方注册用户，弹出注册框
       this.setState({ visible: true, user });
     } else {
@@ -45,20 +50,11 @@ class ThirdRegister extends PureComponent {
         if (password !== password2) {
           message.warning('两次密码输入不一致');
         } else {
-          
-          let oauthId = "";
-          for(let i=0; i<10; i++){
-            oauthId = oauthId +''+ Math.floor(Math.random()*10)
-          }
-
-          console.log(oauthId)
-
-          registerGuest(values, oauthId).then(resp => {
+          registerGuest(values, user.oauthId).then(resp => {
             if (resp.success) {
               this.setState({ visible: false });
               Modal.success({ content: '注册申请已提交,请耐心等待管理员通过!' });
               removeAll();
-              router.push('/user/login');
             }
             form.resetFields();
           });
@@ -70,13 +66,16 @@ class ThirdRegister extends PureComponent {
   render() {
     const {
       form,
+      tenant: { info },
     } = this.props;
 
     const { loading, visible, user } = this.state;
 
     const { getFieldDecorator } = form;
 
-    const tenantVisible = tenantMode;
+    const { tenantId } = info;
+
+    const tenantVisible = tenantMode && tenantId === '000000';
 
     const formItemLayout = {
       labelCol: {
@@ -136,7 +135,7 @@ class ThirdRegister extends PureComponent {
                         message: '请输入用户姓名',
                       },
                     ],
-                    initialValue: user && user.name,
+                    initialValue: user.name,
                   })(<Input placeholder="请输入用户姓名" />)}
                 </FormItem>
               </Col>
@@ -149,7 +148,7 @@ class ThirdRegister extends PureComponent {
                         message: '请输入账号名称',
                       },
                     ],
-                    initialValue: user && user.account,
+                    initialValue: user.account,
                   })(<Input placeholder="请输入账号名称" />)}
                 </FormItem>
               </Col>

@@ -1,67 +1,142 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Table, Alert, Divider, Select , DatePicker } from 'antd';
+import { Button, Col, Form, Input, Row, Select, DatePicker, Divider } from 'antd';
+import { formatMessage, FormattedMessage } from 'umi/locale';
 import Panel from '../../../components/Panel';
-import styles from './index.less'
-import {getSalesmanList} from '../../../services/newServices/order'
+import Grid from '../../../components/Sword/Grid';
+import { NOTICE_INIT, NOTICE_LIST } from '../../../actions/notice';
+import func from '../../../utils/Func';
+import {ORDERSTATUS, ORDERTYPPE} from './data.js'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
-import {ORDERSTATUS, ORDERTYPPE} from './data.js'
-
-@connect(({ menu, loading }) => ({
-  menu,
-  loading: loading.models.menu,
+@connect(({ notice, loading }) => ({
+  notice,
+  loading: loading.models.notice,
 }))
 @Form.create()
 class AllOrdersList extends PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {
-          selectedRowKeys:[],
-          salesmanList:[
-            {name:"业务员1",id:"1"}
-          ]
-        };
-      }
 
-    onSelectChange = selectedRowKeys => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
-        this.setState({ selectedRowKeys });
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedRowKeys:[],
+      salesmanList:[
+        {name:"业务员1",id:"1"}
+      ]
     };
+  }
 
-    onReset=()=>{
+  // ============ 初始化数据 ===============
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch(NOTICE_INIT());
+  }
 
+  // ============ 查询 ===============
+  handleSearch = params => {
+    const { dispatch } = this.props;
+
+    const { dateRange } = params;
+    let payload = {
+      ...params,
+    };
+    if (dateRange) {
+      payload = {
+        ...params,
+        releaseTime_datege: dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
+        releaseTime_datelt: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null,
+      };
+      payload.dateRange = null;
     }
+    dispatch(NOTICE_LIST(payload));
+  };
 
-    componentDidMount (){
-      // getSalesmanList().then(res=>{
+  // ============ 查询表单 ===============
+  renderSearchForm = onReset => {
+    const {
+      form,
+      notice: {
+        init: { category },
+      },
+    } = this.props;
+    const { getFieldDecorator } = form;
 
-      // })
-    }
+    const { selectedRowKeys, salesmanList } = this.state;
+
+    return (
+      <div className={"default_search_form"}>
+        <Form.Item label="关键词">
+            {getFieldDecorator('name')(<Input placeholder="请输入关键词" />)}
+          </Form.Item>
+          <Form.Item label="订单状态">
+            {getFieldDecorator('code')(
+              <Select defaultValue={1} placeholder={"请选择订单状态"} style={{ width: 120 }}>
+                {ORDERSTATUS.map(item=>{
+                  return (<Option value={item.key}>{item.name}</Option>)
+                })}
+              </Select>
+            )}
+          </Form.Item>
+          <Form.Item label="订单类型">
+                  {getFieldDecorator('code1')(
+                    <Select defaultValue={null} placeholder={"请选择订单类型"} style={{ width: 120 }}>
+                      {ORDERTYPPE.map(item=>{
+                        return (<Option value={item.key}>{item.name}</Option>)
+                      })}
+                    </Select>
+                  )}
+              </Form.Item>
+              <Form.Item label="销售">
+                {getFieldDecorator('code2')(
+                    <Select defaultValue={null} placeholder={"请选择销售"} style={{ width: 120 }}>
+                      {salesmanList.map(item=>{
+                        return (<Option value={item.id}>{item.name}</Option>)
+                      })}
+                    </Select>
+                  )}
+              </Form.Item>
+              <Form.Item label="最后跟进">
+            <RangePicker size={"default"} />
+          </Form.Item>
+          <div style={{ float: 'right' }}>
+            <Button type="primary" htmlType="submit">
+              <FormattedMessage id="button.search.name" />
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={onReset}>
+              <FormattedMessage id="button.reset.name" />
+            </Button>
+          </div>
+      </div>
+    );
+  };
+
+  renderLeftButton = () => (
+    <div>
+      <Button type="primary" icon="plus">添加</Button>
+      <Button icon="download">导入</Button>
+      <Button icon="upload">导出</Button>
+      <Button icon="menu-unfold">批量审核</Button>
+      <Button icon="appstore">批量发货</Button>
+      <Button icon="bell">批量提醒</Button>
+      <Button icon="loading-3-quarters">转移客户</Button>
+      <Button icon="highlight">批量编辑</Button>
+      <Button icon="delete">批量删除</Button>
+      {/* <Button icon="ordered-list">排序</Button>
+      <Button icon="unordered-list">列表</Button> */}
+    </div>
+  );
 
   render() {
+    const code = 'allOrdersList';
 
-    let dataSource = [
-        {
-            name:"姓名",
-            name0:"姓名",
-            name1:"姓名",
-            name2:"姓名",
-            name3:"姓名",
-            name4:"姓名",
-            name5:"姓名",
-            name6:"姓名",
-            name7:"姓名",
-            name8:"姓名",
-            name9:"姓名",
-            name10:"姓名",
-            name11:"姓名",
-            name12:"姓名"
-        }
-    ]
-    
+    const {
+      form,
+      loading,
+      notice: { data },
+    } = this.props;
+
     const columns = [
       {
         title: '姓名',
@@ -153,102 +228,19 @@ class AllOrdersList extends PureComponent {
       },
     ];
 
-    const { selectedRowKeys, salesmanList } = this.state;
-
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: this.onSelectChange,
-    };
-
-    const {
-        form: { getFieldDecorator },
-      } = this.props;
-
     return (
       <Panel>
-        <div className={styles.default_table_serch_box}>
-            <Form layout="inline">
-              <Form.Item label="关键词">
-                {getFieldDecorator('name')(<Input placeholder="请输入关键词" />)}
-              </Form.Item>
-              <Form.Item label="订单状态">
-                {getFieldDecorator('code')(
-                  <Select defaultValue={null} style={{ width: 120 }}>
-                    {ORDERSTATUS.map(item=>{
-                      return (<Option value={item.key}>{item.name}</Option>)
-                    })}
-                  </Select>
-                )}
-              </Form.Item>
-              <Form.Item label="订单类型">
-                  {getFieldDecorator('code')(
-                    <Select defaultValue={null} style={{ width: 120 }}>
-                      {ORDERTYPPE.map(item=>{
-                        return (<Option value={item.key}>{item.name}</Option>)
-                      })}
-                    </Select>
-                  )}
-              </Form.Item>
-              <Form.Item label="销售">
-                {getFieldDecorator('code')(
-                    <Select defaultValue={null} style={{ width: 120 }}>
-                      {salesmanList.map(item=>{
-                        return (<Option value={item.id}>{item.name}</Option>)
-                      })}
-                    </Select>
-                  )}
-              </Form.Item>
-              <Form.Item label="最后跟进">
-                <RangePicker size={"default"} />
-              </Form.Item>
-            </Form>
-            
-            <div style={{ textAlign: 'right' }}>
-              <Button type="primary" htmlType="submit">
-              查询
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.onReset}>
-              重置
-              </Button>
-          </div>
-          </div>
-        
-        
-        <div className={styles.default_operation_box}>
-        <Button type="primary" icon="plus" size="small">添加</Button>
-        <Divider type="vertical" />
-        <Button icon="download" size="small">导入</Button>
-        <Divider type="vertical" />
-        <Button icon="upload" size="small">导出</Button>
-
-        <Divider type="vertical" />
-        <Button icon="menu-unfold" size="small">批量审核</Button>
-        <Divider type="vertical" />
-        <Button icon="appstore" size="small">批量发货</Button>
-        <Divider type="vertical" />
-        <Button icon="bell" size="small">批量提醒</Button>
-        <Divider type="vertical" />
-        <Button icon="loading-3-quarters" size="small">转移客户</Button>
-
-        <Divider type="vertical" />
-        <Button icon="highlight" size="small">批量编辑</Button>
-        <Divider type="vertical" />
-        <Button icon="delete" size="small">批量删除</Button>
-
-        <Divider type="vertical" />
-        <Button icon="ordered-list" size="small">排序</Button>
-        <Divider type="vertical" />
-        <Button icon="unordered-list" size="small">列表</Button>
-        </div>
-        <div className={styles.default_table_box}>
-          <Table 
-            columns={columns} 
-            scroll={{ x: 1000 }} 
-            dataSource={dataSource}
-            rowSelection={rowSelection}
-            bordered
-           />
-        </div>
+        <Grid
+          code={code}
+          form={form}
+          onSearch={this.handleSearch}
+          renderSearchForm={this.renderSearchForm}
+          loading={loading}
+          data={data}
+          columns={columns}
+          scroll={{ x: 1000 }} 
+          renderLeftButton={this.renderLeftButton}
+        />
       </Panel>
     );
   }

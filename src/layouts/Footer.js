@@ -8,13 +8,13 @@ const FooterView = () => (
     <GlobalFooter
       copyright={
         <Fragment>
-          Copyright <Icon type="copyright" /> 2020 SpringBlade{' '}
+          Copyright <Icon type="copyright" /> 2020 BladeX{' '}
           <a
             key="github"
             title="git"
             target="_blank"
             rel="noopener noreferrer"
-            href="https://gitee.com/smallc/SpringBlade"
+            href="https://git.bladex.vip/blade/BladeX"
           >
             <Icon type="github" />{' '}
           </a>
