@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Button, Col, Form, Input, Row, Select, DatePicker, Divider } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
+import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { NOTICE_INIT, NOTICE_LIST } from '../../../actions/notice';
@@ -114,7 +115,9 @@ class AllOrdersList extends PureComponent {
 
   renderLeftButton = () => (
     <div>
-      <Button type="primary" icon="plus">添加</Button>
+      <Button type="primary" icon="plus" onClick={()=>{
+        router.push(`/order/AllOrders/add`);
+      }}>添加</Button>
       <Button icon="download">导入</Button>
       <Button icon="upload">导出</Button>
       <Button icon="menu-unfold">批量审核</Button>
