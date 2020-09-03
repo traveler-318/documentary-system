@@ -4,7 +4,7 @@ import { Form, Card, Button } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
-import { USERORDER_DETAIL } from '../../../actions/userOrder';
+import { USERORDER_DETAIL } from '../../../actions/userorder';
 
 const FormItem = Form.Item;
 

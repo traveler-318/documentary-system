@@ -3,7 +3,7 @@ import { Form, Input, Card, Button } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
-import { USERORDER_SUBMIT } from '../../../actions/userOrder';
+import { USERORDER_SUBMIT } from '../../../actions/userorder';
 
 const FormItem = Form.Item;
 
