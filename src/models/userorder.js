@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import router from 'umi/router';
-import { USERORDER_NAMESPACE } from '../actions/userOrder';
-import { list, submit, detail, remove } from '../services/userOrder';
+import { USERORDER_NAMESPACE } from '../actions/userorder';
+import { list, submit, detail, remove } from '../services/userorder';
 
 export default {
   namespace: USERORDER_NAMESPACE,
