@@ -4,15 +4,15 @@ import { Form, Card, Button } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
-import { USERORDER_DETAIL } from '../../../actions/userorder';
+import { ORDER_DETAIL } from '../../../actions/order';
 
 const FormItem = Form.Item;
 
-@connect(({ userOrder }) => ({
-  userOrder,
+@connect(({ order }) => ({
+  order,
 }))
 @Form.create()
-class UserOrderView extends PureComponent {
+class OrderView extends PureComponent {
   componentWillMount() {
     const {
       dispatch,
@@ -20,7 +20,7 @@ class UserOrderView extends PureComponent {
         params: { id },
       },
     } = this.props;
-    dispatch(USERORDER_DETAIL(id));
+    dispatch(ORDER_DETAIL(id));
   }
 
   handleEdit = () => {
@@ -29,12 +29,12 @@ class UserOrderView extends PureComponent {
         params: { id },
       },
     } = this.props;
-    router.push(`/order/userOrder/edit/${id}`);
+    router.push(`/order/order/edit/${id}`);
   };
 
   render() {
     const {
-      userOrder: { detail },
+      order: { detail },
     } = this.props;
 
     const formItemLayout = {
@@ -56,7 +56,7 @@ class UserOrderView extends PureComponent {
     );
 
     return (
-      <Panel title="查看" back="/order/userOrder" action={action}>
+      <Panel title="查看" back="/order/order" action={action}>
         <Form hideRequiredMark style={{ marginTop: 8 }}>
           <Card className={styles.card} bordered={false}>
             <FormItem {...formItemLayout} label="客户姓名">
@@ -179,4 +179,4 @@ class UserOrderView extends PureComponent {
     );
   }
 }
-export default UserOrderView;
+export default OrderView;

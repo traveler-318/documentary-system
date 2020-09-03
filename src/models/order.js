@@ -1,10 +1,10 @@
 import { message } from 'antd';
 import router from 'umi/router';
-import { USERORDER_NAMESPACE } from '../actions/userorder';
-import { list, submit, detail, remove } from '../services/userorder';
+import { ORDER_NAMESPACE } from '../actions/order';
+import { list, submit, detail, remove } from '../services/order';
 
 export default {
-  namespace: USERORDER_NAMESPACE,
+  namespace: ORDER_NAMESPACE,
   state: {
     data: {
       list: [],
@@ -50,7 +50,7 @@ export default {
       const response = yield call(submit, payload);
       if (response.success) {
         message.success('提交成功');
-        router.push('/order/userOrder');
+        router.push('/order/order');
       }
     },
     *remove({ payload }, { call }) {

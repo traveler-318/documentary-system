@@ -2,21 +2,21 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Button, Col, Form, Input, Row } from 'antd';
 import Panel from '../../../components/Panel';
-import { USERORDER_LIST } from '../../../actions/userorder';
+import { ORDER_LIST } from '../../../actions/order';
 import Grid from '../../../components/Sword/Grid';
 
 const FormItem = Form.Item;
 
-@connect(({ userOrder, loading }) => ({   
-  userOrder,
-  loading: loading.models.userOrder,
+@connect(({ order, loading }) => ({
+  order,
+  loading: loading.models.order,
 }))
 @Form.create()
-class UserOrder extends PureComponent {
+class Order extends PureComponent {
   // ============ 查询 ===============
   handleSearch = params => {
     const { dispatch } = this.props;
-    dispatch(USERORDER_LIST(params));
+    dispatch(ORDER_LIST(params));
   };
 
   // ============ 查询表单 ===============
@@ -46,12 +46,12 @@ class UserOrder extends PureComponent {
   };
 
   render() {
-    const code = 'userOrder';
+    const code = 'order';
 
     const {
       form,
       loading,
-      userOrder: { data },
+      order: { data },
     } = this.props;
 
     const columns = [
@@ -224,4 +224,4 @@ class UserOrder extends PureComponent {
     );
   }
 }
-export default UserOrder;
+export default Order;
