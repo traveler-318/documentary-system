@@ -5,7 +5,7 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import { NOTICE_INIT, NOTICE_LIST } from '../../../actions/notice';
+import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
 import {ORDERSTATUS, ORDERTYPPE} from './data.js'
 
@@ -32,7 +32,7 @@ class AllOrdersList extends PureComponent {
   // ============ 初始化数据 ===============
   componentWillMount() {
     const { dispatch } = this.props;
-    dispatch(NOTICE_INIT());
+    dispatch(ORDER_LIST());
   }
 
   // ============ 查询 ===============
@@ -51,7 +51,7 @@ class AllOrdersList extends PureComponent {
       };
       payload.dateRange = null;
     }
-    dispatch(NOTICE_LIST(payload));
+    dispatch(ORDER_LIST(payload));
   };
 
   // ============ 查询表单 ===============
