@@ -7,7 +7,7 @@ import Grid from '../../../components/Sword/Grid';
 
 const FormItem = Form.Item;
 
-@connect(({ userOrder, loading }) => ({
+@connect(({ userOrder, loading }) => ({   
   userOrder,
   loading: loading.models.userOrder,
 }))
