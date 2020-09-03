@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Select, DatePicker, Divider } from 'antd';
+import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
@@ -112,23 +112,60 @@ class AllOrdersList extends PureComponent {
       </div>
     );
   };
+  moreMenu = () => (
+    <Menu onClick={this.handleMenuClick}>
+      <Menu.Item key="1">
+        <Icon type="menu-unfold" />
+        批量审核
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Icon type="appstore" />
+        批量发货
+      </Menu.Item>
+      <Menu.Item key="3">
+        <Icon type="bell" />
+        批量提醒
+      </Menu.Item>
+      <Menu.Item key="1">
+        <Icon type="loading-3-quarters" />
+        转移客户
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Icon type="highlight" />
+        批量编辑
+      </Menu.Item>
+      <Menu.Item key="3">
+        <Icon type="delete" />
+        批量删除
+      </Menu.Item>
+    </Menu>
+  );
+
+  handleMenuClick = (e) => {
+    message.info('Click on menu item.');
+    console.log('click', e);
+  }
 
   renderLeftButton = () => (
-    <div>
+    <>
       <Button type="primary" icon="plus" onClick={()=>{
         router.push(`/order/AllOrders/add`);
       }}>添加</Button>
       <Button icon="download">导入</Button>
       <Button icon="upload">导出</Button>
-      <Button icon="menu-unfold">批量审核</Button>
-      <Button icon="appstore">批量发货</Button>
-      <Button icon="bell">批量提醒</Button>
-      <Button icon="loading-3-quarters">转移客户</Button>
-      <Button icon="highlight">批量编辑</Button>
-      <Button icon="delete">批量删除</Button>
-      {/* <Button icon="ordered-list">排序</Button>
-      <Button icon="unordered-list">列表</Button> */}
-    </div>
+      <Dropdown overlay={this.moreMenu()}>
+        <Button>
+          更多 <Icon type="down" />
+        </Button>
+      </Dropdown>
+    </>
+  );
+
+  renderRightButton = () => (
+    <>
+      <Button icon="ordered-list">排序</Button>
+      <Button icon="unordered-list">列表</Button>
+    </>
   );
 
   render() {
@@ -243,6 +280,7 @@ class AllOrdersList extends PureComponent {
           columns={columns}
           scroll={{ x: 1000 }} 
           renderLeftButton={this.renderLeftButton}
+          renderRightButton={this.renderRightButton}
         />
       </Panel>
     );

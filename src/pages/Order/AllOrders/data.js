@@ -20,6 +20,11 @@ export const ORDERTYPPE = [
     {name:"其他",key:5},
 ]
 
+export const GENDER = [
+    {name:"未知",key:null},
+    {name:"男",key:1},
+    {name:"女",key:2},
+]
 
 
 
