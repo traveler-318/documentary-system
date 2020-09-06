@@ -91,24 +91,29 @@ class UserView extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="用户姓名">
-                  <span>{detail.realName}</span>
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
                 <FormItem {...formItemLayout} label="手机号码">
                   <span>{detail.phone}</span>
                 </FormItem>
               </Col>
+              {/* <Col span={10}>
+                <FormItem {...formItemLayout} label="用户姓名">
+                  <span>{detail.realName}</span>
+                </FormItem>
+              </Col> */}
+            </Row>
+            <Row gutter={24}>
+              {/* <Col span={10}>
+                <FormItem {...formItemLayout} label="手机号码">
+                  <span>{detail.phone}</span>
+                </FormItem>
+              </Col> */}
               <Col span={10}>
                 <FormItem {...formItemLayout} label="电子邮箱">
                   <span>{detail.email}</span>
                 </FormItem>
               </Col>
             </Row>
-            <Row gutter={24}>
+            {/* <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="用户性别">
                   <span>{detail.sexName}</span>
@@ -119,7 +124,7 @@ class UserView extends PureComponent {
                   <span>{detail.birthday}</span>
                 </FormItem>
               </Col>
-            </Row>
+            </Row> */}
           </Card>
           <Card title="职责信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
