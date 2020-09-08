@@ -163,7 +163,7 @@ class UserEdit extends PureComponent {
                   })(<Input placeholder="请输入用户昵称" />)}
                 </FormItem>
               </Col>
-              <Col span={10}>
+              {/* <Col span={10}>
                 <FormItem {...formItemLayout} label="用户姓名">
                   {getFieldDecorator('realName', {
                     rules: [
@@ -175,9 +175,7 @@ class UserEdit extends PureComponent {
                     initialValue: detail.realName,
                   })(<Input placeholder="请输入用户姓名" />)}
                 </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
+              </Col> */}
               <Col span={10}>
                 <FormItem {...formItemLayout} label="手机号码">
                   {getFieldDecorator('phone', {
@@ -185,6 +183,9 @@ class UserEdit extends PureComponent {
                   })(<Input placeholder="请输入手机号码" />)}
                 </FormItem>
               </Col>
+            </Row>
+            <Row gutter={24}>
+              
               <Col span={10}>
                 <FormItem {...formItemLayout} label="电子邮箱">
                   {getFieldDecorator('email', {
@@ -193,7 +194,7 @@ class UserEdit extends PureComponent {
                 </FormItem>
               </Col>
             </Row>
-            <Row gutter={24}>
+            {/* <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="用户性别">
                   {getFieldDecorator('sex', {
@@ -227,7 +228,7 @@ class UserEdit extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-            </Row>
+            </Row> */}
           </Card>
           <Card title="职责信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
