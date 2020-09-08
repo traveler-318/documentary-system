@@ -9,6 +9,8 @@ import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
 import {ORDERSTATUS, ORDERTYPPE} from './data.js'
 
+import {getList} from '../../../services/newServices/order'
+
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
@@ -25,14 +27,34 @@ class AllOrdersList extends PureComponent {
       selectedRowKeys:[],
       salesmanList:[
         {name:"业务员1",id:"1"}
-      ]
+      ],
+      data:{},
+      params:{
+        size:10,
+        current:1
+      }
     };
   }
 
   // ============ 初始化数据 ===============
   componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch(ORDER_LIST());
+    this.getDataList();
+  }
+
+  getDataList = () => {
+    const {params} = this.state
+    getList(params).then(res=>{
+      this.setState({
+        data:{
+          list:res.data.records,
+          pagination:{
+            total:res.data.total,
+            current:res.data.current,
+            pageSize:res.data.size,
+          }
+        }
+      })
+    })
   }
 
   // ============ 查询 ===============
@@ -51,6 +73,7 @@ class AllOrdersList extends PureComponent {
       };
       payload.dateRange = null;
     }
+    
     dispatch(ORDER_LIST(payload));
   };
 
@@ -174,8 +197,10 @@ class AllOrdersList extends PureComponent {
     const {
       form,
       loading,
-      notice: { data },
+      // notice: { data },
     } = this.props;
+
+    const {data} = this.state;
 
     const columns = [
       {

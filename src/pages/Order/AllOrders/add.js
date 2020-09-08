@@ -157,7 +157,7 @@ class OrdersAdd extends PureComponent {
                   title="基础信息"
                 />
                 <FormItem {...formAllItemLayout} label="客户姓名">
-                  {getFieldDecorator('account', {
+                  {getFieldDecorator('userName', {
                     rules: [
                       {
                         required: true,
@@ -167,7 +167,7 @@ class OrdersAdd extends PureComponent {
                   })(<Input placeholder="请输入客户姓名" />)}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="手机号">
-                  {getFieldDecorator('account', {
+                  {getFieldDecorator('userPhone', {
                     rules: [
                       {
                         required: true,
@@ -176,9 +176,9 @@ class OrdersAdd extends PureComponent {
                     ],
                   })(<Input placeholder="请输入手机号" />)}
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="手机号2">
+                {/* <FormItem {...formAllItemLayout} label="手机号2">
                   {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem>
+                </FormItem> */}
                 <FormItem {...formAllItemLayout} label="所在地区">
                   {getFieldDecorator('account')(
                     <Cascader
@@ -189,7 +189,7 @@ class OrdersAdd extends PureComponent {
                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="收货地址">
-                  {getFieldDecorator('account', {
+                  {getFieldDecorator('backupAddress', {
                     rules: [
                       {
                         required: true,
