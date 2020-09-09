@@ -45,11 +45,13 @@ class LogisticsAdd extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const {  form } = this.props;
+    const {data} = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const params = {
           ...values,
           deptId:"1123598813738675201",
+          id:data.id,
         };
         getSubmit(params).then(res=>{
           message.success('提交成功');

@@ -312,6 +312,7 @@ class User extends PureComponent {
     } = this.props;
     console.log(data,"current")
 
+    console.log(data,"data")
     const uploadProps = {
       name: 'file',
       headers: {
