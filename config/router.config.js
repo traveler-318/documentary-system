@@ -540,6 +540,19 @@ export default [
           },
         ],
       },
+      {
+        path: '/logistics',
+        routes: [
+          {
+            path: '/logistics/authority',
+            routes: [
+              { path: '/logistics/authority', redirect: '/logistics/authority/list' },
+              { path: '/logistics/authority/list', component: './Logistics/Authority/index' },
+              { path: '/logistics/authority/add', component: './logistics/authority/add' },
+            ],
+          },
+        ],
+      },
     ],
   },
 ];
