@@ -175,6 +175,11 @@ class UserAdd extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
+                <FormItem {...formItemLayout} label="手机号码">
+                  {getFieldDecorator('phone')(<Input placeholder="请输入手机号码" />)}
+                </FormItem>
+              </Col>
+              {/* <Col span={10}>
                 <FormItem {...formItemLayout} label="用户姓名">
                   {getFieldDecorator('realName', {
                     rules: [
@@ -185,21 +190,17 @@ class UserAdd extends PureComponent {
                     ],
                   })(<Input placeholder="请输入用户姓名" />)}
                 </FormItem>
-              </Col>
+              </Col> */}
             </Row>
             <Row gutter={24}>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="手机号码">
-                  {getFieldDecorator('phone')(<Input placeholder="请输入手机号码" />)}
-                </FormItem>
-              </Col>
+              
               <Col span={10}>
                 <FormItem {...formItemLayout} label="电子邮箱">
                   {getFieldDecorator('email')(<Input placeholder="请输入电子邮箱" />)}
                 </FormItem>
               </Col>
             </Row>
-            <Row gutter={24}>
+            {/* <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="用户性别">
                   {getFieldDecorator('sex')(
@@ -229,7 +230,7 @@ class UserAdd extends PureComponent {
                   )}
                 </FormItem>
               </Col>
-            </Row>
+            </Row> */}
           </Card>
           <Card title="职责信息" className={styles.card} bordered={false}>
             <Row gutter={24}>

@@ -3,16 +3,16 @@ import { Form, Input, Card, Button } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
-import { USERORDER_DETAIL, USERORDER_SUBMIT } from '../../../actions/userOrder';
+import { ORDER_DETAIL, ORDER_SUBMIT } from '../../../actions/order';
 
 const FormItem = Form.Item;
 
-@connect(({ userOrder, loading }) => ({
-  userOrder,
-  submitting: loading.effects['userOrder/submit'],
+@connect(({ order, loading }) => ({
+  order,
+  submitting: loading.effects['order/submit'],
 }))
 @Form.create()
-class UserOrderEdit extends PureComponent {
+class OrderEdit extends PureComponent {
   componentWillMount() {
     const {
       dispatch,
@@ -20,7 +20,7 @@ class UserOrderEdit extends PureComponent {
         params: { id },
       },
     } = this.props;
-    dispatch(USERORDER_DETAIL(id));
+    dispatch(ORDER_DETAIL(id));
   }
 
   handleSubmit = e => {
@@ -39,7 +39,7 @@ class UserOrderEdit extends PureComponent {
           ...values,
         };
         console.log(params);
-        dispatch(USERORDER_SUBMIT(params));
+        dispatch(ORDER_SUBMIT(params));
       }
     });
   };
@@ -47,7 +47,7 @@ class UserOrderEdit extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      userOrder: { detail },
+      order: { detail },
       submitting,
     } = this.props;
 
@@ -70,7 +70,7 @@ class UserOrderEdit extends PureComponent {
     );
 
     return (
-      <Panel title="修改" back="/order/userOrder" action={action}>
+      <Panel title="修改" back="/order/order" action={action}>
         <Form hideRequiredMark style={{ marginTop: 8 }}>
           <Card className={styles.card} bordered={false}>
             <FormItem {...formItemLayout} label="客户姓名">
@@ -498,4 +498,4 @@ class UserOrderEdit extends PureComponent {
   }
 }
 
-export default UserOrderEdit;
+export default OrderEdit;

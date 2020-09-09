@@ -3,21 +3,21 @@ import { Form, Input, Card, Button } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
-import { USERORDER_SUBMIT } from '../../../actions/userOrder';
+import { ORDER_SUBMIT } from '../../../actions/order';
 
 const FormItem = Form.Item;
 
 @connect(({ loading }) => ({
-  submitting: loading.effects['userOrder/submit'],
+  submitting: loading.effects['order/submit'],
 }))
 @Form.create()
-class UserOrderAdd extends PureComponent {
+class OrderAdd extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        dispatch(USERORDER_SUBMIT(values));
+        dispatch(ORDER_SUBMIT(values));
       }
     });
   };
@@ -47,7 +47,7 @@ class UserOrderAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back="/order/userOrder" action={action}>
+      <Panel title="新增" back="/order/order" action={action}>
         <Form hideRequiredMark style={{ marginTop: 8 }}>
           <Card className={styles.card} bordered={false}>
             <FormItem {...formItemLayout} label="客户姓名">
@@ -437,4 +437,4 @@ class UserOrderAdd extends PureComponent {
   }
 }
 
-export default UserOrderAdd;
+export default OrderAdd;
