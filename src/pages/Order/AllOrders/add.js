@@ -2,14 +2,17 @@ import React, { PureComponent } from 'react';
 import { Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, message, Cascader, Radio } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
+import router from 'umi/router';
+
 import Panel from '../../../components/Panel';
 import FormTitle from '../../../components/FormTitle';
-
 import styles from '../../../layouts/Sword.less';
 import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
 import func from '../../../utils/Func';
 import { tenantMode } from '../../../defaultSettings';
 import {GENDER} from './data.js'
+import { getCookie } from '../../../utils/support';
+import {createData} from '../../../services/newServices/order'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -64,43 +67,32 @@ class OrdersAdd extends PureComponent {
           name:"123",
           id:"1"
         }
-      ]
+      ],
+      loading:false,
     };
   }
 
 
   componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch(USER_INIT());
+    
   }
 
   handleSubmit = e => {
     e.preventDefault();
-    const { dispatch, form } = this.props;
+    const { form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const password = form.getFieldValue('password');
-        const password2 = form.getFieldValue('password2');
-        if (password !== password2) {
-          message.warning('两次密码输入不一致');
-        } else {
-          const params = {
-            ...values,
-            roleId: func.join(values.roleId),
-            deptId: func.join(values.deptId),
-            postId: func.join(values.postId),
-            birthday: func.format(values.birthday),
-          };
-          dispatch(USER_SUBMIT(params));
-        }
+        console.log(values,"values")
+        values.deptId = getCookie("dept_id");
+        createData(values).then(res=>{
+          message.success(res.msg);
+          router.push('/order/allOrders');
+        })
       }
     });
   };
 
   handleChange = value => {
-    const { dispatch, form } = this.props;
-    form.resetFields(['roleId', 'deptId', 'postId']);
-    dispatch(USER_CHANGE_INIT({ tenantId: value }));
   };
 
   disabledDate = (current) => {
@@ -111,15 +103,12 @@ class OrdersAdd extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      user: {
-        init: { roleTree, deptTree, postList, tenantList },
-      },
-      submitting,
     } = this.props;
 
     const {
       options,
-      PRODUCTCLASSIFICATION
+      PRODUCTCLASSIFICATION,
+      loading
     } = this.state;
 
     const formItemLayout = {
@@ -141,7 +130,7 @@ class OrdersAdd extends PureComponent {
     };
 
     const action = (
-      <Button type="primary" onClick={this.handleSubmit} loading={submitting}>
+      <Button type="primary" onClick={this.handleSubmit} loading={loading}>
         提交
       </Button>
     );
@@ -180,7 +169,9 @@ class OrdersAdd extends PureComponent {
                   {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
                 </FormItem> */}
                 <FormItem {...formAllItemLayout} label="所在地区">
-                  {getFieldDecorator('account')(
+                  {getFieldDecorator('account', {
+                      // initialValue: {['zhejiang', 'hangzhou', 'xihu']},
+                    })(
                     <Cascader
                       defaultValue={['zhejiang', 'hangzhou', 'xihu']}
                       options={options}
@@ -189,7 +180,7 @@ class OrdersAdd extends PureComponent {
                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="收货地址">
-                  {getFieldDecorator('backupAddress', {
+                  {getFieldDecorator('userAddress', {
                     rules: [
                       {
                         required: true,
@@ -198,8 +189,22 @@ class OrdersAdd extends PureComponent {
                     ],
                   })(<Input placeholder="请输入收货地址" />)}
                 </FormItem>
+                <FormItem {...formAllItemLayout} label="订单号">
+                  {getFieldDecorator('outOrderNo', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请输入订单号',
+                      },
+                    ],
+                  })(<Input placeholder="请输入订单号" />)}
+                </FormItem>
+
+                
                 <FormItem {...formAllItemLayout} label="性别">
-                  {getFieldDecorator('gender')(
+                  {getFieldDecorator('gender', {
+                      initialValue: null,
+                    })(
                     <Radio.Group>
                       {GENDER.map(item=>{
                         return (
@@ -242,8 +247,10 @@ class OrdersAdd extends PureComponent {
                   })(<Input placeholder="请输入订单来源" />)}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="产品分类">
-                  {getFieldDecorator('account')(
-                    <Select defaultValue={null} placeholder={"请选择产品分类"}>
+                  {getFieldDecorator('account', {
+                      initialValue: null,
+                    })(
+                    <Select placeholder={"请选择产品分类"}>
                     {PRODUCTCLASSIFICATION.map(item=>{
                       return (<Option value={item.id}>{item.name}</Option>)
                     })}
@@ -262,8 +269,10 @@ class OrdersAdd extends PureComponent {
                 />
 
                 <FormItem {...formAllItemLayout} label="归属销售">
-                  {getFieldDecorator('account')(
-                    <Select defaultValue={null} placeholder={"请选择归属销售"}>
+                  {getFieldDecorator('account', {
+                      initialValue: null,
+                    })(
+                    <Select placeholder={"请选择归属销售"}>
                     {PRODUCTCLASSIFICATION.map(item=>{
                       return (<Option value={item.id}>{item.name}</Option>)
                     })}

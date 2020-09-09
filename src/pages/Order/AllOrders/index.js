@@ -1,23 +1,20 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon } from 'antd';
+import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
+import {setListData} from '../../../utils/publicMethod';
 import {ORDERSTATUS, ORDERTYPPE} from './data.js'
 
-import {getList} from '../../../services/newServices/order'
+import {getList,deleteData} from '../../../services/newServices/order'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
-@connect(({ notice, loading }) => ({
-  notice,
-  loading: loading.models.notice,
-}))
 @Form.create()
 class AllOrdersList extends PureComponent {
 
@@ -29,6 +26,7 @@ class AllOrdersList extends PureComponent {
         {name:"业务员1",id:"1"}
       ],
       data:{},
+      loading:false,
       params:{
         size:10,
         current:1
@@ -42,47 +40,29 @@ class AllOrdersList extends PureComponent {
   }
 
   getDataList = () => {
-    const {params} = this.state
+    const {params} = this.state;
+    this.setState({
+      loading:true,
+    })
     getList(params).then(res=>{
       this.setState({
-        data:{
-          list:res.data.records,
-          pagination:{
-            total:res.data.total,
-            current:res.data.current,
-            pageSize:res.data.size,
-          }
-        }
+        data:setListData(res.data),
+        loading:false,
       })
     })
   }
 
   // ============ 查询 ===============
   handleSearch = params => {
-    const { dispatch } = this.props;
-
-    const { dateRange } = params;
-    let payload = {
-      ...params,
-    };
-    if (dateRange) {
-      payload = {
-        ...params,
-        releaseTime_datege: dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
-        releaseTime_datelt: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null,
-      };
-      payload.dateRange = null;
-    }
-    dispatch(ORDER_LIST(payload));
+    console.log(params,"params")
+    
+    this.getDataList(params);
   };
 
   // ============ 查询表单 ===============
   renderSearchForm = onReset => {
     const {
       form,
-      notice: {
-        init: { category },
-      },
     } = this.props;
     const { getFieldDecorator } = form;
 
@@ -94,8 +74,10 @@ class AllOrdersList extends PureComponent {
             {getFieldDecorator('name')(<Input placeholder="请输入关键词" />)}
           </Form.Item>
           <Form.Item label="订单状态">
-            {getFieldDecorator('code')(
-              <Select defaultValue={1} placeholder={"请选择订单状态"} style={{ width: 120 }}>
+            {getFieldDecorator('code', {
+                      initialValue: 1,
+                    })(
+              <Select placeholder={"请选择订单状态"} style={{ width: 120 }}>
                 {ORDERSTATUS.map(item=>{
                   return (<Option value={item.key}>{item.name}</Option>)
                 })}
@@ -103,8 +85,10 @@ class AllOrdersList extends PureComponent {
             )}
           </Form.Item>
           <Form.Item label="订单类型">
-                  {getFieldDecorator('code1')(
-                    <Select defaultValue={null} placeholder={"请选择订单类型"} style={{ width: 120 }}>
+                  {getFieldDecorator('code1', {
+                      initialValue: null,
+                    })(
+                    <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
                       {ORDERTYPPE.map(item=>{
                         return (<Option value={item.key}>{item.name}</Option>)
                       })}
@@ -112,8 +96,10 @@ class AllOrdersList extends PureComponent {
                   )}
               </Form.Item>
               <Form.Item label="销售">
-                {getFieldDecorator('code2')(
-                    <Select defaultValue={null} placeholder={"请选择销售"} style={{ width: 120 }}>
+                {getFieldDecorator('code2', {
+                      initialValue: null,
+                    })(
+                    <Select placeholder={"请选择销售"} style={{ width: 120 }}>
                       {salesmanList.map(item=>{
                         return (<Option value={item.id}>{item.name}</Option>)
                       })}
@@ -183,6 +169,31 @@ class AllOrdersList extends PureComponent {
     </>
   );
 
+  refreshTable = () => {
+    this.getDataList();
+  }
+
+  handleDelect = (row) => {
+    const refresh = this.refreshTable;
+    Modal.confirm({
+      title: '删除确认',
+      content: '确定删除选中记录?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        deleteData({
+          ids:row.id
+        }).then(res=>{
+          message.success(res.msg);
+          refresh();
+        })
+      },
+      onCancel() {},
+    });
+    
+  }
+
   renderRightButton = () => (
     <>
       <Button icon="ordered-list">排序</Button>
@@ -195,26 +206,24 @@ class AllOrdersList extends PureComponent {
 
     const {
       form,
-      loading,
-      // notice: { data },
     } = this.props;
 
-    const {data} = this.state;
+    const {data, loading} = this.state;
 
     const columns = [
       {
         title: '姓名',
-        dataIndex: 'name',
+        dataIndex: 'userName',
         width: 200,
       },
       {
         title: '手机号',
-        dataIndex: 'name12',
+        dataIndex: 'userPhone',
         width: 200,
       },
       {
         title: '收货地址',
-        dataIndex: 'name11',
+        dataIndex: 'userAddress',
         width: 200,
       },
       {
@@ -264,7 +273,7 @@ class AllOrdersList extends PureComponent {
       },
       {
         title: '下单时间',
-        dataIndex: 'name1',
+        dataIndex: 'createTime',
         width: 200,
       },
       {
@@ -272,7 +281,7 @@ class AllOrdersList extends PureComponent {
         key: 'operation',
         fixed: 'right',
         width: 300,
-        render: () => {
+        render: (text,row) => {
             return(
                 <div>
                     <a>审核</a>
@@ -285,7 +294,7 @@ class AllOrdersList extends PureComponent {
                     <Divider type="vertical" />
                     <a>归档</a>
                     <Divider type="vertical" />
-                    <a>删除</a>
+                    <a onClick={()=>this.handleDelect(row)}>删除</a>
                 </div>
             )
         },

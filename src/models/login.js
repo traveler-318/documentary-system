@@ -13,9 +13,10 @@ import {
   setButtons,
   removeAll,
 } from '../utils/authority';
-import { getPageQuery, formatRoutes, formatButtons } from '../utils/utils';
+import { getPageQuery, formatRoutes, formatButtons, getTopUrl } from '../utils/utils';
 import { reloadAuthorized } from '../utils/Authorized';
-import { getTopUrl } from '../utils/utils';
+import { setCookie } from '../utils/support';
+
 
 export default {
   namespace: 'login',
@@ -40,6 +41,11 @@ export default {
             data: { ...response },
           },
         });
+        console.log(response,"response")
+        // 缓存全局使用数据
+        // dept_id->部门id  跟当前人帐号挂钩
+        setCookie("dept_id",response.dept_id)
+        // --------结束
         const responseRoutes = yield call(dynamicRoutes);
         const responseButtons = yield call(dynamicButtons);
         yield put({

@@ -16,7 +16,7 @@ import {
 } from 'antd';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import { USER_INIT, USER_LIST, USER_ROLE_GRANT } from '../../../actions/user';
+import { USER_INIT, USER_LIST, USER_ROLE_GRANT, USER_UPDATE } from '../../../actions/user';
 import { resetPassword } from '../../../services/user';
 import { tenantMode } from '../../../defaultSettings';
 import { getAccessToken, getToken } from '../../../utils/authority';
@@ -128,6 +128,31 @@ class User extends PureComponent {
       })
     );
   };
+
+  refreshTable = (checked,row,type) => {
+    console.log(row,"row")
+    const {dispatch} = this.props
+    let params = {...row};
+    params[type] = checked ? 1 : 0
+    params.deptId = row.deptId
+    dispatch(USER_UPDATE(params));
+  }
+  
+  onChange = (checked,row,type) => {
+    const refresh = (checked,row,type)=>this.refreshTable(checked,row,type);
+    Modal.confirm({
+      title: '修改确认',
+      content: '是否要修改该状态??',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        refresh(checked,row,type)
+      },
+      onCancel() {},
+    });
+    
+  }
 
   showModal = () => {
     this.setState({
@@ -358,7 +383,68 @@ class User extends PureComponent {
         dataIndex: 'createTime',
         width:160,
       },
+      {
+        title: '是否启用',
+        dataIndex: 'status',
+        width: 80,
+        render: (key, row) => {
+          return(
+            <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'status')}} />
+          )
+        },
+      },
+      {
+        title: '告警开关',
+        dataIndex: 'alarmStatus',
+        width: 80,
+        render: (key, row) => {
+          return(
+            <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'alarmStatus')}} />
+          )
+        },
+      },
+      {
+        title: '二维码开关',
+        dataIndex: 'qrcodeStatus',
+        width: 100,
+        render: (key, row) => {
+          return(
+            <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'qrcodeStatus')}} />
+          )
+        },
+      },
+      {
+        title: '物流查询开关',
+        dataIndex: 'logisticsStatus',
+        width: 110,
+        render: (key, row) => {
+          return(
+            <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'logisticsStatus')}} />
+          )
+        },
+      },
+      {
+        title: '短信二维码开关',
+        dataIndex: 'smsStatus',
+        width: 120,
+        render: (key, row) => {
+          return(
+            <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'smsStatus')}} />
+          )
+        },
+      },
+      {
+        title: '发货提醒开关',
+        dataIndex: 'shipmentRemindStatus',
+        width: 110,
+        render: (key, row) => {
+          return(
+            <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row, 'shipmentRemindStatus')}} />
+          )
+        },
+      },
     ];
+
 
     if (!tenantMode) {
       columns.splice(0, 1);
