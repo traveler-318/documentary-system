@@ -11,3 +11,24 @@ export async function getList(params) {
     body: params,
   });
 }
+
+export async function getAddList(params) {
+  return request('/api/logistics/authorization/save', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+export async function getSubmit(params) {
+  return request('/api/logistics/authorization/submit', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+export async function getRemove(params) {
+  return request('/api/logistics/authorization/remove', {
+    method: 'POST',
+    body: params,
+  });
+}

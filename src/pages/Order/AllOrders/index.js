@@ -73,7 +73,6 @@ class AllOrdersList extends PureComponent {
       };
       payload.dateRange = null;
     }
-    
     dispatch(ORDER_LIST(payload));
   };
 

@@ -1,13 +1,29 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon ,Switch} from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Row,
+  Select,
+  DatePicker,
+  Divider,
+  Dropdown,
+  Menu,
+  Icon,
+  Switch,
+  Modal,
+  message,
+} from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { LOGISTICS_INIT, LOGISTICS_LIST } from '../../../actions/logistics';
 import func from '../../../utils/Func';
-import {getList} from '../../../services/newServices/logistics';
+import {getList,getRemove} from '../../../services/newServices/logistics';
+import { removeDataScope, scopeDataDetail } from '../../../services/menu';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -22,8 +38,14 @@ class AuthorityList extends PureComponent {
     };
   }
   // ============ 初始化数据 ===============
+
   componentWillMount() {
-    getList().then(res=>{
+    this.getDataList();
+  }
+
+  getDataList = () => {
+    const {params} = this.state;
+    getList(params).then(res=>{
       this.setState({
         data:{
           list:res.data.records,
@@ -36,15 +58,46 @@ class AuthorityList extends PureComponent {
       })
     })
   }
+
   // ============ 查询 ===============
   handleSearch = params => {
 
   };
 
   // ============ 查询表单 ===============
+
   renderSearchForm = onReset => {
 
   };
+
+  // ============ 删除 ===============
+
+  handleClick = ( id) => {
+    const params={
+      ids: id
+    }
+    Modal.confirm({
+      title: '删除确认',
+      content: '确定删除该条记录?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        console.log(params)
+        getRemove(params).then(resp => {
+          console.log(resp)
+          if (resp.success) {
+            message.success(resp.msg);
+          } else {
+            message.error(resp.msg || '删除失败');
+          }
+        });
+      },
+      onCancel() {},
+    });
+  };
+
+
 
   renderLeftButton = () => (
     <>
@@ -66,9 +119,6 @@ class AuthorityList extends PureComponent {
 
     const {data} = this.state;
 
-    function onChange(checked) {
-      console.log(`switch to ${checked}`);
-    }
     const columns = [
       {
         title: '授权ID',
@@ -94,10 +144,11 @@ class AuthorityList extends PureComponent {
         title: '默认开关',
         dataIndex: 'status',
         width: 150,
-        render: () => {
+        render: (res) => {
           return(
             <div>
-              <Switch defaultChecked onChange={onChange} />
+              { res === 0 ? <Switch disabled />
+                : <Switch defaultChecked disabled />}
             </div>
           )
         },
@@ -107,14 +158,14 @@ class AuthorityList extends PureComponent {
         key: 'operation',
         fixed: 'right',
         width: 300,
-        render: () => {
+        render: (res) => {
+          const thisData =  JSON.stringify(res);
           return(
             <div>
               <Divider type="vertical" />
-              <a>编辑</a>
+              <a onClick={()=>{router.push(`/logistics/authority/edit/${thisData}`);}}>编辑</a>
               <Divider type="vertical" />
-              <Divider type="vertical" />
-              <a>删除</a>
+              <a onClick={() => this.handleClick(res.id)}>删除</a>
             </div>
           )
         },
