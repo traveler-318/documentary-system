@@ -548,7 +548,7 @@ export default [
             routes: [
               { path: '/logistics/authority', redirect: '/logistics/authority/list' },
               { path: '/logistics/authority/list', component: './Logistics/Authority/index' },
-              { path: '/logistics/authority/add', component: './logistics/authority/add' },
+              { path: '/logistics/authority/add', component: './Logistics/Authority/add' },
             ],
           },
         ],
