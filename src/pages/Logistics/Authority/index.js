@@ -34,7 +34,7 @@ class AuthorityList extends PureComponent {
     super(props);
     this.state = {
       data:[],
-
+      loading:false
     };
   }
   // ============ 初始化数据 ===============
@@ -45,7 +45,13 @@ class AuthorityList extends PureComponent {
 
   getDataList = () => {
     const {params} = this.state;
+    this.setState({
+      loading:true
+    })
     getList(params).then(res=>{
+      this.setState({
+        loading:false
+      })
       this.setState({
         data:{
           list:res.data.records,
@@ -76,6 +82,7 @@ class AuthorityList extends PureComponent {
     const params={
       ids: id
     }
+    const refresh = this.getDataList;
     Modal.confirm({
       title: '删除确认',
       content: '确定删除该条记录?',
@@ -83,11 +90,10 @@ class AuthorityList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        console.log(params)
         getRemove(params).then(resp => {
-          console.log(resp)
           if (resp.success) {
             message.success(resp.msg);
+            refresh()
           } else {
             message.error(resp.msg || '删除失败');
           }
@@ -117,7 +123,7 @@ class AuthorityList extends PureComponent {
       form,
     } = this.props;
 
-    const {data} = this.state;
+    const {data,loading} = this.state;
 
     const columns = [
       {
@@ -179,6 +185,7 @@ class AuthorityList extends PureComponent {
           onSearch={this.handleSearch}
           renderSearchForm={this.renderSearchForm}
           data={data}
+          loading={loading}
           columns={columns}
           scroll={{ x: 1000 }}
           renderLeftButton={this.renderLeftButton}

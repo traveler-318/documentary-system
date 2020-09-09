@@ -3,7 +3,7 @@
  */
 // import { stringify } from 'qs';
 import request from '../../utils/request';
-// import func from '../utils/Func';
+ import func from '../../utils/Func';
 
 export async function getList(params) {
   return request('/api/logistics/authorization/list', {
@@ -29,6 +29,6 @@ export async function getSubmit(params) {
 export async function getRemove(params) {
   return request('/api/logistics/authorization/remove', {
     method: 'POST',
-    body: params,
+    body: func.toFormData(params),
   });
 }
