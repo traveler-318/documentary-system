@@ -1,14 +1,18 @@
 import { message } from 'antd';
 import router from 'umi/router';
-import { LOGISTICS_NAMESPACE } from '../actions/logistics';
+import { dict } from '../services/dict';
 import { list, submit, detail, remove } from '../services/authority';
+import { LOGISTICS_NAMESPACE } from '../actions/logistics';
 
 export default {
   namespace: LOGISTICS_NAMESPACE,
   state: {
     data: {
       list: [],
-      pagination: false,
+      pagination: {},
+    },
+    init: {
+      category: [],
     },
     detail: {},
   },
@@ -29,6 +33,17 @@ export default {
         });
       }
     },
+    *fetchInit({ payload }, { call, put }) {
+      const response = yield call(dict, payload);
+      if (response.success) {
+        yield put({
+          type: 'saveInit',
+          payload: {
+            category: response.data,
+          },
+        });
+      }
+    },
     *fetchDetail({ payload }, { call, put }) {
       const response = yield call(detail, payload);
       if (response.success) {
@@ -40,24 +55,18 @@ export default {
         });
       }
     },
-    *clearDetail({ payload }, { put }) {
-      yield put({
-        type: 'removeDetail',
-        payload: { payload },
-      });
-    },
     *submit({ payload }, { call }) {
       const response = yield call(submit, payload);
       if (response.success) {
         message.success('提交成功');
-        router.push('/order/order');
+        router.push('/desk/notice');
       }
     },
     *remove({ payload }, { call }) {
       const {
         data: { keys },
         success,
-        } = payload;
+      } = payload;
       const response = yield call(remove, { ids: keys });
       if (response.success) {
         success();
@@ -71,16 +80,16 @@ export default {
         data: action.payload,
       };
     },
+    saveInit(state, action) {
+      return {
+        ...state,
+        init: action.payload,
+      };
+    },
     saveDetail(state, action) {
       return {
         ...state,
         detail: action.payload.detail,
-      };
-    },
-    removeDetail(state) {
-      return {
-        ...state,
-        detail: {},
       };
     },
   },

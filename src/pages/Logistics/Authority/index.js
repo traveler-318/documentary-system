@@ -1,22 +1,35 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon ,Switch} from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Row,
+  Select,
+  DatePicker,
+  Divider,
+  Dropdown,
+  Menu,
+  Icon,
+  Switch,
+  Modal,
+  message,
+} from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { LOGISTICS_INIT, LOGISTICS_LIST } from '../../../actions/logistics';
 import func from '../../../utils/Func';
-import {getList} from '../../../services/newServices/logistics';
-
-
+import {getList,getRemove} from '../../../services/newServices/logistics';
+import { removeDataScope, scopeDataDetail } from '../../../services/menu';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
 @Form.create()
 class AuthorityList extends PureComponent {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -25,37 +38,67 @@ class AuthorityList extends PureComponent {
     };
   }
   // ============ 初始化数据 ===============
-  componentWillMount() {
 
-    getList().then(res=>{
+  componentWillMount() {
+    this.getDataList();
+  }
+
+  getDataList = () => {
+    const {params} = this.state;
+    getList(params).then(res=>{
       this.setState({
-        data:res.data.data
+        data:{
+          list:res.data.records,
+          pagination:{
+            current: res.data.current,
+            pageSize: res.data.size,
+            total: res.data.total
+          }
+        }
       })
     })
-
   }
 
   // ============ 查询 ===============
   handleSearch = params => {
 
-    const { dateRange } = params;
-    let payload = {
-      ...params,
-    };
-    if (dateRange) {
-      payload = {
-        ...params,
-        releaseTime_datege: dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
-        releaseTime_datelt: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null,
-      };
-      payload.dateRange = null;
-    }
   };
 
   // ============ 查询表单 ===============
+
   renderSearchForm = onReset => {
 
   };
+
+  // ============ 删除 ===============
+
+  handleClick = ( id) => {
+    const params={
+      ids: id
+    }
+    Modal.confirm({
+      title: '删除确认',
+      content: '确定删除该条记录?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        console.log(params)
+        getRemove(params).then(resp => {
+          console.log(resp)
+          if (resp.success) {
+            message.success(resp.msg);
+          } else {
+            message.error(resp.msg || '删除失败');
+          }
+        });
+      },
+      onCancel() {},
+    });
+  };
+
+
+
   renderLeftButton = () => (
     <>
       数据列表
@@ -64,9 +107,7 @@ class AuthorityList extends PureComponent {
 
   renderRightButton = () => (
     <>
-      <Button type="primary" icon="plus" onClick={()=>{
-        router.push(`/logistics/authority/add`);
-      }}>添加</Button>
+      <Button type="primary" icon="plus" onClick={()=>{router.push(`/logistics/authority/add`);}}>添加</Button>
     </>
   );
 
@@ -77,11 +118,7 @@ class AuthorityList extends PureComponent {
     } = this.props;
 
     const {data} = this.state;
-    console.log(data,"data")
 
-    function onChange(checked) {
-      console.log(`switch to ${checked}`);
-    }
     const columns = [
       {
         title: '授权ID',
@@ -107,10 +144,11 @@ class AuthorityList extends PureComponent {
         title: '默认开关',
         dataIndex: 'status',
         width: 150,
-        render: () => {
+        render: (res) => {
           return(
             <div>
-              <Switch defaultChecked onChange={onChange} />
+              { res === 0 ? <Switch disabled />
+                : <Switch defaultChecked disabled />}
             </div>
           )
         },
@@ -120,14 +158,14 @@ class AuthorityList extends PureComponent {
         key: 'operation',
         fixed: 'right',
         width: 300,
-        render: () => {
+        render: (res) => {
+          const thisData =  JSON.stringify(res);
           return(
             <div>
               <Divider type="vertical" />
-              <a>编辑</a>
+              <a onClick={()=>{router.push(`/logistics/authority/edit/${thisData}`);}}>编辑</a>
               <Divider type="vertical" />
-              <Divider type="vertical" />
-              <a>删除</a>
+              <a onClick={() => this.handleClick(res.id)}>删除</a>
             </div>
           )
         },

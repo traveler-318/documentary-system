@@ -4,7 +4,10 @@ export default {
   'menu.order.myOrder': '我的订单',
   'menu.order.mySubordinates': '我的下属',
   'menu.order.userOrder': '测试列表',
-  
+
+  'menu.logistics': '物流配置',
+  'menu.logistics.authority': '授权配置',
+
   'menu.home': '首页',
   'menu.login': '登录',
   'menu.register': '注册',

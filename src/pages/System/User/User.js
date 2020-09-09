@@ -285,6 +285,7 @@ class User extends PureComponent {
         init: { roleTree, deptTree },
       },
     } = this.props;
+    console.log(data,"current")
 
     console.log(data,"data")
     const uploadProps = {
@@ -311,26 +312,52 @@ class User extends PureComponent {
       {
         title: '租户ID',
         dataIndex: 'tenantId',
+        width:100,
       },
       {
         title: '登录账号',
         dataIndex: 'account',
+        width:100,
       },
       {
         title: '用户姓名',
         dataIndex: 'realName',
+        width:120,
       },
       {
         title: '所属角色',
         dataIndex: 'roleName',
+        width:120,
       },
       {
         title: '所属机构',
         dataIndex: 'deptName',
+        width:180,
       },
       {
         title: '手机号码',
         dataIndex: 'phone',
+        width:120,
+      },
+      {
+        title: '邮箱',
+        dataIndex: 'email',
+        width:160,
+      },
+      {
+        title: '剩余金额',
+        dataIndex: 'remainingMoney',
+        width:100,
+      },
+      {
+        title: '业务员数量',
+        dataIndex: 'currentQuota',
+        width:100,
+      },
+      {
+        title: '添加时间',
+        dataIndex: 'createTime',
+        width:160,
       },
     ];
 
@@ -358,6 +385,7 @@ class User extends PureComponent {
               loading={loading}
               data={data}
               columns={columns}
+              scroll={{ x: 1000 }} 
             />
           </Col>
         </Row>
