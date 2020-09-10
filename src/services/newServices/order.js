@@ -20,3 +20,7 @@ export async function deleteData(params) {
     body: func.toFormData(params),
   });
 }
+
+export async function getRegion() {
+  return request(`/api/blade-system/dict-biz/dictionary?${stringify({code:"region"})}`);
+}

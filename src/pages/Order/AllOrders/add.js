@@ -11,8 +11,9 @@ import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user'
 import func from '../../../utils/Func';
 import { tenantMode } from '../../../defaultSettings';
 import {GENDER} from './data.js'
+import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
-import {createData} from '../../../services/newServices/order'
+import {createData,getRegion} from '../../../services/newServices/order'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -74,7 +75,10 @@ class OrdersAdd extends PureComponent {
 
 
   componentWillMount() {
-    
+    console.log("123")
+    // getRegion().then(res=>{
+
+    // })
   }
 
   handleSubmit = e => {
@@ -99,6 +103,16 @@ class OrdersAdd extends PureComponent {
     // Can not select days before today and today
     return current && current > moment().endOf('day');
   }
+
+  onChange = (value, selectedOptions) => {
+    let param ={
+      province:value[0],
+      city:value[1],
+      area:value[2],
+      name:`${selectedOptions[0].label}${selectedOptions[1].label}${selectedOptions[2].label}`
+    }
+    console.log(value, selectedOptions,param,"value")
+  };
 
   render() {
     const {
@@ -169,13 +183,13 @@ class OrdersAdd extends PureComponent {
                   {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
                 </FormItem> */}
                 <FormItem {...formAllItemLayout} label="所在地区">
-                  {getFieldDecorator('account', {
+                  {getFieldDecorator('city', {
                       // initialValue: {['zhejiang', 'hangzhou', 'xihu']},
                     })(
                     <Cascader
-                      defaultValue={['zhejiang', 'hangzhou', 'xihu']}
-                      options={options}
-                      // onChange={onChange}
+                      // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
+                      options={CITY}
+                      onChange={this.onChange}
                     />
                   )}
                 </FormItem>
@@ -237,7 +251,7 @@ class OrdersAdd extends PureComponent {
                   title="订单信息"
                 />
                 <FormItem {...formAllItemLayout} label="订单来源">
-                  {getFieldDecorator('account', {
+                  {getFieldDecorator('orderSource', {
                     rules: [
                       {
                         required: true,
@@ -258,7 +272,7 @@ class OrdersAdd extends PureComponent {
                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="产品型号">
-                  {getFieldDecorator('account')(<Input placeholder="请输入产品型号" />)}
+                  {getFieldDecorator('productModel')(<Input placeholder="请输入产品型号" />)}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="序列号SN">
                   {getFieldDecorator('account')(<Input placeholder="请输入序列号SN" />)}
