@@ -68,15 +68,17 @@ class LogisticsAdd extends PureComponent {
 
     for(let key in ts){
       if(text === ts[key]){
-        console.log(key)
+        text = key
       }
     }
     this.setState({
       data:{
         tempids:text
       }
-    });
-    console.log(this.state)
+    },()=>{
+      console.log(this.state)
+      });
+
 
   };
 
@@ -94,6 +96,8 @@ class LogisticsAdd extends PureComponent {
         span: 16,
       },
     };
+
+    const {data}=this.state
 
 
     const action = (
@@ -125,15 +129,9 @@ class LogisticsAdd extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="打印设备码:">
-                  {getFieldDecorator('siid')(<Input placeholder="打印设备码" />)}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
                 <FormItem {...formItemLayout} label="模板ID：">
                   {getFieldDecorator('tempid', {
+                    initialValue: data.tempids,
                     rules: [
                       {
                         required: true,
@@ -145,19 +143,6 @@ class LogisticsAdd extends PureComponent {
                         return (<Option key={index} value={item.id}>{item.value}</Option>)
                       })}
                     </Select>
-                  )}
-                </FormItem>
-              </Col>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="默认开关：">
-                  {getFieldDecorator('status')(
-                    <Radio.Group>
-                      {STATUS.map(item=>{
-                        return (
-                          <Radio key={item.key} value={item.key}>{item.name}</Radio>
-                        )
-                      })}
-                    </Radio.Group>
                   )}
                 </FormItem>
               </Col>
@@ -185,6 +170,13 @@ class LogisticsAdd extends PureComponent {
                       },
                     ],
                   })(<Input placeholder="高" />)}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="打印设备码:">
+                  {getFieldDecorator('siid')(<Input placeholder="打印设备码" />)}
                 </FormItem>
               </Col>
             </Row>
