@@ -24,7 +24,6 @@ class LogisticsAdd extends PureComponent {
   }
 
   componentWillMount() {
-    console.log( JSON.parse(this.props.match.params.id) );
 
     this.setState({
       data:JSON.parse(this.props.match.params.id)
@@ -50,7 +49,6 @@ class LogisticsAdd extends PureComponent {
       if (!err) {
         const params = {
           ...values,
-          deptId:"1123598813738675201",
           id:data.id,
         };
         getSubmit(params).then(res=>{
@@ -67,7 +65,6 @@ class LogisticsAdd extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     const {data} = this.state;
-    console.log(data)
 
     const formItemLayout = {
       labelCol: {

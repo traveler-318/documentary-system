@@ -20,9 +20,7 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-
-import {getList,getRemove} from '../../../services/newServices/logistics';
-
+import {getSurfacesingleList,getRemove} from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -47,7 +45,7 @@ class AuthorityList extends PureComponent {
     this.setState({
       loading:true
     })
-    getList(params).then(res=>{
+    getSurfacesingleList(params).then(res=>{
       this.setState({
         loading:false
       })
@@ -112,7 +110,7 @@ class AuthorityList extends PureComponent {
 
   renderRightButton = () => (
     <>
-      <Button type="primary" icon="plus" onClick={()=>{router.push(`/logistics/authority/add`);}}>添加</Button>
+      <Button type="primary" icon="plus" onClick={()=>{router.push(`/logistics/faceSheet/add`);}}>添加</Button>
     </>
   );
 
@@ -126,24 +124,39 @@ class AuthorityList extends PureComponent {
 
     const columns = [
       {
-        title: '授权ID',
-        dataIndex: 'partnerId',
+        title: '快递公司编码',
+        dataIndex: 'kuaidicom',
         width: 200,
       },
       {
-        title: '授权key',
-        dataIndex: 'partnerKey',
-        width: 250,
+        title: '打印设备码',
+        dataIndex: 'siid',
+        width: 300,
       },
       {
-        title: '快递员名称',
-        dataIndex: 'checkMan',
-        width: 250,
+        title: '快递模板ID',
+        dataIndex: 'tempid',
+        width: 200,
       },
       {
-        title: '当地网点名称',
-        dataIndex: 'net',
-        width: 350,
+        title: '宽',
+        dataIndex: 'width',
+        width: 150,
+      },
+      {
+        title: '高',
+        dataIndex: 'height',
+        width: 150,
+      },
+      {
+        title: '打印设备名称',
+        dataIndex: 'comment',
+        width: 200,
+      },
+      {
+        title: '打印设备状态',
+        dataIndex: 'online',
+        width: 200,
       },
       {
         title: '默认开关',
@@ -162,7 +175,7 @@ class AuthorityList extends PureComponent {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 300,
+        width: 200,
         render: (res) => {
           const thisData =  JSON.stringify(res);
           return(

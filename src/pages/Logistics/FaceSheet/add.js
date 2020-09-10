@@ -7,7 +7,7 @@ import func from '../../../utils/Func';
 
 import { getAddList } from '../../../services/newServices/logistics';
 import router from 'umi/router';
-import { STATUS,NETSELECT } from './data.js';
+import { STATUS,TEMPID ,EXPRESS100DATA ,tempids} from './data.js';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -19,13 +19,17 @@ class LogisticsAdd extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:[],
+      data:{
+
+      },
     };
   }
 
   componentWillMount() {
 
   }
+
+  // ============ 提交 ===============
 
   handleSubmit = e => {
     e.preventDefault();
@@ -37,12 +41,43 @@ class LogisticsAdd extends PureComponent {
           deptId:"1123598813738675201",
           // createTime: values.createTime.format('YYYY-MM-DD hh:mm:ss'),
         };
-        getAddList(params).then(res=>{
-          message.success('提交成功');
-          router.push('/logistics/authority');
-        })
+        console.log(params)
+        // getAddList(params).then(res=>{
+        //   message.success('提交成功');
+        //   router.push('/logistics/authority');
+        // })
       }
     });
+  };
+
+  onChange = value => {
+    console.log(value)
+    const ts = tempids()
+
+    let text = ""
+    for(let i=0; i< EXPRESS100DATA.length; i++){
+      if(value === EXPRESS100DATA[i].num){
+        text = EXPRESS100DATA[i].name
+      }
+    }
+    for(let j=0; j< TEMPID.length; j++){
+      if(text === TEMPID[j].value){
+        text = TEMPID[j].value
+      }
+    }
+
+    for(let key in ts){
+      if(text === ts[key]){
+        console.log(key)
+      }
+    }
+    this.setState({
+      data:{
+        tempids:text
+      }
+    });
+    console.log(this.state)
+
   };
 
 
@@ -50,7 +85,6 @@ class LogisticsAdd extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-
 
     const formItemLayout = {
       labelCol: {
@@ -60,6 +94,7 @@ class LogisticsAdd extends PureComponent {
         span: 16,
       },
     };
+
 
     const action = (
       <Button type="primary" onClick={this.handleSubmit}>
@@ -73,51 +108,46 @@ class LogisticsAdd extends PureComponent {
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="授权ID：">
-                  {getFieldDecorator('partnerId', {
+                <FormItem {...formItemLayout} label="快递公司编码：">
+                  {getFieldDecorator('kuaidicom', {
                     rules: [
                       {
                         required: true,
-                        message: '授权ID',
                       },
                     ],
-                  })(<Input placeholder="授权ID" />)}
-                </FormItem>
-              </Col>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="授权key:">
-                  {getFieldDecorator('partnerKey')(<Input placeholder="授权key" />)}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="快递员名称：">
-                  {getFieldDecorator('checkMan', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入快递员名称',
-                      },
-                    ],
-                  })(<Input placeholder="请输入快递员名称" />)}
-                </FormItem>
-              </Col>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="当地网点名称:">
-                  {getFieldDecorator('net', {
-                    initialValue: null,
                   })(
-                    <Select placeholder="请输入当地网点名称">
-                      {NETSELECT.map(item=>{
-                        return (<Option key={item.key} value={item.name}>{item.name}</Option>)
+                    <Select placeholder="" onSelect={value => this.onChange(value)}>
+                      {EXPRESS100DATA.map((item,index)=>{
+                        return (<Option key={index} value={item.num}>{item.name}</Option>)
                       })}
                     </Select>
                   )}
                 </FormItem>
               </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="打印设备码:">
+                  {getFieldDecorator('siid')(<Input placeholder="打印设备码" />)}
+                </FormItem>
+              </Col>
             </Row>
             <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="模板ID：">
+                  {getFieldDecorator('tempid', {
+                    rules: [
+                      {
+                        required: true,
+                      },
+                    ],
+                  })(
+                    <Select placeholder="" disabled>
+                      {TEMPID.map((item,index) =>{
+                        return (<Option key={index} value={item.id}>{item.value}</Option>)
+                      })}
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="默认开关：">
                   {getFieldDecorator('status')(
@@ -128,7 +158,33 @@ class LogisticsAdd extends PureComponent {
                         )
                       })}
                     </Radio.Group>
-                    )}
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="宽：">
+                  {getFieldDecorator('width', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '宽',
+                      },
+                    ],
+                  })(<Input placeholder="宽" />)}
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="高：">
+                  {getFieldDecorator('height', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '高',
+                      },
+                    ],
+                  })(<Input placeholder="高" />)}
                 </FormItem>
               </Col>
             </Row>
