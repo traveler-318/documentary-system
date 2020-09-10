@@ -7,6 +7,7 @@ export default {
 
   'menu.logistics': '物流配置',
   'menu.logistics.authority': '授权配置',
+  'menu.logistics.faceSheet': '打印模板',
 
   'menu.home': '首页',
   'menu.login': '登录',

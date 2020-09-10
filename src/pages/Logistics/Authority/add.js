@@ -4,19 +4,15 @@ import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
 import func from '../../../utils/Func';
-import { LOGISTICS_INIT, LOGISTICS_SUBMIT } from '../../../actions/logistics';
 
 import { getAddList } from '../../../services/newServices/logistics';
 import router from 'umi/router';
-import { STATUS } from './data.js';
+import { STATUS,NETSELECT } from './data.js';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const { Option } = Select;
 
-@connect(({ logistics, loading }) => ({
-  logistics,
-  submitting: loading.effects['logistics/submit'],
-}))
 @Form.create()
 class LogisticsAdd extends PureComponent {
 
@@ -110,13 +106,14 @@ class LogisticsAdd extends PureComponent {
               <Col span={10}>
                 <FormItem {...formItemLayout} label="当地网点名称:">
                   {getFieldDecorator('net', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入当地网点名称',
-                      },
-                    ],
-                  })(<Input placeholder="请输入当地网点名称" />)}
+                    initialValue: null,
+                  })(
+                    <Select placeholder="请输入当地网点名称">
+                      {NETSELECT.map(item=>{
+                        return (<Option key={item.key} value={item.name}>{item.name}</Option>)
+                      })}
+                    </Select>
+                  )}
                 </FormItem>
               </Col>
             </Row>

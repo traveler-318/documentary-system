@@ -552,6 +552,15 @@ export default [
               { path: '/logistics/authority/edit/:id', component: './Logistics/Authority/edit' },
             ],
           },
+          {
+            path: '/logistics/faceSheet',
+            routes: [
+              { path: '/logistics/faceSheet', redirect: '/logistics/FaceSheet/list' },
+              { path: '/logistics/faceSheet/list', component: './Logistics/FaceSheet/index' },
+              { path: '/logistics/faceSheet/add', component: './Logistics/FaceSheet/add' },
+              // { path: '/logistics/faceSheet/edit/:id', component: './Logistics/FaceSheet/edit' },
+            ],
+          },
         ],
       },
     ],
