@@ -20,9 +20,12 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-
-import {getList,getRemove} from '../../../services/newServices/logistics';
-
+import {
+  getSubmit,
+  getDeliveryList,
+  getSurfacesingleRemove,
+  getSurfacesingleSubmit,
+} from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -47,13 +50,15 @@ class AuthorityList extends PureComponent {
     this.setState({
       loading:true
     })
-    getList(params).then(res=>{
+    getDeliveryList(params).then(res=>{
       this.setState({
         loading:false
       })
+      const data = res.data.records;
+      // JSON.parse(row.addr_coding)
       this.setState({
         data:{
-          list:res.data.records,
+          list:data,
           pagination:{
             current: res.data.current,
             pageSize: res.data.size,
@@ -76,8 +81,8 @@ class AuthorityList extends PureComponent {
   };
 
   // ============ 删除 ===============
-
   handleClick = ( id) => {
+    console.log(id)
     const params={
       ids: id
     }
@@ -89,7 +94,7 @@ class AuthorityList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        getRemove(params).then(resp => {
+        getSurfacesingleRemove(params).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
             refresh()
@@ -102,7 +107,33 @@ class AuthorityList extends PureComponent {
     });
   };
 
-
+  // ============ 修改默认开关 =========
+  onStatus = (value,key) => {
+    const refresh = this.getDataList;
+    const data= value === 0 ? 1 : 0;
+    const params = {
+      id:key.id,
+      status:data
+    };
+    Modal.confirm({
+      title: '修改确认',
+      content: '是否要修改该状态??',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        getSurfacesingleSubmit(params).then(resp=>{
+          if (resp.success) {
+            message.success(resp.msg);
+            refresh()
+          } else {
+            message.error(resp.msg || '修改失败');
+          }
+        })
+      },
+      onCancel() {},
+    });
+  };
 
   renderLeftButton = () => (
     <>
@@ -112,7 +143,7 @@ class AuthorityList extends PureComponent {
 
   renderRightButton = () => (
     <>
-      <Button type="primary" icon="plus" onClick={()=>{router.push(`/logistics/authority/add`);}}>添加</Button>
+      <Button type="primary" icon="plus" onClick={()=>{router.push(`/logistics/sender/add`);}}>添加</Button>
     </>
   );
 
@@ -121,39 +152,37 @@ class AuthorityList extends PureComponent {
     const {
       form,
     } = this.props;
-
     const {data,loading} = this.state;
-
     const columns = [
       {
-        title: '授权ID',
-        dataIndex: 'partnerId',
+        title: '寄件人姓名',
+        dataIndex: 'name',
         width: 200,
       },
       {
-        title: '授权key',
-        dataIndex: 'partnerKey',
-        width: 250,
+        title: '寄件人手机号',
+        dataIndex: 'mobile',
+        width: 300,
       },
       {
-        title: '快递员名称',
-        dataIndex: 'checkMan',
-        width: 250,
+        title: '寄件人地址',
+        dataIndex: 'administrativeAreas',
+        width: 200,
       },
       {
-        title: '当地网点名称',
-        dataIndex: 'net',
-        width: 350,
+        title: '寄件人公司名称',
+        dataIndex: 'company',
+        width: 150,
       },
       {
         title: '默认开关',
         dataIndex: 'status',
         width: 150,
-        render: (res) => {
+        render: (res,key) => {
           return(
             <div>
-              { res === 0 ? <Switch />
-                : <Switch defaultChecked />}
+              { res === 0 ? <Switch onClick={() => this.onStatus(res,key)} />
+                : <Switch defaultChecked onClick={() => this.onStatus(res,key)} />}
             </div>
           )
         },
@@ -162,13 +191,13 @@ class AuthorityList extends PureComponent {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 300,
+        width: 200,
         render: (res) => {
           const thisData =  JSON.stringify(res);
           return(
             <div>
               <Divider type="vertical" />
-              <a onClick={()=>{router.push(`/logistics/authority/edit/${thisData}`);}}>编辑</a>
+              <a onClick={()=>{router.push(`/logistics/faceSheet/edit/${thisData}`);}}>编辑</a>
               <Divider type="vertical" />
               <a onClick={() => this.handleClick(res.id)}>删除</a>
             </div>

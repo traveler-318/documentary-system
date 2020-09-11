@@ -18,22 +18,6 @@ export const TEMPID =[
   {value:'邮政快递包裹',id:"8c93761e575745f0880349fc28ef6eea"},
 ]
 
-export function tempids() {
-  return  {
-    "1d437167a92a4daea4c75387a09342ab": "申通快递",
-    "47da0036ad9e4d99b7ca5cf56cd92ba2": "顺丰速运",
-    "39b4fe4306774d29b2c5a6898a91b04d": "德邦",
-    "640677b0599442f2becf631c30699de7": "京东物流",
-    "613da7bab296496a8a6e4907a8a3f0cc": "中通快递",
-    "cd378bc5ea0c47c4ae2497bc7e61c04d": "天天快递",
-    "26cc76b429fe4ca5bd760a8309bab5c5": "百世快递",
-    "b250d33d8ae44958aff3015695c51ebd": "圆通速递",
-    "4d8b2838de30411187b850793028f73d": "韵达快递",
-    "1c60b50b82e442f495de4808fde444fe": "EMS",
-    "8c93761e575745f0880349fc28ef6eea": "邮政快递包裹"
-  }
-}
-
 export const EXPRESS100DATA =[
   {
     "name": "申通快递",

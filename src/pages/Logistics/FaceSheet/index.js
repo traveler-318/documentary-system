@@ -20,7 +20,14 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import {getSurfacesingleList,getRemove} from '../../../services/newServices/logistics';
+import {
+  getSubmit,
+  getSurfacesingleList,
+  getSurfacesingleRemove,
+  getSurfacesingleSubmit,
+} from '../../../services/newServices/logistics';
+import { TEMPID ,EXPRESS100DATA } from './data.js';
+import styles from './index.less';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -49,9 +56,29 @@ class AuthorityList extends PureComponent {
       this.setState({
         loading:false
       })
+
+      const data = res.data.records;
+
+      for(let i=0; i<data.length; i++){
+        data[i].index = i+1;
+        for(let j=0; j<EXPRESS100DATA.length; j++){
+          if(EXPRESS100DATA[j].num === data[i].kuaidicom){
+            data[i].kuaidicom_value = EXPRESS100DATA[j].name;
+            break;
+          }
+        }
+        for(let s=0; s< TEMPID.length; s++){
+          if(data[i].tempid  === TEMPID[s].id){
+            data[i].tempid_value = TEMPID[s].value
+          }
+        }
+        data[i].online_value = data[i].online === '0' ? '离线' : '在线';
+      }
+
+
       this.setState({
         data:{
-          list:res.data.records,
+          list:data,
           pagination:{
             current: res.data.current,
             pageSize: res.data.size,
@@ -74,8 +101,8 @@ class AuthorityList extends PureComponent {
   };
 
   // ============ 删除 ===============
-
   handleClick = ( id) => {
+    console.log(id)
     const params={
       ids: id
     }
@@ -87,7 +114,7 @@ class AuthorityList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        getRemove(params).then(resp => {
+        getSurfacesingleRemove(params).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
             refresh()
@@ -100,7 +127,33 @@ class AuthorityList extends PureComponent {
     });
   };
 
-
+  // ============ 修改默认开关 =========
+  onStatus = (value,key) => {
+    const refresh = this.getDataList;
+    const data= value === 0 ? 1 : 0;
+    const params = {
+      id:key.id,
+      status:data
+    };
+    Modal.confirm({
+      title: '修改确认',
+      content: '是否要修改该状态??',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        getSurfacesingleSubmit(params).then(resp=>{
+          if (resp.success) {
+            message.success(resp.msg);
+            refresh()
+          } else {
+            message.error(resp.msg || '修改失败');
+          }
+        })
+      },
+      onCancel() {},
+    });
+  };
 
   renderLeftButton = () => (
     <>
@@ -119,13 +172,11 @@ class AuthorityList extends PureComponent {
     const {
       form,
     } = this.props;
-
     const {data,loading} = this.state;
-
     const columns = [
       {
         title: '快递公司编码',
-        dataIndex: 'kuaidicom',
+        dataIndex: 'kuaidicom_value',
         width: 200,
       },
       {
@@ -135,7 +186,7 @@ class AuthorityList extends PureComponent {
       },
       {
         title: '快递模板ID',
-        dataIndex: 'tempid',
+        dataIndex: 'tempid_value',
         width: 200,
       },
       {
@@ -155,18 +206,26 @@ class AuthorityList extends PureComponent {
       },
       {
         title: '打印设备状态',
-        dataIndex: 'online',
+        dataIndex: 'online_value',
         width: 200,
+        render: (res) => {
+          return(
+            <div>
+              { res === '离线' ? <span><span className={styles.statue} style={{ background: '#dcdfe6'}}></span>{res}</span>
+                : <span><span className={styles.statue} style={{ background: '#67C23A' }}></span>{res}</span>}
+            </div>
+          )
+        },
       },
       {
         title: '默认开关',
         dataIndex: 'status',
         width: 150,
-        render: (res) => {
+        render: (res,key) => {
           return(
             <div>
-              { res === 0 ? <Switch disabled />
-                : <Switch defaultChecked disabled />}
+              { res === 0 ? <Switch onClick={() => this.onStatus(res,key)} />
+                : <Switch defaultChecked onClick={() => this.onStatus(res,key)} />}
             </div>
           )
         },
@@ -181,7 +240,7 @@ class AuthorityList extends PureComponent {
           return(
             <div>
               <Divider type="vertical" />
-              <a onClick={()=>{router.push(`/logistics/authority/edit/${thisData}`);}}>编辑</a>
+              <a onClick={()=>{router.push(`/logistics/faceSheet/edit/${thisData}`);}}>编辑</a>
               <Divider type="vertical" />
               <a onClick={() => this.handleClick(res.id)}>删除</a>
             </div>

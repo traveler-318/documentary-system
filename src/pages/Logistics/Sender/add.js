@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, Radio, TreeSelect, Select, DatePicker, message } from 'antd';
+import { Form, Input, Card, Row, Col, Button, Radio, Cascader, Select, DatePicker, message } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
+import { CITY } from '../../../utils/city';
 import func from '../../../utils/Func';
 
-import { getSurfacesingleSave } from '../../../services/newServices/logistics';
+import { getDeliverySave } from '../../../services/newServices/logistics';
 import router from 'umi/router';
-import { TEMPID ,EXPRESS100DATA } from './data.js';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -34,43 +34,31 @@ class LogisticsAdd extends PureComponent {
     e.preventDefault();
     const {  form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
+      values.addrCoding=JSON.stringify(values.addrCoding)
       if (!err) {
         const params = {
           ...values,
           deptId:"1123598813738675201",
           // createTime: values.createTime.format('YYYY-MM-DD hh:mm:ss'),
         };
-        getSurfacesingleSave(params).then(res=>{
+        console.log(params)
+        getDeliverySave(params).then(res=>{
           message.success('提交成功');
-          router.push('/logistics/FaceSheet');
+          router.push('/logistics/sender');
         })
       }
     });
   };
 
-  onChange = value => {
-    let text = ""
-    for(let i=0; i< EXPRESS100DATA.length; i++){
-      if(value === EXPRESS100DATA[i].num){
-        text = EXPRESS100DATA[i].name
-      }
+  onChange = (value, selectedOptions) => {
+    let param ={
+      province:value[0],
+      city:value[1],
+      area:value[2],
+      name:`${selectedOptions[0].label}${selectedOptions[1].label}${selectedOptions[2].label}`
     }
-    for(let j=0; j< TEMPID.length; j++){
-      if(text === TEMPID[j].value){
-        text = TEMPID[j].id
-      }
-    }
-    this.setState({
-      data:{
-        tempids:text
-      }
-    },()=>{
-
-      });
-
-
+    console.log(value, selectedOptions,param,"value")
   };
-
 
   render() {
     const {
@@ -95,76 +83,71 @@ class LogisticsAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back="/logistics/authority" action={action}>
+      <Panel title="新增" back="/logistics/sender" action={action}>
         <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="快递公司编码：">
-                  {getFieldDecorator('kuaidicom', {
+                <FormItem {...formItemLayout} label="寄件人姓名：">
+                  {getFieldDecorator('name', {
                     rules: [
                       {
                         required: true,
+                        message: '寄件人姓名',
                       },
                     ],
-                  })(
-                    <Select placeholder="" onSelect={value => this.onChange(value)}>
-                      {EXPRESS100DATA.map((item,index)=>{
-                        return (<Option key={index} value={item.num}>{item.name}</Option>)
-                      })}
-                    </Select>
-                  )}
+                  })(<Input placeholder="寄件人姓名" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="模板ID：">
-                  {getFieldDecorator('tempid', {
-                    initialValue: data.tempids,
+                <FormItem {...formItemLayout} label="寄件人手机号：">
+                  {getFieldDecorator('mobile', {
                     rules: [
                       {
                         required: true,
+                        message: '寄件人手机号',
                       },
                     ],
-                  })(
-                    <Select placeholder="" disabled>
-                      {TEMPID.map((item,index) =>{
-                        return (<Option key={index} value={item.id}>{item.value}</Option>)
-                      })}
-                    </Select>
-                  )}
+                  })(<Input placeholder="寄件人手机号" />)}
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="宽：">
-                  {getFieldDecorator('width', {
+                <FormItem {...formItemLayout} label="寄件人所在地区：">
+                  {getFieldDecorator('addrCoding', {
                     rules: [
                       {
                         required: true,
-                        message: '宽',
+                        message: '寄件人所在地区',
                       },
                     ],
-                  })(<Input placeholder="宽" />)}
+                  })(
+                    <Cascader
+                      // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
+                      options={CITY}
+                      onChange={this.onChange}
+                    />
+                  )}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="高：">
-                  {getFieldDecorator('height', {
+                <FormItem {...formItemLayout} label="寄件人详细地址：">
+                  {getFieldDecorator('printAddr', {
                     rules: [
                       {
                         required: true,
-                        message: '高',
+                        message: '寄件人详细地址',
                       },
                     ],
-                  })(<Input placeholder="高" />)}
+                  })(<Input placeholder="寄件人详细地址" />)}
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="打印设备码:">
-                  {getFieldDecorator('siid')(<Input placeholder="打印设备码" />)}
+                <FormItem {...formItemLayout} label="寄件人公司名称:">
+                  {getFieldDecorator('company')(<Input placeholder="寄件人公司名称" />)}
                 </FormItem>
               </Col>
             </Row>

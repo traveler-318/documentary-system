@@ -1,13 +1,14 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, Radio, TreeSelect, Select, DatePicker, message } from 'antd';
+import { Form, Input, Card, Row, Col, Button, DatePicker, message, Radio, Select } from 'antd';
 import { connect } from 'dva';
+import moment from 'moment'
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
 import func from '../../../utils/Func';
 
-import { getSurfacesingleSave } from '../../../services/newServices/logistics';
+import { getSurfacesingleSubmit } from '../../../services/newServices/logistics';
 import router from 'umi/router';
-import { TEMPID ,EXPRESS100DATA } from './data.js';
+import { EXPRESS100DATA,TEMPID } from './data';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -18,31 +19,30 @@ class LogisticsAdd extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:{
-
-      },
+      data:[],
     };
   }
 
   componentWillMount() {
-
+    this.setState({
+      data:JSON.parse(this.props.match.params.id)
+    })
   }
-
-  // ============ 提交 ===============
+// ============ 修改提交 ===============
 
   handleSubmit = e => {
     e.preventDefault();
     const {  form } = this.props;
+    const {data} = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const params = {
           ...values,
-          deptId:"1123598813738675201",
-          // createTime: values.createTime.format('YYYY-MM-DD hh:mm:ss'),
+          id:data.id,
         };
-        getSurfacesingleSave(params).then(res=>{
+        getSurfacesingleSubmit(params).then(res=>{
           message.success('提交成功');
-          router.push('/logistics/FaceSheet');
+          router.push('/logistics/faceSheet');
         })
       }
     });
@@ -60,15 +60,15 @@ class LogisticsAdd extends PureComponent {
         text = TEMPID[j].id
       }
     }
+    const {data} = this.state;
+    const datas = Object.assign({}, data, {
+      tempid: text
+    })
     this.setState({
-      data:{
-        tempids:text
-      }
+      data:datas
     },()=>{
 
-      });
-
-
+    });
   };
 
 
@@ -76,7 +76,7 @@ class LogisticsAdd extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-
+    const {data} = this.state;
     const formItemLayout = {
       labelCol: {
         span: 8,
@@ -86,8 +86,6 @@ class LogisticsAdd extends PureComponent {
       },
     };
 
-    const {data}=this.state
-
     const action = (
       <Button type="primary" onClick={this.handleSubmit}>
         提交
@@ -95,13 +93,14 @@ class LogisticsAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back="/logistics/authority" action={action}>
+      <Panel title="修改" back="/logistics/faceSheet" action={action}>
         <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="快递公司编码：">
                   {getFieldDecorator('kuaidicom', {
+                    initialValue: data.kuaidicom,
                     rules: [
                       {
                         required: true,
@@ -119,12 +118,12 @@ class LogisticsAdd extends PureComponent {
               <Col span={10}>
                 <FormItem {...formItemLayout} label="模板ID：">
                   {getFieldDecorator('tempid', {
-                    initialValue: data.tempids,
                     rules: [
                       {
                         required: true,
                       },
                     ],
+                    initialValue: data.tempid,
                   })(
                     <Select placeholder="" disabled>
                       {TEMPID.map((item,index) =>{
@@ -145,6 +144,7 @@ class LogisticsAdd extends PureComponent {
                         message: '宽',
                       },
                     ],
+                    initialValue: data.width,
                   })(<Input placeholder="宽" />)}
                 </FormItem>
               </Col>
@@ -157,18 +157,11 @@ class LogisticsAdd extends PureComponent {
                         message: '高',
                       },
                     ],
+                    initialValue: data.height,
                   })(<Input placeholder="高" />)}
                 </FormItem>
               </Col>
             </Row>
-            <Row gutter={24}>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="打印设备码:">
-                  {getFieldDecorator('siid')(<Input placeholder="打印设备码" />)}
-                </FormItem>
-              </Col>
-            </Row>
-
           </Card>
         </Form>
       </Panel>

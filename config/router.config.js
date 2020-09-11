@@ -558,9 +558,19 @@ export default [
               { path: '/logistics/faceSheet', redirect: '/logistics/FaceSheet/list' },
               { path: '/logistics/faceSheet/list', component: './Logistics/FaceSheet/index' },
               { path: '/logistics/faceSheet/add', component: './Logistics/FaceSheet/add' },
-              // { path: '/logistics/faceSheet/edit/:id', component: './Logistics/FaceSheet/edit' },
+              { path: '/logistics/faceSheet/edit/:id', component: './Logistics/FaceSheet/edit' },
             ],
           },
+          {
+            path: '/logistics/sender',
+            routes: [
+              { path: '/logistics/sender', redirect: '/logistics/Sender/list' },
+              { path: '/logistics/sender/list', component: './Logistics/Sender/index' },
+              { path: '/logistics/sender/add', component: './Logistics/Sender/add' },
+              // { path: '/logistics/sender/edit/:id', component: './Logistics/Sender/edit' },
+            ],
+          },
+
         ],
       },
     ],

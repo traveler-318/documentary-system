@@ -117,6 +117,7 @@ class LogisticsAdd extends PureComponent {
                 </FormItem>
               </Col>
             </Row>
+{/*
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="默认开关：">
@@ -132,6 +133,7 @@ class LogisticsAdd extends PureComponent {
                 </FormItem>
               </Col>
             </Row>
+*/}
 
           </Card>
         </Form>

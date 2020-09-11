@@ -42,3 +42,34 @@ export async function getSurfacesingleList(params) {
     body: params,
   });
 }
+export async function getSurfacesingleSave(params) {
+  return request('/api/logistics/surfacesingle/save', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getSurfacesingleRemove(params) {
+  return request('/api/logistics/surfacesingle/remove', {
+    method: 'POST',
+    body: func.toFormData(params),
+  });
+}
+export async function getSurfacesingleSubmit(params) {
+  return request('/api/logistics/surfacesingle/submit', {
+    method: 'POST',
+    body: params,
+  });
+}
+// ============ 寄件配置 ===============
+export async function getDeliveryList(params) {
+  return request('/api/logistics/delivery/list', {
+    method: 'get',
+    body: params,
+  });
+}
+export async function getDeliverySave(params) {
+  return request('/api/logistics/delivery/save', {
+    method: 'POST',
+    body: params,
+  });
+}

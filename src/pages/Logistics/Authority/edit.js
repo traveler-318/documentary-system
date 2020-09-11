@@ -31,16 +31,6 @@ class LogisticsAdd extends PureComponent {
 
   }
 
-  getDataSubmit = (params) => {
-    console.log(params)
-    getSubmit(params).then(res=>{
-      console.log(res)
-      this.setState({
-
-      })
-    })
-  }
-
   handleSubmit = e => {
     e.preventDefault();
     const {  form } = this.props;
@@ -135,6 +125,7 @@ class LogisticsAdd extends PureComponent {
                 </FormItem>
               </Col>
             </Row>
+{/*
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="默认开关：">
@@ -152,6 +143,7 @@ class LogisticsAdd extends PureComponent {
                 </FormItem>
               </Col>
             </Row>
+*/}
           </Card>
         </Form>
       </Panel>
