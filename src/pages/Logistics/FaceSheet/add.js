@@ -13,7 +13,7 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 @Form.create()
-class LogisticsAdd extends PureComponent {
+class FaceSheetAdd extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -42,7 +42,7 @@ class LogisticsAdd extends PureComponent {
         };
         getSurfacesingleSave(params).then(res=>{
           message.success('提交成功');
-          router.push('/logistics/FaceSheet');
+          router.push('/logistics/faceSheet');
         })
       }
     });
@@ -95,7 +95,7 @@ class LogisticsAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back="/logistics/authority" action={action}>
+      <Panel title="新增" back="/logistics/faceSheet" action={action}>
         <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
@@ -176,4 +176,4 @@ class LogisticsAdd extends PureComponent {
   }
 }
 
-export default LogisticsAdd;
+export default FaceSheetAdd;

@@ -73,3 +73,57 @@ export async function getDeliverySave(params) {
     body: params,
   });
 }
+
+// ============ 物品信息 ===============
+export async function getGoodsList(params) {
+  return request('/api/logistics/iteminformation/list', {
+    method: 'get',
+    body: params,
+  });
+}
+export async function getGoodsSave(params) {
+  return request('/api/logistics/iteminformation/save', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getGoodsSubmit(params) {
+  return request('/api/logistics/iteminformation/submit', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getGoodsRemove(params) {
+  return request('/api/logistics/iteminformation/remove', {
+    method: 'POST',
+    body: func.toFormData(params),
+  });
+}
+
+// ============ 附加信息 ===============
+export async function getAdditionalList(params) {
+  return request('/api/logistics/additionalinformation/list', {
+    method: 'get',
+    body: params,
+  });
+}
+export async function getAdditionalSave(params) {
+  return request('/api/logistics/iteminformation/save', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getAdditionalSubmit(params) {
+  return request('/api/logistics/iteminformation/submit', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getAdditionalRemove(params) {
+  return request('/api/logistics/iteminformation/remove', {
+    method: 'POST',
+    body: func.toFormData(params),
+  });
+}
+
+

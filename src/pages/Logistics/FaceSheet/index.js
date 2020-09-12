@@ -33,7 +33,7 @@ const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
 @Form.create()
-class AuthorityList extends PureComponent {
+class FaceSheetList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -168,7 +168,6 @@ class AuthorityList extends PureComponent {
   );
 
   render() {
-    const code = 'authorityList';
     const {
       form,
     } = this.props;
@@ -251,7 +250,6 @@ class AuthorityList extends PureComponent {
     return (
       <Panel>
         <Grid
-          code={code}
           form={form}
           onSearch={this.handleSearch}
           renderSearchForm={this.renderSearchForm}
@@ -266,4 +264,4 @@ class AuthorityList extends PureComponent {
     );
   }
 }
-export default AuthorityList;
+export default FaceSheetList;

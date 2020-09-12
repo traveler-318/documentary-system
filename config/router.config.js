@@ -570,7 +570,24 @@ export default [
               // { path: '/logistics/sender/edit/:id', component: './Logistics/Sender/edit' },
             ],
           },
-
+          {
+            path: '/logistics/goods',
+            routes: [
+              { path: '/logistics/goods', redirect: '/logistics/Goods/list' },
+              { path: '/logistics/goods/list', component: './Logistics/Goods/index' },
+              { path: '/logistics/goods/add', component: './Logistics/Goods/add' },
+               { path: '/logistics/goods/edit/:id', component: './Logistics/Goods/edit' },
+            ],
+          },
+          {
+            path: '/logistics/additional',
+            routes: [
+              { path: '/logistics/additional', redirect: '/logistics/Additional/list' },
+              { path: '/logistics/additional/list', component: './Logistics/Additional/index' },
+              { path: '/logistics/additional/add', component: './Logistics/Additional/add' },
+              { path: '/logistics/additional/edit/:id', component: './Logistics/Additional/edit' },
+            ],
+          },
         ],
       },
     ],

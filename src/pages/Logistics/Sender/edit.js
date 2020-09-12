@@ -14,7 +14,7 @@ const FormItem = Form.Item;
 const { Option } = Select;
 
 @Form.create()
-class LogisticsAdd extends PureComponent {
+class SenderEdit extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -169,4 +169,4 @@ class LogisticsAdd extends PureComponent {
   }
 }
 
-export default LogisticsAdd;
+export default SenderEdit;

@@ -22,16 +22,16 @@ import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import {
   getSubmit,
-  getDeliveryList,
-  getSurfacesingleRemove,
-  getSurfacesingleSubmit,
+  getGoodsList,
+  getGoodsRemove,
+  getGoodsSubmit,
 } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
 @Form.create()
-class SenderList extends PureComponent {
+class GoodsList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,12 +50,11 @@ class SenderList extends PureComponent {
     this.setState({
       loading:true
     })
-    getDeliveryList(params).then(res=>{
+    getGoodsList(params).then(res=>{
       this.setState({
         loading:false
       })
       const data = res.data.records;
-      // JSON.parse(row.addr_coding)
       this.setState({
         data:{
           list:data,
@@ -94,7 +93,7 @@ class SenderList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        getSurfacesingleRemove(params).then(resp => {
+        getGoodsRemove(params).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
             refresh()
@@ -122,7 +121,7 @@ class SenderList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        getSurfacesingleSubmit(params).then(resp=>{
+        getGoodsSubmit(params).then(resp=>{
           if (resp.success) {
             message.success(resp.msg);
             refresh()
@@ -143,7 +142,7 @@ class SenderList extends PureComponent {
 
   renderRightButton = () => (
     <>
-      <Button type="primary" icon="plus" onClick={()=>{router.push(`/logistics/sender/add`);}}>添加</Button>
+      <Button type="primary" icon="plus" onClick={()=>{router.push(`/logistics/goods/add`);}}>添加</Button>
     </>
   );
 
@@ -154,23 +153,28 @@ class SenderList extends PureComponent {
     const {data,loading} = this.state;
     const columns = [
       {
-        title: '寄件人姓名',
-        dataIndex: 'name',
+        title: '物品名称',
+        dataIndex: 'cargo',
         width: 200,
       },
       {
-        title: '寄件人手机号',
-        dataIndex: 'mobile',
+        title: '物品总数量',
+        dataIndex: 'count',
         width: 300,
       },
       {
-        title: '寄件人地址',
-        dataIndex: 'administrativeAreas',
+        title: '物品总重量',
+        dataIndex: 'weight',
         width: 200,
       },
       {
-        title: '寄件人公司名称',
-        dataIndex: 'company',
+        title: '物品总体积',
+        dataIndex: 'volumn',
+        width: 150,
+      },
+      {
+        title: '备注',
+        dataIndex: 'remark',
         width: 150,
       },
       {
@@ -196,7 +200,7 @@ class SenderList extends PureComponent {
           return(
             <div>
               <Divider type="vertical" />
-              <a onClick={()=>{router.push(`/logistics/faceSheet/edit/${thisData}`);}}>编辑</a>
+              <a onClick={()=>{router.push(`/logistics/goods/edit/${thisData}`);}}>编辑</a>
               <Divider type="vertical" />
               <a onClick={() => this.handleClick(res.id)}>删除</a>
             </div>
@@ -221,4 +225,4 @@ class SenderList extends PureComponent {
     );
   }
 }
-export default SenderList;
+export default GoodsList;

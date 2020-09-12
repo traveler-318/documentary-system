@@ -117,7 +117,6 @@ class AuthorityList extends PureComponent {
   );
 
   render() {
-    const code = 'authorityList';
     const {
       form,
     } = this.props;
@@ -179,7 +178,6 @@ class AuthorityList extends PureComponent {
     return (
       <Panel>
         <Grid
-          code={code}
           form={form}
           onSearch={this.handleSearch}
           renderSearchForm={this.renderSearchForm}
