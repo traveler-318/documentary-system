@@ -508,7 +508,8 @@ export default [
             routes: [
               { path: '/order/allOrders', redirect: '/order/allOrders/list' },
               { path: '/order/allOrders/list', component: './Order/AllOrders/index' },
-              { path: '/order/AllOrders/add', component: './Order/AllOrders/add' },
+              { path: '/order/allOrders/add', component: './Order/AllOrders/add' },
+              { path: '/order/allOrders/edit', component: './Order/AllOrders/edit' },
             ],
           },
           {
