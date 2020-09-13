@@ -5,6 +5,7 @@ import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
 import { CITY } from '../../../utils/city';
 import func from '../../../utils/Func';
+import { getCookie } from '../../../utils/support';
 
 import { getDeliverySave } from '../../../services/newServices/logistics';
 import router from 'umi/router';
@@ -21,6 +22,7 @@ class SenderAdd extends PureComponent {
       data:{
 
       },
+      cityparam:{}
     };
   }
 
@@ -34,14 +36,14 @@ class SenderAdd extends PureComponent {
     e.preventDefault();
     const {  form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
-      values.addrCoding=JSON.stringify(values.addrCoding)
+      values.addrCoding=JSON.stringify(values.addrCoding);
+      values.deptId = getCookie("dept_id");
+      const { cityparam } = this.state;
       if (!err) {
         const params = {
           ...values,
-          deptId:"1123598813738675201",
-          // createTime: values.createTime.format('YYYY-MM-DD hh:mm:ss'),
+          administrativeAreas:cityparam.name
         };
-        console.log(params)
         getDeliverySave(params).then(res=>{
           message.success('提交成功');
           router.push('/logistics/sender');
@@ -51,13 +53,14 @@ class SenderAdd extends PureComponent {
   };
 
   onChange = (value, selectedOptions) => {
-    let param ={
-      province:value[0],
-      city:value[1],
-      area:value[2],
-      name:`${selectedOptions[0].label}${selectedOptions[1].label}${selectedOptions[2].label}`
-    }
-    console.log(value, selectedOptions,param,"value")
+    this.setState({
+      cityparam:{
+        province:value[0],
+        city:value[1],
+        area:value[2],
+        name:`${selectedOptions[0].label}${selectedOptions[1].label}${selectedOptions[2].label}`
+      }
+    })
   };
 
   render() {

@@ -32,8 +32,12 @@ class AuthorityList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:[],
-      loading:false
+      data:{},
+      loading:false,
+      params:{
+        size:10,
+        current:1
+      }
     };
   }
   // ============ 初始化数据 ===============
@@ -66,7 +70,11 @@ class AuthorityList extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
-
+    this.setState({
+      params
+    },()=>{
+      this.getDataList();
+    })
   };
 
   // ============ 查询表单 ===============

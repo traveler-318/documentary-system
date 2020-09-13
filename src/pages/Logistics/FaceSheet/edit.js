@@ -5,7 +5,7 @@ import moment from 'moment'
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
 import func from '../../../utils/Func';
-
+import { getCookie } from '../../../utils/support';
 import { getSurfacesingleSubmit } from '../../../services/newServices/logistics';
 import router from 'umi/router';
 import { EXPRESS100DATA,TEMPID } from './data';
@@ -35,6 +35,7 @@ class FaceSheetEdit extends PureComponent {
     const {  form } = this.props;
     const {data} = this.state;
     form.validateFieldsAndScroll((err, values) => {
+      values.deptId = getCookie("dept_id");
       if (!err) {
         const params = {
           ...values,
