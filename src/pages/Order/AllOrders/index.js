@@ -8,7 +8,7 @@ import Grid from '../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
 import {setListData} from '../../../utils/publicMethod';
-import {ORDERSTATUS, ORDERTYPPE} from './data.js'
+import {ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE} from './data.js'
 
 import {getList,deleteData} from '../../../services/newServices/order'
 
@@ -26,7 +26,14 @@ class AllOrdersList extends PureComponent {
     this.state = {
       selectedRowKeys:[],
       salesmanList:[
-        {name:"业务员1",id:"1"}
+        {
+          name:"全部",
+          id:null
+        },
+        {
+          name:"测试销售",
+          id:"1"
+        }
       ],
       data:{},
       loading:false,
@@ -57,8 +64,25 @@ class AllOrdersList extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
+    const { dateRange } = params;
+    
+    let payload = {
+      ...params,
+    };
+    if (dateRange) {
+      payload = {
+        ...params,
+        start_time: dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
+        end_time: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null,
+      };
+      payload.dateRange = null;
+    }
+    if(payload.salesman && payload.salesman === "全部"){
+      payload.salesman = null;
+    }
+    console.log(payload,"params")
     this.setState({
-      params
+      params:payload
     },()=>{
       this.getDataList();
     })
@@ -75,13 +99,13 @@ class AllOrdersList extends PureComponent {
 
     return (
       <div className={"default_search_form"}>
-        <Form.Item label="关键词">
-            {getFieldDecorator('name')(<Input placeholder="请输入关键词" />)}
+        <Form.Item label="姓名">
+            {getFieldDecorator('userName')(<Input placeholder="请输入姓名" />)}
           </Form.Item>
           <Form.Item label="订单状态">
-            {getFieldDecorator('code', {
-                      initialValue: 1,
-                    })(
+            {getFieldDecorator('confirmTag', {
+              initialValue: null,
+            })(
               <Select placeholder={"请选择订单状态"} style={{ width: 120 }}>
                 {ORDERSTATUS.map(item=>{
                   return (<Option value={item.key}>{item.name}</Option>)
@@ -90,38 +114,57 @@ class AllOrdersList extends PureComponent {
             )}
           </Form.Item>
           <Form.Item label="订单类型">
-                  {getFieldDecorator('code1', {
-                      initialValue: null,
-                    })(
-                    <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
-                      {ORDERTYPPE.map(item=>{
-                        return (<Option value={item.key}>{item.name}</Option>)
-                      })}
-                    </Select>
-                  )}
-              </Form.Item>
-              <Form.Item label="销售">
-                {getFieldDecorator('code2', {
-                      initialValue: null,
-                    })(
-                    <Select placeholder={"请选择销售"} style={{ width: 120 }}>
-                      {salesmanList.map(item=>{
-                        return (<Option value={item.id}>{item.name}</Option>)
-                      })}
-                    </Select>
-                  )}
-              </Form.Item>
-              <Form.Item label="最后跟进">
-            <RangePicker size={"default"} />
+            {getFieldDecorator('orderType', {
+                initialValue: null,
+              })(
+              <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
+                {ORDERTYPPE.map(item=>{
+                  return (<Option value={item.key}>{item.name}</Option>)
+                })}
+              </Select>
+            )}
           </Form.Item>
-          <div style={{ float: 'right' }}>
-            <Button type="primary" htmlType="submit">
-              <FormattedMessage id="button.search.name" />
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={onReset}>
-              <FormattedMessage id="button.reset.name" />
-            </Button>
+          <Form.Item label="销售">
+            {getFieldDecorator('salesman', {
+                  initialValue: "全部",
+                })(
+                <Select placeholder={"请选择销售"} style={{ width: 120 }}>
+                  {salesmanList.map(item=>{
+                    return (<Option value={item.name}>{item.name}</Option>)
+                  })}
+                </Select>
+              )}
+          </Form.Item>
+          <div>
+            {/* <Form.Item label="时间类型">
+              {getFieldDecorator('timeType', {
+                initialValue: 1,
+              })(
+                <Select placeholder={"请选择时间类型"} style={{ width: 120 }}>
+                  {TIMETYPE.map(item=>{
+                    return (<Option value={item.key}>{item.name}</Option>)
+                  })}
+                </Select>
+              )}
+            </Form.Item> */}
+            <Form.Item label="下单时间">
+              {getFieldDecorator('dateRange', {
+                initialValue: null,
+              })(
+                <RangePicker showTime size={"default"} />
+              )}
+            </Form.Item>
+
+            <div style={{ float: 'right' }}>
+              <Button type="primary" htmlType="submit">
+                <FormattedMessage id="button.search.name" />
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={onReset}>
+                <FormattedMessage id="button.reset.name" />
+              </Button>
+            </div>
           </div>
+          
       </div>
     );
   };
@@ -147,10 +190,10 @@ class AllOrdersList extends PureComponent {
         <Icon type="highlight" />
         批量编辑
       </Menu.Item>
-      <Menu.Item key="3">
+      {/* <Menu.Item key="3">
         <Icon type="delete" />
         批量删除
-      </Menu.Item>
+      </Menu.Item> */}
     </Menu>
   );
 
@@ -220,6 +263,16 @@ class AllOrdersList extends PureComponent {
     </>
   );
 
+  getText = (key, type) => {
+    let text = ""
+    type.map(item=>{
+      if(item.key === key){
+        text = item.name
+      }
+    })
+    return text
+  }
+
   render() {
     const code = 'allOrdersList';
 
@@ -233,12 +286,12 @@ class AllOrdersList extends PureComponent {
       {
         title: '姓名',
         dataIndex: 'userName',
-        width: 200,
+        width: 100,
       },
       {
         title: '手机号',
         dataIndex: 'userPhone',
-        width: 200,
+        width: 100,
       },
       {
         title: '收货地址',
@@ -247,59 +300,74 @@ class AllOrdersList extends PureComponent {
       },
       {
         title: '产品分类',
-        dataIndex: 'name10',
-        width: 200,
+        dataIndex: 'productName',
+        width: 100,
       },
       {
         title: '产品型号',
-        dataIndex: 'name9',
-        width: 200,
+        dataIndex: 'productModel',
+        width: 100,
       },
       {
         title: '序列号',
-        dataIndex: 'name8',
-        width: 200,
+        dataIndex: 'deviceSerialNumber',
+        width: 100,
       },
       {
         title: '订单状态',
-        dataIndex: 'name7',
-        width: 200,
+        dataIndex: 'confirmTag',
+        width: 100,
+        render: (key)=>{
+          return (
+            <div>{this.getText(key,ORDERSTATUS)} </div>
+          )
+        }
       },
       {
         title: '订单类型',
-        dataIndex: 'name6',
-        width: 200,
+        dataIndex: 'orderType',
+        width: 100,
+        render: (key)=>{
+          return (
+            <div>{this.getText(key,ORDERTYPE)} </div>
+          )
+        }
       },
       {
         title: '订单来源',
-        dataIndex: 'name5',
-        width: 200,
+        dataIndex: 'orderSource',
+        width: 100,
+        render: (key)=>{
+          return (
+            <div>{this.getText(key,ORDERSOURCE)} </div>
+          )
+        }
       },
       {
         title: '销售',
-        dataIndex: 'name4',
-        width: 200,
+        dataIndex: 'salesman',
+        width: 100,
       },
       {
         title: '快递公司',
-        dataIndex: 'name3',
-        width: 200,
+        dataIndex: 'logisticsCompany',
+        width: 100,
       },
       {
         title: '快递单号',
-        dataIndex: 'name2',
-        width: 200,
+        dataIndex: 'logisticsNumber',
+        width: 100,
       },
       {
         title: '下单时间',
         dataIndex: 'createTime',
-        width: 200,
+        width: 160,
       },
       {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 300,
+        width: 250,
         render: (text,row) => {
             return(
                 <div>
@@ -312,8 +380,6 @@ class AllOrdersList extends PureComponent {
                     <a>置顶</a>
                     <Divider type="vertical" />
                     <a>归档</a>
-                    <Divider type="vertical" />
-                    <a onClick={()=>this.handleDelect(row)}>删除</a>
                 </div>
             )
         },
@@ -333,6 +399,7 @@ class AllOrdersList extends PureComponent {
           scroll={{ x: 1000 }} 
           renderLeftButton={this.renderLeftButton}
           renderRightButton={this.renderRightButton}
+          counterElection={true}
         />
       </Panel>
     );

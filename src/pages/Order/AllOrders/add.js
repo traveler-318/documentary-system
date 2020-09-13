@@ -52,9 +52,12 @@ class OrdersAdd extends PureComponent {
       if (!err) {
         values.deptId = getCookie("dept_id");
         values = {...values,...cityparam};
+        // values.ouOrderNo = "12313243546546546"
         createData(values).then(res=>{
-          message.success(res.msg);
-          router.push('/order/allOrders');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/order/allOrders');
+          }
         })
       }
     });
@@ -280,7 +283,7 @@ class OrdersAdd extends PureComponent {
                     })(
                     <Select placeholder={"请选择归属销售"}>
                     {PRODUCTCLASSIFICATION.map(item=>{
-                      return (<Option value={item.id}>{item.name}</Option>)
+                      return (<Option value={item.name}>{item.name}</Option>)
                     })}
                   </Select>
                   )}

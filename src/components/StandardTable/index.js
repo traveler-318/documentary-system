@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Table, Alert } from 'antd';
+import { Table, Alert, Checkbox } from 'antd';
 import styles from './index.less';
 
 function initTotalList(columns) {
@@ -70,11 +70,15 @@ class StandardTable extends PureComponent {
     this.handleRowSelectChange([], []);
   };
 
+  onChangeCheckbox = () => {
+
+  }
+
   render() {
     const { selectedRowKeys, needTotalList, expandProps } = this.state;
-    const { data = {}, rowKey, alert = false, ...rest } = this.props;
+    const { data = {}, counterElection, rowKey, alert = false, ...rest } = this.props;
     const { list = [], pagination } = data;
-
+    console.log(counterElection,"pagination")
     const paginationProps = pagination
       ? {
           showSizeChanger: true,
@@ -128,6 +132,11 @@ class StandardTable extends PureComponent {
           {...rest.tblProps}
           {...expandProps}
         />
+        {counterElection?(
+          <div className={styles.counterElection}>
+            <Checkbox onChange={this.onChangeCheckbox}>反选</Checkbox>
+          </div>
+        ):""}
       </div>
     );
   }

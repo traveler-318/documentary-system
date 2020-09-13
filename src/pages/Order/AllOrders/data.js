@@ -1,13 +1,10 @@
-
+// 订单状态
 export const ORDERSTATUS = [
-    {name:"全部",key:null},
-    {name:"待审核",key:1},
-    {name:"已审核",key:2},
-    {name:"已发货",key:3},
-    {name:"在途中",key:4},
-    {name:"已签收",key:5},
-    {name:"跟进中",key:6},
-    {name:"已激活",key:7}
+    {"name":"全部",key:null},
+    {"name":"已授权",key:1},
+    {"name":"已解冻",key:2},
+    {"name":"已扣款",key:3},
+    {"name":"未授权",key:0},
 ]
  
 
@@ -45,8 +42,12 @@ export const ORDERSOURCE = [
     {name:"地推",key:7},
 ]
 
-
-
+// 订单来源 
+export const TIMETYPE = [
+    {name:"跟进时间",key:1},
+    {name:"下单时间",key:2},
+    {name:"物流打印时间",key:3},
+]
 
 
 

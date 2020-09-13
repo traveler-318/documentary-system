@@ -204,6 +204,7 @@ export default class Grid extends PureComponent {
       renderLeftButton,
       renderRightButton,
       renderActionButton,
+      counterElection
     } = this.props;
     let { columns } = this.props;
 
@@ -265,6 +266,7 @@ export default class Grid extends PureComponent {
             onChange={this.handleStandardTableChange}
             scroll={scroll}
             tblProps={tblProps}
+            counterElection={counterElection}
             size="middle"
             bordered
           />
