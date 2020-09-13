@@ -36,7 +36,11 @@ class SenderList extends PureComponent {
     super(props);
     this.state = {
       data:[],
-      loading:false
+      loading:false,
+      params:{
+        size:10,
+        current:1
+      }
     };
   }
   // ============ 初始化数据 ===============
@@ -71,7 +75,11 @@ class SenderList extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
-
+    this.setState({
+      params
+    },()=>{
+      this.getDataList();
+    })
   };
 
   // ============ 查询表单 ===============
@@ -167,6 +175,12 @@ class SenderList extends PureComponent {
         title: '寄件人地址',
         dataIndex: 'administrativeAreas',
         width: 200,
+        render: (res,key) => {
+          let Areas =res + key.printAddr;
+          return(
+            Areas
+          )
+        },
       },
       {
         title: '寄件人公司名称',

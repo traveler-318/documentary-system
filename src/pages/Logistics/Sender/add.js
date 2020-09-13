@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Form, Input, Card, Row, Col, Button, Radio, Cascader, Select, DatePicker, message } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
+import styles from '../../../layouts/Sword.less';
 import { CITY } from '../../../utils/city';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
@@ -21,6 +22,7 @@ class SenderAdd extends PureComponent {
       data:{
 
       },
+      cityparam:{}
     };
   }
 
@@ -36,11 +38,12 @@ class SenderAdd extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       values.addrCoding=JSON.stringify(values.addrCoding);
       values.deptId = getCookie("dept_id");
+      const { cityparam } = this.state;
       if (!err) {
         const params = {
           ...values,
+          administrativeAreas:cityparam.name
         };
-        console.log(params)
         getDeliverySave(params).then(res=>{
           message.success('提交成功');
           router.push('/logistics/sender');
@@ -50,13 +53,14 @@ class SenderAdd extends PureComponent {
   };
 
   onChange = (value, selectedOptions) => {
-    let param ={
-      province:value[0],
-      city:value[1],
-      area:value[2],
-      name:`${selectedOptions[0].label}${selectedOptions[1].label}${selectedOptions[2].label}`
-    }
-    console.log(value, selectedOptions,param,"value")
+    this.setState({
+      cityparam:{
+        province:value[0],
+        city:value[1],
+        area:value[2],
+        name:`${selectedOptions[0].label}${selectedOptions[1].label}${selectedOptions[2].label}`
+      }
+    })
   };
 
   render() {

@@ -38,7 +38,11 @@ class FaceSheetList extends PureComponent {
     super(props);
     this.state = {
       data:[],
-      loading:false
+      loading:false,
+      params:{
+        size:10,
+        current:1
+      }
     };
   }
   // ============ 初始化数据 ===============
@@ -91,7 +95,11 @@ class FaceSheetList extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
-
+    this.setState({
+      params
+    },()=>{
+      this.getDataList();
+    })
   };
 
   // ============ 查询表单 ===============

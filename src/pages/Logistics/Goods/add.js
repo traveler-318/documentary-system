@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { Form, Input, Card, Row, Col, Button, Radio, Cascader, Select, DatePicker, message } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
+import styles from '../../../layouts/Sword.less';
 import { CITY } from '../../../utils/city';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';

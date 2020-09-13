@@ -46,7 +46,8 @@ class AuthorityList extends PureComponent {
     this.getDataList();
   }
 
-  getDataList = (params) => {
+  getDataList = () => {
+    const {params} = this.state;
     this.setState({
       loading:true
     })
@@ -69,8 +70,11 @@ class AuthorityList extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
-    console.log(params,"params")
-    this.getDataList(params);
+    this.setState({
+      params
+    },()=>{
+      this.getDataList();
+    })
   };
 
   // ============ 查询表单 ===============

@@ -22,8 +22,8 @@ import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import {
   getAdditionalList,
-  getGoodsRemove,
-  getGoodsSubmit,
+  getAdditionalRemove,
+  getAdditionalSubmit,
 } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
@@ -34,8 +34,12 @@ class AdditionalList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:[],
-      loading:false
+      data:{},
+      loading:false,
+      params:{
+        size:10,
+        current:1
+      }
     };
   }
   // ============ 初始化数据 ===============
@@ -69,7 +73,11 @@ class AdditionalList extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
-
+    this.setState({
+      params
+    },()=>{
+      this.getDataList();
+    })
   };
 
   // ============ 查询表单 ===============
@@ -92,7 +100,7 @@ class AdditionalList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        getGoodsRemove(params).then(resp => {
+        getAdditionalRemove(params).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
             refresh()
@@ -120,7 +128,7 @@ class AdditionalList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        getGoodsSubmit(params).then(resp=>{
+        getAdditionalSubmit(params).then(resp=>{
           if (resp.success) {
             message.success(resp.msg);
             refresh()
