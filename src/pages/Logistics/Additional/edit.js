@@ -3,8 +3,9 @@ import { Form, Input, Card, Row, Col, Button, DatePicker, message, Radio, Select
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import func from '../../../utils/Func';
-
-import { getGoodsSubmit } from '../../../services/newServices/logistics';
+import { PAYMENTMETHOD,EXPRESSTYPE,SONSHEET,BACKSHEET } from './data.js';
+import { getAdditionalSubmit } from '../../../services/newServices/logistics';
+import { getCookie } from '../../../utils/support';
 import router from 'umi/router';
 
 const FormItem = Form.Item;
@@ -32,14 +33,15 @@ class GoodsEdit extends PureComponent {
     const {  form } = this.props;
     const {data} = this.state;
     form.validateFieldsAndScroll((err, values) => {
+      values.deptId = getCookie("dept_id");
       if (!err) {
         const params = {
           ...values,
           id:data.id,
         };
-        getGoodsSubmit(params).then(res=>{
+        getAdditionalSubmit(params).then(res=>{
           message.success('提交成功');
-          router.push('/logistics/goods');
+          router.push('/logistics/additional');
         })
       }
     });
@@ -68,63 +70,100 @@ class GoodsEdit extends PureComponent {
     );
 
     return (
-      <Panel title="修改" back="/logistics/faceSheet" action={action}>
+      <Panel title="新增" back="/logistics/authority" action={action}>
         <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="物品信息：">
-                  {getFieldDecorator('cargo',{
-                    initialValue: data.cargo,
-                  })(<Input placeholder="请输入物品信息" />)}
+                <FormItem {...formItemLayout} label="系统标识：">
+                  {getFieldDecorator('code',{
+                    initialValue: data.code,
+                  })(<Input placeholder="请输入系统标识" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="物品总数量：">
-                  {getFieldDecorator('count',{
-                    initialValue: data.count,
-                  })(<Input placeholder="请输入物品总数量(正整数)" />)}
+                <FormItem {...formItemLayout} label="支付方式：">
+                  {getFieldDecorator('payType',{
+                    initialValue: data.payType,
+                  })(
+                    <Select placeholder="" >
+                      {PAYMENTMETHOD.map((item,index)=>{
+                        return (<Option key={index} value={item.key}>{item.value}</Option>)
+                      })}
+                    </Select>)}
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="物品总总量：">
-                  {getFieldDecorator('weight', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入物品总重量(重量单位kg)',
-                      },
-                    ],
-                    initialValue: data.weight,
-                  })(<Input placeholder="请输入物品总重量(重量单位kg)" />)}
+                <FormItem {...formItemLayout} label="快递类型：">
+                  {getFieldDecorator('expType',{
+                    initialValue: data.expType,
+                  })(
+                    <Select placeholder="" >
+                      {EXPRESSTYPE.map((item,index)=>{
+                        return (<Option key={index} value={item.key}>{item.value}</Option>)
+                      })}
+                    </Select>)}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="物品总体积：">
-                  {getFieldDecorator('volumn', {
+                <FormItem {...formItemLayout} label="保价额度：">
+                  {getFieldDecorator('valinsPay', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入物品总体积(体积单位CM*CM*CM)',
+                        message: '单位是元',
                       },
                     ],
-                    initialValue: data.volumn,
-                  })(<Input placeholder="请输入物品总体积(体积单位CM*CM*CM)" />)}
+                    initialValue: data.valinsPay,
+                  })(<Input placeholder="单位是元" />)}
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="备注内容:">
-                  {getFieldDecorator('remark',{
-                    initialValue: data.remark,
-                  })(<TextArea rows={4} placeholder="备注内容" />)}
+                <FormItem {...formItemLayout} label="代收货款额度:">
+                  {getFieldDecorator('collection', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '单位是元',
+                      },
+                    ],
+                    initialValue: data.collection,
+                  })(<Input placeholder="单位是元" />)}
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="是否需要子单：">
+                  {getFieldDecorator('needChild', {
+                    initialValue: data.needChild,
+                  })(
+                    <Select placeholder="" disabled>
+                      {SONSHEET.map((item,index) =>{
+                        return (<Option key={index} value={item.key}>{item.value}</Option>)
+                      })}
+                    </Select>
+                  )}
                 </FormItem>
               </Col>
             </Row>
-
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="是否需要回单：">
+                  {getFieldDecorator('needBack', {
+                    initialValue: data.needBack,
+                  })(
+                    <Select placeholder="" disabled>
+                      {BACKSHEET.map((item,index) =>{
+                        return (<Option key={index} value={item.key}>{item.value}</Option>)
+                      })}
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
           </Card>
         </Form>
       </Panel>

@@ -1,17 +1,14 @@
 /**
  * Created by Lenovo on 2020/9/8.
  */
-// import { stringify } from 'qs';
+ import { stringify } from 'qs';
 import request from '../../utils/request';
  import func from '../../utils/Func';
 
 
 // ============ 授权配置 ===============
 export async function getList(params) {
-  return request('/api/logistics/authorization/list', {
-    method: 'get',
-    body: params,
-  });
+  return request(`/api/logistics/authorization/list?${stringify(params)}`);
 }
 
 export async function getAddList(params) {
@@ -22,7 +19,7 @@ export async function getAddList(params) {
 }
 
 export async function getSubmit(params) {
-  return request('/api/logistics/authorization/submit', {
+  return request('/api/logistics/authorization/update', {
     method: 'POST',
     body: params,
   });
@@ -55,7 +52,7 @@ export async function getSurfacesingleRemove(params) {
   });
 }
 export async function getSurfacesingleSubmit(params) {
-  return request('/api/logistics/surfacesingle/submit', {
+  return request('/api/logistics/surfacesingle/update', {
     method: 'POST',
     body: params,
   });
@@ -88,7 +85,7 @@ export async function getGoodsSave(params) {
   });
 }
 export async function getGoodsSubmit(params) {
-  return request('/api/logistics/iteminformation/submit', {
+  return request('/api/logistics/iteminformation/update', {
     method: 'POST',
     body: params,
   });
@@ -108,13 +105,13 @@ export async function getAdditionalList(params) {
   });
 }
 export async function getAdditionalSave(params) {
-  return request('/api/logistics/iteminformation/save', {
+  return request('/api/logistics/additionalinformation/save', {
     method: 'POST',
     body: params,
   });
 }
 export async function getAdditionalSubmit(params) {
-  return request('/api/logistics/iteminformation/submit', {
+  return request('/api/logistics/additionalinformation/update', {
     method: 'POST',
     body: params,
   });

@@ -3,12 +3,12 @@ import { Form, Input, Card, Row, Col, Button, DatePicker, message, Radio } from 
 import { connect } from 'dva';
 import moment from 'moment'
 import Panel from '../../../components/Panel';
-import styles from '../../../layouts/Sword.less';
 import func from '../../../utils/Func';
-
+import { getCookie } from '../../../utils/support';
 import { getSubmit } from '../../../services/newServices/logistics';
 import router from 'umi/router';
 import { STATUS } from './data.js';
+import styles from './index.less';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -36,6 +36,7 @@ class LogisticsAdd extends PureComponent {
     const {  form } = this.props;
     const {data} = this.state;
     form.validateFieldsAndScroll((err, values) => {
+      values.deptId = getCookie("dept_id");
       if (!err) {
         const params = {
           ...values,

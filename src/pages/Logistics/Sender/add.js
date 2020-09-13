@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import { Form, Input, Card, Row, Col, Button, Radio, Cascader, Select, DatePicker, message } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
-import styles from '../../../layouts/Sword.less';
 import { CITY } from '../../../utils/city';
 import func from '../../../utils/Func';
+import { getCookie } from '../../../utils/support';
 
 import { getDeliverySave } from '../../../services/newServices/logistics';
 import router from 'umi/router';
@@ -34,12 +34,11 @@ class SenderAdd extends PureComponent {
     e.preventDefault();
     const {  form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
-      values.addrCoding=JSON.stringify(values.addrCoding)
+      values.addrCoding=JSON.stringify(values.addrCoding);
+      values.deptId = getCookie("dept_id");
       if (!err) {
         const params = {
           ...values,
-          deptId:"1123598813738675201",
-          // createTime: values.createTime.format('YYYY-MM-DD hh:mm:ss'),
         };
         console.log(params)
         getDeliverySave(params).then(res=>{

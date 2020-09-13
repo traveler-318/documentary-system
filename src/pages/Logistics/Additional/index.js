@@ -150,23 +150,22 @@ class AdditionalList extends PureComponent {
       form,
     } = this.props;
     const {data,loading} = this.state;
-    let payType;
-    if (data.payType == 'SHIPPER') {
-      payType ='寄方付';
-    } else if(data.payType == 'CONSIGNEE'){
-      payType ='到付';
-    }else if(data.payType == 'MONTHLY'){
-      payType ='月结';
-    }else {
-      payType ='第三方支付';
-    }
-
     const columns = [
       {
         title: '支付方式',
         dataIndex: 'payType',
         width: 150,
         render: (res) => {
+          let payType;
+          if (res == 'SHIPPER') {
+            payType ='寄方付';
+          } else if(res == 'CONSIGNEE'){
+            payType ='到付';
+          }else if(res == 'MONTHLY'){
+            payType ='月结';
+          }else {
+            payType ='第三方支付';
+          }
           return(
             payType
           )

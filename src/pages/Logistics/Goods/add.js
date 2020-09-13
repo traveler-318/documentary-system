@@ -35,12 +35,10 @@ class GoodsAdd extends PureComponent {
     e.preventDefault();
     const {  form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
-      //values.deptId = getCookie("dept_id");
+      values.deptId = getCookie("dept_id");
       if (!err) {
         const params = {
           ...values,
-          deptId:"1123598813738675201",
-          // createTime: values.createTime.format('YYYY-MM-DD hh:mm:ss'),
         };
         console.log(params)
         getGoodsSave(params).then(res=>{

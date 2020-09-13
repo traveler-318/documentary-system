@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
 import func from '../../../utils/Func';
-
+import { getCookie } from '../../../utils/support';
 import { getAddList } from '../../../services/newServices/logistics';
 import router from 'umi/router';
 import { STATUS,NETSELECT } from './data.js';
@@ -31,11 +31,10 @@ class LogisticsAdd extends PureComponent {
     e.preventDefault();
     const {  form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
+      values.deptId = getCookie("dept_id");
       if (!err) {
         const params = {
           ...values,
-          deptId:"1123598813738675201",
-          // createTime: values.createTime.format('YYYY-MM-DD hh:mm:ss'),
         };
         getAddList(params).then(res=>{
           message.success('提交成功');
