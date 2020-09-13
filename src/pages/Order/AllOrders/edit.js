@@ -13,15 +13,14 @@ import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
-import {createData,getRegion} from '../../../services/newServices/order'
+import {updateData,getRegion} from '../../../services/newServices/order'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
 
-@connect(({ user, loading }) => ({
-  user,
-  submitting: loading.effects['user/submit'],
+@connect(({ globalParameters}) => ({
+  globalParameters,
 }))
 @Form.create()
 class OrdersAdd extends PureComponent {
@@ -35,24 +34,33 @@ class OrdersAdd extends PureComponent {
           id:"1"
         }
       ],
-      loading:false,
-      cityparam:{}
+      detail:{},
     };
   }
 
 
   componentWillMount() {
+    const { globalParameters } = this.props;
+
+    // 获取详情数据
+    this.setState({
+      detail:globalParameters.detailData
+    })
+  }
+
+  componentWillReceiveProps(pre,nex){
+    console.log(pre,nex)
   }
 
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { cityparam } = this.state;
+    const { cityparam, detail } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        values.deptId = getCookie("dept_id");
         values = {...values,...cityparam};
-        createData(values).then(res=>{
+        values.id = detail.id
+        updateData(values).then(res=>{
           message.success(res.msg);
           router.push('/order/allOrders');
         })
@@ -85,7 +93,8 @@ class OrdersAdd extends PureComponent {
 
     const {
       PRODUCTCLASSIFICATION,
-      loading
+      loading,
+      detail
     } = this.state;
 
     const formItemLayout = {
@@ -105,6 +114,8 @@ class OrdersAdd extends PureComponent {
         span: 20,
       },
     };
+
+    console.log(this.props.globalParameters)
 
     const action = (
       <Button type="primary" onClick={this.handleSubmit} loading={loading}>
@@ -130,6 +141,7 @@ class OrdersAdd extends PureComponent {
                         message: '请输入客户姓名',
                       },
                     ],
+                    initialValue: detail.userName,
                   })(<Input placeholder="请输入客户姓名" />)}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="手机号">
@@ -144,17 +156,16 @@ class OrdersAdd extends PureComponent {
                         message: '请输入正确的手机号',
                       },
                     ],
+                    initialValue: detail.userPhone,
                   })(<Input placeholder="请输入手机号" />)}
                 </FormItem>
-                {/* <FormItem {...formAllItemLayout} label="手机号2">
-                  {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem> */}
+                
                 <FormItem {...formAllItemLayout} label="所在地区">
                   {getFieldDecorator('region', {
-                      // initialValue: {['zhejiang', 'hangzhou', 'xihu']},
+                      initialValue: [detail.province, detail.city, detail.area],
                     })(
                     <Cascader
-                      // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
+                      defaultValue={[detail.province, detail.city, detail.area]}
                       options={CITY}
                       onChange={this.onChange}
                     />
@@ -168,50 +179,10 @@ class OrdersAdd extends PureComponent {
                         message: '请输入收货地址',
                       },
                     ],
+                    initialValue: detail.userAddress,
                   })(<Input placeholder="请输入收货地址" />)}
                 </FormItem>
-                {/* <FormItem {...formAllItemLayout} label="订单号">
-                  {getFieldDecorator('outOrderNo', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入订单号',
-                      },
-                    ],
-                  })(<Input placeholder="请输入订单号" />)}
-                </FormItem> */}
-
                 
-                {/* <FormItem {...formAllItemLayout} label="性别">
-                  {getFieldDecorator('gender', {
-                      initialValue: null,
-                    })(
-                    <Radio.Group>
-                      {GENDER.map(item=>{
-                        return (
-                          <Radio key={item.key} value={item.key}>{item.name}</Radio>
-                        )
-                      })}
-                    </Radio.Group>
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="生日">
-                  {getFieldDecorator('account')(
-                    <DatePicker
-                    disabledDate={this.disabledDate}
-                    showToday={false}
-                    />
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="微信号">
-                  {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="邮箱">
-                  {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="QQ">
-                  {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem> */}
               </Col>
               <Col span={12}>
                 <FormTitle
@@ -225,6 +196,7 @@ class OrdersAdd extends PureComponent {
                         message: '请选择订单来源',
                       },
                     ],
+                    initialValue: detail.orderSource,
                   })(
                   <Select placeholder={"请选择订单来源"}>
                     {ORDERSOURCE.map(item=>{
@@ -241,6 +213,7 @@ class OrdersAdd extends PureComponent {
                         message: '请选择订单类型',
                       },
                     ],
+                    initialValue: detail.orderType,
                   })(
                     <Select placeholder={"请选择订单类型"}>
                       {ORDERTYPE.map(item=>{
@@ -249,11 +222,9 @@ class OrdersAdd extends PureComponent {
                     </Select>
                   )}
                 </FormItem>
-
-
                 <FormItem {...formAllItemLayout} label="产品分类">
                   {getFieldDecorator('productName', {
-                      initialValue: null,
+                      initialValue: detail.productName,
                     })(
                       <Input placeholder="请输入产品分类" />
                   //   <Select placeholder={"请选择产品分类"}>
@@ -264,10 +235,14 @@ class OrdersAdd extends PureComponent {
                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="产品型号">
-                  {getFieldDecorator('productModel')(<Input placeholder="请输入产品型号" />)}
+                  {getFieldDecorator('productModel',{
+                     initialValue: detail.productModel,
+                  })(<Input placeholder="请输入产品型号" />)}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="序列号SN">
-                  {getFieldDecorator('deviceSerialNumber')(<Input placeholder="请输入序列号SN" />)}
+                  {getFieldDecorator('deviceSerialNumber',{
+                    initialValue: detail.deviceSerialNumber,
+                  })(<Input placeholder="请输入序列号SN" />)}
                 </FormItem>
 
                 <FormTitle
@@ -276,7 +251,7 @@ class OrdersAdd extends PureComponent {
 
                 <FormItem {...formAllItemLayout} label="归属销售">
                   {getFieldDecorator('salesman', {
-                      initialValue: null,
+                      initialValue: detail.salesman,
                     })(
                     <Select placeholder={"请选择归属销售"}>
                     {PRODUCTCLASSIFICATION.map(item=>{
@@ -287,7 +262,9 @@ class OrdersAdd extends PureComponent {
                 </FormItem>
 
                 <FormItem {...formAllItemLayout} label="备注信息">
-                  {getFieldDecorator('orderNote')(
+                  {getFieldDecorator('orderNote',{
+                    initialValue: detail.orderNote,
+                  })(
                     <TextArea rows={4} />
                   )}
                 </FormItem>

@@ -14,6 +14,13 @@ export async function createData(params) {
   });
 }
 
+export async function updateData(params) {
+  return request('/api/order/order/update', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function deleteData(params) {
   return request('/api/order/order/remove', {
     method: 'POST',

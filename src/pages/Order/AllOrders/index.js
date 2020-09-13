@@ -15,6 +15,9 @@ import {getList,deleteData} from '../../../services/newServices/order'
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
+@connect(({ globalParameters }) => ({
+  globalParameters,
+}))
 @Form.create()
 class AllOrdersList extends PureComponent {
 
@@ -54,9 +57,11 @@ class AllOrdersList extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
-    console.log(params,"params")
-    
-    this.getDataList(params);
+    this.setState({
+      params
+    },()=>{
+      this.getDataList();
+    })
   };
 
   // ============ 查询表单 ===============
@@ -173,6 +178,20 @@ class AllOrdersList extends PureComponent {
     this.getDataList();
   }
 
+  // 修改数据
+  handleEdit = (row) => {
+    // 
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: row,
+    });
+
+    router.push('/order/allOrders/edit');
+    // row.id
+  }
+
+  // 列表删除
   handleDelect = (row) => {
     const refresh = this.refreshTable;
     Modal.confirm({
@@ -288,7 +307,7 @@ class AllOrdersList extends PureComponent {
                     <Divider type="vertical" />
                     <a>跟进</a>
                     <Divider type="vertical" />
-                    <a>编辑</a>
+                    <a onClick={()=>this.handleEdit(row)}>编辑</a>
                     <Divider type="vertical" />
                     <a>置顶</a>
                     <Divider type="vertical" />
