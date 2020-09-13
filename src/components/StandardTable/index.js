@@ -119,7 +119,7 @@ class StandardTable extends PureComponent {
               }
               type="info"
               showIcon
-            />
+            />  
           </div>
         ) : null}
         <Table
