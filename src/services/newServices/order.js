@@ -39,3 +39,11 @@ export async function updateRemind(params) {
     body: params,
   });
 }
+// 设备
+export async function equipment(params) {
+  return request('/api/order/order/updateEquipment', {
+    method: 'POST',
+    body: params,
+  });
+}
+

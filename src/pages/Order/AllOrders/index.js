@@ -12,6 +12,7 @@ import {ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE} from 
 import {getList,deleteData, updateRemind} from '../../../services/newServices/order';
 import styles from './index.less';
 import Logistics from './components/Logistics'
+import Equipment from './components/Equipment'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -47,6 +48,8 @@ class AllOrdersList extends PureComponent {
       selectedRows:[],
       // 物流弹窗
       logisticsVisible:false,
+      // 设备弹窗
+      equipmeentVisible:false,
     };
   }
 
@@ -220,11 +223,11 @@ class AllOrdersList extends PureComponent {
         async onOk() {
           let param = selectedRows.map(item=>{
             return {
-              "id": selectedRows.id,
-              "outOrderNo": selectedRows.outOrderNo,
-              "userPhone": selectedRows.userPhone,
-              "payAmount": Number(selectedRows.payAmount), 
-              "deptId": selectedRows.deptId,
+              "id": item.id,
+              "outOrderNo": item.outOrderNo,
+              "userPhone": item.userPhone,
+              "payAmount": Number(item.payAmount), 
+              "deptId": item.deptId,
             }
           })
           console.log(param,"param")
@@ -339,6 +342,28 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  // 打开设备弹窗
+  handleShowEquipment = (row) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: row,
+    });
+    this.setState({
+      equipmeentVisible:true
+    })
+  }
+  // 关闭设备弹窗
+  handleCancelEquipment = (type) => {
+    // getlist代表点击保存成功关闭弹窗后需要刷新列表
+    if(type === "getlist"){
+      this.getDataList();
+    }
+    this.setState({
+      equipmeentVisible:false
+    })
+  }
+
   render() {
     const code = 'allOrdersList';
 
@@ -346,7 +371,7 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
-    const {data, loading, tabKey, logisticsVisible} = this.state;
+    const {data, loading, tabKey, logisticsVisible, equipmeentVisible} = this.state;
 
     // let status = [
     //   {value:"状态1",key :1},
@@ -469,6 +494,8 @@ class AllOrdersList extends PureComponent {
                     <a>归档</a>
                     <Divider type="vertical" />
                     <a onClick={()=>this.handleShowLogistics(row)}>物流</a>
+                    <Divider type="vertical" />
+                    <a onClick={()=>this.handleShowEquipment(row)}>设备</a>
                 </div>
             )
         },
@@ -497,6 +524,14 @@ class AllOrdersList extends PureComponent {
           <Logistics
             logisticsVisible={logisticsVisible}
             handleCancelLogistics={this.handleCancelLogistics}
+          />
+        ):""}
+
+        {/* 设备 */}
+        {equipmeentVisible?(
+          <Equipment
+            equipmeentVisible={equipmeentVisible}
+            handleCancelEquipment={this.handleCancelEquipment}
           />
         ):""}
       </Panel>
