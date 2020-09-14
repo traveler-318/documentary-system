@@ -21,7 +21,7 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 
-import { getList, getRemove, getSubmit } from '../../../services/newServices/logistics';
+import { getList, getRemove, getSubmit,getUrl } from '../../../services/newServices/logistics';
 
 
 const FormItem = Form.Item;
@@ -114,6 +114,15 @@ class AuthorityList extends PureComponent {
       },
     });
   };
+
+  // ============ 授权 ===============
+  activeAuthorization = ( id) => {
+    getUrl(id).then(res => {
+      window.open(JSON.parse(res.data).data.url)
+    });
+  };
+
+
   // ============ 修改默认开关 =========
 
   onStatus = (value,key) => {
@@ -210,13 +219,25 @@ class AuthorityList extends PureComponent {
         fixed: 'right',
         width: 300,
         render: (res,row) => {
-          return(
-            <div>
+
+          let html
+          if(res.net ==='cainiao'){
+            html=(<div>
               <Divider type="vertical" />
               <a onClick={()=>this.handleEdit(row)}>编辑</a>
               <Divider type="vertical" />
-              <a onClick={() => this.handleClick(res.id)}>删除</a>
-            </div>
+              <a onClick={()=>this.activeAuthorization(row.id)}>主动授权</a>
+              <Divider type="vertical" />
+              <a onClick={() => this.handleClick(res.id)}>删除</a></div>)
+          }else {
+            html=(<div>
+              <Divider type="vertical" />
+              <a onClick={()=>this.handleEdit(row)}>编辑</a>
+              <Divider type="vertical" />
+              <a onClick={() => this.handleClick(res.id)}>删除</a></div>)
+          }
+          return(
+           html
           )
         },
       },

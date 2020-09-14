@@ -32,6 +32,13 @@ export async function getRemove(params) {
   });
 }
 
+export async function getUrl(params) {
+  return request(`/api/logistics/authorization/`+params,{
+    method: 'POST',
+  });
+}
+
+
 // ============ 打印模板 ===============
 export async function getSurfacesingleList(params) {
   return request(`/api/logistics/surfacesingle/list?${stringify(params)}`);

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, DatePicker, message, Radio } from 'antd';
+import { Form, Input, Card, Row, Col, Button, DatePicker, message, Radio ,Select} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment'
 import Panel from '../../../components/Panel';
@@ -7,10 +7,11 @@ import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
 import { getSubmit } from '../../../services/newServices/logistics';
 import router from 'umi/router';
-import { STATUS } from './data.js';
+import { STATUS,NETSELECT } from './data.js';
 import styles from './index.less';
 
 const FormItem = Form.Item;
+const { Option } = Select;
 const { TextArea } = Input;
 
 @connect(({ globalParameters}) => ({
@@ -122,11 +123,17 @@ class LogisticsAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '请输入当地网点名称',
+                        message: '请选择当地网点名称',
                       },
                     ],
                     initialValue: data.net,
-                  })(<Input placeholder="请输入当地网点名称" />)}
+                  })(
+                    <Select placeholder="请选择当地网点名称">
+                      {NETSELECT.map(item=>{
+                        return (<Option key={item.key} value={item.name}>{item.name}</Option>)
+                      })}
+                    </Select>
+                  )}
                 </FormItem>
               </Col>
             </Row>

@@ -40,6 +40,7 @@ class FaceSheetEdit extends PureComponent {
     e.preventDefault();
     const {  form } = this.props;
     const {data} = this.state;
+    //debugger
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
       if (!err) {
@@ -78,6 +79,32 @@ class FaceSheetEdit extends PureComponent {
     });
   };
 
+  widthChange = (rule, value, callback) => {
+    let reg=/^[1-9]\d*$/;
+    if(value != "" && value != null){
+      if(!reg.test(value) || value.length > 3){
+        callback('请输入长度小于等于3位数的正整数');
+      }else{
+        return callback();
+      }
+    }else {
+      return callback();
+    }
+  };
+
+  heightChange = (rule, value, callback) => {
+    let reg=/^[1-9]\d*$/;
+    if(value != "" && value != null){
+      if(!reg.test(value) || value.length > 3){
+        callback('请输入长度小于等于3位数的正整数');
+      }else{
+        return callback();
+      }
+    }else {
+      return callback();
+    }
+  };
+
 
   render() {
     const {
@@ -111,6 +138,7 @@ class FaceSheetEdit extends PureComponent {
                     rules: [
                       {
                         required: true,
+                        message: '请选择快递公司编码',
                       },
                     ],
                   })(
@@ -128,6 +156,7 @@ class FaceSheetEdit extends PureComponent {
                     rules: [
                       {
                         required: true,
+                        message: '请输入模板ID',
                       },
                     ],
                     initialValue: data.tempid,
@@ -147,8 +176,7 @@ class FaceSheetEdit extends PureComponent {
                   {getFieldDecorator('width', {
                     rules: [
                       {
-                        required: true,
-                        message: '宽',
+                        validator:this.widthChange,
                       },
                     ],
                     initialValue: data.width,
@@ -160,12 +188,20 @@ class FaceSheetEdit extends PureComponent {
                   {getFieldDecorator('height', {
                     rules: [
                       {
-                        required: true,
-                        message: '高',
+                        validator:this.heightChange,
                       },
                     ],
                     initialValue: data.height,
                   })(<Input placeholder="高" />)}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="打印设备码:">
+                  {getFieldDecorator('siid',{
+                    initialValue: data.siid,
+                  })(<Input placeholder="打印设备码" />)}
                 </FormItem>
               </Col>
             </Row>

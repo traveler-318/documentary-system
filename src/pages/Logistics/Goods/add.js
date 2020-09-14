@@ -57,7 +57,39 @@ class GoodsAdd extends PureComponent {
       area:value[2],
       name:`${selectedOptions[0].label}${selectedOptions[1].label}${selectedOptions[2].label}`
     }
-    console.log(value, selectedOptions,param,"value")
+  };
+
+  countChange = (rule, value, callback) => {
+    var reg=/^[1-9]\d*$/;
+    if(value === "" || value === null){
+      callback('请输入物品总数量');
+    }else if(!reg.test(value)){
+      callback(new Error('请输入正整数'));
+    }else{
+      return callback();
+    }
+  };
+
+  weightChange = (rule, value, callback) => {
+    let reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    if(value === "" || value === undefined){
+      callback('请输入物品总重量');
+    }else if(!reg.test(value) || Number(value) <= 0){
+      callback('请输入大于0的正整数或小数');
+    }else{
+      return callback();
+    }
+  };
+
+  volumnChange = (rule, value, callback) => {
+    let reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    if(value === "" || value === undefined){
+      callback('请输入物品总体积');
+    }else if(!reg.test(value) || Number(value) <= 0){
+      callback('请输入大于0的正整数或小数');
+    }else{
+      return callback();
+    }
   };
 
   render() {
@@ -94,7 +126,13 @@ class GoodsAdd extends PureComponent {
               </Col>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="物品总数量：">
-                  {getFieldDecorator('count')(<Input placeholder="请输入物品总数量(正整数)" />)}
+                  {getFieldDecorator('count',{
+                    rules: [
+                      {
+                        validator:this.countChange,
+                      },
+                    ],
+                  })(<Input placeholder="请输入物品总数量(正整数)" />)}
                 </FormItem>
               </Col>
             </Row>
@@ -105,7 +143,7 @@ class GoodsAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '请输入物品总重量(重量单位kg)',
+                        validator:this.weightChange,
                       },
                     ],
                   })(<Input placeholder="请输入物品总重量(重量单位kg)" />)}
@@ -117,7 +155,7 @@ class GoodsAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '请输入物品总体积(体积单位CM*CM*CM)',
+                        validator:this.volumnChange,
                       },
                     ],
                   })(<Input placeholder="请输入物品总体积(体积单位CM*CM*CM)" />)}
