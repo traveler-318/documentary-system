@@ -105,9 +105,15 @@ class LogisticsAdd extends PureComponent {
               <Col span={10}>
                 <FormItem {...formItemLayout} label="当地网点名称:">
                   {getFieldDecorator('net', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择当地网点名称',
+                      },
+                    ],
                     initialValue: null,
                   })(
-                    <Select placeholder="请输入当地网点名称">
+                    <Select placeholder="请选择当地网点名称">
                       {NETSELECT.map(item=>{
                         return (<Option key={item.key} value={item.name}>{item.name}</Option>)
                       })}

@@ -57,6 +57,36 @@ class GoodsAdd extends PureComponent {
     });
   };
 
+  onChange = (value) => {
+
+  };
+
+  valinsPayChange = (rule, value, callback) => {
+    var reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    if(value != "" && value != null){
+      if(!reg.test(value)){
+        callback('请输入正确的金额格式');
+      }else{
+        return callback();
+      }
+    }else{
+      return callback();
+    }
+  };
+
+  collectionChange = (rule, value, callback) => {
+    var reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    if(value != "" && value != null){
+      if(!reg.test(value)){
+        callback('请输入正确的金额格式');
+      }else{
+        return callback();
+      }
+    }else{
+      return callback();
+    }
+  };
+
 
   render() {
     const {
@@ -122,7 +152,7 @@ class GoodsAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '单位是元',
+                        validator:this.valinsPayChange
                       },
                     ],
                     initialValue: data.valinsPay,
@@ -136,8 +166,7 @@ class GoodsAdd extends PureComponent {
                   {getFieldDecorator('collection', {
                     rules: [
                       {
-                        required: true,
-                        message: '单位是元',
+                        validator:this.collectionChange
                       },
                     ],
                     initialValue: data.collection,

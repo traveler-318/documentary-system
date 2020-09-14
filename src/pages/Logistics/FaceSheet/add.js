@@ -19,7 +19,8 @@ class FaceSheetAdd extends PureComponent {
     super(props);
     this.state = {
       data:{
-
+        width:76,
+        height:130
       },
     };
   }
@@ -31,10 +32,12 @@ class FaceSheetAdd extends PureComponent {
   // ============ 提交 ===============
 
   handleSubmit = e => {
+    console.log('111')
     e.preventDefault();
     const {  form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
+      console.log(values)
       if (!err) {
         const params = {
           ...values,
@@ -61,13 +64,35 @@ class FaceSheetAdd extends PureComponent {
     }
     this.setState({
       data:{
-        tempids:text
+        tempids:text,
+        width:76,
+        height:130
       }
     },()=>{
 
       });
+  };
 
+  widthChange = (rule, value, callback) => {
+    let reg=/^[1-9]\d*$/;
+    if(value != "" && value != null){
+      if(!reg.test(value) || value.length > 3){
+        callback('请输入长度小于等于3位数的正整数');
+      }else{
+        return callback();
+      }
+    }
+  };
 
+  heightChange = (rule, value, callback) => {
+    let reg=/^[1-9]\d*$/;
+    if(value != "" && value != null){
+      if(!reg.test(value) || value.length > 3){
+        callback('请输入长度小于等于3位数的正整数');
+      }else{
+        return callback();
+      }
+    }
   };
 
 
@@ -104,6 +129,7 @@ class FaceSheetAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
+                        message: '请选择快递公司编码',
                       },
                     ],
                   })(
@@ -122,6 +148,7 @@ class FaceSheetAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
+                        message: '请输入模板ID',
                       },
                     ],
                   })(
@@ -141,9 +168,10 @@ class FaceSheetAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '宽',
+                        validator:this.widthChange,
                       },
                     ],
+                    initialValue: data.width,
                   })(<Input placeholder="宽" />)}
                 </FormItem>
               </Col>
@@ -153,10 +181,11 @@ class FaceSheetAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '高',
+                        validator:this.heightChange,
                       },
                     ],
-                  })(<Input placeholder="高" />)}
+                    initialValue: data.height,
+                  })(<Input placeholder="高"/>)}
                 </FormItem>
               </Col>
             </Row>

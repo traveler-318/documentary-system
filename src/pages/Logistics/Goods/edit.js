@@ -52,6 +52,39 @@ class GoodsEdit extends PureComponent {
     });
   };
 
+  countChange = (rule, value, callback) => {
+    var reg=/^[1-9]\d*$/;
+    if(value === "" || value === null){
+      callback('请输入物品总数量');
+    }else if(!reg.test(value)){
+      callback(new Error('请输入正整数'));
+    }else{
+      return callback();
+    }
+  };
+
+  weightChange = (rule, value, callback) => {
+    let reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    if(value === "" || value === undefined){
+      callback('请输入物品总重量');
+    }else if(!reg.test(value) || Number(value) <= 0){
+      callback('请输入大于0的正整数或小数');
+    }else{
+      return callback();
+    }
+  };
+
+  volumnChange = (rule, value, callback) => {
+    let reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    if(value === "" || value === undefined){
+      callback('请输入物品总体积');
+    }else if(!reg.test(value) || Number(value) <= 0){
+      callback('请输入大于0的正整数或小数');
+    }else{
+      return callback();
+    }
+  };
+
 
   render() {
     const {
@@ -74,7 +107,7 @@ class GoodsEdit extends PureComponent {
     );
 
     return (
-      <Panel title="修改" back="/logistics/faceSheet" action={action}>
+      <Panel title="修改" back="/logistics/goods" action={action}>
         <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" bordered={false}>
             <Row gutter={24}>
@@ -89,6 +122,11 @@ class GoodsEdit extends PureComponent {
                 <FormItem {...formItemLayout} label="物品总数量：">
                   {getFieldDecorator('count',{
                     initialValue: data.count,
+                    rules: [
+                      {
+                        validator:this.countChange,
+                      },
+                    ],
                   })(<Input placeholder="请输入物品总数量(正整数)" />)}
                 </FormItem>
               </Col>
@@ -100,7 +138,7 @@ class GoodsEdit extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '请输入物品总重量(重量单位kg)',
+                        validator:this.weightChange,
                       },
                     ],
                     initialValue: data.weight,
@@ -113,7 +151,7 @@ class GoodsEdit extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '请输入物品总体积(体积单位CM*CM*CM)',
+                        validator:this.volumnChange,
                       },
                     ],
                     initialValue: data.volumn,
