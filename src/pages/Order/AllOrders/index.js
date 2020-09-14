@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message } from 'antd';
+import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
@@ -8,12 +8,14 @@ import Grid from '../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
 import {setListData} from '../../../utils/publicMethod';
-import {ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE} from './data.js'
-
-import {getList,deleteData} from '../../../services/newServices/order'
+import {ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE} from './data.js';
+import {getList,deleteData, updateRemind} from '../../../services/newServices/order';
+import styles from './index.less';
+import Logistics from './components/Logistics'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
+const { TabPane } = Tabs;
 
 @connect(({ globalParameters }) => ({
   globalParameters,
@@ -40,7 +42,11 @@ class AllOrdersList extends PureComponent {
       params:{
         size:10,
         current:1
-      }
+      },
+      tabKey:null,
+      selectedRows:[],
+      // 物流弹窗
+      logisticsVisible:false,
     };
   }
 
@@ -102,7 +108,7 @@ class AllOrdersList extends PureComponent {
         <Form.Item label="姓名">
             {getFieldDecorator('userName')(<Input placeholder="请输入姓名" />)}
           </Form.Item>
-          <Form.Item label="订单状态">
+          {/* <Form.Item label="订单状态">
             {getFieldDecorator('confirmTag', {
               initialValue: null,
             })(
@@ -112,7 +118,7 @@ class AllOrdersList extends PureComponent {
                 })}
               </Select>
             )}
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item label="订单类型">
             {getFieldDecorator('orderType', {
                 initialValue: null,
@@ -182,11 +188,11 @@ class AllOrdersList extends PureComponent {
         <Icon type="bell" />
         批量提醒
       </Menu.Item>
-      <Menu.Item key="1">
+      <Menu.Item key="4">
         <Icon type="loading-3-quarters" />
         转移客户
       </Menu.Item>
-      <Menu.Item key="2">
+      <Menu.Item key="5">
         <Icon type="highlight" />
         批量编辑
       </Menu.Item>
@@ -198,8 +204,38 @@ class AllOrdersList extends PureComponent {
   );
 
   handleMenuClick = (e) => {
-    message.info('Click on menu item.');
     console.log('click', e);
+    const {selectedRows} = this.state;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+    // 批量提醒
+    if(e.key === '3'){
+      Modal.confirm({
+        title: '提示',
+        content: '是否确定提醒?',
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        async onOk() {
+          let param = selectedRows.map(item=>{
+            return {
+              "id": selectedRows.id,
+              "outOrderNo": selectedRows.outOrderNo,
+              "userPhone": selectedRows.userPhone,
+              "payAmount": Number(selectedRows.payAmount), 
+              "deptId": selectedRows.deptId,
+            }
+          })
+          console.log(param,"param")
+          updateRemind(param).then(res=>{
+
+          })
+          
+        },
+        onCancel() {},
+      });
+    }
   }
 
   renderLeftButton = () => (
@@ -273,6 +309,36 @@ class AllOrdersList extends PureComponent {
     return text
   }
 
+  statusChange = (key) => {
+    this.setState({
+      tabKey:key
+    })
+  }
+  onSelectRow = rows => {
+    console.log(rows,"rows")
+    this.setState({
+      selectedRows: rows,
+    });
+  };
+
+  // 打开物流弹窗
+  handleShowLogistics = (row) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: row,
+    });
+    this.setState({
+      logisticsVisible:true
+    })
+  }
+  // 关闭物流弹窗
+  handleCancelLogistics = () => {
+    this.setState({
+      logisticsVisible:false
+    })
+  }
+
   render() {
     const code = 'allOrdersList';
 
@@ -280,7 +346,28 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
-    const {data, loading} = this.state;
+    const {data, loading, tabKey, logisticsVisible} = this.state;
+
+    // let status = [
+    //   {value:"状态1",key :1},
+    //   {value:"状态2",key :2},
+    //   {value:"状态3",key :3}
+    // ]
+
+    const TabPanes = () => (
+      <div className={styles.tabs}>
+        {/* <div className={styles.title}></div> */}
+        {ORDERSTATUS.map(item=>{
+          return (
+            <div 
+              onClick={()=>this.statusChange(item.key)} 
+              className={item.key === tabKey ? styles.status_item_select : styles.status_item}
+            >{item.name}</div>
+          )
+        })}
+        
+      </div>
+    );
 
     const columns = [
       {
@@ -380,6 +467,8 @@ class AllOrdersList extends PureComponent {
                     <a>置顶</a>
                     <Divider type="vertical" />
                     <a>归档</a>
+                    <Divider type="vertical" />
+                    <a onClick={()=>this.handleShowLogistics(row)}>物流</a>
                 </div>
             )
         },
@@ -388,10 +477,12 @@ class AllOrdersList extends PureComponent {
 
     return (
       <Panel>
+        <TabPanes/>
         <Grid
           code={code}
           form={form}
           onSearch={this.handleSearch}
+          onSelectRow={this.onSelectRow}
           renderSearchForm={this.renderSearchForm}
           loading={loading}
           data={data}
@@ -400,7 +491,14 @@ class AllOrdersList extends PureComponent {
           renderLeftButton={this.renderLeftButton}
           renderRightButton={this.renderRightButton}
           counterElection={true}
+          // multipleChoice={true}
         />
+        {logisticsVisible?(
+          <Logistics
+            logisticsVisible={logisticsVisible}
+            handleCancelLogistics={this.handleCancelLogistics}
+          />
+        ):""}
       </Panel>
     );
   }
