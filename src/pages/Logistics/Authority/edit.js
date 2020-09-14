@@ -13,22 +13,26 @@ import styles from './index.less';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
+@connect(({ globalParameters}) => ({
+  globalParameters,
+}))
 @Form.create()
 class LogisticsAdd extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
-      data:[],
+      data:{},
     };
   }
 
   componentWillMount() {
+    const { globalParameters } = this.props;
 
+    // 获取详情数据
     this.setState({
-      data:JSON.parse(this.props.match.params.id)
+      data:globalParameters.detailData
     })
-
   }
 
   handleSubmit = e => {

@@ -64,6 +64,20 @@ export async function getDeliverySave(params) {
     body: params,
   });
 }
+export async function getDeliverySubmit(params) {
+  return request('/api/logistics/delivery/update', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getDeliveryRemove(params) {
+  return request('/api/logistics/delivery/remove', {
+    method: 'POST',
+    body: func.toFormData(params),
+  });
+}
+
+
 
 // ============ 物品信息 ===============
 export async function getGoodsList(params) {

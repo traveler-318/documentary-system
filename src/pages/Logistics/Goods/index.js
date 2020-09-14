@@ -21,7 +21,6 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import {
-  getSubmit,
   getGoodsList,
   getGoodsRemove,
   getGoodsSubmit,
@@ -30,6 +29,9 @@ import {
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
+@connect(({ globalParameters }) => ({
+  globalParameters,
+}))
 @Form.create()
 class GoodsList extends PureComponent {
   constructor(props) {
@@ -142,6 +144,18 @@ class GoodsList extends PureComponent {
     });
   };
 
+  // 修改数据
+  handleEdit = (row) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: row,
+    });
+
+    router.push('/logistics/goods/edit');
+    // row.id
+  }
+
   renderLeftButton = () => (
     <>
       数据列表
@@ -191,10 +205,7 @@ class GoodsList extends PureComponent {
         width: 150,
         render: (res,key) => {
           return(
-            <div>
-              { res === 0 ? <Switch onClick={() => this.onStatus(res,key)} />
-                : <Switch defaultChecked onClick={() => this.onStatus(res,key)} />}
-            </div>
+            <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key)} />
           )
         },
       },
@@ -203,12 +214,11 @@ class GoodsList extends PureComponent {
         key: 'operation',
         fixed: 'right',
         width: 200,
-        render: (res) => {
-          const thisData =  JSON.stringify(res);
+        render: (res,row) => {
           return(
             <div>
               <Divider type="vertical" />
-              <a onClick={()=>{router.push(`/logistics/goods/edit/${thisData}`);}}>编辑</a>
+              <a onClick={()=>this.handleEdit(row)}>编辑</a>
               <Divider type="vertical" />
               <a onClick={() => this.handleClick(res.id)}>删除</a>
             </div>

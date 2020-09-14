@@ -21,15 +21,17 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import {
-  getSubmit,
   getDeliveryList,
-  getSurfacesingleRemove,
-  getSurfacesingleSubmit,
+  getDeliveryRemove,
+  getDeliverySubmit,
 } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
+@connect(({ globalParameters }) => ({
+  globalParameters,
+}))
 @Form.create()
 class SenderList extends PureComponent {
   constructor(props) {
@@ -102,7 +104,7 @@ class SenderList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        getSurfacesingleRemove(params).then(resp => {
+        getDeliveryRemove(params).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
             refresh()
@@ -130,7 +132,7 @@ class SenderList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        getSurfacesingleSubmit(params).then(resp=>{
+        getDeliverySubmit(params).then(resp=>{
           if (resp.success) {
             message.success(resp.msg);
             refresh()
@@ -141,6 +143,16 @@ class SenderList extends PureComponent {
       },
       onCancel() {},
     });
+  };
+
+  // 修改数据
+  handleEdit = (row) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: row,
+    });
+    router.push('/logistics/sender/edit');
   };
 
   renderLeftButton = () => (
@@ -164,17 +176,17 @@ class SenderList extends PureComponent {
       {
         title: '寄件人姓名',
         dataIndex: 'name',
-        width: 200,
+        width: 150,
       },
       {
         title: '寄件人手机号',
         dataIndex: 'mobile',
-        width: 300,
+        width: 150,
       },
       {
         title: '寄件人地址',
         dataIndex: 'administrativeAreas',
-        width: 200,
+        width: 350,
         render: (res,key) => {
           let Areas =res + key.printAddr;
           return(
@@ -185,7 +197,7 @@ class SenderList extends PureComponent {
       {
         title: '寄件人公司名称',
         dataIndex: 'company',
-        width: 150,
+        width: 200,
       },
       {
         title: '默认开关',
@@ -193,10 +205,7 @@ class SenderList extends PureComponent {
         width: 150,
         render: (res,key) => {
           return(
-            <div>
-              { res === 0 ? <Switch onClick={() => this.onStatus(res,key)} />
-                : <Switch defaultChecked onClick={() => this.onStatus(res,key)} />}
-            </div>
+            <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key)} />
           )
         },
       },
@@ -205,12 +214,11 @@ class SenderList extends PureComponent {
         key: 'operation',
         fixed: 'right',
         width: 200,
-        render: (res) => {
-          const thisData =  JSON.stringify(res);
+        render: (res,row) => {
           return(
             <div>
               <Divider type="vertical" />
-              <a onClick={()=>{router.push(`/logistics/faceSheet/edit/${thisData}`);}}>编辑</a>
+              <a onClick={()=>this.handleEdit(row)}>编辑</a>
               <Divider type="vertical" />
               <a onClick={() => this.handleClick(res.id)}>删除</a>
             </div>

@@ -11,6 +11,9 @@ import router from 'umi/router';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
+@connect(({ globalParameters }) => ({
+  globalParameters,
+}))
 @Form.create()
 class GoodsEdit extends PureComponent {
 
@@ -22,8 +25,11 @@ class GoodsEdit extends PureComponent {
   }
 
   componentWillMount() {
+    const { globalParameters } = this.props;
+
+    // 获取详情数据
     this.setState({
-      data:JSON.parse(this.props.match.params.id)
+      data:globalParameters.detailData
     })
   }
 // ============ 修改提交 ===============
@@ -53,7 +59,6 @@ class GoodsEdit extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     const {data} = this.state;
-    console.log(data)
     const formItemLayout = {
       labelCol: {
         span: 8,

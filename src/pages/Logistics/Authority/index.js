@@ -21,12 +21,15 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 
-import {getList,getRemove} from '../../../services/newServices/logistics';
+import { getList, getRemove, getSubmit } from '../../../services/newServices/logistics';
 
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
+@connect(({ globalParameters }) => ({
+  globalParameters,
+}))
 @Form.create()
 class AuthorityList extends PureComponent {
   constructor(props) {
@@ -106,10 +109,49 @@ class AuthorityList extends PureComponent {
           }
         });
       },
-      onCancel() {},
+      onCancel() {
+
+      },
+    });
+  };
+  // ============ 修改默认开关 =========
+
+  onStatus = (value,key) => {
+    const refresh = this.getDataList;
+    const data= value === 0 ? 1 : 0;
+    const params = {
+      id:key.id,
+      status:data
+    };
+    Modal.confirm({
+      title: '修改确认',
+      content: '是否要修改该状态??',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        getSubmit(params).then(resp=>{
+          if (resp.success) {
+            message.success(resp.msg);
+            refresh()
+          } else {
+            message.error(resp.msg || '修改失败');
+          }
+        })
+      },
+      onCancel(){},
     });
   };
 
+  // 修改数据
+  handleEdit = (row) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: row,
+    });
+    router.push('/logistics/authority/edit');
+  };
 
 
   renderLeftButton = () => (
@@ -156,12 +198,9 @@ class AuthorityList extends PureComponent {
         title: '默认开关',
         dataIndex: 'status',
         width: 150,
-        render: (res) => {
+        render: (res,key) => {
           return(
-            <div>
-              { res === 0 ? <Switch />
-                : <Switch defaultChecked />}
-            </div>
+            <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key)} />
           )
         },
       },
@@ -170,12 +209,11 @@ class AuthorityList extends PureComponent {
         key: 'operation',
         fixed: 'right',
         width: 300,
-        render: (res) => {
-          const thisData =  JSON.stringify(res);
+        render: (res,row) => {
           return(
             <div>
               <Divider type="vertical" />
-              <a onClick={()=>{router.push(`/logistics/authority/edit/${thisData}`);}}>编辑</a>
+              <a onClick={()=>this.handleEdit(row)}>编辑</a>
               <Divider type="vertical" />
               <a onClick={() => this.handleClick(res.id)}>删除</a>
             </div>

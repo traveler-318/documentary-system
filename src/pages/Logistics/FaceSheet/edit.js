@@ -13,19 +13,25 @@ import { EXPRESS100DATA,TEMPID } from './data';
 const FormItem = Form.Item;
 const { Option } = Select;
 
+@connect(({ globalParameters }) => ({
+  globalParameters,
+}))
 @Form.create()
 class FaceSheetEdit extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
-      data:[],
+      data:{},
     };
   }
 
   componentWillMount() {
+    const { globalParameters } = this.props;
+
+    // 获取详情数据
     this.setState({
-      data:JSON.parse(this.props.match.params.id)
+      data:globalParameters.detailData
     })
   }
 // ============ 修改提交 ===============

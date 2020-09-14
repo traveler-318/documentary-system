@@ -550,7 +550,7 @@ export default [
               { path: '/logistics/authority', redirect: '/logistics/authority/list' },
               { path: '/logistics/authority/list', component: './Logistics/Authority/index' },
               { path: '/logistics/authority/add', component: './Logistics/Authority/add' },
-              { path: '/logistics/authority/edit/:id', component: './Logistics/Authority/edit' },
+              { path: '/logistics/authority/edit', component: './Logistics/Authority/edit' },
             ],
           },
           {
@@ -559,7 +559,7 @@ export default [
               { path: '/logistics/faceSheet', redirect: '/logistics/FaceSheet/list' },
               { path: '/logistics/faceSheet/list', component: './Logistics/FaceSheet/index' },
               { path: '/logistics/faceSheet/add', component: './Logistics/FaceSheet/add' },
-              { path: '/logistics/faceSheet/edit/:id', component: './Logistics/FaceSheet/edit' },
+              { path: '/logistics/faceSheet/edit', component: './Logistics/FaceSheet/edit' },
             ],
           },
           {
@@ -568,7 +568,7 @@ export default [
               { path: '/logistics/sender', redirect: '/logistics/Sender/list' },
               { path: '/logistics/sender/list', component: './Logistics/Sender/index' },
               { path: '/logistics/sender/add', component: './Logistics/Sender/add' },
-              // { path: '/logistics/sender/edit/:id', component: './Logistics/Sender/edit' },
+              { path: '/logistics/sender/edit', component: './Logistics/Sender/edit' },
             ],
           },
           {
@@ -577,7 +577,7 @@ export default [
               { path: '/logistics/goods', redirect: '/logistics/Goods/list' },
               { path: '/logistics/goods/list', component: './Logistics/Goods/index' },
               { path: '/logistics/goods/add', component: './Logistics/Goods/add' },
-               { path: '/logistics/goods/edit/:id', component: './Logistics/Goods/edit' },
+               { path: '/logistics/goods/edit', component: './Logistics/Goods/edit' },
             ],
           },
           {
@@ -586,7 +586,7 @@ export default [
               { path: '/logistics/additional', redirect: '/logistics/Additional/list' },
               { path: '/logistics/additional/list', component: './Logistics/Additional/index' },
               { path: '/logistics/additional/add', component: './Logistics/Additional/add' },
-              { path: '/logistics/additional/edit/:id', component: './Logistics/Additional/edit' },
+              { path: '/logistics/additional/edit', component: './Logistics/Additional/edit' },
             ],
           },
         ],

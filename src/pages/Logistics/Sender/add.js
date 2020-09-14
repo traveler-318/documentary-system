@@ -110,6 +110,10 @@ class SenderAdd extends PureComponent {
                         required: true,
                         message: '寄件人手机号',
                       },
+                      {
+                        len: 11,
+                        message: '请输入正确的手机号',
+                      },
                     ],
                   })(<Input placeholder="寄件人手机号" />)}
                 </FormItem>

@@ -32,6 +32,9 @@ import styles from './index.less';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
+@connect(({ globalParameters }) => ({
+  globalParameters,
+}))
 @Form.create()
 class FaceSheetList extends PureComponent {
   constructor(props) {
@@ -163,6 +166,17 @@ class FaceSheetList extends PureComponent {
     });
   };
 
+  // 修改数据
+  handleEdit = (row) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: row,
+    });
+
+    router.push('/logistics/faceSheet/edit');
+  };
+
   renderLeftButton = () => (
     <>
       数据列表
@@ -218,8 +232,7 @@ class FaceSheetList extends PureComponent {
         render: (res) => {
           return(
             <div>
-              { res === '离线' ? <span><span className={styles.statue} style={{ background: '#dcdfe6'}}></span>{res}</span>
-                : <span><span className={styles.statue} style={{ background: '#67C23A' }}></span>{res}</span>}
+              <span className={styles.statue} style={res === '离线' ? {background:"#dcdfe6"}:{background:"#67C23A"}}></span>{res}
             </div>
           )
         },
@@ -230,10 +243,7 @@ class FaceSheetList extends PureComponent {
         width: 150,
         render: (res,key) => {
           return(
-            <div>
-              { res === 0 ? <Switch onClick={() => this.onStatus(res,key)} />
-                : <Switch defaultChecked onClick={() => this.onStatus(res,key)} />}
-            </div>
+            <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key)} />
           )
         },
       },
@@ -242,12 +252,11 @@ class FaceSheetList extends PureComponent {
         key: 'operation',
         fixed: 'right',
         width: 200,
-        render: (res) => {
-          const thisData =  JSON.stringify(res);
+        render: (res,row) => {
           return(
             <div>
               <Divider type="vertical" />
-              <a onClick={()=>{router.push(`/logistics/faceSheet/edit/${thisData}`);}}>编辑</a>
+              <a onClick={()=>this.handleEdit(row)}>编辑</a>
               <Divider type="vertical" />
               <a onClick={() => this.handleClick(res.id)}>删除</a>
             </div>

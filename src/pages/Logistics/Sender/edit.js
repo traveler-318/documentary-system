@@ -1,17 +1,21 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, DatePicker, message, Radio, Select } from 'antd';
+import { Form, Input, Card, Row, Col, Button, DatePicker, message, Radio, Select, Cascader } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment'
 import Panel from '../../../components/Panel';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
-import { getSurfacesingleSubmit } from '../../../services/newServices/logistics';
+import { getDeliverySubmit } from '../../../services/newServices/logistics';
 import router from 'umi/router';
-import { EXPRESS100DATA,TEMPID } from './data';
+import styles from '../../../layouts/Sword.less';
+import { CITY } from '../../../utils/city';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
+@connect(({ globalParameters }) => ({
+  globalParameters,
+}))
 @Form.create()
 class SenderEdit extends PureComponent {
 
@@ -23,8 +27,11 @@ class SenderEdit extends PureComponent {
   }
 
   componentWillMount() {
+    const { globalParameters } = this.props;
+
+    // 获取详情数据
     this.setState({
-      data:JSON.parse(this.props.match.params.id)
+      data:globalParameters.detailData
     })
   }
 // ============ 修改提交 ===============
@@ -35,40 +42,22 @@ class SenderEdit extends PureComponent {
     const {data} = this.state;
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
+      values.addrCoding=JSON.stringify(values.addrCoding);
       if (!err) {
         const params = {
           ...values,
           id:data.id,
         };
-        getSurfacesingleSubmit(params).then(res=>{
+        getDeliverySubmit(params).then(res=>{
           message.success('提交成功');
-          router.push('/logistics/faceSheet');
+          router.push('/logistics/sender');
         })
       }
     });
   };
 
   onChange = value => {
-    let text = ""
-    for(let i=0; i< EXPRESS100DATA.length; i++){
-      if(value === EXPRESS100DATA[i].num){
-        text = EXPRESS100DATA[i].name
-      }
-    }
-    for(let j=0; j< TEMPID.length; j++){
-      if(text === TEMPID[j].value){
-        text = TEMPID[j].id
-      }
-    }
-    const {data} = this.state;
-    const datas = Object.assign({}, data, {
-      tempid: text
-    })
-    this.setState({
-      data:datas
-    },()=>{
 
-    });
   };
 
 
@@ -77,6 +66,7 @@ class SenderEdit extends PureComponent {
       form: { getFieldDecorator },
     } = this.props;
     const {data} = this.state;
+    console.log(data)
     const formItemLayout = {
       labelCol: {
         span: 8,
@@ -93,75 +83,85 @@ class SenderEdit extends PureComponent {
     );
 
     return (
-      <Panel title="修改" back="/logistics/faceSheet" action={action}>
+      <Panel title="修改" back="/logistics/sender" action={action}>
         <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="快递公司编码：">
-                  {getFieldDecorator('kuaidicom', {
-                    initialValue: data.kuaidicom,
+                <FormItem {...formItemLayout} label="寄件人姓名：">
+                  {getFieldDecorator('name', {
                     rules: [
                       {
                         required: true,
+                        message: '寄件人姓名',
                       },
                     ],
-                  })(
-                    <Select placeholder="" onSelect={value => this.onChange(value)}>
-                      {EXPRESS100DATA.map((item,index)=>{
-                        return (<Option key={index} value={item.num}>{item.name}</Option>)
-                      })}
-                    </Select>
-                  )}
+                    initialValue: data.name,
+                  })(<Input placeholder="寄件人姓名" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="模板ID：">
-                  {getFieldDecorator('tempid', {
+                <FormItem {...formItemLayout} label="寄件人手机号：">
+                  {getFieldDecorator('mobile', {
                     rules: [
                       {
                         required: true,
+                        message: '寄件人手机号',
+                      },
+                      {
+                        len: 11,
+                        message: '请输入正确的手机号',
                       },
                     ],
-                    initialValue: data.tempid,
-                  })(
-                    <Select placeholder="" disabled>
-                      {TEMPID.map((item,index) =>{
-                        return (<Option key={index} value={item.id}>{item.value}</Option>)
-                      })}
-                    </Select>
-                  )}
+                    initialValue: data.mobile,
+                  })(<Input placeholder="寄件人手机号" />)}
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="宽：">
-                  {getFieldDecorator('width', {
+                <FormItem {...formItemLayout} label="寄件人所在地区：">
+                  {getFieldDecorator('addrCoding', {
                     rules: [
                       {
                         required: true,
-                        message: '宽',
+                        message: '寄件人所在地区',
                       },
                     ],
-                    initialValue: data.width,
-                  })(<Input placeholder="宽" />)}
+                    initialValue: JSON.parse(data.addrCoding),
+                  })(
+                    <Cascader
+                      // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
+                      options={CITY}
+                      onChange={this.onChange}
+                    />
+                  )}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="高：">
-                  {getFieldDecorator('height', {
+                <FormItem {...formItemLayout} label="寄件人详细地址：">
+                  {getFieldDecorator('printAddr', {
                     rules: [
                       {
                         required: true,
-                        message: '高',
+                        message: '寄件人详细地址',
                       },
                     ],
-                    initialValue: data.height,
-                  })(<Input placeholder="高" />)}
+                    initialValue: data.printAddr,
+                  })(<Input placeholder="寄件人详细地址" />)}
                 </FormItem>
               </Col>
             </Row>
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="寄件人公司名称:">
+                  {getFieldDecorator('company',{
+                    initialValue: data.company,
+                  })(<Input placeholder="寄件人公司名称" />)}
+                </FormItem>
+              </Col>
+            </Row>
+
           </Card>
         </Form>
       </Panel>
