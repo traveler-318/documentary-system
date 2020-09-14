@@ -59,7 +59,7 @@ const checkServerCode = response => {
       message: response.msg || codeMessage[response.code],
     });
     removeAll();
-    router.push('/user/login');
+    // router.push('/user/login');
   } else if (response.code === 404) {
     notification.error({
       message: response.msg || codeMessage[response.code],
@@ -200,9 +200,9 @@ export default function request(url, option) {
       if (status === 401) {
         // @HACK
         /* eslint-disable no-underscore-dangle */
-        window.g_app._store.dispatch({
-          type: 'login/logout',
-        });
+        // window.g_app._store.dispatch({
+        //   type: 'login/logout',
+        // });
         return;
       }
       // environment should not be used

@@ -31,3 +31,11 @@ export async function deleteData(params) {
 export async function getRegion() {
   return request(`/api/blade-system/dict-biz/dictionary?${stringify({code:"region"})}`);
 }
+
+// 批量提醒接口
+export async function updateRemind(params) {
+  return request('/api/order/order/updateReminds', {
+    method: 'POST',
+    body: params,
+  });
+}
