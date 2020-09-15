@@ -8,12 +8,14 @@ import Grid from '../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
 import {setListData} from '../../../utils/publicMethod';
-import {ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE} from './data.js';
+import {ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY} from './data.js';
 import {getList,deleteData, updateRemind} from '../../../services/newServices/order';
 import styles from './index.less';
 import Logistics from './components/Logistics'
 import Equipment from './components/Equipment'
 import LogisticsConfig from './components/LogisticsConfig'
+import Details from './components/details'
+
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -54,6 +56,8 @@ class AllOrdersList extends PureComponent {
       equipmeentVisible:false,
       // 批量物流下单弹窗
       LogisticsConfigVisible:false,
+      // 详情弹窗
+      detailsVisible:false,
     };
   }
 
@@ -367,6 +371,24 @@ class AllOrdersList extends PureComponent {
     });
   };
 
+  // 打开详情弹窗
+  handleDetails = (row) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: row,
+    });
+    this.setState({
+      detailsVisible:true
+    })
+  }
+  // 关闭详情弹窗
+  handleCancelDetails = () => {
+    this.setState({
+      detailsVisible:false
+    })
+  }
+
   // 打开物流弹窗
   handleShowLogistics = (row) => {
     const { dispatch } = this.props;
@@ -379,7 +401,11 @@ class AllOrdersList extends PureComponent {
     })
   }
   // 关闭物流弹窗
-  handleCancelLogistics = () => {
+  handleCancelLogistics = (type) => {
+    // getlist代表点击保存成功关闭弹窗后需要刷新列表
+    if(type === "getlist"){
+      this.getDataList();
+    }
     this.setState({
       logisticsVisible:false
     })
@@ -414,7 +440,7 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
-    const {data, loading, tabKey, logisticsVisible, equipmeentVisible,LogisticsConfigVisible} = this.state;
+    const {data, loading, tabKey, logisticsVisible, equipmeentVisible,LogisticsConfigVisible, detailsVisible} = this.state;
 
     // let status = [
     //   {value:"状态1",key :1},
@@ -522,11 +548,11 @@ class AllOrdersList extends PureComponent {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 250,
+        width: 280,
         render: (text,row) => {
             return(
                 <div>
-                    <a>审核</a>
+                    {/* <a>审核</a>
                     <Divider type="vertical" />
                     <a>跟进</a>
                     <Divider type="vertical" />
@@ -535,10 +561,18 @@ class AllOrdersList extends PureComponent {
                     <a>置顶</a>
                     <Divider type="vertical" />
                     <a>归档</a>
+                    <Divider type="vertical" /> */}
+                    <a onClick={()=>this.handleDetails(row)}>详情</a>
+                    <Divider type="vertical" />
+                    <a onClick={()=>this.handleShowEquipment(row)}>设备</a>
                     <Divider type="vertical" />
                     <a onClick={()=>this.handleShowLogistics(row)}>物流</a>
                     <Divider type="vertical" />
-                    <a onClick={()=>this.handleShowEquipment(row)}>设备</a>
+                    <a >短信</a>
+                    <Divider type="vertical" />
+                    <a >提醒</a>
+                    <Divider type="vertical" />
+                    <a >下单</a>
                 </div>
             )
         },
@@ -563,6 +597,15 @@ class AllOrdersList extends PureComponent {
           counterElection={true}
           // multipleChoice={true}
         />
+        {/* 详情 */}
+        {detailsVisible?(
+          <Details
+            detailsVisible={detailsVisible}
+            handleCancelDetails={this.handleCancelDetails}
+          />
+        ):""}
+
+        {/* 物流 */}
         {logisticsVisible?(
           <Logistics
             logisticsVisible={logisticsVisible}

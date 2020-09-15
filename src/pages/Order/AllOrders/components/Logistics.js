@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
-import { Modal, Checkbox, Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, message, Cascader, Radio } from 'antd';
+import { Modal, Checkbox, Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, message, Cascader, Radio, Timeline } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 
 import { tenantMode } from '../../../../defaultSettings';
 import { getCookie } from '../../../../utils/support';
-import {createData,getRegion} from '../../../../services/newServices/order'
-import {LOGISTICSCOMPANY} from '../data.js';
+import { updateLogistics, logisticsRemind } from '../../../../services/newServices/order'
+import { LOGISTICSCOMPANY } from '../data.js';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -23,7 +23,8 @@ class Logistics extends PureComponent {
     super(props);
     this.state = {
       loading:false,
-      detail:{}
+      detail:{},
+      logisticsList:[],
     };
   }
 
@@ -36,18 +37,54 @@ class Logistics extends PureComponent {
     })
   }
 
-  handleSubmit = e => {
+  // 签收提醒
+  handlelogisticsRemind = (e) => {
     e.preventDefault();
-    const { form } = this.props;
+    const { form, handleCancelLogistics } = this.props;
+    const { detail } = this.state;
+    
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        this.setState({loading:true });
         values.deptId = getCookie("dept_id");
         values = {...values};
-        // values.ouOrderNo = "12313243546546546"
-        createData(values).then(res=>{
+        values.outOrderNo = detail.outOrderNo
+        values.id = detail.id
+        values.smsConfirmation = true;
+        values.userPhone = detail.userPhone;
+        values.tenantId = detail.tenantId;
+        logisticsRemind(values).then(res=>{
+          this.setState({loading:false });
           if(res.code === 200){
             message.success(res.msg);
-            
+            handleCancelLogistics("getlist");
+          }
+        })
+      }
+    });
+  }
+  // 发货提醒 和 确定
+  handleSubmit = (e,sms_confirmation) => {
+    e.preventDefault();
+    const { form, handleCancelLogistics } = this.props;
+    const { detail } = this.state;
+
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        this.setState({loading:true });
+        values.deptId = getCookie("dept_id");
+        values = {...values};
+        values.outOrderNo = detail.outOrderNo
+        values.id = detail.id
+        values.smsConfirmation = sms_confirmation;
+        if(sms_confirmation){
+          values.userPhone = detail.userPhone
+        }
+        updateLogistics(values).then(res=>{
+          this.setState({loading:false });
+          if(res.code === 200){
+            message.success(res.msg);
+            handleCancelLogistics("getlist");
           }
         })
       }
@@ -71,7 +108,8 @@ class Logistics extends PureComponent {
 
     const {
       loading,
-      detail
+      detail,
+      logisticsList
     } = this.state;
 
     const formItemLayout = {
@@ -102,26 +140,28 @@ class Logistics extends PureComponent {
             <Button key="back" onClick={handleCancelLogistics}>
               取消
             </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={this.handleSubmit}>
-                发货提醒
-            </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={this.handleSubmit}>
-                签收提醒
-            </Button>,
-            <Button style={detail.confirmTag === 1 ? {} : {display:"none"}} key="submit" type="primary" loading={loading} onClick={this.handleSubmit}>
+            <Button style={detail.confirmTag === 1 ? {} : {display:"none"}} type="primary" loading={loading} onClick={this.handleSubmit}>
                 物流订阅
             </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={this.handleSubmit}>
+            <Button type="primary" loading={loading} onClick={this.handleSubmit}>
                 物流查询
             </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={this.handleSubmit}>
+
+            <Button type="primary" loading={loading} onClick={this.handlelogisticsRemind}>
+                签收提醒
+            </Button>,
+            <Button type="primary" loading={loading} onClick={(e)=>this.handleSubmit(e,true)}>
+                发货提醒
+            </Button>,
+            <Button type="primary" loading={loading} onClick={(e)=>this.handleSubmit(e,false)}>
               确定
             </Button>,
           ]}
         >
             <Form style={{ marginTop: 8 }}>
                 <FormItem {...formAllItemLayout} label="物流公司">
-                  {getFieldDecorator('logistics_company', {
+                  {getFieldDecorator('logisticsCompany', {
+                    initialValue: detail.logisticsCompany,
                     rules: [
                       {
                         required: true,
@@ -131,13 +171,14 @@ class Logistics extends PureComponent {
                   })(
                   <Select placeholder={"请选择物流公司"}>
                     {Object.keys(LOGISTICSCOMPANY).map(key=>{
-                      return (<Option value={key}>{LOGISTICSCOMPANY[key]}</Option>)
+                      return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
                     })}
                   </Select>
                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="物流单号">
-                  {getFieldDecorator('logistics_number', {
+                  {getFieldDecorator('logisticsNumber', {
+                    initialValue: detail.logisticsNumber,
                     rules: [
                       {
                         required: true,
@@ -154,7 +195,26 @@ class Logistics extends PureComponent {
                 {detail.confirmTag === 1 ? (
                     <div style={{color:"red",paddingLeft:"20px"}}>如您需要此订单进入自动化流程，请点击物流订阅</div>
                 ) :""}
-                
+                <div style={{marginLeft:10}}>
+                  <Timeline>
+                    <Timeline.Item>
+                      <p>2020-09-15 12:10:10</p>
+                      <p>Create a services site 2015-09-01</p>
+                    </Timeline.Item>
+                    <Timeline.Item>
+                      <p>2020-09-15 12:10:10</p>
+                      <p>Create a services site 2015-09-01</p>
+                    </Timeline.Item>
+                    <Timeline.Item>
+                      <p>2020-09-15 12:10:10</p>
+                      <p>Create a services site 2015-09-01</p>
+                    </Timeline.Item>
+                    <Timeline.Item>
+                      <p>2020-09-15 12:10:10</p>
+                      <p>Create a services site 2015-09-01</p>
+                    </Timeline.Item>
+                  </Timeline>
+                </div>
             </Form>
         </Modal>
     );

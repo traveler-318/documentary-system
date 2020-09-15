@@ -17,7 +17,7 @@ const { TextArea } = Input;
     globalParameters,
 }))
 @Form.create()
-class Equipment extends PureComponent {
+class Details extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -88,8 +88,8 @@ class Equipment extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      equipmeentVisible,
-      handleCancelEquipment,
+      detailsVisible,
+      handleCancelDetails,
     } = this.props;
 
     const {
@@ -117,19 +117,13 @@ class Equipment extends PureComponent {
     // confirmTag
     return (
         <Modal
-          title="设备序列号"
-          visible={equipmeentVisible}
+          title="详情"
+          visible={detailsVisible}
           width={560}
-          onCancel={handleCancelEquipment}
+          onCancel={handleCancelDetails}
           footer={[
-            <Button key="back" onClick={handleCancelEquipment}>
+            <Button key="back" onClick={handleCancelDetails}>
               取消
-            </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={(e)=>this.handleSubmit(e,true)}>
-            短信提醒
-            </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={(e)=>this.handleSubmit(e,false)}>
-              确定
             </Button>,
           ]}
         >
@@ -162,4 +156,4 @@ class Equipment extends PureComponent {
   }
 }
 
-export default Equipment;
+export default Details;

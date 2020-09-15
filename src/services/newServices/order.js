@@ -46,4 +46,18 @@ export async function equipment(params) {
     body: params,
   });
 }
+// 更新物流信息
+export async function updateLogistics(params) {
+  return request('/api/order/order/updateLogistics', {
+    method: 'POST',
+    body: params,
+  });
+}
+// 签收提醒
+export async function logisticsRemind(params) {
+  return request('/api/order/order/logisticsRemind', {
+    method: 'POST',
+    body: params,
+  });
+}
 
