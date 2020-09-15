@@ -78,7 +78,7 @@ class AllOrdersList extends PureComponent {
   // ============ 查询 ===============
   handleSearch = params => {
     const { dateRange } = params;
-    
+
     let payload = {
       ...params,
     };
@@ -177,7 +177,7 @@ class AllOrdersList extends PureComponent {
               </Button>
             </div>
           </div>
-          
+
       </div>
     );
   };
@@ -304,7 +304,7 @@ class AllOrdersList extends PureComponent {
 
   // 修改数据
   handleEdit = (row) => {
-    // 
+    //
     const { dispatch } = this.props;
     dispatch({
       type: `globalParameters/setDetailData`,
@@ -334,7 +334,7 @@ class AllOrdersList extends PureComponent {
       },
       onCancel() {},
     });
-    
+
   }
 
   renderRightButton = () => (
@@ -414,7 +414,7 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
-    const {data, loading, tabKey, logisticsVisible, equipmeentVisible,LogisticsConfigVisible} = this.state;
+    const {data, loading, tabKey, logisticsVisible, equipmeentVisible,LogisticsConfigVisible,selectedRows} = this.state;
 
     // let status = [
     //   {value:"状态1",key :1},
@@ -427,13 +427,13 @@ class AllOrdersList extends PureComponent {
         {/* <div className={styles.title}></div> */}
         {ORDERSTATUS.map(item=>{
           return (
-            <div 
-              onClick={()=>this.statusChange(item.key)} 
+            <div
+              onClick={()=>this.statusChange(item.key)}
               className={item.key === tabKey ? styles.status_item_select : styles.status_item}
             >{item.name}</div>
           )
         })}
-        
+
       </div>
     );
 
@@ -557,7 +557,7 @@ class AllOrdersList extends PureComponent {
           loading={loading}
           data={data}
           columns={columns}
-          scroll={{ x: 1000 }} 
+          scroll={{ x: 1000 }}
           renderLeftButton={this.renderLeftButton}
           renderRightButton={this.renderRightButton}
           counterElection={true}
@@ -577,14 +577,15 @@ class AllOrdersList extends PureComponent {
             handleCancelEquipment={this.handleCancelEquipment}
           />
         ):""}
-
-        {/* 设备 */}
+        {/* 批量物流下单 */}
         {LogisticsConfigVisible?(
           <LogisticsConfig
-            equipmeentVisible={equipmeentVisible}
+            LogisticsConfigVisible={LogisticsConfigVisible}
+            LogisticsConfigList={selectedRows}
             handleCancelLogisticsConfig={this.handleCancelLogisticsConfig}
           />
         ):""}
+
       </Panel>
     );
   }
