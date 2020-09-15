@@ -13,10 +13,12 @@ import {getList,deleteData, updateRemind} from '../../../services/newServices/or
 import styles from './index.less';
 import Logistics from './components/Logistics'
 import Equipment from './components/Equipment'
+import LogisticsConfig from './components/LogisticsConfig'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
+const { SubMenu } = Menu;
 
 @connect(({ globalParameters }) => ({
   globalParameters,
@@ -50,6 +52,8 @@ class AllOrdersList extends PureComponent {
       logisticsVisible:false,
       // 设备弹窗
       equipmeentVisible:false,
+      // 批量物流下单弹窗
+      LogisticsConfigVisible:false,
     };
   }
 
@@ -177,6 +181,35 @@ class AllOrdersList extends PureComponent {
       </div>
     );
   };
+
+  repeat = (e) => {
+    const {selectedRows} = this.state;
+
+    console.log(e)
+    console.log(selectedRows)
+  }
+
+  bulkDelivery = (e) => {
+    console.log(e)
+    const {selectedRows} = this.state;
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: e,
+    });
+    this.setState({
+      LogisticsConfigVisible:true
+    })
+  }
+
+  // 关闭物流弹窗
+  handleCancelLogisticsConfig = () => {
+    this.setState({
+      LogisticsConfigVisible:false
+    })
+  }
+
+
   moreMenu = () => (
     <Menu onClick={this.handleMenuClick}>
       <Menu.Item key="1">
@@ -199,6 +232,15 @@ class AllOrdersList extends PureComponent {
         <Icon type="highlight" />
         批量编辑
       </Menu.Item>
+      <SubMenu key="sub1" title="批量物流下单">
+        <Menu.Item key="6" onClick={this.repeat}>
+          重复打印
+        </Menu.Item>
+        <Menu.Item key="7" onClick={this.bulkDelivery}>
+          首次打印
+        </Menu.Item>
+      </SubMenu>
+
       {/* <Menu.Item key="3">
         <Icon type="delete" />
         批量删除
@@ -226,7 +268,7 @@ class AllOrdersList extends PureComponent {
               "id": item.id,
               "outOrderNo": item.outOrderNo,
               "userPhone": item.userPhone,
-              "payAmount": Number(item.payAmount), 
+              "payAmount": Number(item.payAmount),
               "deptId": item.deptId,
             }
           })
@@ -234,7 +276,7 @@ class AllOrdersList extends PureComponent {
           updateRemind(param).then(res=>{
 
           })
-          
+
         },
         onCancel() {},
       });
@@ -317,6 +359,7 @@ class AllOrdersList extends PureComponent {
       tabKey:key
     })
   }
+
   onSelectRow = rows => {
     console.log(rows,"rows")
     this.setState({
@@ -371,7 +414,7 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
-    const {data, loading, tabKey, logisticsVisible, equipmeentVisible} = this.state;
+    const {data, loading, tabKey, logisticsVisible, equipmeentVisible,LogisticsConfigVisible} = this.state;
 
     // let status = [
     //   {value:"状态1",key :1},
@@ -532,6 +575,14 @@ class AllOrdersList extends PureComponent {
           <Equipment
             equipmeentVisible={equipmeentVisible}
             handleCancelEquipment={this.handleCancelEquipment}
+          />
+        ):""}
+
+        {/* 设备 */}
+        {LogisticsConfigVisible?(
+          <LogisticsConfig
+            equipmeentVisible={equipmeentVisible}
+            handleCancelLogisticsConfig={this.handleCancelLogisticsConfig}
           />
         ):""}
       </Panel>

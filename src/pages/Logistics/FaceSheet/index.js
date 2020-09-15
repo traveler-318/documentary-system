@@ -21,7 +21,6 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import {
-  getSubmit,
   getSurfacesingleList,
   getSurfacesingleRemove,
   getSurfacesingleSubmit,
