@@ -7,14 +7,13 @@ import {
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
-import { getList } from '../../../../services/newServices/logistics';
-
+import { getDeliveryList } from '../../../../services/newServices/logistics';
 
 @connect(({ globalParameters }) => ({
   globalParameters,
 }))
 @Form.create()
-class AuthorityList extends PureComponent {
+class Sender extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,7 +31,6 @@ class AuthorityList extends PureComponent {
   componentWillMount() {
     const { LogisticsConfigList } = this.props;
     this.getDataList()
-    console.log("!##$345")
   }
 
   getDataList = () => {
@@ -40,13 +38,15 @@ class AuthorityList extends PureComponent {
     this.setState({
       loading:true
     })
-    getList(params).then(res=>{
+    getDeliveryList(params).then(res=>{
       this.setState({
         loading:false
       })
+      const data = res.data.records;
+      // JSON.parse(row.addr_coding)
       this.setState({
         data:{
-          list:res.data.records,
+          list:data,
           pagination:{
             current: res.data.current,
             pageSize: res.data.size,
@@ -68,24 +68,30 @@ class AuthorityList extends PureComponent {
 
     const columns = [
       {
-        title: '授权ID',
-        dataIndex: 'partnerId',
-        width: 200,
+        title: '寄件人姓名',
+        dataIndex: 'name',
+        width: 150,
       },
       {
-        title: '授权key',
-        dataIndex: 'partnerKey',
-        width: 250,
+        title: '寄件人手机号',
+        dataIndex: 'mobile',
+        width: 150,
       },
       {
-        title: '快递员名称',
-        dataIndex: 'checkMan',
-        width: 250,
-      },
-      {
-        title: '当地网点名称',
-        dataIndex: 'net',
+        title: '寄件人地址',
+        dataIndex: 'administrativeAreas',
         width: 350,
+        render: (res,key) => {
+          let Areas =res + key.printAddr;
+          return(
+            Areas
+          )
+        },
+      },
+      {
+        title: '寄件人公司名称',
+        dataIndex: 'company',
+        width: 200,
       },
     ];
     const rowSelection = {
@@ -105,4 +111,4 @@ class AuthorityList extends PureComponent {
     );
   }
 }
-export default AuthorityList;
+export default Sender;

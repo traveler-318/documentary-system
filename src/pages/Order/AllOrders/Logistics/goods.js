@@ -7,14 +7,13 @@ import {
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
-import { getList } from '../../../../services/newServices/logistics';
-
+import { getGoodsList } from '../../../../services/newServices/logistics';
 
 @connect(({ globalParameters }) => ({
   globalParameters,
 }))
 @Form.create()
-class AuthorityList extends PureComponent {
+class Goods extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,7 +31,6 @@ class AuthorityList extends PureComponent {
   componentWillMount() {
     const { LogisticsConfigList } = this.props;
     this.getDataList()
-    console.log("!##$345")
   }
 
   getDataList = () => {
@@ -40,13 +38,15 @@ class AuthorityList extends PureComponent {
     this.setState({
       loading:true
     })
-    getList(params).then(res=>{
+    getGoodsList(params).then(res=>{
       this.setState({
         loading:false
       })
+      const data = res.data.records;
+      // JSON.parse(row.addr_coding)
       this.setState({
         data:{
-          list:res.data.records,
+          list:data,
           pagination:{
             current: res.data.current,
             pageSize: res.data.size,
@@ -68,24 +68,29 @@ class AuthorityList extends PureComponent {
 
     const columns = [
       {
-        title: '授权ID',
-        dataIndex: 'partnerId',
+        title: '物品名称',
+        dataIndex: 'cargo',
         width: 200,
       },
       {
-        title: '授权key',
-        dataIndex: 'partnerKey',
-        width: 250,
+        title: '物品总数量',
+        dataIndex: 'count',
+        width: 300,
       },
       {
-        title: '快递员名称',
-        dataIndex: 'checkMan',
-        width: 250,
+        title: '物品总重量',
+        dataIndex: 'weight',
+        width: 200,
       },
       {
-        title: '当地网点名称',
-        dataIndex: 'net',
-        width: 350,
+        title: '物品总体积',
+        dataIndex: 'volumn',
+        width: 150,
+      },
+      {
+        title: '备注',
+        dataIndex: 'remark',
+        width: 150,
       },
     ];
     const rowSelection = {
@@ -105,4 +110,4 @@ class AuthorityList extends PureComponent {
     );
   }
 }
-export default AuthorityList;
+export default Goods;

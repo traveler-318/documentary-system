@@ -62,7 +62,6 @@ class FaceSheetList extends PureComponent {
       this.setState({
         loading:false
       })
-
       const data = res.data.records;
 
       for(let i=0; i<data.length; i++){

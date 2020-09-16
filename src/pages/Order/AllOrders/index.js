@@ -193,20 +193,32 @@ class AllOrdersList extends PureComponent {
     console.log(selectedRows)
   }
 
+  // =========首次打印===========
   bulkDelivery = (e) => {
     console.log(e)
     const {selectedRows} = this.state;
     const { dispatch } = this.props;
     dispatch({
       type: `globalParameters/setDetailData`,
-      payload: e,
+      payload: selectedRows,
     });
-    this.setState({
-      LogisticsConfigVisible:true
-    })
+    if(selectedRows.length > 0 ){
+      this.setState({
+        LogisticsConfigVisible:true
+      })
+    }
+  }
+  // =========重复打印=============
+
+  repeat = () =>{
+    const {selectedRows} = this.state;
+    for(let i=0; i<selectedRows.length; i++){
+
+    }
+    console.log(selectedRows)
   }
 
-  // 关闭物流弹窗
+  // =========关闭物流弹窗========
   handleCancelLogisticsConfig = () => {
     this.setState({
       LogisticsConfigVisible:false
