@@ -225,20 +225,31 @@ class AllOrdersList extends PureComponent {
     })
   }
 
-
+  // 左侧操作按钮
+  renderLeftButton = () => (
+    <>
+      <Button type="primary" icon="plus" onClick={()=>{
+        router.push(`/order/AllOrders/add`);
+      }}>添加</Button>
+      <Button icon="menu-unfold">批量审核</Button>
+      <Button icon="appstore">批量发货</Button>
+      <Button 
+        icon="bell"
+        onClick={this.batchReminders}
+      >批量提醒</Button>
+      <Button icon="download">导入</Button>
+      <Dropdown overlay={this.moreMenu()}>
+        <Button>
+          更多 <Icon type="down" />
+        </Button>
+      </Dropdown>
+    </>
+  );
   moreMenu = () => (
     <Menu onClick={this.handleMenuClick}>
-      <Menu.Item key="1">
-        <Icon type="menu-unfold" />
-        批量审核
-      </Menu.Item>
-      <Menu.Item key="2">
-        <Icon type="appstore" />
-        批量发货
-      </Menu.Item>
       <Menu.Item key="3">
-        <Icon type="bell" />
-        批量提醒
+        <Icon type="upload" />
+        导出
       </Menu.Item>
       <Menu.Item key="4">
         <Icon type="loading-3-quarters" />
@@ -256,63 +267,47 @@ class AllOrdersList extends PureComponent {
           首次打印
         </Menu.Item>
       </SubMenu>
-
-      {/* <Menu.Item key="3">
-        <Icon type="delete" />
-        批量删除
-      </Menu.Item> */}
     </Menu>
   );
-
   handleMenuClick = (e) => {
     console.log('click', e);
     const {selectedRows} = this.state;
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
-    // 批量提醒
-    if(e.key === '3'){
-      Modal.confirm({
-        title: '提示',
-        content: '是否确定提醒?',
-        okText: '确定',
-        okType: 'danger',
-        cancelText: '取消',
-        async onOk() {
-          let param = selectedRows.map(item=>{
-            return {
-              "id": item.id,
-              "outOrderNo": item.outOrderNo,
-              "userPhone": item.userPhone,
-              "payAmount": Number(item.payAmount),
-              "deptId": item.deptId,
-            }
-          })
-          console.log(param,"param")
-          updateRemind(param).then(res=>{
-
-          })
-
-        },
-        onCancel() {},
-      });
-    }
   }
 
-  renderLeftButton = () => (
-    <>
-      <Button type="primary" icon="plus" onClick={()=>{
-        router.push(`/order/AllOrders/add`);
-      }}>添加</Button>
-      <Button icon="download">导入</Button>
-      <Button icon="upload">导出</Button>
-      <Dropdown overlay={this.moreMenu()}>
-        <Button>
-          更多 <Icon type="down" />
-        </Button>
-      </Dropdown>
-    </>
-  );
+  // 批量提醒
+  batchReminders = () => {
+    const {selectedRows} = this.state;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+    Modal.confirm({
+      title: '提示',
+      content: '是否确定提醒?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        let param = selectedRows.map(item=>{
+          return {
+            "id": item.id,
+            "outOrderNo": item.outOrderNo,
+            "userPhone": item.userPhone,
+            "payAmount": Number(item.payAmount),
+            "deptId": item.deptId,
+          }
+        })
+        console.log(param,"param")
+        updateRemind(param).then(res=>{
+
+        })
+
+      },
+      onCancel() {},
+    });
+  }
 
   refreshTable = () => {
     this.getDataList();
@@ -320,7 +315,6 @@ class AllOrdersList extends PureComponent {
 
   // 修改数据
   handleEdit = (row) => {
-    //
     const { dispatch } = this.props;
     dispatch({
       type: `globalParameters/setDetailData`,
@@ -328,7 +322,6 @@ class AllOrdersList extends PureComponent {
     });
 
     router.push('/order/allOrders/edit');
-    // row.id
   }
 
   // 列表删除
