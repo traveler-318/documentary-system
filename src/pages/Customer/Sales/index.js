@@ -22,7 +22,8 @@ import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 
 import { getList, getRemove, getSubmit,getUrl } from '../../../services/newServices/logistics';
-
+import Grouping from './components/grouping'
+import Recharge from './components/recharge'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -35,49 +36,84 @@ class AuthorityList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:{},
+      data:{
+        list:[
+          {
+            authorizationType: 2,
+            belongingId: "wykj",
+            createTime: "2020-04-21 13:43:26",
+            defaultNumber: 0,
+            groupId: 1,
+            groupName: "测试2组",
+            id: 53,
+            openid: "",
+            performanceNumber: 0,
+            qrcodeAddress: "http://47.89.20.105:9091/address?salesman=aaa&belongs=wykj&payAmount=",
+            qrcodePrefix: "http://47.89.20.105:9091",
+            qrcodeSuffix: "/wechat/wechat_authorization?",
+            resultsTotalNumber: 1,
+            status: 1,
+            stayPerformanceNumber: 1,
+            userAddress: null,
+            userName: "aaa",
+            userPhone: "18081456642"
+          }
+        ],
+      },
       loading:false,
+      handleGroupingVisible:false,
+      handleRechargeVisible:false,
       params:{
         size:10,
         current:1
       }
     };
   }
+
+
+
+
+
+
   // ============ 初始化数据 ===============
 
   componentWillMount() {
-    this.getDataList();
+    // this.getDataList();
+
+
+
+
   }
 
-  getDataList = () => {
-    const {params} = this.state;
-    this.setState({
-      loading:true
-    })
-    getList(params).then(res=>{
-      this.setState({
-        loading:false
-      })
-      this.setState({
-        data:{
-          list:res.data.records,
-          pagination:{
-            current: res.data.current,
-            pageSize: res.data.size,
-            total: res.data.total
-          }
-        }
-      })
-    })
-  }
+  // getDataList = () => {
+  //   const {params} = this.state;
+  //   this.setState({
+  //     loading:true
+  //   })
+  //   getList(params).then(res=>{
+  //     this.setState({
+  //       loading:false
+  //     })
+  //     this.setState({
+  //       data:{
+  //         list:res.data.records,
+  //         pagination:{
+  //           current: res.data.current,
+  //           pageSize: res.data.size,
+  //           total: res.data.total
+  //         }
+  //       }
+  //     })
+  //   })
+  // }
 
   // ============ 查询 ===============
   handleSearch = params => {
-    this.setState({
-      params
-    },()=>{
-      this.getDataList();
-    })
+    // this.setState({
+    //   params
+    // },()=>{
+    //   // this.getDataList();
+    // })
   };
 
   // ============ 查询表单 ===============
@@ -112,13 +148,6 @@ class AuthorityList extends PureComponent {
       onCancel() {
 
       },
-    });
-  };
-
-  // ============ 授权 ===============
-  activeAuthorization = ( id) => {
-    getUrl(id).then(res => {
-      window.open(JSON.parse(res.data).data.url)
     });
   };
 
@@ -159,15 +188,45 @@ class AuthorityList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: row,
     });
-    router.push('/logistics/authority/edit');
+    router.push('/customer/sales/edit');
   };
 
   onSelectRow = rows => {
     console.log(rows,"rows")
-    this.setState({
-      selectedRows: rows,
-    });
+    // this.setState({
+    //   selectedRows: rows,
+    // });
   };
+// =========分组弹窗========
+
+  handleGrouping = () => {
+    this.setState({
+      handleGroupingVisible:true
+    })
+  };
+  // =========关闭分组弹窗========
+
+  handleCancelGrouping = () => {
+    this.setState({
+      handleGroupingVisible:false
+    })
+  }
+
+// =========充值弹窗========
+
+  handleRecharge = () => {
+    this.setState({
+      handleRechargeVisible:true,
+    })
+  };
+  // =========关闭充值弹窗========
+
+  handleCancelRecharge = () => {
+    this.setState({
+      handleRechargeVisible:false
+    })
+  }
+
 
   renderLeftButton = () => (
     <>
@@ -177,9 +236,9 @@ class AuthorityList extends PureComponent {
 
   renderRightButton = () => (
     <>
-      <Button type="primary" onClick={()=>{router.push(`/logistics/authority/add`);}}>分组</Button>
-      <Button type="primary" onClick={()=>{router.push(`/logistics/authority/add`);}}>充值</Button>
-      <Button type="primary" onClick={()=>{router.push(`/logistics/authority/add`);}}>添加</Button>
+      <Button type="primary" onClick={this.handleGrouping}>分组</Button>
+      <Button type="primary" onClick={this.handleRecharge}>充值</Button>
+      <Button type="primary" onClick={()=>{router.push(`/customer/sales/add`);}}>添加</Button>
     </>
   );
 
@@ -188,47 +247,47 @@ class AuthorityList extends PureComponent {
       form,
     } = this.props;
 
-    const {data,loading} = this.state;
+    const {data,loading,handleGroupingVisible,handleRechargeVisible} = this.state;
 
     const columns = [
       {
-        title: '业务员姓名123',
-        dataIndex: 'partnerId',
+        title: '业务员姓名',
+        dataIndex: 'userName',
         width: 100,
       },
       {
         title: '分组',
-        dataIndex: 'partnerKey',
+        dataIndex: 'groupName',
         width: 100,
       },
       {
         title: '手机号',
-        dataIndex: 'checkMan',
+        dataIndex: 'userPhone',
         width: 150,
       },
       {
         title: '客户数',
-        dataIndex: '',
+        dataIndex: 'resultsTotalNumber',
         width: 100,
       },
       {
         title: '已履约',
-        dataIndex: '',
+        dataIndex: 'performanceNumber',
         width: 100,
       },
       {
         title: '待履约',
-        dataIndex: '',
+        dataIndex: 'stayPerformanceNumber',
         width: 100,
       },
       {
         title: '已逾期',
-        dataIndex: 'net',
+        dataIndex: 'defaultNumber',
         width: 100,
       },
       {
         title: '创建时间',
-        dataIndex: '',
+        dataIndex: 'createTime',
         width: 200,
       },
       {
@@ -243,12 +302,21 @@ class AuthorityList extends PureComponent {
       },
       {
         title: '授权类型',
-        dataIndex: '',
+        dataIndex: 'authorizationType',
         width: 100,
+        render: (res) => {
+          const value = res === 1 ? "免押金" :
+            res === 2 ? "预授权" :
+              res === 3 ? "伪授权" :
+                res === 4 ? "免费" : "";
+          return(
+            value
+          )
+        },
       },
       {
         title: '公众号通知',
-        dataIndex: '',
+        dataIndex: 'openid',
         width: 100,
       },
       {
@@ -262,7 +330,8 @@ class AuthorityList extends PureComponent {
               <Divider type="vertical" />
               <a onClick={()=>this.handleEdit(row)}>修改</a>
               <Divider type="vertical" />
-              <a onClick={() => this.handleClick(res.id)}>聚合码</a></div>
+              <a>聚合码</a>
+            </div>
           )
         },
       },
@@ -281,6 +350,22 @@ class AuthorityList extends PureComponent {
           renderLeftButton={this.renderLeftButton}
           renderRightButton={this.renderRightButton}
         />
+        {/* 分组 */}
+        {handleGroupingVisible?(
+          <Grouping
+            handleGroupingVisible={handleGroupingVisible}
+            // LogisticsConfigList={selectedRows}
+            handleCancelGrouping={this.handleCancelGrouping}
+          />
+        ):""}
+        {/* 充值 */}
+        {handleRechargeVisible?(
+          <Recharge
+            handleRechargeVisible={handleRechargeVisible}
+            // LogisticsConfigList={selectedRows}
+            handleCancelRecharge={this.handleCancelRecharge}
+          />
+        ):""}
       </Panel>
     );
   }

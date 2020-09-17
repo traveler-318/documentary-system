@@ -599,6 +599,8 @@ export default [
             routes: [
               { path: '/customer/sales', redirect: '/customer/sales/list' },
               { path: '/customer/sales/list', component: './Customer/Sales/index' },
+              { path: '/customer/sales/add', component: './Customer/Sales/add' },
+              { path: '/customer/sales/edit', component: './Customer/Sales/edit' },
             ],
           },
         ],

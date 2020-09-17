@@ -32,7 +32,6 @@ class FaceSheetAdd extends PureComponent {
   // ============ 提交 ===============
 
   handleSubmit = e => {
-    console.log('111')
     e.preventDefault();
     const {  form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
