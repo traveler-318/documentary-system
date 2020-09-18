@@ -11,6 +11,8 @@ export default {
   'menu.logistics.sender': '寄件配置',
   'menu.logistics.goods': '物品信息',
   'menu.logistics.additional': '附加信息',
+  'menu.customer': '客服管理',
+  'menu.customer.sales': '销售管理',
 
   'menu.home': '首页',
   'menu.login': '登录',
