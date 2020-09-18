@@ -63,6 +63,7 @@ class AuthorityList extends PureComponent {
       loading:false,
       handleGroupingVisible:false,
       handleRechargeVisible:false,
+      selectDataArrL:[],
       params:{
         size:10,
         current:1
@@ -193,9 +194,9 @@ class AuthorityList extends PureComponent {
 
   onSelectRow = rows => {
     console.log(rows,"rows")
-    // this.setState({
-    //   selectedRows: rows,
-    // });
+    this.setState({
+      selectDataArrL: rows,
+    });
   };
 // =========分组弹窗========
 
@@ -235,11 +236,14 @@ class AuthorityList extends PureComponent {
   );
 
   renderRightButton = () => (
-    <>
+    <div>
+      <Button type="primary" onClick={this.handleGrouping}>修改分组</Button>
       <Button type="primary" onClick={this.handleGrouping}>分组</Button>
+{/*
       <Button type="primary" onClick={this.handleRecharge}>充值</Button>
+*/}
       <Button type="primary" onClick={()=>{router.push(`/customer/sales/add`);}}>添加</Button>
-    </>
+    </div>
   );
 
   render() {
@@ -265,26 +269,26 @@ class AuthorityList extends PureComponent {
         dataIndex: 'userPhone',
         width: 150,
       },
-      {
-        title: '客户数',
-        dataIndex: 'resultsTotalNumber',
-        width: 100,
-      },
-      {
-        title: '已履约',
-        dataIndex: 'performanceNumber',
-        width: 100,
-      },
-      {
-        title: '待履约',
-        dataIndex: 'stayPerformanceNumber',
-        width: 100,
-      },
-      {
-        title: '已逾期',
-        dataIndex: 'defaultNumber',
-        width: 100,
-      },
+      // {
+      //   title: '客户数',
+      //   dataIndex: 'resultsTotalNumber',
+      //   width: 100,
+      // },
+      // {
+      //   title: '已履约',
+      //   dataIndex: 'performanceNumber',
+      //   width: 100,
+      // },
+      // {
+      //   title: '待履约',
+      //   dataIndex: 'stayPerformanceNumber',
+      //   width: 100,
+      // },
+      // {
+      //   title: '已逾期',
+      //   dataIndex: 'defaultNumber',
+      //   width: 100,
+      // },
       {
         title: '创建时间',
         dataIndex: 'createTime',
