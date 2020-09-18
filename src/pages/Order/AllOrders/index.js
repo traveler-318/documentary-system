@@ -401,9 +401,11 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: row,
     });
-    this.setState({
-      logisticsVisible:true
-    })
+    router.push('/order/allOrders/logisticsConfiguration');
+    
+    // this.setState({
+    //   logisticsVisible:true
+    // })
   }
   // 关闭物流弹窗
   handleCancelLogistics = (type) => {
