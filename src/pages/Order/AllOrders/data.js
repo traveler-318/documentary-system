@@ -1,23 +1,23 @@
 // 订单状态
-export const ORDERSTATUS = [
-    {"name":"全部",key:null},
-    {"name":"已授权",key:1},
-    {"name":"已解冻",key:2},
-    {"name":"已扣款",key:3},
-    {"name":"未授权",key:0},
-]
-
-// 订单状态
 // export const ORDERSTATUS = [
 //     {"name":"全部",key:null},
-//     {"name":"待审核",key:1},
-//     {"name":"已审核",key:2},
-//     {"name":"已发货",key:3},
-//     {"name":"在途中",key:4},
-//     {"name":"已签收",key:4},
-//     {"name":"跟进中",key:4},
-//     {"name":"已激活",key:4},
+//     {"name":"已授权",key:1},
+//     {"name":"已解冻",key:2},
+//     {"name":"已扣款",key:3},
+//     {"name":"未授权",key:0},
 // ]
+
+// 订单状态
+export const ORDERSTATUS = [
+    {"name":"待审核",key:1},
+    {"name":"已审核",key:2},
+    {"name":"已发货",key:3},
+    {"name":"在途中",key:4},
+    {"name":"已签收",key:4},
+    {"name":"跟进中",key:4},
+    {"name":"已激活",key:4},
+    {"name":"全部",key:null},
+]
  
 
 export const ORDERTYPPE = [
