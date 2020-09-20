@@ -1,23 +1,24 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, message, Cascader, Radio } from 'antd';
+import { Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, Tabs, Cascader, Radio,Timeline,} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 
 import Panel from '../../../components/Panel';
 import FormTitle from '../../../components/FormTitle';
-import styles from '../../../layouts/Sword.less';
+import styles from './edit.less';
 import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
 import func from '../../../utils/Func';
 import { tenantMode } from '../../../defaultSettings';
-import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
 import {updateData,getRegion} from '../../../services/newServices/order'
+import {ORDERSTATUS} from './data.js';
+
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
-
+const { TabPane } = Tabs;
 
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -28,13 +29,15 @@ class OrdersAdd extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      PRODUCTCLASSIFICATION:[
-        {
-          name:"测试销售",
-          id:"1"
-        }
-      ],
       detail:{},
+      edit:true,
+      data:{
+        order:'10',
+        followUp:'2',
+        service0rder:'6',
+        product:"9",
+        ownership:"3"
+      }
     };
   }
 
@@ -46,10 +49,6 @@ class OrdersAdd extends PureComponent {
     this.setState({
       detail:globalParameters.detailData
     })
-  }
-
-  componentWillReceiveProps(pre,nex){
-    console.log(pre,nex)
   }
 
   handleSubmit = e => {
@@ -86,16 +85,44 @@ class OrdersAdd extends PureComponent {
     })
   };
 
+  clickEdit = () => {
+    this.setState({
+      edit:false
+    })
+  };
+
+  Preservation = () => {
+    this.setState({
+      edit:true
+    })
+  };
+
+  callback = (key) => {
+
+  };
+
+  getText = (key) => {
+    let text = ""
+    ORDERSTATUS.map(item=>{
+      if(item.key === key){
+        text = item.name
+      }
+    })
+    return text
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
     } = this.props;
 
     const {
-      PRODUCTCLASSIFICATION,
+      data,
       loading,
-      detail
+      detail,
+      edit,
     } = this.state;
+    console.log(detail)
 
     const formItemLayout = {
       labelCol: {
@@ -114,165 +141,219 @@ class OrdersAdd extends PureComponent {
         span: 20,
       },
     };
-
-    console.log(this.props.globalParameters)
-
-    const action = (
-      <Button type="primary" onClick={this.handleSubmit} loading={loading}>
-        提交
-      </Button>
-    );
-
     return (
-      <Panel title="新增" back="/order/AllOrders" action={action}>
+      <Panel title="详情" back="/order/AllOrders">
         <Form style={{ marginTop: 8 }}>
+          <Card bordered={false}>
+            <Row gutter={24} style={{ margin: 0 }}>
+              <Col span={12} style={{ padding: 0 }}>
+                <div className={styles.titleBtn}>
+                  <Button type="primary" onClick={this.Preservation}>保存</Button>
+                  <Button  icon="edit" onClick={this.clickEdit}>编辑</Button>
+                  <Button  icon="delete">删除</Button>
+                  <Button  icon="bell">提醒</Button>
+                  <Button  icon="folder">归档</Button>
+                </div>
+                <div className={styles.editList} style={{ padding: '20px' }}>
+                  <FormTitle title="客户信息" style={{ margin:'0'}}/>
+                  <FormItem {...formAllItemLayout} label="客户姓名">
+                    {getFieldDecorator('userName', {
+                      rules: [
+                        {
+                          message: '请输入客户姓名',
+                        },
+                      ],
+                      initialValue: detail.userName,
+                    })(<Input disabled={edit} placeholder="请输入客户姓名" />)}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="手机号">
+                    {getFieldDecorator('userPhone', {
+                      rules: [
+                        {
+                          message: '请输入手机号',
+                        },
+                        {
+                          len: 11,
+                          message: '请输入正确的手机号',
+                        },
+                      ],
+                      initialValue: detail.userPhone,
+                    })(<Input disabled={edit} placeholder="请输入手机号" />)}
+                  </FormItem>
 
-          <Card title="创建客户" className={styles.card} bordered={false}>
-            <Row gutter={24}>
-              <Col span={12}>
-                <FormTitle
-                  title="基础信息"
-                />
-                <FormItem {...formAllItemLayout} label="客户姓名">
-                  {getFieldDecorator('userName', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入客户姓名',
-                      },
-                    ],
-                    initialValue: detail.userName,
-                  })(<Input placeholder="请输入客户姓名" />)}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="手机号">
-                  {getFieldDecorator('userPhone', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入手机号',
-                      },
-                      {
-                        len: 11,
-                        message: '请输入正确的手机号',
-                      },
-                    ],
-                    initialValue: detail.userPhone,
-                  })(<Input placeholder="请输入手机号" />)}
-                </FormItem>
-                
-                <FormItem {...formAllItemLayout} label="所在地区">
-                  {getFieldDecorator('region', {
+                  <FormItem {...formAllItemLayout} label="所在地区">
+                    {getFieldDecorator('region', {
                       initialValue: [detail.province, detail.city, detail.area],
                     })(
-                    <Cascader
-                      defaultValue={[detail.province, detail.city, detail.area]}
-                      options={CITY}
-                      onChange={this.onChange}
-                    />
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="收货地址">
-                  {getFieldDecorator('userAddress', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入收货地址',
-                      },
-                    ],
-                    initialValue: detail.userAddress,
-                  })(<Input placeholder="请输入收货地址" />)}
-                </FormItem>
-                
-              </Col>
-              <Col span={12}>
-                <FormTitle
-                  title="订单信息"
-                />
-                <FormItem {...formAllItemLayout} label="订单来源">
-                  {getFieldDecorator('orderSource', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择订单来源',
-                      },
-                    ],
-                    initialValue: detail.orderSource,
-                  })(
-                  <Select placeholder={"请选择订单来源"}>
-                    {ORDERSOURCE.map(item=>{
-                      return (<Option value={item.key}>{item.name}</Option>)
-                    })}
-                  </Select>
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="订单类型">
-                  {getFieldDecorator('orderType', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择订单类型',
-                      },
-                    ],
-                    initialValue: detail.orderType,
-                  })(
-                    <Select placeholder={"请选择订单类型"}>
-                      {ORDERTYPE.map(item=>{
-                        return (<Option value={item.key}>{item.name}</Option>)
-                      })}
-                    </Select>
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="产品分类">
-                  {getFieldDecorator('productName', {
-                      initialValue: detail.productName,
-                    })(
-                      <Input placeholder="请输入产品分类" />
-                  //   <Select placeholder={"请选择产品分类"}>
-                  //   {PRODUCTCLASSIFICATION.map(item=>{
-                  //     return (<Option value={item.id}>{item.name}</Option>)
-                  //   })}
-                  // </Select>
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="产品型号">
-                  {getFieldDecorator('productModel',{
-                     initialValue: detail.productModel,
-                  })(<Input placeholder="请输入产品型号" />)}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="序列号SN">
-                  {getFieldDecorator('deviceSerialNumber',{
-                    initialValue: detail.deviceSerialNumber,
-                  })(<Input placeholder="请输入序列号SN" />)}
-                </FormItem>
-
-                <FormTitle
-                  title="销售信息"
-                />
-
-                <FormItem {...formAllItemLayout} label="归属销售">
-                  {getFieldDecorator('salesman', {
+                      <Cascader
+                        defaultValue={[detail.province, detail.city, detail.area]}
+                        options={CITY}
+                        disabled={edit}
+                        onChange={this.onChange}
+                      />
+                    )}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="收货地址">
+                    {getFieldDecorator('userAddress', {
+                      rules: [
+                        {
+                          message: '请输入收货地址',
+                        },
+                      ],
+                      initialValue: detail.userAddress,
+                    })(<Input disabled={edit} placeholder="请输入收货地址" />)}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="客戶状态">
+                    {getFieldDecorator('userAddress', {
+                      rules: [
+                        {
+                          message: '',
+                        },
+                      ],
+                      initialValue: detail.userAddress,
+                    })(<Input disabled={edit} placeholder="" />)}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="系统编号">
+                    {getFieldDecorator('userAddress', {
+                      rules: [
+                        {
+                          message: '',
+                        },
+                      ],
+                      initialValue: detail.userAddress,
+                    })(<Input disabled={edit} placeholder="" />)}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="订单状态">
+                    {getFieldDecorator('confirmTag', {
+                      rules: [
+                        {
+                          message: '',
+                        },
+                      ],
+                      initialValue: this.getText(detail.confirmTag),
+                    })(<Input disabled={edit} placeholder="" />)}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="客户来源">
+                    {getFieldDecorator('salesman', {
+                      rules: [
+                        {
+                          message: '',
+                        },
+                      ],
                       initialValue: detail.salesman,
-                    })(
-                    <Select placeholder={"请选择归属销售"}>
-                    {PRODUCTCLASSIFICATION.map(item=>{
-                      return (<Option value={item.id}>{item.name}</Option>)
-                    })}
-                  </Select>
-                  )}
-                </FormItem>
+                    })(<Input disabled={edit} placeholder="" />)}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="客户归属">
+                    {getFieldDecorator('salesman', {
+                      rules: [
+                        {
+                          message: '',
+                        },
+                      ],
+                      initialValue: detail.salesman,
+                    })(<Input disabled={edit} placeholder="" />)}
+                  </FormItem>
+                  <FormTitle
+                    title="其他信息"
+                  />
+                  <FormItem {...formAllItemLayout} label="微信号">
+                    {getFieldDecorator('userAddress', {
+                      rules: [
+                        {
+                          message: '',
+                        },
+                      ],
+                      initialValue: detail.userAddress,
+                    })(<Input disabled={edit} placeholder="" />)}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="部门职务">
+                    {getFieldDecorator('userAddress', {
+                      rules: [
+                        {
+                          message: '',
+                        },
+                      ],
+                      initialValue: detail.userAddress,
+                    })(<Input disabled={edit} placeholder="" />)}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="电子邮箱">
+                    {getFieldDecorator('userAddress', {
+                      rules: [
+                        {
+                          message: '',
+                        },
+                      ],
+                      initialValue: detail.userAddress,
+                    })(<Input disabled={edit} placeholder="请输入电子邮箱" />)}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="传真号码">
+                    {getFieldDecorator('userAddress', {
+                      rules: [
+                        {
+                          message: '',
+                        },
+                      ],
+                      initialValue: detail.userAddress,
+                    })(<Input disabled={edit} placeholder="请输入传真号码" />)}
+                  </FormItem>
+                </div>
+              </Col>
+              <Col span={12} style={{ padding: 0 }}>
+                <div className={styles.titleBtn}>
+                  <Button icon="plus">工单</Button>
+                  <Button  icon="plus">产品</Button>
+                  <Button  icon="plus">地址</Button>
+                </div>
+                <Tabs defaultActiveKey="1" onChange={this.callback}>
+                  <TabPane tab="概况信息" key="1">
+                    概况信息
+                  </TabPane>
+                  <TabPane tab={`订单记录(${data.order})`} key="2">
+                    订单记录
+                  </TabPane>
+                  <TabPane tab="跟进记录()" key="3">
+                    <Timeline>
+                      <Timeline.Item>2020-09-19</Timeline.Item>
+                      <Timeline.Item>
+                        <div className={styles.content}>
+                          <p>
+                            <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/>
+                            <span className={styles.name}>赵小刚 跟进</span>
+                            <span className={styles.time}>2020-09-19</span>
+                          </p>
+                          <p>电话无人接听</p>
+                        </div>
+                      </Timeline.Item>
+                      <Timeline.Item>
+                        <div className={styles.content}>
+                          <p>
+                            <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/>
+                            <span className={styles.name}>赵小刚 跟进</span>
+                            <span className={styles.time}>2020-09-19</span>
+                          </p>
+                          <p>电话无人接听</p>
+                        </div>
+                      </Timeline.Item>
+                    </Timeline>
+                  </TabPane>
+                  <TabPane tab={`服务工单(${data.followUp})`} key="4">
+                    服务工单()
+                  </TabPane>
+                  <TabPane tab={`产品记录(${data.service0rder})`} key="5">
+                    产品记录()
+                  </TabPane>
+                  <TabPane tab={`归属记录(${data.product})`} key="6">
+                    归属记录
+                  </TabPane>
+                  <TabPane tab={`操作日志(${data.ownership})`} key="7">
+                    操作日志()
+                  </TabPane>
+                </Tabs>
 
-                <FormItem {...formAllItemLayout} label="备注信息">
-                  {getFieldDecorator('orderNote',{
-                    initialValue: detail.orderNote,
-                  })(
-                    <TextArea rows={4} />
-                  )}
-                </FormItem>
               </Col>
             </Row>
-            
+
           </Card>
-          
         </Form>
       </Panel>
     );

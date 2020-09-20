@@ -233,7 +233,7 @@ class AllOrdersList extends PureComponent {
       }}>添加</Button>
       <Button icon="menu-unfold">批量审核</Button>
       <Button icon="appstore">批量发货</Button>
-      <Button 
+      <Button
         icon="bell"
         onClick={this.batchReminders}
       >批量提醒</Button>
@@ -402,7 +402,7 @@ class AllOrdersList extends PureComponent {
       payload: row,
     });
     router.push('/order/allOrders/logisticsConfiguration');
-    
+
     // this.setState({
     //   logisticsVisible:true
     // })
@@ -569,7 +569,7 @@ class AllOrdersList extends PureComponent {
                     <Divider type="vertical" />
                     <a>归档</a>
                     <Divider type="vertical" /> */}
-                    <a onClick={()=>this.handleDetails(row)}>详情</a>
+                    <a onClick={()=>this.handleEdit(row)}>详情</a>
                     <Divider type="vertical" />
                     <a onClick={()=>this.handleShowEquipment(row)}>设备</a>
                     <Divider type="vertical" />
