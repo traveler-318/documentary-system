@@ -5,7 +5,7 @@ import moment from 'moment';
 import router from 'umi/router';
 
 import Panel from '../../../components/Panel';
-import FormTitle from '../../../components/FormTitle';
+import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import styles from '../../../layouts/Sword.less';
 import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
 import func from '../../../utils/Func';
@@ -19,6 +19,12 @@ import { LOGISTICSCOMPANY } from './data.js';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
+const tipsStyle = {
+  lineHeight: '16px',
+  paddingLeft: '12px',
+  marginBottom: '20px',
+  color:'red'
+}
 
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -118,21 +124,29 @@ class LogisticsConfiguration extends PureComponent {
 
     console.log(this.props.globalParameters)
 
-    const action = (
-      <Button type="primary" onClick={this.handleSubmit} loading={loading}>
-        提交
-      </Button>
-    );
-
     return (
-      <Panel title="新增" back="/order/AllOrders" action={action}>
+      <Panel title="物流配置" back="/order/AllOrders">
+        <div style={{background:"#fff",marginBottom:10,padding:"10px 10px 10px 20px"}}>
+            <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
+              保存
+            </Button>
+            <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
+              保存并打印
+            </Button>
+            <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
+              保存并处理下一条
+            </Button>
+            <Button icon="reload" onClick={this.handleSubmit} loading={loading}>
+              重置
+            </Button>
+          </div>
+
         <Form style={{ marginTop: 8 }}>
-
-          <Card title="创建客户" className={styles.card} bordered={false}>
-
+          <Card title="" className={styles.card} bordered={false}>
+          
             <Row gutter={24}>
               <Col span={12}>
-                <FormTitle
+                <FormDetailsTitle
                   title="客户信息"
                 />
                 <FormItem {...formAllItemLayout} label="姓名">
@@ -150,7 +164,7 @@ class LogisticsConfiguration extends PureComponent {
                 <FormItem {...formAllItemLayout} label="备注">
                   <span>{detail.orderNote}</span>
                 </FormItem>
-                <FormTitle
+                <FormDetailsTitle
                   title="发货配置"
                 />
                 <FormItem {...formAllItemLayout} label="对应产品">
@@ -224,9 +238,8 @@ class LogisticsConfiguration extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={12}>
-                <FormTitle
-                  title="销售信息"
-                />
+                <div style={{height:351}}></div>
+                <div style={tipsStyle}>如您需要此订单进入自动化流程，请打开本开关</div>
                 <FormItem {...formAllItemLayout} label="设备提醒">
                   {getFieldDecorator('product', {
                     initialValue: detail.product,

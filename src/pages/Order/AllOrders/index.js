@@ -48,7 +48,7 @@ class AllOrdersList extends PureComponent {
         size:10,
         current:1
       },
-      tabKey:null,
+      tabKey:1,
       selectedRows:[],
       // 物流弹窗
       logisticsVisible:false,
