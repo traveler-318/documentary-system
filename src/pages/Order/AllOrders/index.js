@@ -511,6 +511,16 @@ class AllOrdersList extends PureComponent {
           )
         }
       },
+      // {
+      //   title: '订单状态',
+      //   dataIndex: 'confirmTag',
+      //   width: 100,
+      //   render: (key)=>{
+      //     return (
+      //       <div>{this.getText(key,ORDERSTATUS)} </div>
+      //     )
+      //   }
+      // },
       {
         title: '订单类型',
         dataIndex: 'orderType',
