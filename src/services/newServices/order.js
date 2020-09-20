@@ -4,7 +4,10 @@ import request from '../../utils/request';
 import func from '../../utils/Func';
 
 export async function getList(params) {
-  return request(`/api/order/order/list?${stringify(params)}`);
+  return request(`/api/order/order/page`, {
+    method: 'POST',
+    body: params,
+  });
 }
 
 export async function createData(params) {
