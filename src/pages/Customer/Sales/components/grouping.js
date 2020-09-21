@@ -20,11 +20,10 @@ import {
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
-
-import { tenantMode } from '../../../../defaultSettings';
 import { getCookie } from '../../../../utils/support';
+import { tenantMode } from '../../../../defaultSettings';
 import { updateLogistics, logisticsRemind } from '../../../../services/newServices/order'
-import { getDeliverySave } from '../../../../services/newServices/logistics';
+import { getSalesmangroup,getSalesmangroupSubmit } from '../../../../services/newServices/sales';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -41,21 +40,29 @@ class Logistics extends PureComponent {
     this.state = {
       // 添加分组弹窗
       groupAddVisible:false,
-      data:[
-        {
-          key:1,
-          name:"测试2组"
-        },{
-          key:2,
-          name:"测试3组"
-        }
-      ],
+      data:[],
     };
   }
 
 
   componentWillMount() {
     const { globalParameters } = this.props;
+    this.getDataList()
+  }
+
+  getDataList = () => {
+    const {params} = this.state;
+    this.setState({
+      loading:true
+    })
+    getSalesmangroup(params).then(res=>{
+      this.setState({
+        loading:false
+      })
+      this.setState({
+        data:res.data.records
+      })
+    })
   }
 
   handleChange = value => {
@@ -84,7 +91,21 @@ class Logistics extends PureComponent {
     e.preventDefault();
     const {  form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
-      console.log(values)
+      console.log(values);
+      values.deptId = getCookie("dept_id");
+      if (!err) {
+        const params = {
+          ...values,
+        };
+        console.log(params)
+        getSalesmangroupSubmit(params).then(res=>{
+          message.success('提交成功');
+          this.setState({
+            groupAddVisible:false,
+          })
+          this.getDataList()
+        })
+      }
     });
   };
 
@@ -109,11 +130,11 @@ class Logistics extends PureComponent {
     const columns=[
       {
         title: '',
-        dataIndex: 'key',
+        dataIndex: 'id',
         width: 50,
       },{
         title: '分组名称',
-        dataIndex: 'name',
+        dataIndex: 'groupName',
         width: 200,
       },{
         title: '操作',
@@ -167,7 +188,7 @@ class Logistics extends PureComponent {
         >
           <Form style={{ marginTop: 8 }}>
             <FormItem {...formAllItemLayout} label="分组名称">
-              {getFieldDecorator('name', {
+              {getFieldDecorator('groupName', {
                 rules: [
                   {
                     required: true,
