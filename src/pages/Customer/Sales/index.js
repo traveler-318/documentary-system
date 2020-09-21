@@ -206,8 +206,14 @@ class AuthorityList extends PureComponent {
   renderRightButton = () => (
     <div>
 {/*
-      <Button type="primary" onClick={this.handleGrouping}>修改分组</Button>
+      
 */}
+      {
+        this.state.selectDataArrL.length > 0 ? 
+        (<Button type="primary" onClick={this.handleGrouping}>修改分组</Button>)
+        :""
+      }
+      
       <Button type="primary" onClick={this.handleGrouping}>分组</Button>
 
 {/*

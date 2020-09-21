@@ -14,7 +14,13 @@ import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
 import {updateData,getRegion} from '../../../services/newServices/order'
-import { LOGISTICSCOMPANY } from './data.js';
+import { 
+  LOGISTICSCOMPANY,
+  paymentCompany,
+  productType,
+  productID,
+  amountOfMoney
+} from './data.js';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -42,6 +48,7 @@ class LogisticsConfiguration extends PureComponent {
         }
       ],
       detail:{},
+      productList:[]
     };
   }
 
@@ -53,6 +60,35 @@ class LogisticsConfiguration extends PureComponent {
     this.setState({
       detail:globalParameters.detailData
     })
+
+    // 拼装对应产品
+    this.assemblingData();
+  }
+
+  assemblingData = () => {
+    // let TheThirdLevel = productID.map(item=>{
+    //   return {
+    //     ...item,
+    //     key:`${item.key}_3`,
+    //     children:amountOfMoney
+    //   }
+    // })
+    let TheSecondLevel = productType.map(item=>{
+      return {
+        ...item,
+        key:`${item.key}_2`,
+        children:productID
+      }
+    })
+    let TheFirstLevel = paymentCompany.map(item=>{
+      return {
+        ...item,
+        key:`${item.key}_1`,
+        children:TheSecondLevel
+      }
+    })
+    this.setState({productList:TheFirstLevel})
+    console.log(TheFirstLevel,"TheFirstLevel")
   }
 
   componentWillReceiveProps(pre,nex){
@@ -65,12 +101,13 @@ class LogisticsConfiguration extends PureComponent {
     const { cityparam, detail } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        values = {...values,...cityparam};
-        values.id = detail.id
-        updateData(values).then(res=>{
-          message.success(res.msg);
-          router.push('/order/allOrders');
-        })
+        console.log(values,"123")
+        // values = {...values,...cityparam};
+        // values.id = detail.id
+        // updateData(values).then(res=>{
+        //   message.success(res.msg);
+        //   router.push('/order/allOrders');
+        // })
       }
     });
   };
@@ -93,6 +130,11 @@ class LogisticsConfiguration extends PureComponent {
     })
   };
 
+  onProductChange = (value, selectedOptions) => {
+    // 对应产品
+    console.log(value, selectedOptions,"123");
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -101,7 +143,8 @@ class LogisticsConfiguration extends PureComponent {
     const {
       PRODUCTCLASSIFICATION,
       loading,
-      detail
+      detail,
+      productList
     } = this.state;
 
     const formItemLayout = {
@@ -177,7 +220,14 @@ class LogisticsConfiguration extends PureComponent {
                       },
                     ],
                   })(
-                    <Input placeholder="请输入对应产品" />
+                    // <Input placeholder="请输入对应产品" />
+                    <Cascader 
+                      options={productList}
+                      fieldNames={{ label: 'name', value: 'key'}}
+                      onChange={(value, selectedOptions)=>{
+                        console.log("123")
+                      }}
+                    ></Cascader>
                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="类型">
@@ -242,15 +292,25 @@ class LogisticsConfiguration extends PureComponent {
                 <div style={tipsStyle}>如您需要此订单进入自动化流程，请打开本开关</div>
                 <FormItem {...formAllItemLayout} label="设备提醒">
                   {getFieldDecorator('product', {
-                    initialValue: detail.product,
+                    initialValue: 1,
                   })(
-                    <Radio.Group onChange={this.onChange} value={1}>
+                    <Radio.Group onChange={this.onChange}>
                       <Radio value={1}>开</Radio>
                       <Radio value={0}>关</Radio>
                     </Radio.Group>
                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="发货提醒">
+                  {getFieldDecorator('smsConfirmation', {
+                    initialValue: 1,
+                  })(
+                    <Radio.Group onChange={this.onChange}>
+                      <Radio value={1}>开</Radio>
+                      <Radio value={0}>关</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                {/* <FormItem {...formAllItemLayout} label="签收提醒">
                   {getFieldDecorator('product', {
                     initialValue: detail.product,
                   })(
@@ -259,22 +319,12 @@ class LogisticsConfiguration extends PureComponent {
                       <Radio value={0}>关</Radio>
                     </Radio.Group>
                   )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="签收提醒">
-                  {getFieldDecorator('product', {
-                    initialValue: detail.product,
+                </FormItem> */}
+                <FormItem {...formAllItemLayout} label="物流订阅">
+                  {getFieldDecorator('shipmentRemind', {
+                    initialValue:1,
                   })(
-                    <Radio.Group onChange={this.onChange} value={1}>
-                      <Radio value={1}>开</Radio>
-                      <Radio value={0}>关</Radio>
-                    </Radio.Group>
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="激活提醒">
-                  {getFieldDecorator('product', {
-                    initialValue: detail.product,
-                  })(
-                    <Radio.Group onChange={this.onChange} value={1}>
+                    <Radio.Group onChange={this.onChange}>
                       <Radio value={1}>开</Radio>
                       <Radio value={0}>关</Radio>
                     </Radio.Group>
