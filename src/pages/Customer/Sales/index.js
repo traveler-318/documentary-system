@@ -21,7 +21,7 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 
-import { getList } from '../../../services/newServices/sales';
+import { getList,getSalesmangroup,updateStatus } from '../../../services/newServices/sales';
 import Grouping from './components/grouping'
 import Recharge from './components/recharge'
 
@@ -44,7 +44,8 @@ class AuthorityList extends PureComponent {
       params:{
         size:10,
         current:1
-      }
+      },
+      groupingList:[]
     };
   }
 
@@ -52,6 +53,7 @@ class AuthorityList extends PureComponent {
 
   componentWillMount() {
     this.getDataList();
+
   }
 
   getDataList = () => {
@@ -72,6 +74,11 @@ class AuthorityList extends PureComponent {
             total: res.data.total
           }
         }
+      })
+    })
+    getSalesmangroup().then(res=>{
+      this.setState({
+        groupingList:res.data.records
       })
     })
   }
@@ -128,7 +135,7 @@ class AuthorityList extends PureComponent {
     const data= value === 0 ? 1 : 0;
     const params = {
       id:key.id,
-      status:data
+      salesman_status:data
     };
     Modal.confirm({
       title: '修改确认',
@@ -137,13 +144,14 @@ class AuthorityList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        getSubmit(params).then(resp=>{
-          if (resp.success) {
-            message.success(resp.msg);
-            refresh()
-          } else {
-            message.error(resp.msg || '修改失败');
-          }
+        updateStatus(params).then(resp=>{
+          console.log(resp)
+          //if (resp.success) {
+          //  message.success(resp.msg);
+          //  refresh()
+          //} else {
+          //  message.error(resp.msg || '修改失败');
+          //}
         })
       },
       onCancel(){},
@@ -172,6 +180,7 @@ class AuthorityList extends PureComponent {
     this.setState({
       handleGroupingVisible:true
     })
+
   };
   // =========关闭分组弹窗========
 
@@ -223,7 +232,7 @@ class AuthorityList extends PureComponent {
       form,
     } = this.props;
 
-    const {data,loading,handleGroupingVisible,handleRechargeVisible} = this.state;
+    const {data,loading,handleGroupingVisible,handleRechargeVisible,groupingList} = this.state;
 
     const columns = [
       {
@@ -233,8 +242,21 @@ class AuthorityList extends PureComponent {
       },
       {
         title: '分组',
-        dataIndex: 'groupName',
+        dataIndex: 'groupId',
         width: 100,
+        render: (res) => {
+          console.log(res)
+          let name='';
+          for(let i=0; i<groupingList.length; i++){
+            console.log(groupingList[i])
+            if(groupingList[i].id === res){
+              name = groupingList[i].groupName
+            }
+          }
+          return(
+            name
+          )
+        },
       },
       {
         title: '手机号',
@@ -268,7 +290,7 @@ class AuthorityList extends PureComponent {
       },
       {
         title: '默认开关',
-        dataIndex: 'status',
+        dataIndex: 'salesmanStatus',
         width: 100,
         render: (res,key) => {
           return(
@@ -289,11 +311,6 @@ class AuthorityList extends PureComponent {
             value
           )
         },
-      },
-      {
-        title: '公众号通知',
-        dataIndex: 'openid',
-        width: 100,
       },
       {
         title: '操作',

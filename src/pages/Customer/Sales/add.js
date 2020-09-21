@@ -7,7 +7,7 @@ import { CITY } from '../../../utils/city';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
 
-import { getDeliverySave } from '../../../services/newServices/logistics';
+import {getSalesmangroup,getAddList } from '../../../services/newServices/sales';
 import router from 'umi/router';
 import { EXPRESS100DATA } from '../../Logistics/FaceSheet/data';
 
@@ -29,20 +29,21 @@ class SenderAdd extends PureComponent {
         {value:"伪授权",key:3},
         {value:"免费",key:4},
       ],
-      groupingList:[
-        {
-          key:1,
-          name:"测试2组"
-        },{
-          key:2,
-          name:"测试3组"
-        }
-      ],
+      groupingList:[]
     };
   }
 
   componentWillMount() {
+    this.getDataList()
+  }
 
+  getDataList = () => {
+    const {params} = this.state;
+    getSalesmangroup(params).then(res=>{
+      this.setState({
+        groupingList:res.data.records
+      })
+    })
   }
 
   // ============ 提交 ===============
@@ -56,7 +57,7 @@ class SenderAdd extends PureComponent {
         const params = {
           ...values,
         };
-        getDeliverySave(params).then(res=>{
+        getAddList(params).then(res=>{
           message.success('提交成功');
           router.push('/customer/sales');
         })
@@ -93,7 +94,7 @@ class SenderAdd extends PureComponent {
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="姓名：">
-                  {getFieldDecorator('name', {
+                  {getFieldDecorator('userName', {
                     rules: [
                       {
                         required: true,
@@ -105,7 +106,7 @@ class SenderAdd extends PureComponent {
               </Col>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="手机号：">
-                  {getFieldDecorator('mobile', {
+                  {getFieldDecorator('userPhone', {
                     rules: [
                       {
                         required: true,
@@ -123,7 +124,7 @@ class SenderAdd extends PureComponent {
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="授权类型：">
-                  {getFieldDecorator('addrCoding', {
+                  {getFieldDecorator('authorizationType', {
                     rules: [
                       {
                         required: true,
@@ -133,7 +134,7 @@ class SenderAdd extends PureComponent {
                   })(
                     <Select placeholder="请选择授权类型">
                       {authorizationType.map((item)=>{
-                        return (<Option key={item.key} value={item.value}>{item.value}</Option>)
+                        return (<Option key={item.key} value={item.key}>{item.value}</Option>)
                       })}
                     </Select>
                   )}
@@ -141,7 +142,7 @@ class SenderAdd extends PureComponent {
               </Col>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="分组：">
-                  {getFieldDecorator('printAddr', {
+                  {getFieldDecorator('groupId', {
                     rules: [
                       {
                         required: true,
@@ -151,7 +152,7 @@ class SenderAdd extends PureComponent {
                   })(
                     <Select placeholder="请选择分组">
                       {groupingList.map((item)=>{
-                        return (<Option key={item.key} value={item.name}>{item.name}</Option>)
+                        return (<Option value={item.id}>{item.groupName}</Option>)
                       })}
                     </Select>
                   )}
