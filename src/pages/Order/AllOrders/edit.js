@@ -144,7 +144,7 @@ class OrdersAdd extends PureComponent {
     return (
       <Panel title="详情" back="/order/AllOrders">
         <Form style={{ marginTop: 8 }}>
-          <Card bordered={false}>
+          <Card bordered={false} className={styles.editContent}>
             <Row gutter={24} style={{ margin: 0 }}>
               <Col span={12} style={{ padding: 0 }}>
                 <div className={styles.titleBtn}>
@@ -155,7 +155,7 @@ class OrdersAdd extends PureComponent {
                   <Button  icon="folder">归档</Button>
                 </div>
                 <div className={styles.editList} style={{ padding: '20px' }}>
-                  <FormTitle title="客户信息" style={{ margin:'0'}}/>
+                  <FormTitle title="客户信息" style={{ margin:'0'}} />
                   <FormItem {...formAllItemLayout} label="客户姓名">
                     {getFieldDecorator('userName', {
                       rules: [

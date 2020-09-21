@@ -24,15 +24,17 @@ class AuthorityList extends PureComponent {
         size:10,
         current:1
       },
-      selectedRowKey:['21']
+      authorizationId:['28']
     };
   }
   // ============ 初始化数据 ===============
 
   componentWillMount() {
     const { LogisticsConfigList } = this.props;
+    this.setState({
+      // authorizationId:LogisticsConfigList.id,
+    })
     this.getDataList()
-    console.log("!##$345")
   }
 
   getDataList = () => {
@@ -63,8 +65,9 @@ class AuthorityList extends PureComponent {
       form,
     } = this.props;
 
-    const {data,selectedRowKey,loading} = this.state;
+    const {data,authorizationId,loading} = this.state;
 
+    console.log(authorizationId)
 
     const columns = [
       {
@@ -89,12 +92,12 @@ class AuthorityList extends PureComponent {
       },
     ];
     const rowSelection = {
-      type: "radio",
-      onChange: (selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys);
-      },
-      getCheckboxProps: (record) => ({
-        defaultChecked:selectedRowKey.includes(`${record.id}`)
+        type: "radio",
+      getCheckboxProps: record => ({
+        defaultChecked:record.id === authorizationId
+        // return{
+        //   defaultChecked: record.id === 28,
+        // }
       }),
     };
     return (

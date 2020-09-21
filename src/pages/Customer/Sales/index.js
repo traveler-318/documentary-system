@@ -21,7 +21,7 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 
-import { getList, getRemove, getSubmit,getUrl } from '../../../services/newServices/logistics';
+import { getList } from '../../../services/newServices/sales';
 import Grouping from './components/grouping'
 import Recharge from './components/recharge'
 
@@ -36,30 +36,7 @@ class AuthorityList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:{
-        list:[
-          {
-            authorizationType: 2,
-            belongingId: "wykj",
-            createTime: "2020-04-21 13:43:26",
-            defaultNumber: 0,
-            groupId: 1,
-            groupName: "测试2组",
-            id: 53,
-            openid: "",
-            performanceNumber: 0,
-            qrcodeAddress: "http://47.89.20.105:9091/address?salesman=aaa&belongs=wykj&payAmount=",
-            qrcodePrefix: "http://47.89.20.105:9091",
-            qrcodeSuffix: "/wechat/wechat_authorization?",
-            resultsTotalNumber: 1,
-            status: 1,
-            stayPerformanceNumber: 1,
-            userAddress: null,
-            userName: "aaa",
-            userPhone: "18081456642"
-          }
-        ],
-      },
+      data:{ },
       loading:false,
       handleGroupingVisible:false,
       handleRechargeVisible:false,
@@ -71,42 +48,33 @@ class AuthorityList extends PureComponent {
     };
   }
 
-
-
-
-
-
   // ============ 初始化数据 ===============
 
   componentWillMount() {
-    // this.getDataList();
-
-
-
-
+    this.getDataList();
   }
 
-  // getDataList = () => {
-  //   const {params} = this.state;
-  //   this.setState({
-  //     loading:true
-  //   })
-  //   getList(params).then(res=>{
-  //     this.setState({
-  //       loading:false
-  //     })
-  //     this.setState({
-  //       data:{
-  //         list:res.data.records,
-  //         pagination:{
-  //           current: res.data.current,
-  //           pageSize: res.data.size,
-  //           total: res.data.total
-  //         }
-  //       }
-  //     })
-  //   })
-  // }
+  getDataList = () => {
+    const {params} = this.state;
+    this.setState({
+      loading:true
+    })
+    getList(params).then(res=>{
+      this.setState({
+        loading:false
+      })
+      this.setState({
+        data:{
+          list:res.data.records,
+          pagination:{
+            current: res.data.current,
+            pageSize: res.data.size,
+            total: res.data.total
+          }
+        }
+      })
+    })
+  }
 
   // ============ 查询 ===============
   handleSearch = params => {
@@ -237,11 +205,15 @@ class AuthorityList extends PureComponent {
 
   renderRightButton = () => (
     <div>
+{/*
       <Button type="primary" onClick={this.handleGrouping}>修改分组</Button>
+*/}
       <Button type="primary" onClick={this.handleGrouping}>分组</Button>
+
 {/*
       <Button type="primary" onClick={this.handleRecharge}>充值</Button>
 */}
+
       <Button type="primary" onClick={()=>{router.push(`/customer/sales/add`);}}>添加</Button>
     </div>
   );

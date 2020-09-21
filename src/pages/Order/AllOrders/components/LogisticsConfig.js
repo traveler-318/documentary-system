@@ -6,6 +6,7 @@ import router from 'umi/router';
 
 import { getCookie } from '../../../../utils/support';
 import {equipment} from '../../../../services/newServices/order'
+import {getAdditionalList,getList,getSurfacesingleList,getGoodsList,getDeliveryList } from '../../../../services/newServices/logistics';
 import styles from '../index.less';
 import Authority from '../Logistics/authority'
 import FaceSheet from '../Logistics/faceSheet'
@@ -44,11 +45,81 @@ class LogisticsConfig extends PureComponent {
       GoodsVisible:false,
       // 附加信息弹窗
       AdditionalVisible:false,
+      additionalItem:'',
+      additionalId:'',
+      authorizationItem:'',
+      authorizationId:'',
+      faceSheetItem:'',
+      faceSheetId:'',
+      goodsItem:'',
+      goodsId:'',
+      senderItem:'',
+      senderId:''
     };
   }
 
   componentWillMount() {
     const { LogisticsConfigList } = this.props;
+    this.getDEfalutData()
+  }
+
+  getDEfalutData = () => {
+    const {params} = this.state;
+    getAdditionalList(params).then(res=>{
+      const data = res.data.records;
+      for(let i=0; i<data.length; i++){
+        if(data[i].status === 1){
+          this.setState({
+            additionalItem:data[i],
+            additionalId:data[i].id,
+          })
+        }
+      }
+    })
+    getList(params).then(res=>{
+      const data = res.data.records;
+      for(let i=0; i<data.length; i++){
+        if(data[i].status === 1){
+          this.setState({
+            authorizationItem:data[i],
+            authorizationId:data[i].id,
+          })
+        }
+      }
+    })
+    getSurfacesingleList(params).then(res=>{
+      const data = res.data.records;
+      for(let i=0; i<data.length; i++){
+        if(data[i].status === 1){
+          this.setState({
+            faceSheetItem:data[i],
+            faceSheetId:data[i].id,
+          })
+        }
+      }
+    })
+    getGoodsList(params).then(res=>{
+      const data = res.data.records;
+      for(let i=0; i<data.length; i++){
+        if(data[i].status === 1){
+          this.setState({
+            goodsItem:data[i],
+            goodsId:data[i].id,
+          })
+        }
+      }
+    })
+    getDeliveryList(params).then(res=>{
+      const data = res.data.records;
+      for(let i=0; i<data.length; i++){
+        if(data[i].status === 1){
+          this.setState({
+            senderItem:data[i],
+            senderId:data[i].id,
+          })
+        }
+      }
+    })
   }
 
   handleSubmit = e => {
@@ -168,8 +239,10 @@ class LogisticsConfig extends PureComponent {
       GoodsVisible,
       AdditionalVisible,
       title,
-      data
+      additionalItem,
+      authorizationItem,
       } = this.state;
+    console.log(additionalItem)
 
     const formItemLayout = {
       labelCol: {
@@ -237,7 +310,7 @@ class LogisticsConfig extends PureComponent {
           {AuthorityVisible?(
             <Authority
               AuthorityVisible={AuthorityVisible}
-              LogisticsConfigList={title}
+              LogisticsConfigList={authorizationItem}
               handleCancel={this.handleCancel}
             />
           ):""}

@@ -186,36 +186,92 @@ class AllOrdersList extends PureComponent {
     );
   };
 
-  repeat = (e) => {
-    const {selectedRows} = this.state;
-
-    console.log(e)
-    console.log(selectedRows)
-  }
 
   // =========首次打印===========
-  bulkDelivery = (e) => {
-    console.log(e)
+  bulkDelivery = () => {
     const {selectedRows} = this.state;
     const { dispatch } = this.props;
-    dispatch({
-      type: `globalParameters/setDetailData`,
-      payload: selectedRows,
-    });
-    if(selectedRows.length > 0 ){
+    const  tips=[];
+    if(selectedRows.length > 20){
+      message.info('最多批量操作20条数据');
+    }else{
+      for(let i=0; i<selectedRows.length; i++){
+        if(selectedRows[i].taskId){
+          tips.push(selectedRows[i].userName);
+          Modal.confirm({
+            title: '提示',
+            content: "客户"+selectedRows[i].userName+"订单已打印过!只能进行重复打印!",
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {},
+            onCancel() {},
+          });
+        }
+      }
+      if(tips.length > 0 ){
+        return false;
+      }
+      dispatch({
+        type: `globalParameters/setDetailData`,
+        payload: selectedRows,
+      });
       this.setState({
         LogisticsConfigVisible:true
       })
     }
+
   }
+
   // =========重复打印=============
 
   repeat = () =>{
     const {selectedRows} = this.state;
-    for(let i=0; i<selectedRows.length; i++){
-
+    const { dispatch } = this.props;
+    const  tips=[]
+    // 当前时间戳
+    const timestamp = (new Date()).getTime();
+    const timeInterval = 24 * 60 * 60 * 1000 * 2;
+    if(selectedRows.length > 20){
+      message.info('最多批量操作20条数据');
+    }else{
+      for(let i=0; i<selectedRows.length; i++){
+        const time = timestamp - (new Date(selectedRows[i].taskCreateTime)).getTime();
+        if(!selectedRows[i].taskId){
+          tips.push(selectedRows[i].userName)
+          Modal.confirm({
+            title: '提示',
+            content: selectedRows[i].userName+"客户没有首次打印记录,不能进行重复打印!",
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {},
+            onCancel() {},
+          });
+        }else if( time > timeInterval){
+          tips.push(selectedRows[i].userName)
+          Modal.confirm({
+            title: '提示',
+            content: selectedRows[i].userName+"客户的订单 距离首次时间超过2天 禁止打印！",
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {},
+            onCancel() {},
+          });
+        }
+      }
+      if(tips.length > 0 ){
+        return false;
+      }
+      dispatch({
+        type: `globalParameters/setDetailData`,
+        payload: selectedRows,
+      });
+      this.setState({
+        LogisticsConfigVisible:true
+      })
     }
-    console.log(selectedRows)
   }
 
   // =========关闭物流弹窗========
