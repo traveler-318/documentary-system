@@ -22,6 +22,18 @@ import {
   amountOfMoney
 } from './data.js';
 
+import { 
+  getList,
+  // 打印模板
+  getSurfacesingleList,
+  // 寄件配置
+  getDeliveryList,
+  // 物品信息
+  getGoodsList,
+  // 附加信息
+  getAdditionalList
+} from '../../../services/newServices/logistics'
+
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
