@@ -63,4 +63,10 @@ export async function logisticsRemind(params) {
     body: params,
   });
 }
-
+export async function logisticsSubscription(params) {
+  return request('/api/order/order/logisticsSubscription', {
+    method: 'POST',
+    body: params,
+  });
+}
+// /order/order/logisticsSubscription
