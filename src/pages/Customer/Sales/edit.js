@@ -58,8 +58,11 @@ class SenderAdd extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const {  form } = this.props;
+    const {  data } = this.state;
+
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
+      values.id = data.id;
       if (!err) {
         const params = {
           ...values,

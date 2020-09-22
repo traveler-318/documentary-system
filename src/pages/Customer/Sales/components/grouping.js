@@ -151,6 +151,11 @@ class Logistics extends PureComponent {
         title: '',
         dataIndex: 'id',
         width: 50,
+        render: (res,rows,index) => {
+          return(
+            index+1
+          )
+        },
       },{
         title: '分组名称',
         dataIndex: 'groupName',
