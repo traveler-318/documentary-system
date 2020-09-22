@@ -235,30 +235,34 @@ class AuthorityList extends PureComponent {
     </>
   );
 
-  renderRightButton = () => (
-    <div>
-      {
-        this.state.selectDataArrL.length > 0 ?
-          (<Button type="primary" onClick={this.handleGrouping}>修改分组</Button>)
-        :""
-      }
-      
-      <Button type="primary" onClick={this.handleGrouping}>分组</Button>
-
-{/*
-      <Button type="primary" onClick={this.handleRecharge}>充值</Button>
-*/}
-
-      <Button type="primary" onClick={()=>{router.push(`/customer/sales/add`);}}>添加</Button>
-    </div>
-  );
+  renderRightButton = (selectDataArrL) => {
+    return(
+      <div>
+        {
+          selectDataArrL.length > 0 ?
+            (<Button type="primary" onClick={this.handleGrouping}>修改分组</Button>)
+          :""
+        }
+        
+        <Button type="primary" onClick={this.handleGrouping}>分组</Button>
+  
+  {/*
+        <Button type="primary" onClick={this.handleRecharge}>充值</Button>
+  */}
+  
+        <Button type="primary" onClick={()=>{router.push(`/customer/sales/add`);}}>添加</Button>
+      </div>
+    )
+  };
 
   render() {
     const {
       form,
     } = this.props;
 
-    const {data,loading,handleGroupingVisible,handleRechargeVisible,groupingList,handleAggregateCodeVisible} = this.state;
+    const {
+      selectDataArrL,
+      data,loading,handleGroupingVisible,handleRechargeVisible,groupingList,handleAggregateCodeVisible} = this.state;
 
     const columns = [
       {
@@ -365,7 +369,7 @@ class AuthorityList extends PureComponent {
           columns={columns}
           scroll={{ x: 1000 }}
           renderLeftButton={this.renderLeftButton}
-          renderRightButton={this.renderRightButton}
+          renderRightButton={()=>this.renderRightButton(selectDataArrL)}
         />
         {/* 分组 */}
         {handleGroupingVisible?(
