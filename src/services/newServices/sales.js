@@ -8,7 +8,13 @@ import request from '../../utils/request';
 
 // ============ 销售管理 ===============
 export async function getList(params) {
-  return request(`/api/agent/salesman/list?${stringify(params)}`);
+  //return request(`/api/agent/salesman/list?${stringify(params)}`,{
+    //method: 'POST'
+  //});
+  return request("/api/agent/salesman/list",{
+    method: 'POST',
+    body: params,
+  });
 }
 
 export async function updateStatus(params) {
@@ -43,7 +49,7 @@ export async function getRemove(params) {
 // ============ 分组 ===============
 export async function getSalesmangroup(params) {
   return request('/api/agent/salesmangroup/list', {
-    method: 'get',
+    method: 'POST',
     body: params,
   });
 }

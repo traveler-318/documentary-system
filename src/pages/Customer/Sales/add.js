@@ -28,7 +28,11 @@ class SenderAdd extends PureComponent {
         {value:"伪授权",key:3},
         {value:"免费",key:4},
       ],
-      groupingList:[]
+      groupingList:[],
+      params:{
+        size:10,
+        current:1
+      },
     };
   }
 

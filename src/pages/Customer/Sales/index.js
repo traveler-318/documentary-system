@@ -78,7 +78,7 @@ class AuthorityList extends PureComponent {
         }
       })
     })
-    getSalesmangroup().then(res=>{
+    getSalesmangroup(params).then(res=>{
       this.setState({
         groupingList:res.data.records
       })
@@ -243,13 +243,13 @@ class AuthorityList extends PureComponent {
             (<Button type="primary" onClick={this.handleGrouping}>修改分组</Button>)
           :""
         }
-        
+
         <Button type="primary" onClick={this.handleGrouping}>分组</Button>
-  
+
   {/*
         <Button type="primary" onClick={this.handleRecharge}>充值</Button>
   */}
-  
+
         <Button type="primary" onClick={()=>{router.push(`/customer/sales/add`);}}>添加</Button>
       </div>
     )
