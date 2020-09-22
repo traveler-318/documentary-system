@@ -81,22 +81,14 @@ class LogisticsConfiguration extends PureComponent {
     // 拼装对应产品
     this.assemblingData();
 
-    this.getDefaultData();
+    
   }
   // 获取打印的默认数据
-  getDefaultData = () => {
-
+  getDefaultData = (callBack) => {
     const promise1 = new Promise((resolve, reject) => {
       getList({current:1,size:10}).then(res=>{
         let _datas = res.data.records
         resolve(_datas,"senderItem")
-        // for(let i=0; i<_datas.length; i++){
-        //   if(_datas[i].status === 1){
-        //     this.setState({
-        //       senderItem:_datas[i]
-        //     })
-        //   }
-        // }
       })
     })
 
@@ -104,88 +96,79 @@ class LogisticsConfiguration extends PureComponent {
       getSurfacesingleList({current:1,size:10}).then(res=>{
         let _datas = res.data.records
         resolve(_datas,"printTemplateItem")
-        // for(let i=0; i<_datas.length; i++){
-        //   if(_datas[i].status === 1){
-        //     this.setState({
-        //       printTemplateItem:_datas[i]
-        //     })
-        //   }
-        // }
       })
     })
 
     const promise3 = new Promise((resolve, reject) => {
       getDeliveryList({current:1,size:10}).then(res=>{
       let _datas = res.data.records
-      resolve(_datas)
-      // for(let i=0; i<_datas.length; i++){
-      //   if(_datas[i].status === 1){
-      //     this.setState({
-      //       deliveryItem:_datas[i]
-      //     })
-      //   }
-      // }
+        resolve(_datas)
+      })
     })
-  })
 
     const promise4 = new Promise((resolve, reject) => {
       getGoodsList({current:1,size:10}).then(res=>{
-      let _datas = res.data.records
-      resolve(_datas)
-
-      // for(let i=0; i<_datas.length; i++){
-      //   if(_datas[i].status === 1){
-      //     this.setState({
-      //       goodsItem:_datas[i]
-      //     })
-      //   }
-      // }
+        let _datas = res.data.records
+        resolve(_datas)
+      })
     })
-  })
 
     const promise5 = new Promise((resolve, reject) => {
       getAdditionalList({current:1,size:10}).then(res=>{
-      let _datas = res.data.records
-      resolve(_datas)
-      // for(let i=0; i<_datas.length; i++){
-      //   if(_datas[i].status === 1){
-      //     this.setState({
-      //       additionalItem:_datas[i]
-      //     })
-      //   }
-      // }
+        let _datas = res.data.records
+        resolve(_datas)
+      })
     })
-  })
     Promise.all([promise1, promise2, promise3, promise4, promise5]).then((values,type) => {
       console.log(values,type,"values");
+      let _dataList = [],senderItem={},printTemplateItem={},deliveryItem={},goodsItem={},additionalItem={}
       values.map((item,index)=>{
+        if(item.length === 0){
+          if(index === 0){
+            // 授权配置
+            return message.error("请设置基础授权配置");
+          }else if(index === 1){
+            // 打印模板
+            return message.error("请设置打印模板");
+          }else if(index === 2){
+            // 寄件配置
+            return message.error("请设置寄件人信息");
+          }else if(index === 3){
+            // 物品
+            return message.error("请设置物品信息");
+          }else if(index === 4){
+            // 附加信息
+            return message.error("请设置附加信息");
+          }
+
+        }
         for(let i=0; i<item.length; i++){
           if(item[i].status === 1){
-
             if(index === 0){
+              // _dataList.push(item[i])
               this.setState({
                 senderItem:item[i]
               })
             }else if(index === 1){
               this.setState({
-                senderItem:item[i]
+                printTemplateItem:item[i]
               })
             }else if(index === 2){
               this.setState({
-                senderItem:item[i]
+                deliveryItem:item[i]
               })
             }else if(index === 3){
               this.setState({
-                senderItem:item[i]
+                goodsItem:item[i]
               })
-            }else if(index === 0){
+            }else if(index === 4){
               this.setState({
-                senderItem:item[i]
+                additionalItem:item[i]
               })
             }
-            
           }
         }
+        callBack();
       })
     });
   }
@@ -256,8 +239,12 @@ class LogisticsConfiguration extends PureComponent {
     const { detail } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        // 先保存数据
         saveData(values,()=>{
-          
+          // 获取物流配置
+          this.getDefaultData(()=>{
+            // 获取物流配置成功
+          });
         })
       }
     });
@@ -321,43 +308,48 @@ class LogisticsConfiguration extends PureComponent {
     return (
       <Panel title="物流配置" back="/order/AllOrders">
         <div style={{background:"#fff",marginBottom:10,padding:"10px 10px 10px 20px"}}>
-            <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
-              保存
-            </Button>
-            <Button style={{marginRight:10}} type="primary" onClick={this.handlePrinting} loading={loading}>
-              保存并打印
-            </Button>
-            <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
-              保存并处理下一条
-            </Button>
-            <Button icon="reload" onClick={this.handleSubmit} loading={loading}>
-              重置
-            </Button>
-          </div>
-
+          <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
+            保存
+          </Button>
+          <Button style={{marginRight:10}} type="primary" onClick={this.handlePrinting} loading={loading}>
+            保存并打印
+          </Button>
+          <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
+            保存并处理下一条
+          </Button>
+          <Button icon="reload" onClick={this.handleSubmit} loading={loading}>
+            重置
+          </Button>
+        </div>
         <Form style={{ marginTop: 8 }}>
           <Card title="" className={styles.card} bordered={false}>
-          
             <Row gutter={24}>
-              <Col span={12}>
+              <Col span={24}>
                 <FormDetailsTitle
                   title="客户信息"
                 />
-                <FormItem {...formAllItemLayout} label="姓名">
+              </Col>
+              <Col span={12}>
+                <FormItem {...formAllItemLayout} label="姓名" style>
                   <span>{detail.userName}</span>
                 </FormItem>
+              </Col>
+              <Col span={12}>
                 <FormItem {...formAllItemLayout} label="手机号">
                   <span>{detail.userPhone}</span>
                 </FormItem>
-                {/* <FormItem {...formAllItemLayout} label="手机号2">
-                  <span>{detail.userPhone}</span>
-                </FormItem> */}
+              </Col>
+              <Col span={12}>
                 <FormItem {...formAllItemLayout} label="收货地址">
                   <span>{detail.userAddress}</span>
                 </FormItem>
+              </Col>
+              <Col span={12}>
                 <FormItem {...formAllItemLayout} label="备注">
                   <span>{detail.orderNote}</span>
                 </FormItem>
+              </Col>
+              <Col span={12}>
                 <FormDetailsTitle
                   title="发货配置"
                 />
@@ -412,12 +404,12 @@ class LogisticsConfiguration extends PureComponent {
                 <FormItem {...formAllItemLayout} label="物流公司">
                   {getFieldDecorator('logisticsCompany', {
                     initialValue: detail.logisticsCompany,
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择物流公司',
-                      },
-                    ],
+                    // rules: [
+                    //   {
+                    //     required: true,
+                    //     message: '请选择物流公司',
+                    //   },
+                    // ],
                   })(
                   <Select placeholder={"请选择物流公司"}>
                     {Object.keys(LOGISTICSCOMPANY).map(key=>{
@@ -429,17 +421,17 @@ class LogisticsConfiguration extends PureComponent {
                 <FormItem {...formAllItemLayout} label="物流单号">
                   {getFieldDecorator('logisticsNumber', {
                     initialValue: detail.logisticsNumber,
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入物流单号',
-                      },
-                    ],
+                    // rules: [
+                    //   {
+                    //     required: true,
+                    //     message: '请输入物流单号',
+                    //   },
+                    // ],
                   })(<Input placeholder="请输入物流单号" />)}
                 </FormItem>
               </Col>
               <Col span={12}>
-                <div style={{height:287}}></div>
+                {/* <div style={{height:287}}></div> */}
                 <div style={tipsStyle}>如您需要此订单进入自动化流程，请打开本开关</div>
                 <FormItem {...formAllItemLayout} label="设备提醒">
                   {getFieldDecorator('product', {
