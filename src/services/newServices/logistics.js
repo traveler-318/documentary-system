@@ -111,7 +111,11 @@ export async function getGoodsRemove(params) {
 
 // ============ 附加信息 ===============
 export async function getAdditionalList(params) {
-  return request(`/api/logistics/additionalinformation/list?${stringify(params)}`);
+  //return request(`/api/logistics/additionalinformation/list?${stringify(params)}`);
+  return request("/api/logistics/additionalinformation/list",{
+    method: 'POST',
+    body: params,
+  });
 }
 export async function getAdditionalSave(params) {
   return request('/api/logistics/additionalinformation/save', {
