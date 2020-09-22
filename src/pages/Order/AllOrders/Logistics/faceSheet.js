@@ -2,7 +2,7 @@ import React, { PureComponent  } from 'react';
 import { connect } from 'dva';
 import {
   Button,
-  Form,
+  Form, message, Modal, Radio,
   Table,
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
@@ -12,9 +12,10 @@ import styles from '../../../Logistics/FaceSheet/index.less';
 import { EXPRESS100DATA, TEMPID } from '../../../Logistics/FaceSheet/data';
 
 
-@connect(({ globalParameters }) => ({
-  globalParameters,
+@connect(({ logisticsParameters }) => ({
+  logisticsParameters,
 }))
+
 @Form.create()
 class FaceSheet extends PureComponent {
   constructor(props) {
@@ -26,15 +27,33 @@ class FaceSheet extends PureComponent {
         size:10,
         current:1
       },
-      selectedRowKey:['21']
+      faceSheetId:''
     };
   }
   // ============ 初始化数据 ===============
 
   componentWillMount() {
     const { LogisticsConfigList } = this.props;
+    this.setState({
+      faceSheetId:LogisticsConfigList.id,
+    })
     this.getDataList()
   }
+
+  onChange = (rows) => {
+    this.setState({
+      faceSheetId: rows.id,
+    });
+    if(rows.online === '0'){
+      message.success('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
+      return false;
+    }
+    const { dispatch } = this.props;
+    dispatch({
+      type: `logisticsParameters/setListId`,
+      payload: rows,
+    });
+  };
 
   getDataList = () => {
     const {params} = this.state;
@@ -77,14 +96,21 @@ class FaceSheet extends PureComponent {
 
 
   render() {
-    const {
-      form,
-    } = this.props;
 
-    const {data,selectedRowKey,loading} = this.state;
+    const {data,loading,faceSheetId} = this.state;
 
 
     const columns = [
+      {
+        title: '',
+        dataIndex: 'id',
+        width: 200,
+        render: (res,rows) => {
+          return(
+            <Radio checked={res===faceSheetId?true:false} onChange={() =>this.onChange(rows)} value={res}></Radio>
+          )
+        },
+      },
       {
         title: '快递公司编码',
         dataIndex: 'kuaidicom_value',
@@ -127,18 +153,9 @@ class FaceSheet extends PureComponent {
         },
       },
     ];
-    const rowSelection = {
-      type: "radio",
-      onChange: (selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys);
-      },
-      getCheckboxProps: (record) => ({
-        defaultChecked:selectedRowKey.includes(`${record.id}`)
-      }),
-    };
     return (
       <div>
-        <Table rowSelection={rowSelection} loading={loading} rowKey={(record, index) => `${index}`} dataSource={data.list} columns={columns} />
+        <Table loading={loading} rowKey={(record, index) => `${index}`} dataSource={data.list} columns={columns} />
       </div>
 
     );

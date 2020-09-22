@@ -9,7 +9,6 @@ import { getCookie } from '../../../utils/support';
 
 import {getSalesmangroup,getAddList } from '../../../services/newServices/sales';
 import router from 'umi/router';
-import { EXPRESS100DATA } from '../../Logistics/FaceSheet/data';
 
 const FormItem = Form.Item;
 const { Option } = Select;

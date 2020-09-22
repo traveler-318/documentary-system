@@ -41,8 +41,6 @@ class Logistics extends PureComponent {
           name:"测试3组"
         }
       ],
-      RechargeAmountList:[5,10,20,50,100],
-      RechargeAmount:5,
     };
   }
 
@@ -88,34 +86,49 @@ class Logistics extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      handleRechargeVisible,
-      handleCancelRecharge,
+      handleAggregateCodeVisible,
+      handleCancelAggregateCode,
     } = this.props;
 
-    const {groupAddVisible,RechargeAmountList,RechargeAmount} = this.state;
+    const formItemLayout = {
+      labelCol: {
+        span: 7,
+      },
+      wrapperCol: {
+        span: 17,
+      },
+    };
+
+    const {groupAddVisible} = this.state;
 
 
     // confirmTag
     return (
       <div>
         <Modal
-          title="业务员充值"
-          visible={handleRechargeVisible}
-          width={550}
-          onCancel={handleCancelRecharge}
+          title="支付金额"
+          visible={handleAggregateCodeVisible}
+          width={360}
+          onCancel={handleCancelAggregateCode}
           footer={[
+            <Button key="back" onClick={handleCancelAggregateCode}>
+              取消
+            </Button>,
             <Button key="primary" onClick={()=>this.handleSubmit()}>
               确认
-            </Button>,
+            </Button>
           ]}
         >
-          <Form.Item label="充值个数：">
-            <div style={{float:'left'}}>
-              {RechargeAmountList.map(item=>{
-                return (<Tag onClick={()=>this.changeRechargeAmount(item)} className={item === RechargeAmount ? "ant-tag ant-tag-color " : "ant-tag"} key={item}>{item}个</Tag>)
-              })}
-            </div>
-          </Form.Item>
+          <FormItem {...formItemLayout} label="支付金额：">
+            {getFieldDecorator('payAmount', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入支付金额',
+                },
+              ],
+            })(<Input placeholder="请输入支付金额" />)}
+          </FormItem>
         </Modal>
         <Modal
           title="添加分组"

@@ -25,12 +25,13 @@ export async function getAddList(params) {
   });
 }
 
-export async function getSubmit(params) {
-  return request('/api/logistics/authorization/update', {
+export async function getUpdate(params) {
+  return request('/api/agent/salesman/update', {
     method: 'POST',
     body: params,
   });
 }
+
 
 export async function getRemove(params) {
   return request('/api/logistics/authorization/remove', {
@@ -51,5 +52,11 @@ export async function getSalesmangroupSubmit(params) {
   return request('/api/agent/salesmangroup/save', {
     method: 'POST',
     body: params,
+  });
+}
+// ============ 删除分组 ===============
+export async function getDeleteGroup(params) {
+  return request(`/api/agent/salesmangroup/deleteGroup/${params}`, {
+    method: 'POST',
   });
 }

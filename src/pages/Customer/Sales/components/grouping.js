@@ -23,7 +23,8 @@ import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
 import { tenantMode } from '../../../../defaultSettings';
 import { updateLogistics, logisticsRemind } from '../../../../services/newServices/order'
-import { getSalesmangroup,getSalesmangroupSubmit } from '../../../../services/newServices/sales';
+import { getSalesmangroup,getSalesmangroupSubmit,getDeleteGroup } from '../../../../services/newServices/sales';
+import { getAdditionalRemove } from '../../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -52,13 +53,7 @@ class Logistics extends PureComponent {
 
   getDataList = () => {
     const {params} = this.state;
-    this.setState({
-      loading:true
-    })
     getSalesmangroup(params).then(res=>{
-      this.setState({
-        loading:false
-      })
       this.setState({
         data:res.data.records
       })
@@ -109,6 +104,30 @@ class Logistics extends PureComponent {
     });
   };
 
+  handleSubmitDelete = (id) =>{
+    console.log(id)
+    const refresh = this.getDataList;
+    Modal.confirm({
+      title: '删除确认',
+      content: '确定删除该条记录?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        getDeleteGroup(id.id).then(resp => {
+          if (resp.success) {
+            message.success(resp.msg);
+            refresh()
+          } else {
+            message.error(resp.msg || '删除失败');
+          }
+        });
+      },
+      onCancel() {},
+    });
+
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -144,7 +163,7 @@ class Logistics extends PureComponent {
         render: (res,row) => {
           return(
             <div>
-              <a onClick={()=>this.handleEdit(row)}>删除</a>
+              <a onClick={()=>this.handleSubmitDelete(row)}>删除</a>
             </div>
           )
         },

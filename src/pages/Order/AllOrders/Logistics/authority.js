@@ -4,14 +4,15 @@ import {
   Button,
   Form,
   Table,
+  Radio
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import { getList } from '../../../../services/newServices/logistics';
 
 
-@connect(({ globalParameters }) => ({
-  globalParameters,
+@connect(({ logisticsParameters }) => ({
+  logisticsParameters,
 }))
 @Form.create()
 class AuthorityList extends PureComponent {
@@ -24,7 +25,7 @@ class AuthorityList extends PureComponent {
         size:10,
         current:1
       },
-      authorizationId:['28']
+      authorizationId:''
     };
   }
   // ============ 初始化数据 ===============
@@ -32,7 +33,7 @@ class AuthorityList extends PureComponent {
   componentWillMount() {
     const { LogisticsConfigList } = this.props;
     this.setState({
-      // authorizationId:LogisticsConfigList.id,
+      authorizationId:LogisticsConfigList.id,
     })
     this.getDataList()
   }
@@ -59,6 +60,17 @@ class AuthorityList extends PureComponent {
     })
   }
 
+  onChange = (rows) => {
+    this.setState({
+      authorizationId: rows.id,
+    });
+    const { dispatch } = this.props;
+    dispatch({
+      type: `logisticsParameters/setListId`,
+      payload: rows,
+    });
+  };
+
 
   render() {
     const {
@@ -67,9 +79,18 @@ class AuthorityList extends PureComponent {
 
     const {data,authorizationId,loading} = this.state;
 
-    console.log(authorizationId)
 
     const columns = [
+      {
+        title: '',
+        dataIndex: 'id',
+        width: 200,
+        render: (res,rows) => {
+          return(
+            <Radio checked={res===authorizationId?true:false} onChange={() =>this.onChange(rows)} value={res}></Radio>
+          )
+        },
+      },
       {
         title: '授权ID',
         dataIndex: 'partnerId',
@@ -102,7 +123,7 @@ class AuthorityList extends PureComponent {
     };
     return (
       <div>
-        <Table rowSelection={rowSelection} loading={loading} rowKey={(record, index) => `${index}`} dataSource={data.list} columns={columns} />
+        <Table loading={loading} rowKey={(record, index) => `${index}`} dataSource={data.list} columns={columns} />
       </div>
 
     );

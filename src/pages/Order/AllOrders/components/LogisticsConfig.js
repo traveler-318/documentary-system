@@ -18,8 +18,8 @@ const FormItem = Form.Item;
 const { TextArea } = Input;
 
 
-@connect(({ globalParameters}) => ({
-  globalParameters,
+@connect(({ globalParameters,logisticsParameters}) => ({
+  globalParameters,logisticsParameters
 }))
 @Form.create()
 class LogisticsConfig extends PureComponent {
@@ -122,31 +122,77 @@ class LogisticsConfig extends PureComponent {
     })
   }
 
-  handleSubmit = e => {
+  handleConfirm = e => {
     e.preventDefault();
-    const { form } = this.props;
-    const { detail } = this.state;
+    const { authorizationItem,faceSheetItem,senderItem,goodsItem,additionalItem } = this.state;
 
-    form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        values.deptId = getCookie("dept_id");
-        values = {...values};
-        values.outOrderNo = detail.outOrderNo
-        values.id = detail.id
-        values.sms_confirmation = false;
+    if(authorizationItem === ''){
+      message.success('请选择基础授权配置');
+      return false
+    }else if(faceSheetItem === ''){
+      message.success('请选择打印模板');
+      return false
+    }else if(senderItem === ''){
+      message.success('请选择寄件人信息');
+      return false
+    }else if(goodsItem === ''){
+      message.success('请选择物品信息');
+      return false
+    }else if(additionalItem === ''){
+      message.success('请选择附加信息');
+      return false
+    }
+    if(faceSheetItem.online === '0'){
+      message.success('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
+      return false;
+    }
+    console.log(authorizationItem)
+    console.log(faceSheetItem)
+    console.log(senderItem)
+    console.log(goodsItem)
+    console.log(additionalItem)
+  };
 
-        equipment(values).then(res=>{
-          if(res.code === 200){
-            message.success(res.msg);
-            this.props.handleCancelLogisticsConfig("getlist");
-          }
-        })
+  handleConfirmList = e => {
+    const { faceSheetVisible,AuthorityVisible,AdditionalVisible,GoodsVisible,SenderVisible} = this.state;
+    const { logisticsParameters } = this.props;
+    console.log(AuthorityVisible)
+    console.log(logisticsParameters.listParam)
+    if(faceSheetVisible){
+      if(logisticsParameters.listParam.online === '0'){
+        message.success('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
+        return false;
+      }else if(logisticsParameters.listParam.online === undefined){
+        message.success('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
+        return false;
       }
-    });
+      this.setState({
+        faceSheetItem:logisticsParameters.listParam
+      })
+    }else if(AuthorityVisible){
+      this.setState({
+        authorizationItem:logisticsParameters.listParam
+      })
+    }else if(GoodsVisible){
+      this.setState({
+        goodsItem:logisticsParameters.listParam
+      })
+    }else if(SenderVisible){
+      this.setState({
+        senderItem:logisticsParameters.listParam
+      })
+    }else if(AdditionalVisible){
+      this.setState({
+        additionalItem:logisticsParameters.listParam
+      })
+    }
+    this.setState({
+      LogisticsVisible:false,
+    })
   };
 
   onChange = e => {
-    console.log('checked = ', e.target.checked);
+    console.log('checked = ', e.target);
     this.setState({
       checked: e.target.checked,
     });
@@ -167,26 +213,46 @@ class LogisticsConfig extends PureComponent {
     if(e === "基础授权配置"){
       this.setState({
         AuthorityVisible:true,
+        faceSheetVisible:false,
+        SenderVisible:false,
+        GoodsVisible:false,
+        AdditionalVisible:false,
         title:e,
       })
     }else if(e === '打印模板'){
       this.setState({
         faceSheetVisible:true,
+        AuthorityVisible:false,
+        SenderVisible:false,
+        GoodsVisible:false,
+        AdditionalVisible:false,
         title:e,
       })
     }else if(e === '寄件人信息'){
       this.setState({
         SenderVisible:true,
+        faceSheetVisible:false,
+        AuthorityVisible:false,
+        GoodsVisible:false,
+        AdditionalVisible:false,
         title:e,
       })
     }else if(e === '物品信息'){
       this.setState({
         GoodsVisible:true,
+        faceSheetVisible:false,
+        AuthorityVisible:false,
+        SenderVisible:false,
+        AdditionalVisible:false,
         title:e,
       })
     }else if(e === '附加信息'){
       this.setState({
         AdditionalVisible:true,
+        faceSheetVisible:false,
+        AuthorityVisible:false,
+        SenderVisible:false,
+        GoodsVisible:false,
         title:e,
       })
     }
@@ -241,8 +307,10 @@ class LogisticsConfig extends PureComponent {
       title,
       additionalItem,
       authorizationItem,
+      faceSheetItem,
+      goodsItem,
+      senderItem,
       } = this.state;
-    console.log(additionalItem)
 
     const formItemLayout = {
       labelCol: {
@@ -270,7 +338,7 @@ class LogisticsConfig extends PureComponent {
           width={560}
           onCancel={handleCancelLogisticsConfig}
           footer={[
-            <Button key="submit" type="primary" loading={loading} onClick={this.handleSubmit}>
+            <Button key="submit" type="primary" loading={loading} onClick={this.handleConfirm}>
               确定
             </Button>,
           ]}
@@ -301,7 +369,7 @@ class LogisticsConfig extends PureComponent {
           onCancel={this.handleCancel}
           width={1000}
           footer={[
-            <Button key="submit" type="primary" loading={loading} onClick={this.handleSubmit}>
+            <Button key="submit" type="primary" loading={loading} onClick={this.handleConfirmList}>
               确定
             </Button>,
           ]}
@@ -318,7 +386,7 @@ class LogisticsConfig extends PureComponent {
           {faceSheetVisible?(
             <FaceSheet
               faceSheetVisible={faceSheetVisible}
-              LogisticsConfigList={title}
+              LogisticsConfigList={faceSheetItem}
               handleCancel={this.handleCancel}
             />
           ):""}
@@ -326,7 +394,7 @@ class LogisticsConfig extends PureComponent {
           {SenderVisible?(
             <Sender
               SenderVisible={SenderVisible}
-              LogisticsConfigList={title}
+              LogisticsConfigList={senderItem}
               handleCancel={this.handleCancel}
             />
           ):""}
@@ -334,7 +402,7 @@ class LogisticsConfig extends PureComponent {
           {GoodsVisible?(
             <Goods
               GoodsVisible={GoodsVisible}
-              LogisticsConfigList={title}
+              LogisticsConfigList={goodsItem}
               handleCancel={this.handleCancel}
             />
           ):""}
@@ -342,7 +410,7 @@ class LogisticsConfig extends PureComponent {
           {AdditionalVisible?(
             <Additional
               AdditionalVisible={AdditionalVisible}
-              LogisticsConfigList={title}
+              LogisticsConfigList={additionalItem}
               handleCancel={this.handleCancel}
             />
           ):""}

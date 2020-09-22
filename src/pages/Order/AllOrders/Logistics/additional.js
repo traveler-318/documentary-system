@@ -2,15 +2,15 @@ import React, { PureComponent  } from 'react';
 import { connect } from 'dva';
 import {
   Button,
-  Form,
+  Form, Radio,
   Table,
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import { getAdditionalList } from '../../../../services/newServices/logistics';
 
-@connect(({ globalParameters }) => ({
-  globalParameters,
+@connect(({ logisticsParameters }) => ({
+  logisticsParameters,
 }))
 @Form.create()
 class Additional extends PureComponent {
@@ -23,13 +23,17 @@ class Additional extends PureComponent {
         size:10,
         current:1
       },
-      selectedRowKey:['21']
+      additionalId:''
     };
   }
   // ============ 初始化数据 ===============
 
   componentWillMount() {
     const { LogisticsConfigList } = this.props;
+    console.log(this.props)
+    this.setState({
+      additionalId:LogisticsConfigList.id,
+    })
     this.getDataList()
   }
 
@@ -57,16 +61,37 @@ class Additional extends PureComponent {
     })
   }
 
+  onChange = (rows) => {
+    this.setState({
+      additionalId: rows.id,
+    });
+    const { dispatch } = this.props;
+    dispatch({
+      type: `logisticsParameters/setListId`,
+      payload: rows,
+    });
+  };
+
 
   render() {
     const {
       form,
     } = this.props;
 
-    const {data,selectedRowKey,loading} = this.state;
+    const {data,additionalId,loading} = this.state;
 
 
     const columns = [
+      {
+        title: '',
+        dataIndex: 'id',
+        width: 200,
+        render: (res,rows) => {
+          return(
+            <Radio checked={res===additionalId?true:false} onChange={() =>this.onChange(rows)} value={res}></Radio>
+          )
+        },
+      },
       {
         title: '支付方式',
         dataIndex: 'payType',
@@ -132,18 +157,9 @@ class Additional extends PureComponent {
         },
       },
     ];
-    const rowSelection = {
-      type: "radio",
-      onChange: (selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys);
-      },
-      getCheckboxProps: (record) => ({
-        defaultChecked:selectedRowKey.includes(`${record.id}`)
-      }),
-    };
     return (
       <div>
-        <Table rowSelection={rowSelection} loading={loading} rowKey={(record, index) => `${index}`} dataSource={data.list} columns={columns} />
+        <Table loading={loading} rowKey={(record, index) => `${index}`} dataSource={data.list} columns={columns} />
       </div>
 
     );

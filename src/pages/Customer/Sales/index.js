@@ -24,6 +24,7 @@ import Grid from '../../../components/Sword/Grid';
 import { getList,getSalesmangroup,updateStatus } from '../../../services/newServices/sales';
 import Grouping from './components/grouping'
 import Recharge from './components/recharge'
+import AggregateCode from './components/aggregateCode'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -40,6 +41,7 @@ class AuthorityList extends PureComponent {
       loading:false,
       handleGroupingVisible:false,
       handleRechargeVisible:false,
+      handleAggregateCodeVisible:false,
       selectDataArrL:[],
       params:{
         size:10,
@@ -131,11 +133,12 @@ class AuthorityList extends PureComponent {
   // ============ 修改默认开关 =========
 
   onStatus = (value,key) => {
+    console.log(value)
     const refresh = this.getDataList;
     const data= value === 0 ? 1 : 0;
     const params = {
       id:key.id,
-      salesman_status:data
+      salesmanStatus:data
     };
     Modal.confirm({
       title: '修改确认',
@@ -146,12 +149,12 @@ class AuthorityList extends PureComponent {
       async onOk() {
         updateStatus(params).then(resp=>{
           console.log(resp)
-          //if (resp.success) {
-          //  message.success(resp.msg);
-          //  refresh()
-          //} else {
-          //  message.error(resp.msg || '修改失败');
-          //}
+          if (resp.success) {
+           message.success(resp.msg);
+           refresh()
+          } else {
+           message.error(resp.msg || '修改失败');
+          }
         })
       },
       onCancel(){},
@@ -205,6 +208,26 @@ class AuthorityList extends PureComponent {
     })
   }
 
+  // =========聚合码弹窗========
+
+  handleAggregateCode = (res) => {
+    if(res.salesmanStatus === 0){
+      message.success('当前业务员关闭状态,不能生成聚合码');
+      return false
+    }
+    this.setState({
+      handleAggregateCodeVisible:true
+    })
+  };
+// =========关闭聚合码弹窗========
+
+  handleCancelAggregateCode = () => {
+    this.setState({
+      handleAggregateCodeVisible:false
+    })
+  }
+
+
 
   renderLeftButton = () => (
     <>
@@ -214,12 +237,9 @@ class AuthorityList extends PureComponent {
 
   renderRightButton = () => (
     <div>
-{/*
-      
-*/}
       {
-        this.state.selectDataArrL.length > 0 ? 
-        (<Button type="primary" onClick={this.handleGrouping}>修改分组</Button>)
+        this.state.selectDataArrL.length > 0 ?
+          (<Button type="primary" onClick={this.handleGrouping}>修改分组</Button>)
         :""
       }
       
@@ -238,7 +258,7 @@ class AuthorityList extends PureComponent {
       form,
     } = this.props;
 
-    const {data,loading,handleGroupingVisible,handleRechargeVisible,groupingList} = this.state;
+    const {data,loading,handleGroupingVisible,handleRechargeVisible,groupingList,handleAggregateCodeVisible} = this.state;
 
     const columns = [
       {
@@ -251,10 +271,8 @@ class AuthorityList extends PureComponent {
         dataIndex: 'groupId',
         width: 100,
         render: (res) => {
-          console.log(res)
           let name='';
           for(let i=0; i<groupingList.length; i++){
-            console.log(groupingList[i])
             if(groupingList[i].id === res){
               name = groupingList[i].groupName
             }
@@ -329,7 +347,7 @@ class AuthorityList extends PureComponent {
               <Divider type="vertical" />
               <a onClick={()=>this.handleEdit(row)}>修改</a>
               <Divider type="vertical" />
-              <a>聚合码</a>
+              <a onClick={()=>this.handleAggregateCode(row)}>聚合码</a>
             </div>
           )
         },
@@ -363,6 +381,14 @@ class AuthorityList extends PureComponent {
             handleRechargeVisible={handleRechargeVisible}
             // LogisticsConfigList={selectedRows}
             handleCancelRecharge={this.handleCancelRecharge}
+          />
+        ):""}
+        {/* 聚合码弹框 */}
+        {handleAggregateCodeVisible?(
+          <AggregateCode
+            handleAggregateCodeVisible={handleAggregateCodeVisible}
+            // LogisticsConfigList={selectedRows}
+            handleCancelAggregateCode={this.handleCancelAggregateCode}
           />
         ):""}
       </Panel>
