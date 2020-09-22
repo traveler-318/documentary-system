@@ -13,7 +13,7 @@ import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
-import {updateData,getRegion} from '../../../services/newServices/order'
+import {updateData,getRegion,logisticsSubscription} from '../../../services/newServices/order'
 import { 
   LOGISTICSCOMPANY,
   paymentCompany,
@@ -60,7 +60,12 @@ class LogisticsConfiguration extends PureComponent {
         }
       ],
       detail:{},
-      productList:[]
+      productList:[],
+      senderItem:{},
+      printTemplateItem:{},
+      deliveryItem:{},
+      goodsItem:{},
+      additionalItem:{},
     };
   }
 
@@ -75,6 +80,114 @@ class LogisticsConfiguration extends PureComponent {
 
     // 拼装对应产品
     this.assemblingData();
+
+    this.getDefaultData();
+  }
+  // 获取打印的默认数据
+  getDefaultData = () => {
+
+    const promise1 = new Promise((resolve, reject) => {
+      getList({current:1,size:10}).then(res=>{
+        let _datas = res.data.records
+        resolve(_datas,"senderItem")
+        // for(let i=0; i<_datas.length; i++){
+        //   if(_datas[i].status === 1){
+        //     this.setState({
+        //       senderItem:_datas[i]
+        //     })
+        //   }
+        // }
+      })
+    })
+
+    const promise2 = new Promise((resolve, reject) => {
+      getSurfacesingleList({current:1,size:10}).then(res=>{
+        let _datas = res.data.records
+        resolve(_datas,"printTemplateItem")
+        // for(let i=0; i<_datas.length; i++){
+        //   if(_datas[i].status === 1){
+        //     this.setState({
+        //       printTemplateItem:_datas[i]
+        //     })
+        //   }
+        // }
+      })
+    })
+
+    const promise3 = new Promise((resolve, reject) => {
+      getDeliveryList({current:1,size:10}).then(res=>{
+      let _datas = res.data.records
+      resolve(_datas)
+      // for(let i=0; i<_datas.length; i++){
+      //   if(_datas[i].status === 1){
+      //     this.setState({
+      //       deliveryItem:_datas[i]
+      //     })
+      //   }
+      // }
+    })
+  })
+
+    const promise4 = new Promise((resolve, reject) => {
+      getGoodsList({current:1,size:10}).then(res=>{
+      let _datas = res.data.records
+      resolve(_datas)
+
+      // for(let i=0; i<_datas.length; i++){
+      //   if(_datas[i].status === 1){
+      //     this.setState({
+      //       goodsItem:_datas[i]
+      //     })
+      //   }
+      // }
+    })
+  })
+
+    const promise5 = new Promise((resolve, reject) => {
+      getAdditionalList({current:1,size:10}).then(res=>{
+      let _datas = res.data.records
+      resolve(_datas)
+      // for(let i=0; i<_datas.length; i++){
+      //   if(_datas[i].status === 1){
+      //     this.setState({
+      //       additionalItem:_datas[i]
+      //     })
+      //   }
+      // }
+    })
+  })
+    Promise.all([promise1, promise2, promise3, promise4, promise5]).then((values,type) => {
+      console.log(values,type,"values");
+      values.map((item,index)=>{
+        for(let i=0; i<item.length; i++){
+          if(item[i].status === 1){
+
+            if(index === 0){
+              this.setState({
+                senderItem:item[i]
+              })
+            }else if(index === 1){
+              this.setState({
+                senderItem:item[i]
+              })
+            }else if(index === 2){
+              this.setState({
+                senderItem:item[i]
+              })
+            }else if(index === 3){
+              this.setState({
+                senderItem:item[i]
+              })
+            }else if(index === 0){
+              this.setState({
+                senderItem:item[i]
+              })
+            }
+            
+          }
+        }
+      })
+    });
   }
 
   assemblingData = () => {
@@ -107,22 +220,48 @@ class LogisticsConfiguration extends PureComponent {
     console.log(pre,nex)
   }
 
+  saveData = (values,callBack) => {
+    console.log(values,"123")
+    const { detail } = this.state;
+    values = {...values,...cityparam};
+    values.id = detail.id;
+    values.deptId = getCookie("dept_id");
+    values.confirmTag = detail.confirmTag;
+    values.outOrderNo = detail.outOrderNo;
+    values.tenantId = detail.tenantId;
+    values.userPhone = detail.userPhone;
+    logisticsSubscription(values).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg);
+        if(callBack)callBack()
+      }else{
+        message.error(res.msg);
+      }
+    })
+  }; 
+
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { cityparam, detail } = this.state;
+    const { detail } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values,"123")
-        // values = {...values,...cityparam};
-        // values.id = detail.id
-        // updateData(values).then(res=>{
-        //   message.success(res.msg);
-        //   router.push('/order/allOrders');
-        // })
+        saveData(values)
       }
     });
   };
+  // 保存并打印
+  handlePrinting = (e) => {
+    const { form } = this.props;
+    const { detail } = this.state;
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        saveData(values,()=>{
+          
+        })
+      }
+    });
+  }
 
   handleChange = value => {
   };
@@ -132,15 +271,15 @@ class LogisticsConfiguration extends PureComponent {
     return current && current > moment().endOf('day');
   }
 
-  onChange = (value, selectedOptions) => {
-    this.setState({
-      cityparam:{
-        province:value[0],
-        city:value[1],
-        area:value[2],
-      }
-    })
-  };
+  // onChange = (value, selectedOptions) => {
+  //   this.setState({
+  //     cityparam:{
+  //       province:value[0],
+  //       city:value[1],
+  //       area:value[2],
+  //     }
+  //   })
+  // };
 
   onProductChange = (value, selectedOptions) => {
     // 对应产品
@@ -185,7 +324,7 @@ class LogisticsConfiguration extends PureComponent {
             <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
               保存
             </Button>
-            <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
+            <Button style={{marginRight:10}} type="primary" onClick={this.handlePrinting} loading={loading}>
               保存并打印
             </Button>
             <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
@@ -210,9 +349,9 @@ class LogisticsConfiguration extends PureComponent {
                 <FormItem {...formAllItemLayout} label="手机号">
                   <span>{detail.userPhone}</span>
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="手机号2">
+                {/* <FormItem {...formAllItemLayout} label="手机号2">
                   <span>{detail.userPhone}</span>
-                </FormItem>
+                </FormItem> */}
                 <FormItem {...formAllItemLayout} label="收货地址">
                   <span>{detail.userAddress}</span>
                 </FormItem>
@@ -300,13 +439,13 @@ class LogisticsConfiguration extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={12}>
-                <div style={{height:351}}></div>
+                <div style={{height:287}}></div>
                 <div style={tipsStyle}>如您需要此订单进入自动化流程，请打开本开关</div>
                 <FormItem {...formAllItemLayout} label="设备提醒">
                   {getFieldDecorator('product', {
                     initialValue: 1,
                   })(
-                    <Radio.Group onChange={this.onChange}>
+                    <Radio.Group>
                       <Radio value={1}>开</Radio>
                       <Radio value={0}>关</Radio>
                     </Radio.Group>
@@ -316,7 +455,7 @@ class LogisticsConfiguration extends PureComponent {
                   {getFieldDecorator('smsConfirmation', {
                     initialValue: 1,
                   })(
-                    <Radio.Group onChange={this.onChange}>
+                    <Radio.Group>
                       <Radio value={1}>开</Radio>
                       <Radio value={0}>关</Radio>
                     </Radio.Group>
@@ -326,7 +465,7 @@ class LogisticsConfiguration extends PureComponent {
                   {getFieldDecorator('product', {
                     initialValue: detail.product,
                   })(
-                    <Radio.Group onChange={this.onChange} value={1}>
+                    <Radio.Group value={1}>
                       <Radio value={1}>开</Radio>
                       <Radio value={0}>关</Radio>
                     </Radio.Group>
@@ -336,7 +475,7 @@ class LogisticsConfiguration extends PureComponent {
                   {getFieldDecorator('shipmentRemind', {
                     initialValue:1,
                   })(
-                    <Radio.Group onChange={this.onChange}>
+                    <Radio.Group>
                       <Radio value={1}>开</Radio>
                       <Radio value={0}>关</Radio>
                     </Radio.Group>

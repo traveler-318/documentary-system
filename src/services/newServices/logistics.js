@@ -8,7 +8,10 @@ import request from '../../utils/request';
 
 // ============ 授权配置 ===============
 export async function getList(params) {
-  return request(`/api/logistics/authorization/list?${stringify(params)}`);
+  return request(`/api/logistics/authorization/list`, {
+    method: 'POST',
+    body: params,
+  });
 }
 
 export async function getAddList(params) {
@@ -41,7 +44,10 @@ export async function getUrl(params) {
 
 // ============ 打印模板 ===============
 export async function getSurfacesingleList(params) {
-  return request(`/api/logistics/surfacesingle/list?${stringify(params)}`);
+  return request(`/api/logistics/surfacesingle/list`, {
+    method: 'POST',
+    body: params,
+  });
 }
 export async function getSurfacesingleSave(params) {
   return request('/api/logistics/surfacesingle/save', {
@@ -63,7 +69,10 @@ export async function getSurfacesingleSubmit(params) {
 }
 // ============ 寄件配置 ===============
 export async function getDeliveryList(params) {
-  return request(`/api/logistics/delivery/list?${stringify(params)}`);
+  return request(`/api/logistics/delivery/list`,{
+    method: 'POST',
+    body: params,
+  });
 }
 export async function getDeliverySave(params) {
   return request('/api/logistics/delivery/save', {
@@ -88,7 +97,10 @@ export async function getDeliveryRemove(params) {
 
 // ============ 物品信息 ===============
 export async function getGoodsList(params) {
-  return request(`/api/logistics/iteminformation/list?${stringify(params)}`);
+  return request(`/api/logistics/iteminformation/list`, {
+    method: 'POST',
+    body: params,
+  });
 }
 export async function getGoodsSave(params) {
   return request('/api/logistics/iteminformation/save', {
@@ -111,7 +123,10 @@ export async function getGoodsRemove(params) {
 
 // ============ 附加信息 ===============
 export async function getAdditionalList(params) {
-  return request(`/api/logistics/additionalinformation/list?${stringify(params)}`);
+  return request(`/api/logistics/additionalinformation/list`, {
+    method: 'POST',
+    body: params,
+  });
 }
 export async function getAdditionalSave(params) {
   return request('/api/logistics/additionalinformation/save', {
