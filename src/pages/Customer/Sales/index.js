@@ -89,11 +89,11 @@ class AuthorityList extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
-    // this.setState({
-    //   params
-    // },()=>{
-    //   // this.getDataList();
-    // })
+    this.setState({
+      params
+    },()=>{
+      this.getDataList();
+    })
   };
 
   // ============ 查询表单 ===============

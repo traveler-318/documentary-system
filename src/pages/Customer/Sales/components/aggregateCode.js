@@ -151,13 +151,13 @@ class Logistics extends PureComponent {
           width={550}
           onCancel={this.handleCancelGroupAdd}
         >
-          <div>
+          {/*<div>
             <QRCode
               value={qrUrl}
               size={200}
               fgColor="#000000"
             />
-          </div>
+          </div>*/}
         </Modal>
       </div>
     );

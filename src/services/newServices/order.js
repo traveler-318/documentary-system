@@ -70,3 +70,11 @@ export async function logisticsSubscription(params) {
   });
 }
 // /order/order/logisticsSubscription
+
+// 首次打印
+export async function logisticsPrintRequest(params) {
+  return request('/api/order/order/printRequest', {
+    method: 'POST',
+    body: params,
+  });
+}

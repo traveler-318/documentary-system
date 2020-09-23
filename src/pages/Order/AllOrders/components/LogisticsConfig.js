@@ -5,8 +5,9 @@ import moment from 'moment';
 import router from 'umi/router';
 
 import { getCookie } from '../../../../utils/support';
-import {equipment} from '../../../../services/newServices/order'
 import {getAdditionalList,getList,getSurfacesingleList,getGoodsList,getDeliveryList } from '../../../../services/newServices/logistics';
+import {logisticsPrintRequest} from '../../../../services/newServices/order';
+
 import styles from '../index.less';
 import Authority from '../Logistics/authority'
 import FaceSheet from '../Logistics/faceSheet'
@@ -31,6 +32,10 @@ class LogisticsConfig extends PureComponent {
       detail:{},
       data:{
 
+      },
+      params:{
+        size:10,
+        current:1
       },
       checked:true,
       checked1:true,
@@ -124,7 +129,8 @@ class LogisticsConfig extends PureComponent {
 
   handleConfirm = e => {
     e.preventDefault();
-    const { authorizationItem,faceSheetItem,senderItem,goodsItem,additionalItem } = this.state;
+    const { authorizationItem,faceSheetItem,senderItem,goodsItem,additionalItem,checked,checked1 } = this.state;
+    const { globalParameters } = this.props;
 
     if(authorizationItem === ''){
       message.success('请选择基础授权配置');
@@ -146,11 +152,36 @@ class LogisticsConfig extends PureComponent {
       message.success('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
       return false;
     }
-    console.log(authorizationItem)
-    console.log(faceSheetItem)
-    console.log(senderItem)
-    console.log(goodsItem)
-    console.log(additionalItem)
+    const params =
+      {
+        recMans: [],
+        ...goodsItem,
+        ...faceSheetItem,
+        ...additionalItem,
+        sendMan:{
+          ...senderItem,
+        },
+        subscribe:checked,
+        shipmentRemind:checked1,
+        ...authorizationItem
+      };
+
+    for(let i=0; i<globalParameters.detailData.length; i++){
+      params.recMans.push(
+        {
+          "mobile": globalParameters.detailData[i].userPhone,
+          "name": globalParameters.detailData[i].userName,
+          "printAddr": globalParameters.detailData[i].userAddress,
+          "out_order_no": globalParameters.detailData[i].outOrderNo,
+          "id":globalParameters.detailData[i].id,
+          // 'salesman':globalParameters.detailData[i].salesman,
+        }
+      )
+    }
+    logisticsPrintRequest(params).then(res=>{
+      message.success(res.msg);
+      router.push('/order/allOrders');
+    })
   };
 
   handleConfirmList = e => {
