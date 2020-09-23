@@ -66,6 +66,8 @@ class LogisticsConfiguration extends PureComponent {
       deliveryItem:{},
       goodsItem:{},
       additionalItem:{},
+      currentIndex:0,
+      listID:[1,2,3,4,5,6]
     };
   }
 
@@ -74,6 +76,10 @@ class LogisticsConfiguration extends PureComponent {
     const { globalParameters } = this.props;
 
     console.log(globalParameters.listParam)
+
+    // this.setState({
+    //   listID:globalParameters.listParam
+    // })
 
     // 获取详情数据
     // this.setState({
@@ -90,6 +96,28 @@ class LogisticsConfiguration extends PureComponent {
 
   getDetailsData = () => {
 
+  }
+
+  // 切换数据
+  handleSwitch = (type) => {
+    console.log("123123")
+    let { currentIndex, listID } = this.state
+    // if(currentIndex === 0 || currentIndex === listID.length){
+    //   return false
+    // }
+    if(type === 0){
+      this.setState({
+        currentIndex:currentIndex - 1 
+      },()=>{
+        console.log(this.state.currentIndex)
+      })
+    }else{
+      this.setState({
+        currentIndex:currentIndex + 1
+      },()=>{
+        console.log(this.state.currentIndex)
+      })
+    }
   }
 
   // 获取打印的默认数据
@@ -295,8 +323,12 @@ class LogisticsConfiguration extends PureComponent {
       PRODUCTCLASSIFICATION,
       loading,
       detail,
-      productList
+      productList,
+      currentIndex,
+      listID
     } = this.state;
+
+    console.log(listID,"listID")
 
     const formItemLayout = {
       labelCol: {
@@ -332,6 +364,20 @@ class LogisticsConfiguration extends PureComponent {
           </Button>
           <Button icon="reload" onClick={this.handleSubmit} loading={loading}>
             重置
+          </Button>
+          <Button 
+            icon="right" 
+            onClick={ currentIndex === listID.length ? "" : ()=>this.handleSwitch(1)} 
+            style={{float:"right"}}
+            disabled={ currentIndex === listID.length ? true : false }  
+          >
+          </Button>
+          <Button 
+            icon="left" 
+            onClick={ currentIndex != 0 ? ()=>this.handleSwitch(0) : ""} 
+            disabled={ currentIndex != 0 ? false : true } 
+            style={{float:"right",marginRight:5}}
+          >
           </Button>
         </div>
         <Form style={{ marginTop: 8 }}>
@@ -370,7 +416,7 @@ class LogisticsConfiguration extends PureComponent {
                 />
                 <FormItem {...formAllItemLayout} label="对应产品">
                   {getFieldDecorator('productName', {
-                    initialValue: detail.productName.split("/"),
+                    initialValue: detail.productName ? detail.productName.split("/") : "",
                     rules: [
                       {
                         required: true,
