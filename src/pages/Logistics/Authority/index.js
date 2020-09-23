@@ -21,7 +21,7 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 
-import { getList, getRemove, getSubmit,getUrl } from '../../../services/newServices/logistics';
+import { getList, getRemove, getSuthorizationStatus,getUrl } from '../../../services/newServices/logistics';
 
 
 const FormItem = Form.Item;
@@ -139,7 +139,7 @@ class AuthorityList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        getSubmit(params).then(resp=>{
+        getSuthorizationStatus(params).then(resp=>{
           if (resp.success) {
             message.success(resp.msg);
             refresh()

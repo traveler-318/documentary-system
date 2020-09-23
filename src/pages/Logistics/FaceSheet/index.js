@@ -23,7 +23,7 @@ import Grid from '../../../components/Sword/Grid';
 import {
   getSurfacesingleList,
   getSurfacesingleRemove,
-  getSurfacesingleSubmit,
+  getSurfacesingleStatus,
 } from '../../../services/newServices/logistics';
 import { TEMPID ,EXPRESS100DATA } from './data.js';
 import styles from './index.less';
@@ -151,7 +151,7 @@ class FaceSheetList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        getSurfacesingleSubmit(params).then(resp=>{
+        getSurfacesingleStatus(params).then(resp=>{
           if (resp.success) {
             message.success(resp.msg);
             refresh()

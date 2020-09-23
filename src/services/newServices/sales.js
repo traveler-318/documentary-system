@@ -46,6 +46,13 @@ export async function getRemove(params) {
   });
 }
 
+// ============ 修改分组 ===============
+export async function getModifyGroup(params) {
+  return request('/api/agent/salesman/batchUpdateSalesmanGroup', {
+    method: 'POST',
+    body: params,
+  });
+}
 // ============ 分组 ===============
 export async function getSalesmangroup(params) {
   return request('/api/agent/salesmangroup/list', {

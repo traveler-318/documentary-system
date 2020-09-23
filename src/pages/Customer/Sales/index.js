@@ -22,9 +22,10 @@ import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 
 import { getList,getSalesmangroup,updateStatus } from '../../../services/newServices/sales';
-import Grouping from './components/grouping'
+import Grouping from './components/modifyGroup'
 import Recharge from './components/recharge'
 import AggregateCode from './components/aggregateCode'
+import ModifyGroup from './components/modifyGroup'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -42,6 +43,7 @@ class AuthorityList extends PureComponent {
       handleGroupingVisible:false,
       handleRechargeVisible:false,
       handleAggregateCodeVisible:false,
+      ModifyGroupVisible:false,
       selectDataArrL:[],
       params:{
         size:10,
@@ -172,9 +174,13 @@ class AuthorityList extends PureComponent {
   };
 
   onSelectRow = rows => {
-    console.log(rows,"rows")
     this.setState({
       selectDataArrL: rows,
+    });
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: rows,
     });
   };
 // =========分组弹窗========
@@ -192,14 +198,22 @@ class AuthorityList extends PureComponent {
       handleGroupingVisible:false
     })
   }
+  // =========修改分组弹窗========
 
-// =========充值弹窗========
-
-  handleRecharge = () => {
+  handleModifyGroup = () => {
     this.setState({
-      handleRechargeVisible:true,
+      ModifyGroupVisible:true
     })
   };
+
+  // =========关闭分组分组弹窗========
+
+  handleCancelModifyGroup = () => {
+    this.setState({
+      ModifyGroupVisible:false
+    })
+  }
+
   // =========关闭充值弹窗========
 
   handleCancelRecharge = () => {
@@ -211,10 +225,16 @@ class AuthorityList extends PureComponent {
   // =========聚合码弹窗========
 
   handleAggregateCode = (res) => {
+    console.log(res)
     if(res.salesmanStatus === 0){
       message.success('当前业务员关闭状态,不能生成聚合码');
       return false
     }
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: res,
+    });
     this.setState({
       handleAggregateCodeVisible:true
     })
@@ -238,11 +258,11 @@ class AuthorityList extends PureComponent {
   renderRightButton = (selectDataArrL) => {
     return(
       <div>
-/*        {
+        {
           selectDataArrL.length > 0 ?
-            (<Button type="primary" onClick={this.handleGrouping}>修改分组</Button>)
+            (<Button type="primary" onClick={this.handleModifyGroup}>修改分组</Button>)
           :""
-        }*/
+        }
 
         <Button type="primary" onClick={this.handleGrouping}>分组</Button>
 
@@ -262,7 +282,7 @@ class AuthorityList extends PureComponent {
 
     const {
       selectDataArrL,
-      data,loading,handleGroupingVisible,handleRechargeVisible,groupingList,handleAggregateCodeVisible} = this.state;
+      data,loading,handleGroupingVisible,handleRechargeVisible,groupingList,handleAggregateCodeVisible,ModifyGroupVisible} = this.state;
 
     const columns = [
       {
@@ -379,11 +399,17 @@ class AuthorityList extends PureComponent {
             handleCancelGrouping={this.handleCancelGrouping}
           />
         ):""}
+        {/* 修改分组 */}
+        {ModifyGroupVisible?(
+          <ModifyGroup
+            ModifyGroupVisible={ModifyGroupVisible}
+            handleCancelModifyGroup={this.handleCancelModifyGroup}
+          />
+        ):""}
         {/* 充值 */}
         {handleRechargeVisible?(
           <Recharge
             handleRechargeVisible={handleRechargeVisible}
-            // LogisticsConfigList={selectedRows}
             handleCancelRecharge={this.handleCancelRecharge}
           />
         ):""}
@@ -391,7 +417,6 @@ class AuthorityList extends PureComponent {
         {handleAggregateCodeVisible?(
           <AggregateCode
             handleAggregateCodeVisible={handleAggregateCodeVisible}
-            // LogisticsConfigList={selectedRows}
             handleCancelAggregateCode={this.handleCancelAggregateCode}
           />
         ):""}

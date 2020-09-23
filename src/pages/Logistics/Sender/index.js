@@ -23,7 +23,7 @@ import Grid from '../../../components/Sword/Grid';
 import {
   getDeliveryList,
   getDeliveryRemove,
-  getDeliverySubmit,
+  getDeliveryStatus,
 } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
@@ -132,7 +132,7 @@ class SenderList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        getDeliverySubmit(params).then(resp=>{
+        getDeliveryStatus(params).then(resp=>{
           if (resp.success) {
             message.success(resp.msg);
             refresh()

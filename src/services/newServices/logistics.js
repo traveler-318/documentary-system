@@ -40,6 +40,12 @@ export async function getUrl(params) {
     method: 'POST',
   });
 }
+export async function getSuthorizationStatus(params) {
+  return request('/api/logistics/authorization/updateItemInfoStatus', {
+    method: 'POST',
+    body: params,
+  });
+}
 
 
 // ============ 打印模板 ===============
@@ -67,6 +73,14 @@ export async function getSurfacesingleSubmit(params) {
     body: params,
   });
 }
+export async function getSurfacesingleStatus(params) {
+  return request('/api/logistics/surfacesingle/updateSurfaceSingleStatus', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+
 // ============ 寄件配置 ===============
 export async function getDeliveryList(params) {
   return request(`/api/logistics/delivery/list`,{
@@ -90,6 +104,12 @@ export async function getDeliveryRemove(params) {
   return request('/api/logistics/delivery/remove', {
     method: 'POST',
     body: func.toFormData(params),
+  });
+}
+export async function getDeliveryStatus(params) {
+  return request('/api/logistics/delivery/updateDeliveryStatus', {
+    method: 'POST',
+    body: params,
   });
 }
 
@@ -120,6 +140,12 @@ export async function getGoodsRemove(params) {
     body: func.toFormData(params),
   });
 }
+export async function getIteminformationStatus(params) {
+  return request('/api/logistics/iteminformation/updateItemInfoStatus', {
+    method: 'POST',
+    body: params,
+  });
+}
 
 // ============ 附加信息 ===============
 export async function getAdditionalList(params) {
@@ -146,5 +172,13 @@ export async function getAdditionalRemove(params) {
     body: func.toFormData(params),
   });
 }
+
+export async function getAdditionalinformationStatus(params) {
+  return request('/api/logistics/additionalinformation/updateAdditionInfoStatus', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 
 

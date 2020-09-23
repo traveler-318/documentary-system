@@ -4,27 +4,16 @@ import {
   Checkbox,
   Form,
   Input,
-  Card,
-  Row,
-  Col,
   Button,
-  TreeSelect,
-  Select,
-  DatePicker,
   message,
-  Cascader,
   Radio,
-  Timeline,
-  Table, Divider,
+  Table
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
-import { tenantMode } from '../../../../defaultSettings';
-import { updateLogistics, logisticsRemind } from '../../../../services/newServices/order'
 import { getSalesmangroup,getSalesmangroupSubmit,getDeleteGroup } from '../../../../services/newServices/sales';
-import { getAdditionalRemove } from '../../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -42,6 +31,10 @@ class Logistics extends PureComponent {
       // 添加分组弹窗
       groupAddVisible:false,
       data:[],
+      params:{
+        size:10,
+        current:1
+      },
     };
   }
 

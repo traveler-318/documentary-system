@@ -4,7 +4,7 @@ import {
   Form,
   Input,
   Button,
-  Tag,
+  Tag, message,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -12,9 +12,8 @@ import router from 'umi/router';
 
 import { tenantMode } from '../../../../defaultSettings';
 import { getCookie } from '../../../../utils/support';
-import { updateLogistics, logisticsRemind } from '../../../../services/newServices/order'
-import { getDeliverySave } from '../../../../services/newServices/logistics';
-import styles from '../index.less';
+
+import QRCode  from 'qrcode.react';
 
 
 const FormItem = Form.Item;
@@ -32,15 +31,7 @@ class Logistics extends PureComponent {
     this.state = {
       // 添加分组弹窗
       groupAddVisible:false,
-      data:[
-        {
-          key:1,
-          name:"测试2组"
-        },{
-          key:2,
-          name:"测试3组"
-        }
-      ],
+      data:{},
     };
   }
 
@@ -71,9 +62,33 @@ class Logistics extends PureComponent {
   // ======确认==========
 
   handleSubmit = e => {
-
-    const {  RechargeAmount } = this.state;
-    console.log(RechargeAmount)
+    const {  form } = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      console.log(values);
+      const res = /[^\d+(\d\d\d)*.\d+$]/g;
+      var reg1=/^[1-9]\d*$/; // 验证正整数
+      if(Number(values.payAmount) < 1  || !reg1.test(values.payAmount)){
+        message.success('请输入不小于1的正整数');
+        return false
+      }
+      if(Number(values.payAmount) <= 0  || res.test(values.payAmount) ){
+        message.success('请输入不小于等于0的数字');
+        return false
+      }else{
+        if(Number(values.payAmount) > 300){
+          message.success('支付金额不能超过上限300');
+          return false
+        }
+        const serverAddress = getCookie("serverAddress");
+        const { globalParameters } = this.props;
+        console.log(globalParameters.qrcodeSuffix)
+        console.log(globalParameters.userName)
+        console.log(values.payAmount)
+        this.setState({
+          qrUrl:'',
+        })
+      }
+    });
 
   };
 
@@ -99,7 +114,7 @@ class Logistics extends PureComponent {
       },
     };
 
-    const {groupAddVisible} = this.state;
+    const {groupAddVisible,qrUrl} = this.state;
 
 
     // confirmTag
@@ -131,16 +146,18 @@ class Logistics extends PureComponent {
           </FormItem>
         </Modal>
         <Modal
-          title="添加分组"
+          title="聚合码"
           visible={groupAddVisible}
           width={550}
           onCancel={this.handleCancelGroupAdd}
-          footer={[
-            <Button key="primary" onClick={this.handleSubmit}>
-              确认
-            </Button>,
-          ]}
         >
+          <div>
+            <QRCode
+              value={qrUrl}
+              size={200}
+              fgColor="#000000"
+            />
+          </div>
         </Modal>
       </div>
     );
