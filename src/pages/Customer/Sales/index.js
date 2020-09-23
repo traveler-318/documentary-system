@@ -45,6 +45,7 @@ class AuthorityList extends PureComponent {
       handleAggregateCodeVisible:false,
       ModifyGroupVisible:false,
       selectDataArrL:[],
+      selectedRowKeys:[],
       params:{
         size:10,
         current:1
@@ -174,8 +175,10 @@ class AuthorityList extends PureComponent {
   };
 
   onSelectRow = rows => {
+    console.log(rows,"rows")
     this.setState({
       selectDataArrL: rows,
+      selectedRowKeys: key
     });
     const { dispatch } = this.props;
     dispatch({
@@ -281,6 +284,7 @@ class AuthorityList extends PureComponent {
     } = this.props;
 
     const {
+      selectedRowKeys,
       selectDataArrL,
       data,loading,handleGroupingVisible,handleRechargeVisible,groupingList,handleAggregateCodeVisible,ModifyGroupVisible} = this.state;
 
@@ -390,6 +394,7 @@ class AuthorityList extends PureComponent {
           scroll={{ x: 1000 }}
           renderLeftButton={this.renderLeftButton}
           renderRightButton={()=>this.renderRightButton(selectDataArrL)}
+          selectedKey={selectedRowKeys}
         />
         {/* 分组 */}
         {handleGroupingVisible?(

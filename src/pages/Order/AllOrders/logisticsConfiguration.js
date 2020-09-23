@@ -73,16 +73,25 @@ class LogisticsConfiguration extends PureComponent {
   componentWillMount() {
     const { globalParameters } = this.props;
 
+    console.log(globalParameters.listParam)
+
     // 获取详情数据
-    this.setState({
-      detail:globalParameters.detailData
-    })
+    // this.setState({
+    //   detail:
+    // })
+
+    this.getDetailsData(globalParameters.listParam[globalParameters.listParam.length]);
 
     // 拼装对应产品
     this.assemblingData();
 
     
   }
+
+  getDetailsData = () => {
+
+  }
+
   // 获取打印的默认数据
   getDefaultData = (callBack) => {
     const promise1 = new Promise((resolve, reject) => {
@@ -206,17 +215,20 @@ class LogisticsConfiguration extends PureComponent {
   saveData = (values,callBack) => {
     console.log(values,"123")
     const { detail } = this.state;
-    values = {...values,...cityparam};
+    console.log(detail,"detail")
     values.id = detail.id;
     values.deptId = getCookie("dept_id");
     values.confirmTag = detail.confirmTag;
     values.outOrderNo = detail.outOrderNo;
     values.tenantId = detail.tenantId;
     values.userPhone = detail.userPhone;
+    values.productName = values.productName.join("/");
     logisticsSubscription(values).then(res=>{
       if(res.code === 200){
         message.success(res.msg);
-        if(callBack)callBack()
+        if(callBack){
+          callBack()
+        }
       }else{
         message.error(res.msg);
       }
@@ -229,7 +241,7 @@ class LogisticsConfiguration extends PureComponent {
     const { detail } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        saveData(values)
+        this.saveData(values)
       }
     });
   };
@@ -239,8 +251,9 @@ class LogisticsConfiguration extends PureComponent {
     const { detail } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        console.log("先保存数据")
         // 先保存数据
-        saveData(values,()=>{
+        this.saveData(values,()=>{
           // 获取物流配置
           this.getDefaultData(()=>{
             // 获取物流配置成功
@@ -306,7 +319,7 @@ class LogisticsConfiguration extends PureComponent {
     console.log(this.props.globalParameters)
 
     return (
-      <Panel title="物流配置" back="/order/AllOrders">
+      <Panel title="发货配置" back="/order/AllOrders">
         <div style={{background:"#fff",marginBottom:10,padding:"10px 10px 10px 20px"}}>
           <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
             保存
@@ -329,44 +342,46 @@ class LogisticsConfiguration extends PureComponent {
                   title="客户信息"
                 />
               </Col>
-              <Col span={12}>
-                <FormItem {...formAllItemLayout} label="姓名" style>
-                  <span>{detail.userName}</span>
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem {...formAllItemLayout} label="手机号">
-                  <span>{detail.userPhone}</span>
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem {...formAllItemLayout} label="收货地址">
-                  <span>{detail.userAddress}</span>
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem {...formAllItemLayout} label="备注">
-                  <span>{detail.orderNote}</span>
-                </FormItem>
-              </Col>
+              <div style={{display: 'flow-root', clear: 'both'}}>
+                <Col span={12}>
+                  <FormItem {...formAllItemLayout} label="姓名" style>
+                    <span>{detail.userName}</span>
+                  </FormItem>
+                </Col>
+                <Col span={12}>
+                  <FormItem {...formAllItemLayout} label="手机号">
+                    <span>{detail.userPhone}</span>
+                  </FormItem>
+                </Col>
+                <Col span={12}>
+                  <FormItem {...formAllItemLayout} label="收货地址">
+                    <span>{detail.userAddress}</span>
+                  </FormItem>
+                </Col>
+                <Col span={12}>
+                  <FormItem {...formAllItemLayout} label="备注">
+                    <span>{detail.orderNote}</span>
+                  </FormItem>
+                </Col>
+              </div>
               <Col span={12}>
                 <FormDetailsTitle
                   title="发货配置"
                 />
                 <FormItem {...formAllItemLayout} label="对应产品">
-                  {getFieldDecorator('product', {
-                    initialValue: detail.product,
+                  {getFieldDecorator('productName', {
+                    initialValue: detail.productName.split("/"),
                     rules: [
                       {
                         required: true,
-                        message: '请输入对应产品',
+                        message: '请选择对应产品',
                       },
                     ],
                   })(
                     // <Input placeholder="请输入对应产品" />
                     <Cascader 
                       options={productList}
-                      fieldNames={{ label: 'name', value: 'key'}}
+                      fieldNames={{ label: 'name', value: 'name'}}
                       onChange={(value, selectedOptions)=>{
                         console.log("123")
                       }}
@@ -399,7 +414,12 @@ class LogisticsConfiguration extends PureComponent {
                         message: '请输入设备序列号',
                       },
                     ],
-                  })(<Input placeholder="请输入设备序列号" />)}
+                  })(
+                    <Input 
+                      placeholder="请输入设备序列号"
+                      onPressEnter={this.handleSubmit}
+                    />
+                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="物流公司">
                   {getFieldDecorator('logisticsCompany', {

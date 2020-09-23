@@ -13,7 +13,15 @@ import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
-import {createData,getRegion} from '../../../services/newServices/order'
+import { createData, getRegion } from '../../../services/newServices/order'
+import { getList as getSalesmanLists } from '../../../services/newServices/sales';
+import { 
+  LOGISTICSCOMPANY,
+  paymentCompany,
+  productType,
+  productID,
+  amountOfMoney
+} from './data.js';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -29,19 +37,44 @@ class OrdersAdd extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      PRODUCTCLASSIFICATION:[
-        {
-          name:"测试销售",
-          id:"1"
-        }
-      ],
+      salesmanList:[],
       loading:false,
-      cityparam:{}
+      cityparam:{},
+      productList:{}
     };
   }
 
 
   componentWillMount() {
+    this.getSalesmanList();
+    this.assemblingData();
+  }
+
+  assemblingData = () => {
+    let TheSecondLevel = productType.map(item=>{
+      return {
+        ...item,
+        key:`${item.key}_2`,
+        children:productID
+      }
+    })
+    let TheFirstLevel = paymentCompany.map(item=>{
+      return {
+        ...item,
+        key:`${item.key}_1`,
+        children:TheSecondLevel
+      }
+    })
+    this.setState({productList:TheFirstLevel})
+  }
+
+  // 获取业务员数据
+  getSalesmanList = () => {
+    getSalesmanLists({size:100,current:1}).then(res=>{
+      this.setState({
+        salesmanList:res.data.records
+      })
+    })
   }
 
   handleSubmit = e => {
@@ -52,6 +85,7 @@ class OrdersAdd extends PureComponent {
       if (!err) {
         values.deptId = getCookie("dept_id");
         values = {...values,...cityparam};
+        values.productName = values.productName.join("/")
         // values.ouOrderNo = "12313243546546546"
         createData(values).then(res=>{
           if(res.code === 200){
@@ -87,8 +121,9 @@ class OrdersAdd extends PureComponent {
     } = this.props;
 
     const {
-      PRODUCTCLASSIFICATION,
-      loading
+      salesmanList,
+      loading,
+      productList
     } = this.state;
 
     const formItemLayout = {
@@ -258,14 +293,16 @@ class OrdersAdd extends PureComponent {
                   {getFieldDecorator('productName', {
                       initialValue: null,
                     })(
-                      <Input placeholder="请输入产品分类" />
-                  //   <Select placeholder={"请选择产品分类"}>
-                  //   {PRODUCTCLASSIFICATION.map(item=>{
-                  //     return (<Option value={item.id}>{item.name}</Option>)
-                  //   })}
-                  // </Select>
+                      <Cascader 
+                        options={productList}
+                        fieldNames={{ label: 'name', value: 'name'}}
+                        onChange={(value, selectedOptions)=>{
+                          console.log("123")
+                        }}
+                      ></Cascader>
                   )}
                 </FormItem>
+
                 <FormItem {...formAllItemLayout} label="产品型号">
                   {getFieldDecorator('productModel')(<Input placeholder="请输入产品型号" />)}
                 </FormItem>
@@ -282,8 +319,8 @@ class OrdersAdd extends PureComponent {
                       initialValue: null,
                     })(
                     <Select placeholder={"请选择归属销售"}>
-                    {PRODUCTCLASSIFICATION.map(item=>{
-                      return (<Option value={item.name}>{item.name}</Option>)
+                    {salesmanList.map(item=>{
+                      return (<Option value={item.userName}>{item.userName}</Option>)
                     })}
                   </Select>
                   )}

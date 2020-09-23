@@ -3,13 +3,16 @@ import { connect } from 'dva';
 import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
+
+
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
-import {setListData} from '../../../utils/publicMethod';
-import {ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY} from './data.js';
-import {getList,deleteData, updateRemind} from '../../../services/newServices/order';
+import { setListData } from '../../../utils/publicMethod';
+import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY } from './data.js';
+import { getList, deleteData, updateRemind } from '../../../services/newServices/order';
+import { getList as getSalesmanLists } from '../../../services/newServices/sales';
 import styles from './index.less';
 import Logistics from './components/Logistics'
 import Equipment from './components/Equipment'
@@ -31,17 +34,10 @@ class AllOrdersList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      // 反选数据
       selectedRowKeys:[],
-      salesmanList:[
-        {
-          name:"全部",
-          id:null
-        },
-        {
-          name:"测试销售",
-          id:"1"
-        }
-      ],
+      selectedRowKey:[],
+      salesmanList:[],
       data:{},
       loading:false,
       params:{
@@ -64,6 +60,7 @@ class AllOrdersList extends PureComponent {
   // ============ 初始化数据 ===============
   componentWillMount() {
     this.getDataList();
+    this.getSalesmanList();
   }
 
   getDataList = () => {
@@ -75,6 +72,15 @@ class AllOrdersList extends PureComponent {
       this.setState({
         data:setListData(res.data),
         loading:false,
+      })
+    })
+  }
+
+  // 获取业务员数据
+  getSalesmanList = () => {
+    getSalesmanLists({size:100,current:1}).then(res=>{
+      this.setState({
+        salesmanList:res.data.records
       })
     })
   }
@@ -97,6 +103,8 @@ class AllOrdersList extends PureComponent {
     if(payload.salesman && payload.salesman === "全部"){
       payload.salesman = null;
     }
+    // payload.confirmTag = this.state.tabKey;
+    delete payload.dateRange
     console.log(payload,"params")
     this.setState({
       params:payload
@@ -112,24 +120,13 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { selectedRowKeys, salesmanList } = this.state;
+    const { salesmanList } = this.state;
 
     return (
       <div className={"default_search_form"}>
         <Form.Item label="姓名">
             {getFieldDecorator('userName')(<Input placeholder="请输入姓名" />)}
           </Form.Item>
-          {/* <Form.Item label="订单状态">
-            {getFieldDecorator('confirmTag', {
-              initialValue: null,
-            })(
-              <Select placeholder={"请选择订单状态"} style={{ width: 120 }}>
-                {ORDERSTATUS.map(item=>{
-                  return (<Option value={item.key}>{item.name}</Option>)
-                })}
-              </Select>
-            )}
-          </Form.Item> */}
           <Form.Item label="订单类型">
             {getFieldDecorator('orderType', {
                 initialValue: null,
@@ -147,7 +144,7 @@ class AllOrdersList extends PureComponent {
                 })(
                 <Select placeholder={"请选择销售"} style={{ width: 120 }}>
                   {salesmanList.map(item=>{
-                    return (<Option value={item.name}>{item.name}</Option>)
+                    return (<Option value={item.userName}>{item.userName}</Option>)
                   })}
                 </Select>
               )}
@@ -181,7 +178,6 @@ class AllOrdersList extends PureComponent {
               </Button>
             </div>
           </div>
-
       </div>
     );
   };
@@ -281,6 +277,21 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  // 批量发货
+  bulkDelivery = () => {
+    const {selectedRows} = this.state;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+
+    let idList = [];
+    selectedRows.map(item=>{
+      idList.push(item.id)
+    })
+
+    this.handleShowLogistics(idList)
+  }
+
   // 左侧操作按钮
   renderLeftButton = () => (
     <>
@@ -288,7 +299,10 @@ class AllOrdersList extends PureComponent {
         router.push(`/order/AllOrders/add`);
       }}>添加</Button>
       <Button icon="menu-unfold">批量审核</Button>
-      <Button icon="appstore">批量发货</Button>
+      <Button 
+        icon="appstore"
+        onClick={this.bulkDelivery}
+      >批量发货</Button>
       <Button
         icon="bell"
         onClick={this.batchReminders}
@@ -425,10 +439,11 @@ class AllOrdersList extends PureComponent {
     })
   }
 
-  onSelectRow = rows => {
-    console.log(rows,"rows")
+  onSelectRow = (rows,keys) => {
+    console.log(rows,keys,"rows")
     this.setState({
       selectedRows: rows,
+      selectedRowKeys: keys,
     });
   };
 
@@ -451,11 +466,17 @@ class AllOrdersList extends PureComponent {
   }
 
   // 打开物流弹窗
-  handleShowLogistics = (row) => {
+  handleShowLogistics = (data) => {
     const { dispatch } = this.props;
+
+    let listId = [];
+    data.map(item=>{
+      listId.push(item.id)
+    })
+
     dispatch({
-      type: `globalParameters/setDetailData`,
-      payload: row,
+      type: `globalParameters/setListId`,
+      payload: listId,
     });
     router.push('/order/allOrders/logisticsConfiguration');
 
@@ -496,6 +517,24 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  // 反选数据
+  onChangeCheckbox = () => {
+    const { selectedRowKeys, data } = this.state;
+
+    let rowKeys = [];
+    let row = []
+    data.list.map(item=>{
+      if(selectedRowKeys.indexOf(item.id) === -1){
+        rowKeys.push(item.id)
+        row.push(item)
+      }
+    })
+    this.setState({
+      selectedRowKeys:rowKeys,
+      selectedRows:row
+    })
+  }
+
   render() {
     const code = 'allOrdersList';
 
@@ -503,17 +542,22 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
-    const {data, loading, tabKey, logisticsVisible, equipmeentVisible,LogisticsConfigVisible,selectedRows, detailsVisible} = this.state;
+    const { 
+      data, 
+      loading, 
+      tabKey, 
+      logisticsVisible, 
+      equipmeentVisible,
+      LogisticsConfigVisible,
+      selectedRows, 
+      detailsVisible,
+      selectedRowKeys
+    } = this.state;
 
-    // let status = [
-    //   {value:"状态1",key :1},
-    //   {value:"状态2",key :2},
-    //   {value:"状态3",key :3}
-    // ]
+    console.log(selectedRowKeys,"selectedRowKeys")
 
     const TabPanes = () => (
       <div className={styles.tabs}>
-        {/* <div className={styles.title}></div> */}
         {ORDERSTATUS.map(item=>{
           return (
             <div
@@ -522,7 +566,6 @@ class AllOrdersList extends PureComponent {
             >{item.name}</div>
           )
         })}
-
       </div>
     );
 
@@ -567,16 +610,6 @@ class AllOrdersList extends PureComponent {
           )
         }
       },
-      // {
-      //   title: '订单状态',
-      //   dataIndex: 'confirmTag',
-      //   width: 100,
-      //   render: (key)=>{
-      //     return (
-      //       <div>{this.getText(key,ORDERSTATUS)} </div>
-      //     )
-      //   }
-      // },
       {
         title: '订单类型',
         dataIndex: 'orderType',
@@ -639,7 +672,7 @@ class AllOrdersList extends PureComponent {
                     <Divider type="vertical" />
                     <a onClick={()=>this.handleShowEquipment(row)}>设备</a>
                     <Divider type="vertical" />
-                    <a onClick={()=>this.handleShowLogistics(row)}>物流</a>
+                    <a onClick={()=>this.handleShowLogistics([row])}>发货</a>
                     <Divider type="vertical" />
                     <a >短信</a>
                     <Divider type="vertical" />
@@ -668,6 +701,8 @@ class AllOrdersList extends PureComponent {
           renderLeftButton={this.renderLeftButton}
           renderRightButton={this.renderRightButton}
           counterElection={true}
+          onChangeCheckbox={this.onChangeCheckbox}
+          selectedKey={selectedRowKeys}
           // multipleChoice={true}
         />
         {/* 详情 */}

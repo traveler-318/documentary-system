@@ -59,7 +59,7 @@ const checkServerCode = response => {
       message: response.msg || codeMessage[response.code],
     });
     removeAll();
-    // router.push('/user/login');
+    router.push('/user/login');
   } else if (response.code === 404) {
     notification.error({
       message: response.msg || codeMessage[response.code],

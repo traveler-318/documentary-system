@@ -88,14 +88,14 @@ export default class Grid extends PureComponent {
     }
   };
 
-  handleSelectRows = rows => {
+  handleSelectRows = (rows,keys) => {
     this.setState({
       selectedRows: rows,
     });
 
     const { onSelectRow } = this.props;
     if (onSelectRow) {
-      onSelectRow(rows);
+      onSelectRow(rows,keys);
     }
   };
 
@@ -260,11 +260,13 @@ export default class Grid extends PureComponent {
           <StandardTable
             rowKey={rowKey || 'id'}
             selectedRows={selectedRows}
+            selectedRowKeys={this.props.selectedKey}
             loading={loading}
             columns={columns}
             data={data}
             onSelectRow={this.handleSelectRows}
             onChange={this.handleStandardTableChange}
+            onChangeCheckbox={this.props.onChangeCheckbox}
             scroll={scroll}
             tblProps={tblProps}
             counterElection={counterElection}

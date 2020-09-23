@@ -53,7 +53,7 @@ class StandardTable extends PureComponent {
     }));
     const { onSelectRow } = this.props;
     if (onSelectRow) {
-      onSelectRow(selectedRows);
+      onSelectRow(selectedRows,selectedRowKeys);
     }
 
     this.setState({ selectedRowKeys, needTotalList });
@@ -70,8 +70,11 @@ class StandardTable extends PureComponent {
     this.handleRowSelectChange([], []);
   };
 
-  onChangeCheckbox = () => {
-
+  onCounterElection = (e) => {
+    const { onChangeCheckbox } = this.props;
+    if (onChangeCheckbox) {
+      onChangeCheckbox(e);
+    }
   }
 
   render() {
@@ -83,11 +86,12 @@ class StandardTable extends PureComponent {
           showSizeChanger: true,
           showQuickJumper: true,
           ...pagination,
+          pageSizeOptions:[10,15,20]
         }
       : false;
 
     const rowSelection = {
-      selectedRowKeys,
+      selectedRowKeys:this.props.selectedRowKeys,
       onChange: this.handleRowSelectChange,
       getCheckboxProps: record => ({
         disabled: record.disabled,
@@ -133,7 +137,7 @@ class StandardTable extends PureComponent {
         />
         {counterElection?(
           <div className={styles.counterElection}>
-            <Checkbox onChange={this.onChangeCheckbox}>反选</Checkbox>
+            <Checkbox onChange={this.onCounterElection}>反选</Checkbox>
           </div>
         ):""}
       </div>
