@@ -14,6 +14,7 @@ import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
 import {updateData,getRegion} from '../../../services/newServices/order'
 import {ORDERSTATUS} from './data.js';
+import FormDetailsTitle from '../../../components/FormDetailsTitle';
 
 
 const FormItem = Form.Item;
@@ -85,6 +86,10 @@ class OrdersAdd extends PureComponent {
     })
   };
 
+  TextAreaChange = (e) => {
+    console.log(e.target.value)
+  };
+
   clickEdit = () => {
     this.setState({
       edit:false
@@ -146,7 +151,7 @@ class OrdersAdd extends PureComponent {
         <Form style={{ marginTop: 8 }}>
           <Card bordered={false} className={styles.editContent}>
             <Row gutter={24} style={{ margin: 0 }}>
-              <Col span={12} style={{ padding: 0 }}>
+              <Col span={10} style={{ padding: 0 }}>
                 <div className={styles.titleBtn}>
                   <Button type="primary" onClick={this.Preservation}>保存</Button>
                   <Button  icon="edit" onClick={this.clickEdit}>编辑</Button>
@@ -155,7 +160,7 @@ class OrdersAdd extends PureComponent {
                   <Button  icon="folder">归档</Button>
                 </div>
                 <div className={styles.editList} style={{ padding: '20px' }}>
-                  <FormTitle title="客户信息" style={{ margin:'0'}} />
+                  <FormDetailsTitle title="客户信息" style={{ margin:'0'}} />
                   <FormItem {...formAllItemLayout} label="客户姓名">
                     {getFieldDecorator('userName', {
                       rules: [
@@ -243,7 +248,7 @@ class OrdersAdd extends PureComponent {
                       initialValue: detail.salesman,
                     })(<Input disabled={edit} placeholder="" />)}
                   </FormItem>
-                  <FormItem {...formAllItemLayout} label="客户归属">
+                  <FormItem {...formAllItemLayout} label="客户归属" className={styles.salesman}>
                     {getFieldDecorator('salesman', {
                       rules: [
                         {
@@ -253,9 +258,7 @@ class OrdersAdd extends PureComponent {
                       initialValue: detail.salesman,
                     })(<Input disabled={edit} placeholder="" />)}
                   </FormItem>
-                  <FormTitle
-                    title="其他信息"
-                  />
+                  <FormDetailsTitle title="其他信息" />
                   <FormItem {...formAllItemLayout} label="微信号">
                     {getFieldDecorator('userAddress', {
                       rules: [
@@ -298,58 +301,82 @@ class OrdersAdd extends PureComponent {
                   </FormItem>
                 </div>
               </Col>
-              <Col span={12} style={{ padding: 0 }}>
+              <Col span={14} style={{ padding: 0 }}>
                 <div className={styles.titleBtn}>
                   <Button icon="plus">工单</Button>
                   <Button  icon="plus">产品</Button>
                   <Button  icon="plus">地址</Button>
                 </div>
-                <Tabs defaultActiveKey="1" onChange={this.callback}>
-                  <TabPane tab="概况信息" key="1">
-                    概况信息
-                  </TabPane>
-                  <TabPane tab={`订单记录(${data.order})`} key="2">
-                    订单记录
-                  </TabPane>
-                  <TabPane tab="跟进记录()" key="3">
-                    <Timeline>
-                      <Timeline.Item>2020-09-19</Timeline.Item>
-                      <Timeline.Item>
-                        <div className={styles.content}>
-                          <p>
-                            <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/>
-                            <span className={styles.name}>赵小刚 跟进</span>
-                            <span className={styles.time}>2020-09-19</span>
-                          </p>
-                          <p>电话无人接听</p>
-                        </div>
-                      </Timeline.Item>
-                      <Timeline.Item>
-                        <div className={styles.content}>
-                          <p>
-                            <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/>
-                            <span className={styles.name}>赵小刚 跟进</span>
-                            <span className={styles.time}>2020-09-19</span>
-                          </p>
-                          <p>电话无人接听</p>
-                        </div>
-                      </Timeline.Item>
-                    </Timeline>
-                  </TabPane>
-                  <TabPane tab={`服务工单(${data.followUp})`} key="4">
-                    服务工单()
-                  </TabPane>
-                  <TabPane tab={`产品记录(${data.service0rder})`} key="5">
-                    产品记录()
-                  </TabPane>
-                  <TabPane tab={`归属记录(${data.product})`} key="6">
-                    归属记录
-                  </TabPane>
-                  <TabPane tab={`操作日志(${data.ownership})`} key="7">
-                    操作日志()
-                  </TabPane>
-                </Tabs>
-
+                <div className={styles.tabContent}>
+                  <Tabs defaultActiveKey="1" onChange={this.callback}>
+                    <TabPane tab="概况" key="1">
+                      <Timeline>
+                        <Timeline.Item>2020-09-19</Timeline.Item>
+                        <Timeline.Item>
+                          <div className={styles.content}>
+                            <p>
+                              <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                              <span className={styles.name}>赵小刚 跟进</span>
+                              <span className={styles.time}>2020-09-19</span>
+                            </p>
+                            <p>电话无人接听</p>
+                          </div>
+                        </Timeline.Item>
+                        <Timeline.Item>
+                          <div className={styles.content}>
+                            <p>
+                              <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                              <span className={styles.name}>赵小刚 跟进</span>
+                              <span className={styles.time}>2020-09-19</span>
+                            </p>
+                            <p>电话无人接听</p>
+                          </div>
+                        </Timeline.Item>
+                      </Timeline>
+                      <TextArea rows={4} onChange={this.TextAreaChange} className={styles.tabText}/>
+                    </TabPane>
+                    <TabPane tab={`订单(${data.order})`} key="2">
+                      订单记录
+                    </TabPane>
+                    <TabPane tab="跟进()" key="3">
+                      <Timeline>
+                        <Timeline.Item>2020-09-19</Timeline.Item>
+                        <Timeline.Item>
+                          <div className={styles.content}>
+                            <p>
+                              <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/>
+                              <span className={styles.name}>赵小刚 跟进</span>
+                              <span className={styles.time}>2020-09-19</span>
+                            </p>
+                            <p>电话无人接听</p>
+                          </div>
+                        </Timeline.Item>
+                        <Timeline.Item>
+                          <div className={styles.content}>
+                            <p>
+                              <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/>
+                              <span className={styles.name}>赵小刚 跟进</span>
+                              <span className={styles.time}>2020-09-19</span>
+                            </p>
+                            <p>电话无人接听</p>
+                          </div>
+                        </Timeline.Item>
+                      </Timeline>
+                    </TabPane>
+                    <TabPane tab={`服务(${data.followUp})`} key="4">
+                      服务工单()
+                    </TabPane>
+                    <TabPane tab={`产品(${data.service0rder})`} key="5">
+                      产品记录()
+                    </TabPane>
+                    <TabPane tab={`归属(${data.product})`} key="6">
+                      归属记录
+                    </TabPane>
+                    <TabPane tab={`操作(${data.ownership})`} key="7">
+                      操作日志()
+                    </TabPane>
+                  </Tabs>
+                </div>
               </Col>
             </Row>
 
