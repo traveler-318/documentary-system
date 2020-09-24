@@ -110,30 +110,35 @@ class FaceSheetList extends PureComponent {
   };
 
   // ============ 删除 ===============
-  handleClick = ( id) => {
-    console.log(id)
+  handleClick = ( res) => {
+    console.log(res)
     const params={
-      ids: id
+      ids: res.id
     }
     const refresh = this.getDataList;
-    Modal.confirm({
-      title: '删除确认',
-      content: '确定删除该条记录?',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      onOk() {
-        getSurfacesingleRemove(params).then(resp => {
-          if (resp.success) {
-            message.success(resp.msg);
-            refresh()
-          } else {
-            message.error(resp.msg || '删除失败');
-          }
-        });
-      },
-      onCancel() {},
-    });
+    if(res.status === 1){
+      message.error("当前为唯一默认选项 不允许删除");
+    }else {
+      Modal.confirm({
+        title: '删除确认',
+        content: '确定删除该条记录?',
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk() {
+          getSurfacesingleRemove(params).then(resp => {
+            if (resp.success) {
+              message.success(resp.msg);
+              refresh()
+            } else {
+              message.error(resp.msg || '删除失败');
+            }
+          });
+        },
+        onCancel() {},
+      });
+    }
+
   };
 
   // ============ 修改默认开关 =========
@@ -256,7 +261,7 @@ class FaceSheetList extends PureComponent {
               <Divider type="vertical" />
               <a onClick={()=>this.handleEdit(row)}>编辑</a>
               <Divider type="vertical" />
-              <a onClick={() => this.handleClick(res.id)}>删除</a>
+              <a onClick={() => this.handleClick(res)}>删除</a>
             </div>
           )
         },

@@ -88,31 +88,37 @@ class AuthorityList extends PureComponent {
 
   // ============ 删除 ===============
 
-  handleClick = ( id) => {
+  handleClick = ( res) => {
     const params={
-      ids: id
+      ids: res.id
     }
+    console.log(res)
     const refresh = this.getDataList;
-    Modal.confirm({
-      title: '删除确认',
-      content: '确定删除该条记录?',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      onOk() {
-        getRemove(params).then(resp => {
-          if (resp.success) {
-            message.success(resp.msg);
-            refresh()
-          } else {
-            message.error(resp.msg || '删除失败');
-          }
-        });
-      },
-      onCancel() {
+    if(res.status === 1){
+      message.error("当前为唯一默认选项 不允许删除");
+    }else {
+      Modal.confirm({
+        title: '删除确认',
+        content: '确定删除该条记录?',
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk() {
+          getRemove(params).then(resp => {
+            if (resp.success) {
+              message.success(resp.msg);
+              refresh()
+            } else {
+              message.error(resp.msg || '删除失败');
+            }
+          });
+        },
+        onCancel() {
 
-      },
-    });
+        },
+      });
+    }
+
   };
 
   // ============ 授权 ===============
@@ -219,25 +225,20 @@ class AuthorityList extends PureComponent {
         fixed: 'right',
         width: 300,
         render: (res,row) => {
-
-          let html
-          if(res.net ==='cainiao'){
-            html=(<div>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleEdit(row)}>编辑</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.activeAuthorization(row.id)}>主动授权</a>
-              <Divider type="vertical" />
-              <a onClick={() => this.handleClick(res.id)}>删除</a></div>)
-          }else {
-            html=(<div>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleEdit(row)}>编辑</a>
-              <Divider type="vertical" />
-              <a onClick={() => this.handleClick(res.id)}>删除</a></div>)
-          }
           return(
-           html
+            <div>
+              <Divider type="vertical" />
+              <a onClick={()=>this.handleEdit(row)}>编辑</a>
+              <Divider type="vertical" />
+              {
+                res.net ==='cainiao' ?
+                  (<a onClick={()=>this.activeAuthorization(row.id)}>主动授权</a>)
+                  :""
+              }
+              <Divider type="vertical" />
+              <a onClick={() => this.handleClick(res)}>删除</a>
+            </div>
+
           )
         },
       },
