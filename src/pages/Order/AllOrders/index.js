@@ -474,6 +474,8 @@ class AllOrdersList extends PureComponent {
       listId.push(item.id)
     })
 
+    console.log(listId,"listId")
+
     dispatch({
       type: `globalParameters/setListId`,
       payload: listId,
@@ -584,21 +586,23 @@ class AllOrdersList extends PureComponent {
         title: '收货地址',
         dataIndex: 'userAddress',
         width: 200,
+        ellipsis: true,
       },
       {
         title: '产品分类',
+        dataIndex: 'productType',
+        width: 130,
+      },
+      {
+        title: '产品型号',
         dataIndex: 'productName',
         width: 100,
       },
       {
-        title: '产品型号',
-        dataIndex: 'productModel',
-        width: 100,
-      },
-      {
-        title: '序列号',
-        dataIndex: 'deviceSerialNumber',
-        width: 100,
+        title: 'SN码',
+        dataIndex: 'productCoding',
+        width: 200,
+        ellipsis: true,
       },
       {
         title: '订单状态',
@@ -638,12 +642,12 @@ class AllOrdersList extends PureComponent {
       {
         title: '快递公司',
         dataIndex: 'logisticsCompany',
-        width: 100,
+        width: 130,
       },
       {
         title: '快递单号',
         dataIndex: 'logisticsNumber',
-        width: 100,
+        width: 130,
       },
       {
         title: '下单时间',
@@ -677,8 +681,6 @@ class AllOrdersList extends PureComponent {
                     <a >短信</a>
                     <Divider type="vertical" />
                     <a >提醒</a>
-                    <Divider type="vertical" />
-                    <a >下单</a>
                 </div>
             )
         },

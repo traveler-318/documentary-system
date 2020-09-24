@@ -13,7 +13,12 @@ import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
-import {updateData,getRegion,logisticsSubscription} from '../../../services/newServices/order'
+import {
+  updateData,
+  getRegion,
+  logisticsSubscription,
+  getDetails
+} from '../../../services/newServices/order'
 import { 
   LOGISTICSCOMPANY,
   paymentCompany,
@@ -67,7 +72,7 @@ class LogisticsConfiguration extends PureComponent {
       goodsItem:{},
       additionalItem:{},
       currentIndex:0,
-      listID:[1,2,3,4,5,6]
+      listID:[]
     };
   }
 
@@ -75,27 +80,27 @@ class LogisticsConfiguration extends PureComponent {
   componentWillMount() {
     const { globalParameters } = this.props;
 
-    console.log(globalParameters.listParam)
+    console.log(globalParameters.listParam,"data")
 
-    // this.setState({
-    //   listID:globalParameters.listParam
-    // })
+    this.setState({
+      listID:globalParameters.listParam
+    })
 
+    
     // 获取详情数据
-    // this.setState({
-    //   detail:
-    // })
-
-    this.getDetailsData(globalParameters.listParam[globalParameters.listParam.length]);
+    this.getDetailsData(globalParameters.listParam[globalParameters.listParam.length-1]);
 
     // 拼装对应产品
     this.assemblingData();
-
     
   }
 
-  getDetailsData = () => {
-
+  getDetailsData = (id) => {
+    getDetails({id}).then(res=>{
+      this.setState({
+        detail:res.data
+      })
+    })
   }
 
   // 切换数据
@@ -250,7 +255,10 @@ class LogisticsConfiguration extends PureComponent {
     values.outOrderNo = detail.outOrderNo;
     values.tenantId = detail.tenantId;
     values.userPhone = detail.userPhone;
-    values.productName = values.productName.join("/");
+    values.payAmount = values.productType[2].split("-")[1];
+    values.productName = values.productType[2];
+    values.productType = `${values.productType[0]}/${values.productType[1]}`;
+    // values.productName = values.productName.join("/");
     logisticsSubscription(values).then(res=>{
       if(res.code === 200){
         message.success(res.msg);
@@ -367,9 +375,9 @@ class LogisticsConfiguration extends PureComponent {
           </Button>
           <Button 
             icon="right" 
-            onClick={ currentIndex === listID.length ? "" : ()=>this.handleSwitch(1)} 
+            onClick={ currentIndex === listID.length-1 ? "" : ()=>this.handleSwitch(1)} 
             style={{float:"right"}}
-            disabled={ currentIndex === listID.length ? true : false }  
+            disabled={ currentIndex === listID.length-1 ? true : false }  
           >
           </Button>
           <Button 
@@ -415,8 +423,8 @@ class LogisticsConfiguration extends PureComponent {
                   title="发货配置"
                 />
                 <FormItem {...formAllItemLayout} label="对应产品">
-                  {getFieldDecorator('productName', {
-                    initialValue: detail.productName ? detail.productName.split("/") : "",
+                  {getFieldDecorator('productType', {
+                    initialValue: detail.productType ? [...detail.productType.split("/"),detail.productName] : "",
                     rules: [
                       {
                         required: true,
@@ -451,18 +459,18 @@ class LogisticsConfiguration extends PureComponent {
                   </Select>
                   )}
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="序列号">
-                  {getFieldDecorator('deviceSerialNumber', {
-                    initialValue: detail.deviceSerialNumber,
+                <FormItem {...formAllItemLayout} label="SN码">
+                  {getFieldDecorator('productCoding', {
+                    initialValue: detail.productCoding,
                     rules: [
                       {
                         required: true,
-                        message: '请输入设备序列号',
+                        message: '请输入SN码',
                       },
                     ],
                   })(
                     <Input 
-                      placeholder="请输入设备序列号"
+                      placeholder="请输入SN码"
                       onPressEnter={this.handleSubmit}
                     />
                    )}

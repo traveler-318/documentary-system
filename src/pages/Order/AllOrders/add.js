@@ -40,7 +40,8 @@ class OrdersAdd extends PureComponent {
       salesmanList:[],
       loading:false,
       cityparam:{},
-      productList:{}
+      productList:{},
+      selectedOptions:[]
     };
   }
 
@@ -80,12 +81,20 @@ class OrdersAdd extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { cityparam } = this.state;
+    const { cityparam, selectedOptions } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values.deptId = getCookie("dept_id");
         values = {...values,...cityparam};
-        values.productName = values.productName.join("/")
+        if(values.productType && values.productType != ""){
+          console.log(values.productType[2])
+          console.log(values.productType[2].split("-"))
+          values.payAmount = values.productType[2].split("-")[1];
+          values.productName = values.productType[2];
+          values.productType = `${values.productType[0]}/${values.productType[1]}`;
+        }
+        values.userAddress = `${selectedOptions}${values.userAddress}`;
+        
         // values.ouOrderNo = "12313243546546546"
         createData(values).then(res=>{
           if(res.code === 200){
@@ -106,12 +115,19 @@ class OrdersAdd extends PureComponent {
   }
 
   onChange = (value, selectedOptions) => {
+    
+    let text = ""
+    for(let i=0; i<selectedOptions.length; i++){
+      text += selectedOptions[i].label
+    }
+
     this.setState({
       cityparam:{
         province:value[0],
         city:value[1],
         area:value[2],
-      }
+      },
+      selectedOptions:text
     })
   };
 
@@ -290,8 +306,14 @@ class OrdersAdd extends PureComponent {
 
 
                 <FormItem {...formAllItemLayout} label="产品分类">
-                  {getFieldDecorator('productName', {
+                  {getFieldDecorator('productType', {
                       initialValue: null,
+                      // rules: [
+                      //   {
+                      //     required: true,
+                      //     message: '请选择产品分类',
+                      //   },
+                      // ],
                     })(
                       <Cascader 
                         options={productList}
@@ -303,11 +325,11 @@ class OrdersAdd extends PureComponent {
                   )}
                 </FormItem>
 
-                <FormItem {...formAllItemLayout} label="产品型号">
-                  {getFieldDecorator('productModel')(<Input placeholder="请输入产品型号" />)}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="序列号SN">
-                  {getFieldDecorator('deviceSerialNumber')(<Input placeholder="请输入序列号SN" />)}
+                {/* <FormItem {...formAllItemLayout} label="产品型号">
+                  {getFieldDecorator('productName')(<Input placeholder="请输入产品型号" />)}
+                </FormItem> */}
+                <FormItem {...formAllItemLayout} label="SN码">
+                  {getFieldDecorator('productCoding')(<Input placeholder="请输入SN码" />)}
                 </FormItem>
 
                 <FormTitle

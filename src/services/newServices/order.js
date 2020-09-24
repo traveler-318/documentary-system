@@ -11,10 +11,7 @@ export async function getList(params) {
 }
 
 export async function getDetails(params) {
-  return request(`/api/order/order/list`, {
-    method: 'POST',
-    body: params,
-  });
+  return request(`/api/order/order/detail?${stringify(params)}`);
 }
 
 export async function createData(params) {

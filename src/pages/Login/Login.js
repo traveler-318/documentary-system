@@ -108,9 +108,9 @@ class LoginPage extends Component {
               this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
             {tenantVisible ? (
               <TenantId
-                defaultValue={`${tenantId}`}
+                defaultValue={`988608`} //${tenantId}
                 name="tenantId"
-                placeholder={`${formatMessage({ id: 'app.login.tenantId' })}: 000000`}
+                placeholder={`${formatMessage({ id: 'app.login.tenantId' })}: 988608`}
                 rules={[
                   {
                     required: true,
