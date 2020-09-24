@@ -289,7 +289,7 @@ class OrdersAdd extends PureComponent {
                 </div>
                 <div className={styles.tabContent}>
                   <Tabs defaultActiveKey="1" onChange={this.callback}>
-                    <TabPane tab="概况信息" key="1">
+                    <TabPane tab="概况" key="1">
                       <div className={styles.timelineContent}>
                         <Timeline>
                           <Timeline.Item>
@@ -326,10 +326,10 @@ class OrdersAdd extends PureComponent {
                         </div>
                       </div>
                     </TabPane>
-                    <TabPane tab={`订单记录(${data.order})`} key="2">
+                    <TabPane tab={`订单(${data.order})`} key="2">
                       订单记录
                     </TabPane>
-                    <TabPane tab={`跟进记录(${data.followUp})`} key="3">
+                    <TabPane tab={`跟进(${data.followUp})`} key="3">
                       <div className={styles.timelineContent}>
                         <Timeline>
                           <Timeline.Item>
@@ -366,16 +366,16 @@ class OrdersAdd extends PureComponent {
                         </div>
                       </div>
                     </TabPane>
-                    <TabPane tab={`服务工单(${data.service0rder})`} key="4">
+                    <TabPane tab={`服务(${data.service0rder})`} key="4">
                       服务工单()
                     </TabPane>
-                    <TabPane tab={`产品记录(${data.product})`} key="5">
+                    <TabPane tab={`产品(${data.product})`} key="5">
                       产品记录()
                     </TabPane>
-                    <TabPane tab={`归属记录(${data.ownership})`} key="6">
+                    <TabPane tab={`归属(${data.ownership})`} key="6">
                       归属记录
                     </TabPane>
-                    <TabPane tab="操作日志" key="7">
+                    <TabPane tab="操作" key="7">
                       操作日志()
                     </TabPane>
                   </Tabs>

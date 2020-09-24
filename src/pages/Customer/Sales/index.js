@@ -22,7 +22,7 @@ import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 
 import { getList,getSalesmangroup,updateStatus } from '../../../services/newServices/sales';
-import Grouping from './components/modifyGroup'
+import Grouping from './components/Mgrouping'
 import Recharge from './components/recharge'
 import AggregateCode from './components/aggregateCode'
 import ModifyGroup from './components/modifyGroup'
@@ -174,7 +174,7 @@ class AuthorityList extends PureComponent {
     router.push('/customer/sales/edit');
   };
 
-  onSelectRow = rows => {
+  onSelectRow = (rows,key) => {
     console.log(rows,"rows")
     this.setState({
       selectDataArrL: rows,
@@ -189,10 +189,10 @@ class AuthorityList extends PureComponent {
 // =========分组弹窗========
 
   handleGrouping = () => {
+    console.log("111")
     this.setState({
       handleGroupingVisible:true
     })
-
   };
   // =========关闭分组弹窗========
 
@@ -400,7 +400,6 @@ class AuthorityList extends PureComponent {
         {handleGroupingVisible?(
           <Grouping
             handleGroupingVisible={handleGroupingVisible}
-            // LogisticsConfigList={selectedRows}
             handleCancelGrouping={this.handleCancelGrouping}
           />
         ):""}

@@ -47,6 +47,7 @@ class Logistics extends PureComponent {
 
   componentWillMount() {
     const { globalParameters } = this.props;
+    console.log("!!!!!!")
     this.setState({
       selectDataArrL:globalParameters.detailData,
     })
