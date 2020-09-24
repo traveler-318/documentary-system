@@ -19,10 +19,11 @@
         .ant-form-item-label{
           text-align: center;
           background: #f5f5f5;
-          width: 90px;
+          width: 110px;
           border: 1px solid #ccc;
           border-right: none;
-          height: 40px;
+          height: 45px;
+          line-height: 45px;
         }
       }
       .ant-form-item-control{
@@ -31,7 +32,7 @@
       .ant-form-item-control-wrapper{
         width: 77%;
         input{
-          height: 40px;
+          height: 45px;
           border-radius:0;
         }
         .ant-input[disabled]{
@@ -56,6 +57,7 @@
   height: 63px;
   border-bottom: 1px solid #ccc;
   padding: 15px 20px;
+
 }
 .content{
   border: 1px solid #ccc;
@@ -71,12 +73,82 @@
     float: right
   }
 }
+.leftContent{
+  :global{
+    .ant-btn{
+      box-shadow:none;
+      border:none;
+    }
+
+  }
+}
+.rightContent{
+  :global{
+    .ant-btn{
+      margin-right: 10px;
+    }
+
+  }
+}
 .tabContent{
   //position: relative;
   .tabText{
+    height: 140px;
     margin-left: 20px;
     max-width: 96%;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
     //position: absolute;
     //bottom: 90px;
   }
+  :global{
+    .ant-tabs-nav {
+      .ant-tabs-tab{
+        margin: 0 10px 0 0;
+      }
+    }
+    .ant-timeline-item-content{
+      top:0;
+    }
+    .ant-input{
+      border: 0;
+      resize:none
+    }
+    .ant-input:focus {
+      border: none;
+      box-shadow: none;
+    }
+  }
 }
+.timelineContent{
+  height: 380px;
+  overflow: auto;
+  margin-bottom: 10px;
+  :global{
+    //.ant-timeline-item-head{
+    //  top:6px;
+    //}
+    //.ant-timeline-item-content{
+    //  top:0;
+    //}
+  }
+  p{
+    margin-bottom: 5px;
+  }
+}
+.timelineContent::-webkit-scrollbar{
+  width: 4px;
+  height: 4px;
+}
+.timelineContent::-webkit-scrollbar-thumb{
+  background:rgba(0,0,0,0.2);
+  border-radius:5px;
+  -webkit-box-shadow:inset005pxrgba(0,0,0,0.2);
+
+}
+.timelineContent::-webkit-scrollbar-track{
+  background:rgba(0,0,0,0.1);
+  border-radius:0;
+  -webkit-box-shadow:inset005pxrgba(0,0,0,0.2);
+}
+

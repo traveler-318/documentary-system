@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, Tabs, Cascader, Radio,Timeline,} from 'antd';
+import { Form, Input, Card, Row, Col, Button, Icon , Select, DatePicker, Tabs, Cascader, Radio,Timeline,} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -151,7 +151,7 @@ class OrdersAdd extends PureComponent {
         <Form style={{ marginTop: 8 }}>
           <Card bordered={false} className={styles.editContent}>
             <Row gutter={24} style={{ margin: 0 }}>
-              <Col span={10} style={{ padding: 0 }}>
+              <Col span={12} style={{ padding: 0 }} className={styles.leftContent}>
                 <div className={styles.titleBtn}>
                   <Button type="primary" onClick={this.Preservation}>保存</Button>
                   <Button  icon="edit" onClick={this.clickEdit}>编辑</Button>
@@ -269,16 +269,6 @@ class OrdersAdd extends PureComponent {
                       initialValue: detail.userAddress,
                     })(<Input disabled={edit} placeholder="" />)}
                   </FormItem>
-                  <FormItem {...formAllItemLayout} label="部门职务">
-                    {getFieldDecorator('userAddress', {
-                      rules: [
-                        {
-                          message: '',
-                        },
-                      ],
-                      initialValue: detail.userAddress,
-                    })(<Input disabled={edit} placeholder="" />)}
-                  </FormItem>
                   <FormItem {...formAllItemLayout} label="电子邮箱">
                     {getFieldDecorator('userAddress', {
                       rules: [
@@ -289,19 +279,9 @@ class OrdersAdd extends PureComponent {
                       initialValue: detail.userAddress,
                     })(<Input disabled={edit} placeholder="请输入电子邮箱" />)}
                   </FormItem>
-                  <FormItem {...formAllItemLayout} label="传真号码">
-                    {getFieldDecorator('userAddress', {
-                      rules: [
-                        {
-                          message: '',
-                        },
-                      ],
-                      initialValue: detail.userAddress,
-                    })(<Input disabled={edit} placeholder="请输入传真号码" />)}
-                  </FormItem>
                 </div>
               </Col>
-              <Col span={14} style={{ padding: 0 }}>
+              <Col span={12} style={{ padding: 0 }} className={styles.rightContent}>
                 <div className={styles.titleBtn}>
                   <Button icon="plus">工单</Button>
                   <Button  icon="plus">产品</Button>
@@ -309,70 +289,93 @@ class OrdersAdd extends PureComponent {
                 </div>
                 <div className={styles.tabContent}>
                   <Tabs defaultActiveKey="1" onChange={this.callback}>
-                    <TabPane tab="概况" key="1">
-                      <Timeline>
-                        <Timeline.Item>2020-09-19</Timeline.Item>
-                        <Timeline.Item>
-                          <div className={styles.content}>
-                            <p>
-                              <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-                              <span className={styles.name}>赵小刚 跟进</span>
-                              <span className={styles.time}>2020-09-19</span>
-                            </p>
+                    <TabPane tab="概况信息" key="1">
+                      <div className={styles.timelineContent}>
+                        <Timeline>
+                          <Timeline.Item>
+                            <p>赵小刚 跟进</p>
                             <p>电话无人接听</p>
-                          </div>
-                        </Timeline.Item>
-                        <Timeline.Item>
-                          <div className={styles.content}>
-                            <p>
-                              <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-                              <span className={styles.name}>赵小刚 跟进</span>
-                              <span className={styles.time}>2020-09-19</span>
-                            </p>
+                            <p>2020-09-19</p>
+                          </Timeline.Item>
+                          <Timeline.Item>
+                            <p>赵小刚 新增客户</p>
+                            <p>上门拜访了客服，客户对产品很满意</p>
+                            <p>2020-09-19</p>
+                          </Timeline.Item>
+                          <Timeline.Item>
+                            <p>赵小刚 跟进</p>
                             <p>电话无人接听</p>
-                          </div>
-                        </Timeline.Item>
-                      </Timeline>
-                      <TextArea rows={4} onChange={this.TextAreaChange} className={styles.tabText}/>
+                            <p>2020-09-19</p>
+                          </Timeline.Item>
+                          <Timeline.Item>
+                            <p>赵小刚 新增客户</p>
+                            <p>上门拜访了客服，客户对产品很满意</p>
+                            <p>2020-09-19</p>
+                          </Timeline.Item>
+                        </Timeline>
+                      </div>
+                      <div className={styles.tabText}>
+                        <TextArea rows={4} onChange={this.TextAreaChange} placeholder='请输入内容（Alt+Enter快速提交）' />
+                        <div style={{float:"left"}}>
+                          <Icon type="clock-circle" style={{margin:"0 10px 0 15px"}} />
+                          计划提醒
+                        </div>
+                        <div style={{float:"right"}}>
+                          <Button>清空</Button>
+                          <Button type="primary">提交</Button>
+                        </div>
+                      </div>
                     </TabPane>
-                    <TabPane tab={`订单(${data.order})`} key="2">
+                    <TabPane tab={`订单记录(${data.order})`} key="2">
                       订单记录
                     </TabPane>
-                    <TabPane tab="跟进()" key="3">
-                      <Timeline>
-                        <Timeline.Item>2020-09-19</Timeline.Item>
-                        <Timeline.Item>
-                          <div className={styles.content}>
-                            <p>
-                              <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/>
-                              <span className={styles.name}>赵小刚 跟进</span>
-                              <span className={styles.time}>2020-09-19</span>
-                            </p>
+                    <TabPane tab={`跟进记录(${data.followUp})`} key="3">
+                      <div className={styles.timelineContent}>
+                        <Timeline>
+                          <Timeline.Item>
+                            <p>赵小刚 跟进</p>
                             <p>电话无人接听</p>
-                          </div>
-                        </Timeline.Item>
-                        <Timeline.Item>
-                          <div className={styles.content}>
-                            <p>
-                              <img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/>
-                              <span className={styles.name}>赵小刚 跟进</span>
-                              <span className={styles.time}>2020-09-19</span>
-                            </p>
+                            <p>2020-09-19</p>
+                          </Timeline.Item>
+                          <Timeline.Item>
+                            <p>赵小刚 新增客户</p>
+                            <p>上门拜访了客服，客户对产品很满意</p>
+                            <p>2020-09-19</p>
+                          </Timeline.Item>
+                          <Timeline.Item>
+                            <p>赵小刚 跟进</p>
                             <p>电话无人接听</p>
-                          </div>
-                        </Timeline.Item>
-                      </Timeline>
+                            <p>2020-09-19</p>
+                          </Timeline.Item>
+                          <Timeline.Item>
+                            <p>赵小刚 新增客户</p>
+                            <p>上门拜访了客服，客户对产品很满意</p>
+                            <p>2020-09-19</p>
+                          </Timeline.Item>
+                        </Timeline>
+                      </div>
+                      <div className={styles.tabText}>
+                        <TextArea rows={4} onChange={this.TextAreaChange} placeholder='请输入内容（Alt+Enter快速提交）' />
+                        <div style={{float:"left"}}>
+                          <Icon type="clock-circle" style={{margin:"0 10px 0 15px"}} />
+                          计划提醒
+                        </div>
+                        <div style={{float:"right"}}>
+                          <Button>清空</Button>
+                          <Button type="primary">提交</Button>
+                        </div>
+                      </div>
                     </TabPane>
-                    <TabPane tab={`服务(${data.followUp})`} key="4">
+                    <TabPane tab={`服务工单(${data.service0rder})`} key="4">
                       服务工单()
                     </TabPane>
-                    <TabPane tab={`产品(${data.service0rder})`} key="5">
+                    <TabPane tab={`产品记录(${data.product})`} key="5">
                       产品记录()
                     </TabPane>
-                    <TabPane tab={`归属(${data.product})`} key="6">
+                    <TabPane tab={`归属记录(${data.ownership})`} key="6">
                       归属记录
                     </TabPane>
-                    <TabPane tab={`操作(${data.ownership})`} key="7">
+                    <TabPane tab="操作日志" key="7">
                       操作日志()
                     </TabPane>
                   </Tabs>
