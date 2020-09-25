@@ -14,9 +14,7 @@ import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
 import { getAddSave } from '../../../../services/newServices/product';
-import {
-  paymentCompany,
-} from '../../../order/allOrders/data.js';
+//import {paymentCompany,} from '../../../order/allOrders/data.js';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -122,12 +120,13 @@ class Logistics extends PureComponent {
                     message: '请输入支付公司',
                   },
                 ],
-              })(
-                <Select placeholder="请选择支付公司">
-                  {paymentCompany.map((item)=>{
-                    return (<Option key={item.key} value={item.key}>{item.name}</Option>)
-                  })}
-                </Select>)}
+              })(<Input placeholder="请输入支付公司" />
+                //<Select placeholder="请选择支付公司">
+                //  {paymentCompany.map((item)=>{
+                //    return (<Option key={item.key} value={item.key}>{item.name}</Option>)
+                //  })}
+                //</Select>
+              )}
             </FormItem>
             <FormItem {...formAllItemLayout} label="排序编号">
               {getFieldDecorator('sortNumber', {

@@ -23,7 +23,6 @@ import Grid from '../../../components/Sword/Grid';
 import { getPaypanyList } from '../../../services/newServices/product';
 import { getCookie } from '../../../utils/support';
 import Add from './components/add'
-import Grouping from '../../Customer/Sales/components/Mgrouping';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -106,14 +105,7 @@ class AuthorityList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        getRemove(params).then(resp => {
-          if (resp.success) {
-            message.success(resp.msg);
-            refresh()
-          } else {
-            message.error(resp.msg || '删除失败');
-          }
-        });
+
       },
       onCancel() {
 
@@ -198,11 +190,11 @@ class AuthorityList extends PureComponent {
         dataIndex: 'payName',
         width: 300,
       },
-      {
-        title: '排序',
-        dataIndex: 'sortNumber',
-        width: 150,
-      },
+      //{
+      //  title: '排序',
+      //  dataIndex: 'sortNumber',
+      //  width: 150,
+      //},
       {
         title: '操作',
         key: 'operation',

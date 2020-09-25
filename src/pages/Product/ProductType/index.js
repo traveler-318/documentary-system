@@ -189,11 +189,6 @@ class AuthorityList extends PureComponent {
         width: 300,
       },
       {
-        title: '级别',
-        dataIndex: 'sortNumber',
-        width: 150,
-      },
-      {
         title: '支付公司',
         dataIndex: 'payName',
         width: 300,
