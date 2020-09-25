@@ -21,6 +21,7 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { getPaypanyList } from '../../../services/newServices/product';
+import { getCookie } from '../../../utils/support';
 import Add from './components/add'
 import Grouping from '../../Customer/Sales/components/Mgrouping';
 
@@ -50,6 +51,7 @@ class AuthorityList extends PureComponent {
 
   componentWillMount() {
     this.getDataList();
+    console.log(getCookie("dept_id"))
 
   }
 
