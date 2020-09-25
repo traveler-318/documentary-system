@@ -44,7 +44,7 @@ export default {
         console.log(response,"response")
         // 缓存全局使用数据
         // dept_id->部门id  跟当前人帐号挂钩
-        setCookie("dept_id",response.deptId)
+        setCookie("dept_id",response.dept_id)
         // 网关地址
         setCookie("serverAddress",response.serverAddress)
         // --------结束
