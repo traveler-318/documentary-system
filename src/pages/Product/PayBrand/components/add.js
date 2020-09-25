@@ -14,6 +14,9 @@ import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
 import { getAddSave } from '../../../../services/newServices/product';
+import {
+  paymentCompany,
+} from '../../../order/allOrders/data.js';
 
 const FormItem = Form.Item;
 @connect(({ globalParameters}) => ({
