@@ -557,7 +557,7 @@ export default [
           {
             path: '/logistics/faceSheet',
             routes: [
-              { path: '/logistics/faceSheet', redirect: '/logistics/FaceSheet/list' },
+              { path: '/logistics/faceSheet', redirect: '/logistics/faceSheet/list' },
               { path: '/logistics/faceSheet/list', component: './Logistics/FaceSheet/index' },
               { path: '/logistics/faceSheet/add', component: './Logistics/FaceSheet/add' },
               { path: '/logistics/faceSheet/edit', component: './Logistics/FaceSheet/edit' },
@@ -566,7 +566,7 @@ export default [
           {
             path: '/logistics/sender',
             routes: [
-              { path: '/logistics/sender', redirect: '/logistics/Sender/list' },
+              { path: '/logistics/sender', redirect: '/logistics/sender/list' },
               { path: '/logistics/sender/list', component: './Logistics/Sender/index' },
               { path: '/logistics/sender/add', component: './Logistics/Sender/add' },
               { path: '/logistics/sender/edit', component: './Logistics/Sender/edit' },
@@ -575,7 +575,7 @@ export default [
           {
             path: '/logistics/goods',
             routes: [
-              { path: '/logistics/goods', redirect: '/logistics/Goods/list' },
+              { path: '/logistics/goods', redirect: '/logistics/goods/list' },
               { path: '/logistics/goods/list', component: './Logistics/Goods/index' },
               { path: '/logistics/goods/add', component: './Logistics/Goods/add' },
                { path: '/logistics/goods/edit', component: './Logistics/Goods/edit' },
@@ -584,7 +584,7 @@ export default [
           {
             path: '/logistics/additional',
             routes: [
-              { path: '/logistics/additional', redirect: '/logistics/Additional/list' },
+              { path: '/logistics/additional', redirect: '/logistics/additional/list' },
               { path: '/logistics/additional/list', component: './Logistics/Additional/index' },
               { path: '/logistics/additional/add', component: './Logistics/Additional/add' },
               { path: '/logistics/additional/edit', component: './Logistics/Additional/edit' },
@@ -611,19 +611,19 @@ export default [
           {
             path: '/product/payBrand',
             routes: [
-              { path: '/product/payBrand', redirect: '/product/PayBrand/list' },
+              { path: '/product/payBrand', redirect: '/product/payBrand/list' },
               { path: '/product/payBrand/list', component: './Product/PayBrand/index' },
             ],
           },{
             path: '/product/productType',
             routes: [
-              { path: '/product/productType', redirect: '/product/ProductType/list' },
+              { path: '/product/productType', redirect: '/product/productType/list' },
               { path: '/product/productType/list', component: './Product/ProductType/index' },
             ],
           },{
             path: '/product/productManagement',
             routes: [
-              { path: '/product/productManagement', redirect: '/product/ProductManagement/list' },
+              { path: '/product/productManagement', redirect: '/product/productManagement/list' },
               { path: '/product/productManagement/list', component: './Product/ProductManagement/index' },
             ],
           },
