@@ -605,6 +605,35 @@ export default [
             ],
           },
         ],
+      },{
+        path: '/product',
+        routes: [
+          {
+            path: '/product/payBrand',
+            routes: [
+              { path: '/product/payBrand', redirect: '/product/PayBrand/list' },
+              { path: '/product/payBrand/list', component: './product/PayBrand/index' },
+              // { path: '/customer/sales/add', component: './Customer/Sales/add' },
+              // { path: '/customer/sales/edit', component: './Customer/Sales/edit' },
+            ],
+          },{
+            path: '/product/productType',
+            routes: [
+              { path: '/product/productType', redirect: '/product/ProductType/list' },
+              { path: '/product/productType/list', component: './product/ProductType/index' },
+              // { path: '/customer/sales/add', component: './Customer/Sales/add' },
+              // { path: '/customer/sales/edit', component: './Customer/Sales/edit' },
+            ],
+          },{
+            path: '/product/productManagement',
+            routes: [
+              { path: '/product/productManagement', redirect: '/product/ProductManagement/list' },
+              { path: '/product/productManagement/list', component: './product/ProductManagement/index' },
+              // { path: '/customer/sales/add', component: './Customer/Sales/add' },
+              // { path: '/customer/sales/edit', component: './Customer/Sales/edit' },
+            ],
+          },
+        ],
       },
     ],
   },
