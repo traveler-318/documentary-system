@@ -612,19 +612,19 @@ export default [
             path: '/product/payBrand',
             routes: [
               { path: '/product/payBrand', redirect: '/product/PayBrand/list' },
-              { path: '/product/payBrand/list', component: './product/PayBrand/index' },
+              { path: '/product/payBrand/list', component: './Product/PayBrand/index' },
             ],
           },{
             path: '/product/productType',
             routes: [
               { path: '/product/productType', redirect: '/product/ProductType/list' },
-              { path: '/product/productType/list', component: './product/ProductType/index' },
+              { path: '/product/productType/list', component: './Product/ProductType/index' },
             ],
           },{
             path: '/product/productManagement',
             routes: [
               { path: '/product/productManagement', redirect: '/product/ProductManagement/list' },
-              { path: '/product/productManagement/list', component: './product/ProductManagement/index' },
+              { path: '/product/productManagement/list', component: './Product/ProductManagement/index' },
             ],
           },
         ],
