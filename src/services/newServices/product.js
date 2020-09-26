@@ -68,4 +68,16 @@ export async function getProductattributeList(params) {
   });
 }
 
+export async function getProductattributeAdd(params) {
+  return request(`/api/business/productattribute/save`, {
+    method: 'POST',
+    body: params,
+  });
+}
 
+export async function getProductattributeUpdate(params) {
+  return request(`/api/business/productattribute/update`, {
+    method: 'POST',
+    body: params,
+  });
+}
