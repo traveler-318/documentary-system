@@ -42,6 +42,12 @@ export async function getProductcategoryList(params) {
     body: params,
   });
 }
+export async function getProductcategoryUpdate(params) {
+  return request('/api/business/productcategory/update', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function getProductcategorySave(params) {
   return request('/api/business/productcategory/save', {
     method: 'POST',

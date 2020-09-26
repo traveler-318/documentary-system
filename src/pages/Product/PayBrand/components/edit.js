@@ -36,8 +36,6 @@ class productEdit extends PureComponent {
 
   componentWillMount() {
     const { details } = this.props;
-    console.log(details)
-
   }
 
   valinsPayChange = (rule, value, callback) => {

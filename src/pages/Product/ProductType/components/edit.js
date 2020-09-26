@@ -13,8 +13,8 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
-import { getPaypanyUpdate } from '../../../../services/newServices/product';
-import {paymentCompany,} from '../../../Order/AllOrders/data.js';
+import { getProductcategoryUpdate,getPaypanyList } from '../../../../services/newServices/product';
+import {productType,} from '../../../Order/AllOrders/data.js';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -22,22 +22,43 @@ const FormItem = Form.Item;
   globalParameters,
 }))
 @Form.create()
-class productEdit extends PureComponent {
+class ProductTypeEdit extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
-      data:{
-        sortNumber:0
-      }
+      data:[],
+      sortNumber:0,
+      params:{
+        size:100,
+        current:1
+      },
+      details:'',
     };
   }
 
 
   componentWillMount() {
     const { details } = this.props;
-    console.log(details)
+    this.setState({
+      details:details
+    })
+    this.getDataList()
+  }
 
+  getDataList = () => {
+    const {params} = this.state;
+    this.setState({
+      loading:true
+    })
+    getPaypanyList(params).then(res=>{
+      this.setState({
+        loading:false
+      })
+      this.setState({
+        data:res.data.records,
+      })
+    })
   }
 
   valinsPayChange = (rule, value, callback) => {
@@ -57,32 +78,44 @@ class productEdit extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    const {  form,details } = this.props;
+    const {  form } = this.props;
+    const {  details } = this.state;
+    console.log(details)
     form.validateFieldsAndScroll((err, values) => {
+      values.deptId = getCookie("dept_id");
+      values.payPanyId = details.payPanyId;
       if (!err) {
         const params = {
           ...values,
-          id:details.id,
-          deptId:details.deptId,
         };
         console.log(params)
-        getPaypanyUpdate(params).then(res=>{
+        getProductcategoryUpdate(params).then(res=>{
           message.success('修改成功');
-          router.push('/product/payBrand');
+          router.push('/product/productType');
         })
       }
     });
+  };
+
+  onChange = (e,row) => {
+    const {  details } = this.state;
+    this.setState({
+      details:{
+        payPanyId:row.key,
+        productTypeName:details.productTypeName,
+        sortNumber:details.sortNumber,
+      }
+    })
   };
 
   render() {
     const {
       form: { getFieldDecorator },
       handleEditVisible,
-      handleCancelEdit,
-      details,
-    } = this.props;
+      handleCancelEdit
+      } = this.props;
 
-    const {data,loading} = this.state;
+    const {data,loading,sortNumber,details} = this.state;
 
     const formAllItemLayout = {
       labelCol: {
@@ -111,13 +144,36 @@ class productEdit extends PureComponent {
           ]}
         >
           <Form style={{ marginTop: 8 }}>
-            <FormItem {...formAllItemLayout} label="支付公司">
-              {getFieldDecorator('payName', {
-                initialValue: details.payName,
+            <FormItem {...formAllItemLayout} label="产品类别">
+              {getFieldDecorator('productTypeName', {
+                initialValue: details.productTypeName,
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择产品类别名称',
+                  },
+                ],
               })(
-                <Select placeholder="">
-                  {paymentCompany.map((item)=>{
-                    return (<Option key={item.name} value={item.name}>{item.name}</Option>)
+                <Select placeholder="请选择产品类别名称">
+                  {productType.map((item)=>{
+                    return (<Option key={item.key} value={item.name}>{item.name}</Option>)
+                  })}
+                </Select>
+              )}
+            </FormItem>
+            <FormItem {...formAllItemLayout} label="支付公司">
+              {getFieldDecorator('payPanyName', {
+                initialValue: details.payPanyName,
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入支付公司',
+                  },
+                ],
+              })(
+                <Select placeholder="请选择支付公司" onSelect={this.onChange}>
+                  {data.map((item)=>{
+                    return (<Option key={item.id} value={item.payName}>{item.payName}</Option>)
                   })}
                 </Select>
               )}
@@ -140,4 +196,4 @@ class productEdit extends PureComponent {
   }
 }
 
-export default productEdit;
+export default ProductTypeEdit;
