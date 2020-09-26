@@ -91,12 +91,16 @@ class Logistics extends PureComponent {
           ...values,
           payPanyId,
           productTypeId,
-          deptId:getCookie("dept_id")
+          deptId:getCookie("dept_id"),
+          price:values.price ? Number(values.price) : null,
+          settlePrice:values.settlePrice ? Number(values.settlePrice) : null,
         };
         console.log(params)
         getProductattributeAdd(params).then(res=>{
-          message.success('新增成功');
-          router.push('/product/productManagement');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/product/productManagement');
+          }
         })
       }
     });
@@ -115,6 +119,19 @@ class Logistics extends PureComponent {
     
     console.log(key,row)
   }
+
+  countChange = (rule, value, callback) => {
+    var reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    if(value != "" && value != null){
+      if(!reg.test(value)){
+        callback('请输入正确的金额格式');
+      }else{
+        return callback();
+      }
+    }else{
+      return callback();
+    }
+  };
 
   render() {
     const {
@@ -144,7 +161,7 @@ class Logistics extends PureComponent {
         <Modal
           title="新增"
           visible={handleAddVisible}
-          width={500}
+          width={600}
           onCancel={handleCancelAdd}
           footer={[
             <Button key="back" onClick={handleCancelAdd}>
@@ -209,17 +226,29 @@ class Logistics extends PureComponent {
                     required: true,
                     validator:this.valinsPayChange
                   },
-                ],
+                ], 
               })(<Input placeholder="请输入排序编号" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="价格">
               {getFieldDecorator('price', {
                 initialValue: data.price,
+                rules: [
+                  {
+                    required: true,
+                    validator:this.countChange,
+                  },
+                ],
               })(<Input placeholder="请输入价格" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="结算价">
               {getFieldDecorator('settlePrice', {
                 initialValue: data.settlePrice,
+                rules: [
+                  {
+                    required: true,
+                    validator:this.countChange,
+                  },
+                ],
               })(<Input placeholder="请输入结算价" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="自定义名称1">

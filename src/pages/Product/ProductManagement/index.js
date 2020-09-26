@@ -201,7 +201,7 @@ class AuthorityList extends PureComponent {
       },
       {
         title: '支付公司',
-        dataIndex: 'payName',
+        dataIndex: 'payPanyName',
         width: 300,
       },
       {
@@ -231,12 +231,12 @@ class AuthorityList extends PureComponent {
       },
       {
         title: '自定义2',
-        dataIndex: 'customThree',
+        dataIndex: 'customTwo',
         width: 150,
       },
       {
         title: '自定义3',
-        dataIndex: 'customTwo',
+        dataIndex: 'customThree',
         width: 150,
       },
       {
