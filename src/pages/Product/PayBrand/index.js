@@ -20,18 +20,17 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import { getPaypanyList } from '../../../services/newServices/product';
+import { getPaypanyList,getPaypanyRemove } from '../../../services/newServices/product';
 import { getCookie } from '../../../utils/support';
 import Add from './components/add'
+import Edit from './components/edit'
 
-const FormItem = Form.Item;
-const { RangePicker } = DatePicker;
 
 @connect(({ globalParameters }) => ({
   globalParameters,
 }))
 @Form.create()
-class AuthorityList extends PureComponent {
+class PayBrandList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,6 +42,8 @@ class AuthorityList extends PureComponent {
         current:1
       },
       handleAddVisible:false,
+      handleEditVisible:false,
+      details:''
     };
   }
 
@@ -50,8 +51,6 @@ class AuthorityList extends PureComponent {
 
   componentWillMount() {
     this.getDataList();
-    console.log(getCookie("dept_id"))
-
   }
 
   getDataList = () => {
@@ -93,9 +92,9 @@ class AuthorityList extends PureComponent {
 
   // ============ 删除 ===============
 
-  handleClick = ( id) => {
+  handleClick = ( row) => {
     const params={
-      ids: id
+      ids: row.id
     }
     const refresh = this.getDataList;
     Modal.confirm({
@@ -105,7 +104,14 @@ class AuthorityList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-
+        getPaypanyRemove(params).then(resp => {
+          if (resp.success) {
+            message.success(resp.msg);
+            refresh()
+          } else {
+            message.error(resp.msg || '删除失败');
+          }
+        });
       },
       onCancel() {
 
@@ -126,16 +132,20 @@ class AuthorityList extends PureComponent {
     })
   }
 
-
-  // 修改数据
+  // 修改弹框
   handleEdit = (row) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: `globalParameters/setDetailData`,
-      payload: row,
-    });
-    router.push('/customer/sales/edit');
-  };
+    this.setState({
+      handleEditVisible:true,
+      details:row
+    })
+  }
+
+  handleCancelEdit = () => {
+    this.setState({
+      handleEditVisible:false
+    })
+  }
+
 
   onSelectRow = (rows,key) => {
     console.log(rows,"rows")
@@ -172,7 +182,7 @@ class AuthorityList extends PureComponent {
     } = this.props;
 
     const {
-      selectedRowKeys,handleAddVisible,data,loading} = this.state;
+      selectedRowKeys,handleAddVisible,handleEditVisible,details,data,loading} = this.state;
 
     const columns = [
       {
@@ -233,8 +243,16 @@ class AuthorityList extends PureComponent {
             handleCancelAdd={this.handleCancelAdd}
           />
         ):""}
+        {/* 修改 */}
+        {handleEditVisible?(
+          <Edit
+            handleEditVisible={handleEditVisible}
+            details={details}
+            handleCancelEdit={this.handleCancelEdit}
+          />
+        ):""}
       </Panel>
     );
   }
 }
-export default AuthorityList;
+export default PayBrandList;

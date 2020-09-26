@@ -20,7 +20,9 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import { getProductcategoryList } from '../../../services/newServices/product';
+import { getProductcategoryList,getProductcategoryRemove } from '../../../services/newServices/product';
+import Add from './components/add'
+import Edit from './components/edit'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -35,13 +37,13 @@ class AuthorityList extends PureComponent {
     this.state = {
       data:{ },
       loading:false,
-      selectDataArrL:[],
-      selectedRowKeys:[],
       params:{
         size:10,
         current:1
       },
-      groupingList:[]
+      handleAddVisible:false,
+      handleEditVisible:false,
+      details:''
     };
   }
 
@@ -91,9 +93,9 @@ class AuthorityList extends PureComponent {
 
   // ============ 删除 ===============
 
-  handleClick = ( id) => {
+  handleClick = ( row) => {
     const params={
-      ids: id
+      ids: row.id
     }
     const refresh = this.getDataList;
     Modal.confirm({
@@ -103,7 +105,7 @@ class AuthorityList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        getRemove(params).then(resp => {
+        getProductcategoryRemove(params).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
             refresh()
@@ -120,19 +122,30 @@ class AuthorityList extends PureComponent {
 
   // 新增弹框
   handleAdd = () => {
-
+    this.setState({
+      handleAddVisible:true
+    })
   }
 
+  handleCancelAdd = () => {
+    this.setState({
+      handleAddVisible:false
+    })
+  }
 
-  // 修改数据
+  // 修改弹框
   handleEdit = (row) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: `globalParameters/setDetailData`,
-      payload: row,
-    });
-    router.push('/customer/sales/edit');
-  };
+    this.setState({
+      handleEditVisible:true,
+      details:row
+    })
+  }
+
+  handleCancelEdit = () => {
+    this.setState({
+      handleEditVisible:false
+    })
+  }
 
   onSelectRow = (rows,key) => {
     console.log(rows,"rows")
@@ -158,7 +171,7 @@ class AuthorityList extends PureComponent {
   renderRightButton = () => {
     return(
       <div>
-        <Button type="primary" onClick={this.handleAdd()}>添加</Button>
+        <Button type="primary" onClick={() =>this.handleAdd()}>添加</Button>
       </div>
     )
   };
@@ -170,7 +183,7 @@ class AuthorityList extends PureComponent {
 
     const {
       selectedRowKeys,
-      data,loading} = this.state;
+      data,loading,handleAddVisible,handleEditVisible,details} = this.state;
 
     const columns = [
       {
@@ -186,17 +199,16 @@ class AuthorityList extends PureComponent {
       {
         title: '产品类型',
         dataIndex: 'productTypeName',
-        width: 300,
+        width: 150,
       },
       {
         title: '支付公司',
-        dataIndex: 'payName',
-        width: 300,
+        dataIndex: 'payPanyName',
+        width: 200,
       },
       {
         title: '排序',
         dataIndex: 'sortNumber',
-        width: 150,
       },
       {
         title: '操作',
@@ -230,6 +242,21 @@ class AuthorityList extends PureComponent {
           renderRightButton={this.renderRightButton}
           selectedKey={selectedRowKeys}
         />
+        {/* 新增 */}
+        {handleAddVisible?(
+          <Add
+            handleAddVisible={handleAddVisible}
+            handleCancelAdd={this.handleCancelAdd}
+          />
+        ):""}
+        {/* 修改 */}
+        {handleEditVisible?(
+          <Edit
+            handleEditVisible={handleEditVisible}
+            details={details}
+            handleCancelEdit={this.handleCancelEdit}
+          />
+        ):""}
       </Panel>
     );
   }

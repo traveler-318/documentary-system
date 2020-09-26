@@ -105,14 +105,7 @@ class AuthorityList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        getRemove(params).then(resp => {
-          if (resp.success) {
-            message.success(resp.msg);
-            refresh()
-          } else {
-            message.error(resp.msg || '删除失败');
-          }
-        });
+
       },
       onCancel() {
 
@@ -123,12 +116,7 @@ class AuthorityList extends PureComponent {
 
   // 修改数据
   handleEdit = (row) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: `globalParameters/setDetailData`,
-      payload: row,
-    });
-    router.push('/customer/sales/edit');
+
   };
 
   onSelectRow = (rows,key) => {

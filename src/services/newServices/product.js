@@ -21,15 +21,15 @@ export async function getAddSave(params) {
   });
 }
 
-export async function getSubmit(params) {
-  return request('/api/logistics/authorization/update', {
+export async function getPaypanyUpdate(params) {
+  return request('/api/business/paypany/update', {
     method: 'POST',
     body: params,
   });
 }
 
-export async function getRemove(params) {
-  return request('/api/logistics/authorization/remove', {
+export async function getPaypanyRemove(params) {
+  return request('/api/business/paypany/remove', {
     method: 'POST',
     body: func.toFormData(params),
   });
@@ -40,6 +40,18 @@ export async function getProductcategoryList(params) {
   return request(`/api/business/productcategory/list`, {
     method: 'POST',
     body: params,
+  });
+}
+export async function getProductcategorySave(params) {
+  return request('/api/business/productcategory/save', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getProductcategoryRemove(params) {
+  return request('/api/business/productcategory/remove', {
+    method: 'POST',
+    body: func.toFormData(params),
   });
 }
 // ============ 产品管理 ===============

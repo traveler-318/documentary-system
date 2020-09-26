@@ -13,8 +13,8 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
-import { getAddSave } from '../../../../services/newServices/product';
-import {paymentCompany,} from '../../../Order/AllOrders/data.js';
+import { getProductcategorySave,getPaypanyList } from '../../../../services/newServices/product';
+import {productType,} from '../../../Order/AllOrders/data.js';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -22,16 +22,15 @@ const FormItem = Form.Item;
   globalParameters,
 }))
 @Form.create()
-class PayBrandAdd extends PureComponent {
+class ProductTypeAdd extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
-      data:{
-        sortNumber:0
-      },
+      data:[],
+      sortNumber:0,
       params:{
-        size:10,
+        size:100,
         current:1
       },
     };
@@ -39,7 +38,22 @@ class PayBrandAdd extends PureComponent {
 
 
   componentWillMount() {
+    this.getDataList()
+  }
 
+  getDataList = () => {
+    const {params} = this.state;
+    this.setState({
+      loading:true
+    })
+    getPaypanyList(params).then(res=>{
+      this.setState({
+        loading:false
+      })
+      this.setState({
+        data:res.data.records,
+      })
+    })
   }
 
   valinsPayChange = (rule, value, callback) => {
@@ -60,19 +74,26 @@ class PayBrandAdd extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const {  form } = this.props;
+    const {  id } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
+      values.payPanyId = id;
       if (!err) {
         const params = {
           ...values,
         };
-        console.log(params)
-        getAddSave(params).then(res=>{
+        getProductcategorySave(params).then(res=>{
           message.success('新增成功');
-          router.push('/product/payBrand');
+          router.push('/product/productType');
         })
       }
     });
+  };
+
+  onChange = (e,row) => {
+    this.setState({
+      id:row.key,
+    })
   };
 
   render() {
@@ -82,7 +103,7 @@ class PayBrandAdd extends PureComponent {
       handleCancelAdd,
     } = this.props;
 
-    const {data,loading} = this.state;
+    const {data,loading,sortNumber} = this.state;
 
     const formAllItemLayout = {
       labelCol: {
@@ -111,8 +132,24 @@ class PayBrandAdd extends PureComponent {
           ]}
         >
           <Form style={{ marginTop: 8 }}>
+            <FormItem {...formAllItemLayout} label="产品类别">
+              {getFieldDecorator('productTypeName', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择产品类别名称',
+                  },
+                ],
+              })(
+                <Select placeholder="请选择产品类别名称">
+                  {productType.map((item)=>{
+                    return (<Option key={item.key} value={item.name}>{item.name}</Option>)
+                  })}
+                </Select>
+              )}
+            </FormItem>
             <FormItem {...formAllItemLayout} label="支付公司">
-              {getFieldDecorator('payName', {
+              {getFieldDecorator('payPanyName', {
                 rules: [
                   {
                     required: true,
@@ -120,16 +157,16 @@ class PayBrandAdd extends PureComponent {
                   },
                 ],
               })(
-                <Select placeholder="请选择支付公司">
-                  {paymentCompany.map((item)=>{
-                    return (<Option key={item.key} value={item.name}>{item.name}</Option>)
+                <Select placeholder="请选择支付公司" onSelect={this.onChange}>
+                  {data.map((item)=>{
+                    return (<Option key={item.id} value={item.payName}>{item.payName}</Option>)
                   })}
                 </Select>
               )}
             </FormItem>
             <FormItem {...formAllItemLayout} label="排序编号">
               {getFieldDecorator('sortNumber', {
-                initialValue: data.sortNumber,
+                initialValue: sortNumber,
                 rules: [
                   {
                     required: true,
@@ -145,4 +182,4 @@ class PayBrandAdd extends PureComponent {
   }
 }
 
-export default PayBrandAdd;
+export default ProductTypeAdd;

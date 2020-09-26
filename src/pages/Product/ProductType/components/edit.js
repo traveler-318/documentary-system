@@ -13,7 +13,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
-import { getAddSave } from '../../../../services/newServices/product';
+import { getPaypanyUpdate } from '../../../../services/newServices/product';
 import {paymentCompany,} from '../../../Order/AllOrders/data.js';
 
 const { Option } = Select;
@@ -22,23 +22,21 @@ const FormItem = Form.Item;
   globalParameters,
 }))
 @Form.create()
-class PayBrandAdd extends PureComponent {
+class productEdit extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
       data:{
         sortNumber:0
-      },
-      params:{
-        size:10,
-        current:1
-      },
+      }
     };
   }
 
 
   componentWillMount() {
+    const { details } = this.props;
+    console.log(details)
 
   }
 
@@ -59,16 +57,17 @@ class PayBrandAdd extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    const {  form } = this.props;
+    const {  form,details } = this.props;
     form.validateFieldsAndScroll((err, values) => {
-      values.deptId = getCookie("dept_id");
       if (!err) {
         const params = {
           ...values,
+          id:details.id,
+          deptId:details.deptId,
         };
         console.log(params)
-        getAddSave(params).then(res=>{
-          message.success('新增成功');
+        getPaypanyUpdate(params).then(res=>{
+          message.success('修改成功');
           router.push('/product/payBrand');
         })
       }
@@ -78,8 +77,9 @@ class PayBrandAdd extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      handleAddVisible,
-      handleCancelAdd,
+      handleEditVisible,
+      handleCancelEdit,
+      details,
     } = this.props;
 
     const {data,loading} = this.state;
@@ -97,12 +97,12 @@ class PayBrandAdd extends PureComponent {
     return (
       <div>
         <Modal
-          title="新增"
-          visible={handleAddVisible}
+          title="修改"
+          visible={handleEditVisible}
           width={500}
-          onCancel={handleCancelAdd}
+          onCancel={handleCancelEdit}
           footer={[
-            <Button key="back" onClick={handleCancelAdd}>
+            <Button key="back" onClick={handleCancelEdit}>
               取消
             </Button>,
             <Button type="primary" loading={loading} onClick={(e)=>this.handleSubmit(e,false)}>
@@ -113,23 +113,18 @@ class PayBrandAdd extends PureComponent {
           <Form style={{ marginTop: 8 }}>
             <FormItem {...formAllItemLayout} label="支付公司">
               {getFieldDecorator('payName', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入支付公司',
-                  },
-                ],
+                initialValue: details.payName,
               })(
-                <Select placeholder="请选择支付公司">
+                <Select placeholder="">
                   {paymentCompany.map((item)=>{
-                    return (<Option key={item.key} value={item.name}>{item.name}</Option>)
+                    return (<Option key={item.name} value={item.name}>{item.name}</Option>)
                   })}
                 </Select>
               )}
             </FormItem>
             <FormItem {...formAllItemLayout} label="排序编号">
               {getFieldDecorator('sortNumber', {
-                initialValue: data.sortNumber,
+                initialValue: details.sortNumber,
                 rules: [
                   {
                     required: true,
@@ -145,4 +140,4 @@ class PayBrandAdd extends PureComponent {
   }
 }
 
-export default PayBrandAdd;
+export default productEdit;
