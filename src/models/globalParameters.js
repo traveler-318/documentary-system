@@ -2,7 +2,7 @@ export default {
   namespace: 'globalParameters',
 
   state: {
-    listParam:{},
+    listParam:[],
     detailData:{},
   },
 

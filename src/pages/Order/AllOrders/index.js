@@ -20,7 +20,7 @@ import {
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
 import styles from './index.less';
 import Logistics from './components/Logistics'
-import Equipment from './components/Equipment'
+import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 
@@ -53,8 +53,8 @@ class AllOrdersList extends PureComponent {
       selectedRows:[],
       // 物流弹窗
       logisticsVisible:false,
-      // 设备弹窗
-      equipmeentVisible:false,
+      // 转移客户
+      TransferVisible:false,
       // 批量物流下单弹窗
       LogisticsConfigVisible:false,
       // 详情弹窗
@@ -345,11 +345,15 @@ class AllOrdersList extends PureComponent {
       </SubMenu>
     </Menu>
   );
-  handleMenuClick = (e) => {
-    console.log('click', e);
+  handleMenuClick = (menuRow) => {
+    console.log('click', menuRow);
     const {selectedRows} = this.state;
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
+    }
+    // 转移客户
+    if(menuRow.key === "4"){
+      this.handleShowTransfer();
     }
   }
 
@@ -403,28 +407,6 @@ class AllOrdersList extends PureComponent {
     });
 
     router.push('/order/allOrders/edit');
-  }
-
-  // 列表删除
-  handleDelect = (row) => {
-    const refresh = this.refreshTable;
-    Modal.confirm({
-      title: '删除确认',
-      content: '确定删除选中记录?',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      async onOk() {
-        deleteData({
-          ids:row.id
-        }).then(res=>{
-          message.success(res.msg);
-          refresh();
-        })
-      },
-      onCancel() {},
-    });
-
   }
 
   renderRightButton = () => (
@@ -508,25 +490,26 @@ class AllOrdersList extends PureComponent {
     })
   }
 
-  // 打开设备弹窗
-  handleShowEquipment = (row) => {
+  // 打开转移客户弹窗
+  handleShowTransfer = () => {
     const { dispatch } = this.props;
+    const { selectedRows } = this.state;
     dispatch({
-      type: `globalParameters/setDetailData`,
-      payload: row,
+      type: `globalParameters/setListId`,
+      payload: selectedRows,
     });
     this.setState({
-      equipmeentVisible:true
+      TransferVisible:true
     })
   }
-  // 关闭设备弹窗
-  handleCancelEquipment = (type) => {
+  // 转移客户
+  handleCancelTransfer = (type) => {
     // getlist代表点击保存成功关闭弹窗后需要刷新列表
     if(type === "getlist"){
       this.getDataList();
     }
     this.setState({
-      equipmeentVisible:false
+      TransferVisible:false
     })
   }
 
@@ -560,7 +543,7 @@ class AllOrdersList extends PureComponent {
       loading, 
       tabKey, 
       logisticsVisible, 
-      equipmeentVisible,
+      TransferVisible,
       LogisticsConfigVisible,
       selectedRows, 
       detailsVisible,
@@ -685,8 +668,6 @@ class AllOrdersList extends PureComponent {
                     <Divider type="vertical" /> */}
                     <a onClick={()=>this.handleEdit(row)}>详情</a>
                     <Divider type="vertical" />
-                    {/* <a onClick={()=>this.handleShowEquipment(row)}>设备</a>
-                    <Divider type="vertical" /> */}
                     <a onClick={()=>this.handleShowLogistics([row])}>发货</a>
                     {/* <Divider type="vertical" />
                     <a >短信</a> */}
@@ -735,10 +716,10 @@ class AllOrdersList extends PureComponent {
         ):""}
 
         {/* 设备 */}
-        {equipmeentVisible?(
-          <Equipment
-            equipmeentVisible={equipmeentVisible}
-            handleCancelEquipment={this.handleCancelEquipment}
+        {TransferVisible?(
+          <TransferCustomers
+            TransferVisible={TransferVisible}
+            handleCancelTransfer={this.handleCancelTransfer}
           />
         ):""}
         {/* 批量物流下单 */}

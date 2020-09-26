@@ -510,7 +510,7 @@ export default [
               { path: '/order/allOrders/list', component: './Order/AllOrders/index' },
               { path: '/order/allOrders/add', component: './Order/AllOrders/add' },
               { path: '/order/allOrders/edit', component: './Order/AllOrders/edit' },
-              { path: '/order/allOrders/logisticsConfiguration', component: './Order/AllOrders/logisticsConfiguration' },
+              { path: '/order/allOrders/logisticsConfiguration', component: './Order/AllOrders/components/logisticsConfiguration' },
             ],
           },
           {

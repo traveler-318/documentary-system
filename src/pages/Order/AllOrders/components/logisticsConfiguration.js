@@ -4,28 +4,30 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 
-import Panel from '../../../components/Panel';
-import FormDetailsTitle from '../../../components/FormDetailsTitle';
-import styles from '../../../layouts/Sword.less';
-import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
-import func from '../../../utils/Func';
-import { tenantMode } from '../../../defaultSettings';
-import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
-import { CITY } from '../../../utils/city';
-import { getCookie } from '../../../utils/support';
+import Panel from '../../../../components/Panel';
+import FormDetailsTitle from '../../../../components/FormDetailsTitle';
+import styles from '../../../../layouts/Sword.less';
+import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../../actions/user';
+import func from '../../../../utils/Func';
+import { tenantMode } from '../../../../defaultSettings';
+import { CITY } from '../../../../utils/city';
+import { getCookie } from '../../../../utils/support';
 import {
   updateData,
   getRegion,
   logisticsSubscription,
   getDetails
-} from '../../../services/newServices/order'
+} from '../../../../services/newServices/order'
 import { 
   LOGISTICSCOMPANY,
   paymentCompany,
   productType,
   productID,
-  amountOfMoney
-} from './data.js';
+  amountOfMoney,
+  GENDER,
+  ORDERTYPE,
+  ORDERSOURCE
+} from '../data.js';
 
 import { 
   getList,
@@ -37,7 +39,7 @@ import {
   getGoodsList,
   // 附加信息
   getAdditionalList
-} from '../../../services/newServices/logistics'
+} from '../../../../services/newServices/logistics'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
