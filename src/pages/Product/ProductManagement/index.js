@@ -22,6 +22,7 @@ import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { getProductattributeList } from '../../../services/newServices/product';
 import Add from './components/add'
+import Edit from './components/edit'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -43,7 +44,9 @@ class AuthorityList extends PureComponent {
         current:1
       },
       groupingList:[],
-      handleAddVisible:false
+      handleAddVisible:false,
+      details:{},
+      handleEditVisible:false
     };
   }
 
@@ -114,10 +117,19 @@ class AuthorityList extends PureComponent {
   };
 
 
-  // 修改数据
+  // 修改弹框
   handleEdit = (row) => {
+    this.setState({
+      handleEditVisible:true,
+      details:row
+    })
+  }
 
-  };
+  handleCancelEdit = () => {
+    this.setState({
+      handleEditVisible:false
+    })
+  }
 
   onSelectRow = (rows,key) => {
     console.log(rows,"rows")
@@ -168,8 +180,13 @@ class AuthorityList extends PureComponent {
       selectedRowKeys,
       handleAddVisible,
       data,
-      loading
+      loading,
+      handleEditVisible,
+      details,
+      handleCancelEdit
     } = this.state;
+
+    console.log(handleEditVisible,"handleEditVisible")
 
     const columns = [
       {
@@ -183,9 +200,9 @@ class AuthorityList extends PureComponent {
         },
       },
       {
-        title: '产品',
-        dataIndex: 'productTypeName',
-        width: 200,
+        title: '支付公司',
+        dataIndex: 'payName',
+        width: 300,
       },
       {
         title: '类型',
@@ -193,9 +210,9 @@ class AuthorityList extends PureComponent {
         width: 200,
       },
       {
-        title: '支付公司',
-        dataIndex: 'payName',
-        width: 300,
+        title: '产品',
+        dataIndex: 'productName',
+        width: 200,
       },
       {
         title: '价格',
@@ -264,6 +281,14 @@ class AuthorityList extends PureComponent {
           <Add
             handleAddVisible={handleAddVisible}
             handleCancelAdd={this.handleCancelAdd}
+          />
+        ):""}
+        {/* 修改 */}
+        {handleEditVisible?(
+          <Edit
+            handleEditVisible={handleEditVisible}
+            details={details}
+            handleCancelEdit={this.handleCancelEdit}
           />
         ):""}
       </Panel>
