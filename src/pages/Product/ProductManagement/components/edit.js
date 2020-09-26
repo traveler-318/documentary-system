@@ -38,13 +38,19 @@ class Logistics extends PureComponent {
         current:1
       },
       paypanyList:[],
-      productcategoryList:[]
+      productcategoryList:[],
+      payPanyId:"",
+      productTypeId:"",
     };
   }
 
 
   componentWillMount() {
-
+    const {details} = this.props;
+    this.setState({
+      payPanyId:details.payPanyId,
+      productTypeId:details.productTypeId,
+    })
 
     getPaypanyList({
       size:100,
@@ -92,15 +98,32 @@ class Logistics extends PureComponent {
           payPanyId,
           productTypeId,
           deptId:getCookie("dept_id"),
-          id:details.id
+          id:details.id,
+          price:values.price ? Number(values.price) : null,
+          settlePrice:values.settlePrice ? Number(values.settlePrice) : null,
         };
         console.log(params)
         getProductattributeUpdate(params).then(res=>{
-          message.success('新增成功');
-          router.push('/product/productManagement');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/product/productManagement');
+          }
         })
       }
     });
+  };
+
+  countChange = (rule, value, callback) => {
+    var reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    if(value != "" && value != null){
+      if(!reg.test(value)){
+        callback('请输入正确的金额格式');
+      }else{
+        return callback();
+      }
+    }else{
+      return callback();
+    }
   };
 
   onChange = (key,row,type) => {
@@ -132,8 +155,6 @@ class Logistics extends PureComponent {
       paypanyList,
       productcategoryList,
     } = this.state;
-
-    console.log(handleEditVisible,"handleEditVisible")
 
     const formAllItemLayout = {
       labelCol: {
@@ -220,11 +241,23 @@ class Logistics extends PureComponent {
             <FormItem {...formAllItemLayout} label="价格">
               {getFieldDecorator('price', {
                 initialValue: details.price,
+                rules: [
+                  {
+                    required: true,
+                    validator:this.countChange,
+                  },
+                ],
               })(<Input placeholder="请输入价格" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="结算价">
               {getFieldDecorator('settlePrice', {
                 initialValue: details.settlePrice,
+                rules: [
+                  {
+                    required: true,
+                    validator:this.countChange,
+                  },
+                ],
               })(<Input placeholder="请输入结算价" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="自定义名称1">
