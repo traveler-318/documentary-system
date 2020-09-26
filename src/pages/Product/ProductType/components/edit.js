@@ -41,7 +41,8 @@ class ProductTypeEdit extends PureComponent {
   componentWillMount() {
     const { details } = this.props;
     this.setState({
-      details:details
+      details:details,
+      payPanyId:details.payPanyId
     })
     this.getDataList()
   }
@@ -79,14 +80,16 @@ class ProductTypeEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const {  form } = this.props;
-    const {  details } = this.state;
+    const {  details , payPanyId } = this.state;
     console.log(details)
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
-      values.payPanyId = details.payPanyId;
+      // values.payPanyId = details.payPanyId;
       if (!err) {
         const params = {
           ...values,
+          id:details.id,
+          payPanyId
         };
         console.log(params)
         getProductcategoryUpdate(params).then(res=>{
@@ -100,11 +103,7 @@ class ProductTypeEdit extends PureComponent {
   onChange = (e,row) => {
     const {  details } = this.state;
     this.setState({
-      details:{
-        payPanyId:row.key,
-        productTypeName:details.productTypeName,
-        sortNumber:details.sortNumber,
-      }
+      payPanyId:row.key
     })
   };
 
