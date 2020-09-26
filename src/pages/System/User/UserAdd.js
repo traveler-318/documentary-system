@@ -31,10 +31,11 @@ class UserAdd extends PureComponent {
         if (password !== password2) {
           message.warning('两次密码输入不一致');
         } else {
+          console.log(values)
           const params = {
             ...values,
             roleId: func.join(values.roleId),
-            deptId: func.join(values.deptId),
+            deptId: values.deptId,
             postId: func.join(values.postId),
             birthday: func.format(values.birthday),
           };
