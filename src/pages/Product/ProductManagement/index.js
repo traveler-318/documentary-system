@@ -21,6 +21,7 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { getProductattributeList } from '../../../services/newServices/product';
+import Add from './components/add'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -41,7 +42,8 @@ class AuthorityList extends PureComponent {
         size:10,
         current:1
       },
-      groupingList:[]
+      groupingList:[],
+      handleAddVisible:false
     };
   }
 
@@ -142,7 +144,18 @@ class AuthorityList extends PureComponent {
     });
   };
 
+ // 新增弹框
+  handleAdd = () => {
+    this.setState({
+      handleAddVisible:true
+    })
+  }
 
+  handleCancelAdd = () => {
+    this.setState({
+      handleAddVisible:false
+    })
+  }
 
   renderLeftButton = () => (
     <>
@@ -153,7 +166,7 @@ class AuthorityList extends PureComponent {
   renderRightButton = () => {
     return(
       <div>
-        <Button type="primary" onClick={()=>{router.push(`/customer/sales/add`);}}>添加</Button>
+        <Button type="primary" onClick={()=>this.handleAdd()}>添加</Button>
       </div>
     )
   };
@@ -165,7 +178,10 @@ class AuthorityList extends PureComponent {
 
     const {
       selectedRowKeys,
-      data,loading} = this.state;
+      handleAddVisible,
+      data,
+      loading
+    } = this.state;
 
     const columns = [
       {
@@ -255,6 +271,13 @@ class AuthorityList extends PureComponent {
           renderRightButton={this.renderRightButton}
           selectedKey={selectedRowKeys}
         />
+        {/* 新增 */}
+        {handleAddVisible?(
+          <Add
+            handleAddVisible={handleAddVisible}
+            handleCancelAdd={this.handleCancelAdd}
+          />
+        ):""}
       </Panel>
     );
   }
