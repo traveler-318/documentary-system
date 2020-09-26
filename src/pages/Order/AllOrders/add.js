@@ -94,8 +94,6 @@ class OrdersAdd extends PureComponent {
           values.productType = `${values.productType[0]}/${values.productType[1]}`;
         }
         values.userAddress = `${selectedOptions}${values.userAddress}`;
-        
-        // values.ouOrderNo = "12313243546546546"
         createData(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
