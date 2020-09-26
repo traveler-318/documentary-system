@@ -82,3 +82,10 @@ export async function logisticsPrintRequest(params) {
     body: params,
   });
 }
+// 提醒
+export async function updateReminds(params) {
+  return request('/api/order/order/updateReminds', {
+    method: 'POST',
+    body: params,
+  });
+}

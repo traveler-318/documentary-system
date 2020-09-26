@@ -42,7 +42,7 @@ export default {
   'menu.authority.api_scope': '接口权限',
   'menu.system': '系统管理',
   'menu.system.user': '用户管理',
-  'menu.system.dept': '机构管理',
+  'menu.system.dept': '分公司管理',
   'menu.system.dict': '系统字典',
   'menu.system.post': '岗位管理',
   'menu.system.dictbiz': '业务字典',

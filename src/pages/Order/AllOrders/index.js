@@ -11,7 +11,12 @@ import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY } from './data.js';
-import { getList, deleteData, updateRemind } from '../../../services/newServices/order';
+import { 
+  getList, 
+  deleteData, 
+  updateRemind,
+  updateReminds
+} from '../../../services/newServices/order';
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
 import styles from './index.less';
 import Logistics from './components/Logistics'
@@ -44,7 +49,7 @@ class AllOrdersList extends PureComponent {
         size:10,
         current:1
       },
-      tabKey:1,
+      tabKey:0,
       selectedRows:[],
       // 物流弹窗
       logisticsVisible:false,
@@ -182,7 +187,6 @@ class AllOrdersList extends PureComponent {
     );
   };
 
-
   // =========首次打印===========
   bulkDelivery = () => {
     const {selectedRows} = this.state;
@@ -284,12 +288,14 @@ class AllOrdersList extends PureComponent {
       return message.info('请至少选择一条数据');
     }
 
-    let idList = [];
-    selectedRows.map(item=>{
-      idList.push(item.id)
-    })
+    // debugger
 
-    this.handleShowLogistics(idList)
+    // let idList = [];
+    // selectedRows.map(item=>{
+    //   idList.push(item.id)
+    // })
+
+    this.handleShowLogistics(selectedRows)
   }
 
   // 左侧操作按钮
@@ -347,36 +353,41 @@ class AllOrdersList extends PureComponent {
     }
   }
 
+  // 提醒
+  handleReminds = (data) => {
+    Modal.confirm({
+      title: '提醒',
+      content: "确定提示此订单吗？",
+      okText: '确定',
+      okType: 'info',
+      cancelText: '取消',
+      onOk() {
+        let _data = data.map(item=>{
+          return {
+            deptId:item.deptId,
+            id:item.id,
+            outOrderNo:item.outOrderNo,
+            payAmount:Number(item.payAmount),
+            userPhone:item.userPhone,
+          }
+        })
+        updateReminds(_data).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+          }
+        })
+      },
+      onCancel() {},
+    });
+  }
+
   // 批量提醒
   batchReminders = () => {
     const {selectedRows} = this.state;
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
-    Modal.confirm({
-      title: '提示',
-      content: '是否确定提醒?',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      async onOk() {
-        let param = selectedRows.map(item=>{
-          return {
-            "id": item.id,
-            "outOrderNo": item.outOrderNo,
-            "userPhone": item.userPhone,
-            "payAmount": Number(item.payAmount),
-            "deptId": item.deptId,
-          }
-        })
-        console.log(param,"param")
-        updateRemind(param).then(res=>{
-
-        })
-
-      },
-      onCancel() {},
-    });
+    this.handleReminds(selectedRows)
   }
 
   refreshTable = () => {
@@ -674,13 +685,13 @@ class AllOrdersList extends PureComponent {
                     <Divider type="vertical" /> */}
                     <a onClick={()=>this.handleEdit(row)}>详情</a>
                     <Divider type="vertical" />
-                    <a onClick={()=>this.handleShowEquipment(row)}>设备</a>
-                    <Divider type="vertical" />
+                    {/* <a onClick={()=>this.handleShowEquipment(row)}>设备</a>
+                    <Divider type="vertical" /> */}
                     <a onClick={()=>this.handleShowLogistics([row])}>发货</a>
+                    {/* <Divider type="vertical" />
+                    <a >短信</a> */}
                     <Divider type="vertical" />
-                    <a >短信</a>
-                    <Divider type="vertical" />
-                    <a >提醒</a>
+                    <a onClick={()=>this.handleReminds([row])}>提醒</a>
                 </div>
             )
         },

@@ -105,22 +105,20 @@ class LogisticsConfiguration extends PureComponent {
 
   // 切换数据
   handleSwitch = (type) => {
-    console.log("123123")
     let { currentIndex, listID } = this.state
-    // if(currentIndex === 0 || currentIndex === listID.length){
-    //   return false
-    // }
     if(type === 0){
       this.setState({
         currentIndex:currentIndex - 1 
       },()=>{
-        console.log(this.state.currentIndex)
+        
       })
+      this.getDetailsData(listID[currentIndex - 1]);
     }else{
+      this.getDetailsData(listID[currentIndex + 1]);
       this.setState({
         currentIndex:currentIndex + 1
       },()=>{
-        console.log(this.state.currentIndex)
+        
       })
     }
   }

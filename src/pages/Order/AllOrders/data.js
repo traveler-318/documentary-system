@@ -16,6 +16,7 @@ export const ORDERSTATUS = [
     {"name":"已签收",key:4},
     {"name":"跟进中",key:5},
     {"name":"已激活",key:6},
+    {"name":"已退回",key:7},
     {"name":"全部",key:null},
 ]
  

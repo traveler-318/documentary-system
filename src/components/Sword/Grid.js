@@ -248,7 +248,7 @@ export default class Grid extends PureComponent {
       <Card bordered={false} {...cardProps}>
         <div className={styles.swordPage}>
           <SearchBox onSubmit={this.handleSearch} onReset={this.handleFormReset}>
-            {renderSearchForm(this.handleFormReset)}
+            {renderSearchForm ? renderSearchForm(this.handleFormReset) : ""}
           </SearchBox>
           <ToolBar
             buttons={buttons}

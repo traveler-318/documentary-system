@@ -15,7 +15,6 @@ import { getCookie } from '../../../utils/support';
 import {updateData,getRegion} from '../../../services/newServices/order'
 import {ORDERSTATUS} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
-import OrderList from './components/OrderList'
 
 
 const FormItem = Form.Item;
@@ -51,32 +50,6 @@ class OrdersAdd extends PureComponent {
     this.setState({
       detail:globalParameters.detailData
     })
-  }
-
-  // 提醒
-  handleReminds = () => {
-    Modal.confirm({
-      title: '提醒',
-      content: "确定提示此订单吗？",
-      okText: '确定',
-      okType: 'info',
-      cancelText: '取消',
-      onOk() {
-        const { detail } = this.state;
-        updateReminds({
-          deptId:detail.deptId,
-          id:detail.id,
-          outOrderNo:detail.outOrderNo,
-          payAmount:Number(detail.payAmount),
-          userPhone:detail.userPhone,
-        }).then(res=>{
-          if(res.code === 200){
-            message.success(res.msg);
-          }
-        })
-      },
-      onCancel() {},
-    });
   }
 
   handleSubmit = e => {
@@ -181,13 +154,10 @@ class OrdersAdd extends PureComponent {
               <Col span={12} style={{ padding: 0 }} className={styles.leftContent}>
                 <div className={styles.titleBtn}>
                   <Button type="primary" onClick={this.Preservation}>保存</Button>
-                  <Button icon="edit" onClick={this.clickEdit}>编辑</Button>
-                  {/* <Button  icon="delete">删除</Button> */}
-                  <Button 
-                    icon="bell"
-                    onClick={this.handleReminds}
-                  >提醒</Button>
-                  {/* <Button  icon="folder">归档</Button> */}
+                  <Button  icon="edit" onClick={this.clickEdit}>编辑</Button>
+                  <Button  icon="delete">删除</Button>
+                  <Button  icon="bell">提醒</Button>
+                  <Button  icon="folder">归档</Button>
                 </div>
                 <div className={styles.editList} style={{ padding: '20px' }}>
                   <FormDetailsTitle title="客户信息" style={{ margin:'0'}} />
@@ -223,7 +193,7 @@ class OrdersAdd extends PureComponent {
                       <Cascader
                         defaultValue={[detail.province, detail.city, detail.area]}
                         options={CITY}
-                        disabled={edit && detail.confirmTag === 0}
+                        disabled={edit}
                         onChange={this.onChange}
                       />
                     )}
@@ -288,7 +258,7 @@ class OrdersAdd extends PureComponent {
                       initialValue: detail.salesman,
                     })(<Input disabled={edit} placeholder="" />)}
                   </FormItem>
-                  {/* <FormDetailsTitle title="其他信息" />
+                  <FormDetailsTitle title="其他信息" />
                   <FormItem {...formAllItemLayout} label="微信号">
                     {getFieldDecorator('userAddress', {
                       rules: [
@@ -308,14 +278,14 @@ class OrdersAdd extends PureComponent {
                       ],
                       initialValue: detail.userAddress,
                     })(<Input disabled={edit} placeholder="请输入电子邮箱" />)}
-                  </FormItem> */}
+                  </FormItem>
                 </div>
               </Col>
               <Col span={12} style={{ padding: 0 }} className={styles.rightContent}>
                 <div className={styles.titleBtn}>
-                  {/* <Button icon="plus">工单</Button>
+                  <Button icon="plus">工单</Button>
                   <Button  icon="plus">产品</Button>
-                  <Button  icon="plus">地址</Button> */}
+                  <Button  icon="plus">地址</Button>
                 </div>
                 <div className={styles.tabContent}>
                   <Tabs defaultActiveKey="1" onChange={this.callback}>
@@ -357,7 +327,7 @@ class OrdersAdd extends PureComponent {
                       </div>
                     </TabPane>
                     <TabPane tab={`订单(${data.order})`} key="2">
-                      <OrderList/>
+                      订单记录
                     </TabPane>
                     <TabPane tab={`跟进(${data.followUp})`} key="3">
                       <div className={styles.timelineContent}>
@@ -396,7 +366,7 @@ class OrdersAdd extends PureComponent {
                         </div>
                       </div>
                     </TabPane>
-                    {/* <TabPane tab={`服务(${data.service0rder})`} key="4">
+                    <TabPane tab={`服务(${data.service0rder})`} key="4">
                       服务工单()
                     </TabPane>
                     <TabPane tab={`产品(${data.product})`} key="5">
@@ -407,7 +377,7 @@ class OrdersAdd extends PureComponent {
                     </TabPane>
                     <TabPane tab="操作" key="7">
                       操作日志()
-                    </TabPane> */}
+                    </TabPane>
                   </Tabs>
                 </div>
               </Col>

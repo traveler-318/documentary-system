@@ -61,19 +61,24 @@ class Dept extends PureComponent {
     router.push(`/system/dept/add/${parentId}`);
   };
 
-  renderActionButton = (keys, rows) => (
-    <Fragment>
-      <Divider type="vertical" />
-      <a
-        title="新增下级"
-        onClick={() => {
-          this.handleClick(rows[0].id);
-        }}
-      >
-        新增下级
-      </a>
-    </Fragment>
-  );
+  renderActionButton = (keys, rows) => {
+    console.log(rows[0].parentId === "0",rows,"row")
+    if(rows[0].parentId === "0"){
+      return (
+        <Fragment>
+          <Divider type="vertical" />
+          <a
+            title="新增下级"
+            onClick={() => {
+              this.handleClick(rows[0].id);
+            }}
+          >
+            新增下级
+          </a>
+        </Fragment>
+      )
+    }
+  };
 
   render() {
     const code = 'dept';
