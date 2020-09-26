@@ -106,30 +106,7 @@ class AuthorityList extends PureComponent {
   // ============ 删除 ===============
 
   handleClick = ( id) => {
-    const params={
-      ids: id
-    }
-    const refresh = this.getDataList;
-    Modal.confirm({
-      title: '删除确认',
-      content: '确定删除该条记录?',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      onOk() {
-        getRemove(params).then(resp => {
-          if (resp.success) {
-            message.success(resp.msg);
-            refresh()
-          } else {
-            message.error(resp.msg || '删除失败');
-          }
-        });
-      },
-      onCancel() {
 
-      },
-    });
   };
 
 
