@@ -93,8 +93,10 @@ class ProductTypeEdit extends PureComponent {
         };
         console.log(params)
         getProductcategoryUpdate(params).then(res=>{
-          message.success('修改成功');
-          router.push('/product/productType');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/product/productType');
+          }
         })
       }
     });

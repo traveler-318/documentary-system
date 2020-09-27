@@ -81,3 +81,10 @@ export async function getProductattributeUpdate(params) {
     body: params,
   });
 }
+
+export async function getProductattributeRemove(params) {
+  return request('/api/business/productattribute/remove', {
+    method: 'POST',
+    body: func.toFormData(params),
+  });
+}

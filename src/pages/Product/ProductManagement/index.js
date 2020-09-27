@@ -20,7 +20,10 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import { getProductattributeList } from '../../../services/newServices/product';
+import {
+  getProductattributeList,
+  getProductattributeRemove,
+} from '../../../services/newServices/product';
 import Add from './components/add'
 import Edit from './components/edit'
 
@@ -31,7 +34,7 @@ const { RangePicker } = DatePicker;
   globalParameters,
 }))
 @Form.create()
-class AuthorityList extends PureComponent {
+class ProductManagement extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -96,9 +99,9 @@ class AuthorityList extends PureComponent {
 
   // ============ 删除 ===============
 
-  handleClick = ( id) => {
+  handleClick = ( row) => {
     const params={
-      ids: id
+      ids: row.id
     }
     const refresh = this.getDataList;
     Modal.confirm({
@@ -108,7 +111,14 @@ class AuthorityList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-
+        getProductattributeRemove(params).then(resp => {
+          if (resp.success) {
+            message.success(resp.msg);
+            refresh()
+          } else {
+            message.error(resp.msg || '删除失败');
+          }
+        });
       },
       onCancel() {
 
@@ -185,8 +195,6 @@ class AuthorityList extends PureComponent {
       details,
       handleCancelEdit
     } = this.state;
-
-    console.log(handleEditVisible,"handleEditVisible")
 
     const columns = [
       {
@@ -295,4 +303,4 @@ class AuthorityList extends PureComponent {
     );
   }
 }
-export default AuthorityList;
+export default ProductManagement;

@@ -83,8 +83,10 @@ class ProductTypeAdd extends PureComponent {
           ...values,
         };
         getProductcategorySave(params).then(res=>{
-          message.success('新增成功');
-          router.push('/product/productType');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/product/productType');
+          }
         })
       }
     });

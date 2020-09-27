@@ -45,8 +45,10 @@ class GoodsEdit extends PureComponent {
           id:data.id,
         };
         getGoodsSubmit(params).then(res=>{
-          message.success('提交成功');
-          router.push('/logistics/goods');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/logistics/goods');
+          }
         })
       }
     });

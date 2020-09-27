@@ -65,8 +65,10 @@ class productEdit extends PureComponent {
         };
         console.log(params)
         getPaypanyUpdate(params).then(res=>{
-          message.success('修改成功');
-          router.push('/product/payBrand');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/product/payBrand');
+          }
         })
       }
     });

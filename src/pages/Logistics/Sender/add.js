@@ -45,8 +45,10 @@ class SenderAdd extends PureComponent {
           administrativeAreas:cityparam.name
         };
         getDeliverySave(params).then(res=>{
-          message.success('提交成功');
-          router.push('/logistics/sender');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/logistics/sender');
+          }
         })
       }
     });

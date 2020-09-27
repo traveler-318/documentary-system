@@ -49,8 +49,10 @@ class FaceSheetEdit extends PureComponent {
           id:data.id,
         };
         getSurfacesingleSubmit(params).then(res=>{
-          message.success('提交成功');
-          router.push('/logistics/faceSheet');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/logistics/faceSheet');
+          }
         })
       }
     });

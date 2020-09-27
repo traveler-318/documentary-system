@@ -48,8 +48,10 @@ class LogisticsAdd extends PureComponent {
           id:data.id,
         };
         getSubmit(params).then(res=>{
-          message.success('提交成功');
-          router.push('/logistics/authority');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/logistics/authority');
+          }
         })
       }
     });

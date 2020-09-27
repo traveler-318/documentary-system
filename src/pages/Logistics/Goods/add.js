@@ -43,8 +43,10 @@ class GoodsAdd extends PureComponent {
         };
         console.log(params)
         getGoodsSave(params).then(res=>{
-          message.success('提交成功');
-          router.push('/logistics/goods');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/logistics/goods');
+          }
         })
       }
     });

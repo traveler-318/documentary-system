@@ -68,8 +68,10 @@ class PayBrandAdd extends PureComponent {
         };
         console.log(params)
         getAddSave(params).then(res=>{
-          message.success('新增成功');
-          router.push('/product/payBrand');
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/product/payBrand');
+          }
         })
       }
     });
