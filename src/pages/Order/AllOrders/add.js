@@ -193,14 +193,18 @@ class OrdersAdd extends PureComponent {
                       },
                       {
                         len: 11,
-                        message: '请输入正确的手机号',
+                        message: '请输入正确的手机号格式',
                       },
                     ],
                   })(<Input placeholder="请输入手机号" />)}
                 </FormItem>
-                {/* <FormItem {...formAllItemLayout} label="手机号2">
-                  {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem> */}
+                <FormItem {...formAllItemLayout} label="备用手机号">
+                  {getFieldDecorator('backPhone', {
+                  })(<Input placeholder="请输入备用手机号" />)}
+                </FormItem>
+                <FormItem {...formAllItemLayout} label="微信号">
+                  {getFieldDecorator('wechatId')(<Input placeholder="请输入微信号" />)}
+                </FormItem>
                 <FormItem {...formAllItemLayout} label="所在地区">
                   {getFieldDecorator('region', {
                       // initialValue: {['zhejiang', 'hangzhou', 'xihu']},

@@ -15,7 +15,8 @@ import {
   getList, 
   deleteData, 
   updateRemind,
-  updateReminds
+  updateReminds,
+  toExamine
 } from '../../../services/newServices/order';
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
 import styles from './index.less';
@@ -108,9 +109,9 @@ class AllOrdersList extends PureComponent {
     if(payload.salesman && payload.salesman === "全部"){
       payload.salesman = null;
     }
-    // payload.confirmTag = this.state.tabKey;
+    payload.confirmTag = this.state.tabKey;
     delete payload.dateRange
-    console.log(payload,"params")
+    // console.log(payload,"params")
     this.setState({
       params:payload
     },()=>{
@@ -281,19 +282,34 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  // 批量审核
+  batchAudit = () => {
+    const {selectedRows} = this.state;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+
+    let _data = selectedRows.map(item=>{
+      return item.id
+    })
+
+    toExamine({
+      confirmTag:1,
+      list:_data
+    }).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg);
+        
+      }
+    })
+  }
+
   // 批量发货
   bulkDelivery = () => {
     const {selectedRows} = this.state;
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
-
-    // debugger
-
-    // let idList = [];
-    // selectedRows.map(item=>{
-    //   idList.push(item.id)
-    // })
 
     this.handleShowLogistics(selectedRows)
   }
@@ -304,15 +320,18 @@ class AllOrdersList extends PureComponent {
       <Button type="primary" icon="plus" onClick={()=>{
         router.push(`/order/AllOrders/add`);
       }}>添加</Button>
-      <Button icon="menu-unfold">批量审核</Button>
+      <Button 
+        icon="menu-unfold"
+        onClick={this.batchAudit}
+      >审核</Button>
       <Button 
         icon="appstore"
         onClick={this.bulkDelivery}
-      >批量发货</Button>
+      >发货</Button>
       <Button
         icon="bell"
         onClick={this.batchReminders}
-      >批量提醒</Button>
+      >提醒</Button>
       <Button icon="download">导入</Button>
       <Dropdown overlay={this.moreMenu()}>
         <Button>
@@ -331,10 +350,10 @@ class AllOrdersList extends PureComponent {
         <Icon type="loading-3-quarters" />
         转移客户
       </Menu.Item>
-      <Menu.Item key="5">
+      {/* <Menu.Item key="5">
         <Icon type="highlight" />
         批量编辑
-      </Menu.Item>
+      </Menu.Item> */}
       <SubMenu key="sub1" title="批量物流下单">
         <Menu.Item key="6" onClick={this.repeat}>
           重复打印
@@ -355,6 +374,28 @@ class AllOrdersList extends PureComponent {
     if(menuRow.key === "4"){
       this.handleShowTransfer();
     }
+  }
+
+  // 删除
+  handleDelect = (row) => {
+    const refresh = this.refreshTable;
+    Modal.confirm({
+      title: '删除确认',
+      content: '确定删除选中记录?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        deleteData({
+          ids:row.id
+        }).then(res=>{
+          message.success(res.msg);
+          refresh();
+        })
+      },
+      onCancel() {},
+    });
+
   }
 
   // 提醒
@@ -429,6 +470,8 @@ class AllOrdersList extends PureComponent {
   statusChange = (key) => {
     this.setState({
       tabKey:key
+    },()=>{
+      this.handleSearch(this.params.tabKey)
     })
   }
 
@@ -656,9 +699,9 @@ class AllOrdersList extends PureComponent {
         render: (text,row) => {
             return(
                 <div>
-                    {/* <a>审核</a>
+                    <a onClick={()=>this.handleDelect(row)}>删除</a>
                     <Divider type="vertical" />
-                    <a>跟进</a>
+                    {/* <a>跟进</a>
                     <Divider type="vertical" />
                     <a onClick={()=>this.handleEdit(row)}>编辑</a>
                     <Divider type="vertical" />
@@ -667,12 +710,12 @@ class AllOrdersList extends PureComponent {
                     <a>归档</a>
                     <Divider type="vertical" /> */}
                     <a onClick={()=>this.handleEdit(row)}>详情</a>
-                    <Divider type="vertical" />
-                    <a onClick={()=>this.handleShowLogistics([row])}>发货</a>
+                    {/* <Divider type="vertical" /> */}
+                    {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
                     {/* <Divider type="vertical" />
                     <a >短信</a> */}
-                    <Divider type="vertical" />
-                    <a onClick={()=>this.handleReminds([row])}>提醒</a>
+                    {/* <Divider type="vertical" /> */}
+                    {/* <a onClick={()=>this.handleReminds([row])}>提醒</a> */}
                 </div>
             )
         },

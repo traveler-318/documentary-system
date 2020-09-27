@@ -89,3 +89,11 @@ export async function updateReminds(params) {
     body: params,
   });
 }
+
+// 审核
+export async function toExamine(params) {
+  return request('/api/order/order/updateReminds', {
+    method: 'POST',
+    body: params,
+  });
+}

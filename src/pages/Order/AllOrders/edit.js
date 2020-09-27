@@ -213,15 +213,20 @@ class OrdersAdd extends PureComponent {
                         },
                       ],
                       initialValue: detail.userPhone,
-                    })(<Input disabled={edit} placeholder="请输入手机号" />)}
+                    })(<Input disabled={detail.userPhone ? true : edit} placeholder="请输入手机号" />)}
                   </FormItem>
-
+                  <FormItem {...formAllItemLayout} label="备用手机号">
+                    {getFieldDecorator('backPhone', {
+                      initialValue: detail.backPhone,
+                    })(<Input disabled={detail.backPhone ? true : edit} placeholder="请输入手机号" />)}
+                  </FormItem>
+                  
                   <FormItem {...formAllItemLayout} label="所在地区">
                     {getFieldDecorator('region', {
                       initialValue: [detail.province, detail.city, detail.area],
                     })(
                       <Cascader
-                        defaultValue={[detail.province, detail.city, detail.area]}
+                        // defaultValue={[detail.province, detail.city, detail.area]}
                         options={CITY}
                         disabled={edit && detail.confirmTag === 0}
                         onChange={this.onChange}
@@ -288,18 +293,13 @@ class OrdersAdd extends PureComponent {
                       initialValue: detail.salesman,
                     })(<Input disabled={edit} placeholder="" />)}
                   </FormItem>
-                  {/* <FormDetailsTitle title="其他信息" />
+                  <FormDetailsTitle title="其他信息" />
                   <FormItem {...formAllItemLayout} label="微信号">
-                    {getFieldDecorator('userAddress', {
-                      rules: [
-                        {
-                          message: '',
-                        },
-                      ],
-                      initialValue: detail.userAddress,
-                    })(<Input disabled={edit} placeholder="" />)}
+                    {getFieldDecorator('wechatId', {
+                      initialValue: detail.wechatId,
+                    })(<Input disabled={detail.wechatId ? true : edit} placeholder="请输入微信号" />)}
                   </FormItem>
-                  <FormItem {...formAllItemLayout} label="电子邮箱">
+                  {/* <FormItem {...formAllItemLayout} label="电子邮箱">
                     {getFieldDecorator('userAddress', {
                       rules: [
                         {
