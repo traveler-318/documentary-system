@@ -37,14 +37,14 @@ class Survey extends PureComponent {
       },
       describe:"",
       orderType:[
-        {"name":"待审核",key:0},
-        {"name":"已审核",key:1},
-        {"name":"已发货",key:2},
-        {"name":"在途中",key:3},
-        {"name":"已签收",key:4},
-        {"name":"跟进中",key:5},
-        {"name":"已激活",key:6},
-        {"name":"已退回",key:7},
+        {"name":"待审核",key:0,className:""},
+        {"name":"已审核",key:1,className:""},
+        {"name":"已发货",key:2,className:""},
+        {"name":"在途中",key:3,className:""},
+        {"name":"已签收",key:4,className:""},
+        {"name":"跟进中",key:5,className:""},
+        {"name":"已激活",key:6,className:""},
+        {"name":"已退回",key:7,className:""},
       ],
       followRecords:[]
     };
@@ -61,6 +61,8 @@ class Survey extends PureComponent {
       let _item = {...item}
       if(item.key <= detail.confirmTag){
         _item.className = "clolor"
+      }else{
+        _item.className = ""
       }
     })
 
