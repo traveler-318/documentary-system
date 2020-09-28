@@ -294,9 +294,6 @@ class Survey extends PureComponent {
                       onClick={()=>this.handleediTtime(index,item.reminderTime)}
                       style={{color:"rgb(90, 205, 216)",marginLeft:5,cursor:"pointer"}}
                     >{item.reminderTime}</span>
-                    <span style={{fontWeight:"bold"}}>{item.userName}</span>
-                    {item.type === '1' ? '跟进了该客户' : "添加了计划提醒"}
-                    <span style={{color:"rgb(90, 205, 216)",marginLeft:5}}>{item.reminderTime}</span>
                     <span
                       style={{float:"right",cursor:"pointer"}}
                       onClick={()=>this.handleDelect(index)}
