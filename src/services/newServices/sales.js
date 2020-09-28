@@ -48,7 +48,7 @@ export async function getRemove(params) {
 
 // 售后列表
 export async function getAfterlists(params) {
-  return request('/api/gent/salesman/afterlist ', {
+  return request('/api/agent/salesman/afterlist ', {
     method: 'get',
   });
 }
