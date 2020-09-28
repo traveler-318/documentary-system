@@ -108,7 +108,8 @@ class Survey extends PureComponent {
       detail,
       edit,
       describe,
-      followRecords
+      followRecords,
+      orderType
     } = this.state;
     console.log(detail)
 
