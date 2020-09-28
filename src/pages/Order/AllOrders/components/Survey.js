@@ -109,7 +109,7 @@ class Survey extends PureComponent {
     let _param = {
       ...detail,
     }
-    _param.followRecords = followRecords
+    _param.followRecords = JSON.stringify(followRecords)
 
     console.log(_param,"_param")
 
