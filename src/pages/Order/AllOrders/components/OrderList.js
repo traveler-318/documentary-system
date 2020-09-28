@@ -37,8 +37,13 @@ class OrderList extends PureComponent {
   // ============ 初始化数据 ===============
   componentWillMount() {
     const { detail } = this.props;
-    console.log(detail)
-    this.getList(detail);
+    const { orderDetail } = this.props;
+    console.log(orderDetail)
+    this.setState({
+      data:{
+        list:orderDetail
+      }
+    })
   }
 
   getList = (detail) =>{
@@ -51,9 +56,16 @@ class OrderList extends PureComponent {
     }
     orderDetail(params).then(res=>{
       console.log(res)
+      const data = res.data.records;
+      let list=[]
+      for(let i=0; i<data.length; i++){
+        if(data[i].id != detail.id){
+          list.push(data[i])
+        }
+      }
       this.setState({
         data:{
-          list:res.data.records
+          list:list
         }
       })
     })
@@ -80,9 +92,9 @@ class OrderList extends PureComponent {
       form,
     } = this.props;
 
-    const { 
+    const {
       data,
-      loading, 
+      loading,
     } = this.state;
 
     const columns = [

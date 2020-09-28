@@ -10,11 +10,10 @@ import styles from './edit.less';
 import { CITY } from '../../../utils/city';
 import { getQueryString } from '../../../utils/utils';
 import { getCookie } from '../../../utils/support';
-import { updateData, getDetails } from '../../../services/newServices/order';
+import { updateData, getDetails,orderDetail } from '../../../services/newServices/order';
 import {ORDERSTATUS} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import Survey from './components/Survey'
-import FollowUp from './components/FollowUp'
 import { setListData } from '../../../utils/publicMethod';
 import OrderList from './components/OrderList';
 
@@ -64,6 +63,30 @@ class OrdersEdit extends PureComponent {
     getDetails(params).then(res=>{
       this.setState({
         detail:res.data,
+      })
+      this.getList(res.data)
+    })
+  }
+  getList = (detail) =>{
+    const params={
+      userAddress:detail.userAddress,
+      userPhone:detail.userPhone,
+      userName:detail.userName,
+      size:100,
+      current:1
+    }
+    orderDetail(params).then(res=>{
+      console.log(res)
+      const data = res.data.records;
+      let list=[];
+      for(let i=0; i<data.length; i++){
+        if(data[i].id != detail.id){
+          list.push(data[i])
+        }
+      }
+      this.setState({
+        orderDetail:list,
+        orderListLength:list.length
       })
     })
   }
@@ -139,10 +162,6 @@ class OrdersEdit extends PureComponent {
     })
   };
 
-  TextAreaChange = (e) => {
-    console.log(e.target.value)
-  };
-
   clickEdit = () => {
     this.setState({
       edit:false
@@ -167,8 +186,10 @@ class OrdersEdit extends PureComponent {
     const {
       data,
       loading,
+      orderDetail,
       detail,
       edit,
+      orderListLength,
     } = this.state;
 
     const formItemLayout = {
@@ -198,7 +219,7 @@ class OrdersEdit extends PureComponent {
                   <Button type="primary" onClick={this.handleSubmit}>保存</Button>
                   <Button icon="edit" onClick={this.clickEdit}>编辑</Button>
                   {/* <Button  icon="delete">删除</Button> */}
-                  <Button 
+                  <Button
                     icon="bell"
                     onClick={this.handleReminds}
                   >提醒</Button>
@@ -235,7 +256,7 @@ class OrdersEdit extends PureComponent {
                       initialValue: detail.backPhone,
                     })(<Input disabled={detail.backPhone ? true : edit} placeholder="" />)}
                   </FormItem>
-                  
+
                   <FormItem {...formAllItemLayout} label="所在地区">
                     {getFieldDecorator('region', {
                       initialValue: [detail.province, detail.city, detail.area],
@@ -325,9 +346,10 @@ class OrdersEdit extends PureComponent {
                         getEditDetails={this.getEditDetails}
                       />
                     </TabPane>
-                    <TabPane tab={`订单(${data.order})`} key="2">
+                    <TabPane tab={`订单(${orderListLength})`} key="2">
                       <OrderList
                         detail={detail}
+                        orderDetail={orderDetail}
                       />
                     </TabPane>
                     {/* <TabPane tab={`跟进(${data.followUp})`} key="3">
