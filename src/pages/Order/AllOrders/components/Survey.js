@@ -66,6 +66,8 @@ class Survey extends PureComponent {
       }
     })
 
+    console.log(_type,"_type")
+
     this.setState({
       orderType:_type
     })
@@ -121,7 +123,7 @@ class Survey extends PureComponent {
           <ul>
             {orderType.map(item=>{
               return (
-                <li className={item.className ? styles.color : ""}>{item.name}</li>
+                <li className={item.className ? styles.color : styles.defaultColor}>{item.name}</li>
               )
             })}
           </ul>
