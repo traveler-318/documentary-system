@@ -9,7 +9,7 @@ import Panel from '../../../../components/Panel';
 import Grid from '../../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../../actions/order';
 import func from '../../../../utils/Func';
-import { setListData } from '../../../../utils/publicMethod';
+import { orderDetail } from '../../../../services/newServices/order';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY } from '../data.js';
 
 const FormItem = Form.Item;
@@ -23,7 +23,9 @@ class OrderList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:{},
+      data:{
+        salesman:'123'
+      },
       loading:false,
       params:{
         size:10,
@@ -34,20 +36,24 @@ class OrderList extends PureComponent {
 
   // ============ 初始化数据 ===============
   componentWillMount() {
-    this.getList();
+    const { detail } = this.props;
+    console.log(detail)
+    this.getList(detail);
   }
 
-  getList = () =>{
-    this.setState({
-        data:{
-          list:[
-            {
-              orderSource:"123213",
-              productType:"",
-              salesman:"salesman"
-            }
-        ],
-      }
+  getList = (detail) =>{
+    const params={
+      userAddress:detail.userAddress,
+      userPhone:detail.userPhone,
+      userName:detail.userName,
+      size:100,
+      current:1
+    }
+    orderDetail(params).then(res=>{
+      console.log(res)
+      this.setState({
+        data:res.data.records
+      })
     })
   }
 
@@ -94,7 +100,7 @@ class OrderList extends PureComponent {
     } = this.props;
 
     const { 
-      data, 
+      data,
       loading, 
     } = this.state;
 
@@ -141,24 +147,24 @@ class OrderList extends PureComponent {
             width: 100,
             render: (text,row) => {
                 return(
-                    <div>
-                        <a onClick={()=>this.handleDetsils(row)}>详情</a>
-                        <Divider type="vertical" />
-                        <a onClick={()=>this.handleDelect(row)}>删除</a>
-                    </div>
+                  <div>
+                    <a onClick={()=>this.handleDetsils(row)}>详情</a>
+                    <Divider type="vertical" />
+                    <a onClick={()=>this.handleDelect(row)}>删除</a>
+                  </div>
                 )
             },
         },
     ];
 
     return (
-        <Grid
-            form={form}
-            data={data}
-            loading={loading}
-            columns={columns}
-            multipleChoice={true}
-        />
+      <Grid
+        form={form}
+        data={data}
+        loading={loading}
+        columns={columns}
+        // multipleChoice={true}
+      />
     );
   }
 }
