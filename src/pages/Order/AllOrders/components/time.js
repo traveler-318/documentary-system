@@ -32,17 +32,15 @@ class ReminderTimes extends PureComponent {
 
   onChange = (value, dateString) => {
       this.setState({
-        reminderTimes:value
+        reminderTimes:dateString
       })
-    console.log('Selected Time: ', value);
-    console.log('Formatted Selected Time: ', dateString);
   }
   
   onOk = (value) => {
     this.setState({
-        reminderTimes:value
-      })
-    console.log('onOk: ', value);
+      reminderTimes:moment(value).format('YYYY-MM-DD HH:mm:ss')
+    })
+    console.log('onOk: ', moment(value).format('YYYY-MM-DD HH:mm:ss'));
   }
 
   handleSubmit = (e,sms_confirmation) => {
@@ -60,6 +58,7 @@ class ReminderTimes extends PureComponent {
     const {
       form: { getFieldDecorator },
       handleReminderTimeBack,
+      reminderTimeVisible
     } = this.props;
 
     const {
@@ -89,12 +88,12 @@ class ReminderTimes extends PureComponent {
     // confirmTag
     return (
         <Modal
-          title="设备序列号"
-          visible={equipmeentVisible}
-          width={560}
-          onCancel={handleReminderTimeBack("")}
+          title="提醒时间"
+          visible={reminderTimeVisible}
+          width={500}
+          onCancel={()=>handleReminderTimeBack("")}
           footer={[
-            <Button key="back" onClick={handleReminderTimeBack("")}>
+            <Button key="back" onClick={()=>handleReminderTimeBack("")}>
               取消
             </Button>,
             <Button key="submit" type="primary" loading={loading} onClick={(e)=>this.handleSubmit(e,false)}>
@@ -113,10 +112,14 @@ class ReminderTimes extends PureComponent {
                       },
                     ],
                   })(
-                    <DatePicker showTime placeholder="Select Time" onChange={onChange} onOk={onOk} />
+                    <DatePicker 
+                      showTime 
+                      placeholder="请选择提醒时间" 
+                      onChange={this.onChange} 
+                      onOk={this.onOk}
+                    />
                   )}
                 </FormItem>
-                
             </Form>
         </Modal>
     );

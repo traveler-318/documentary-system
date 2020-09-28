@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, Icon , Select, DatePicker, Tabs, Cascader, Radio,Timeline,} from 'antd';
+import { Form, message, Input, Card, Row, Col, Button, Icon , Select, DatePicker, Tabs, Cascader, Radio,Timeline,} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -12,8 +12,7 @@ import func from '../../../../utils/Func';
 import { getCookie } from '../../../../utils/support';
 import { updateData, getRegion, getDetails } from '../../../../services/newServices/order';
 import OrderList from './OrderList'
-// import ReminderTimes from './reminderTime'
-
+import ReminderTimes from './time'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -60,7 +59,7 @@ class Survey extends PureComponent {
     const { detail } = this.props;
     this.setState({
       detail,
-      followRecords:detail.followRecords || []
+      followRecords:detail.followRecords ? JSON.parse(detail.followRecords).list : []
     })
     let _type = orderType.map(item=>{
       let _item = {...item}
@@ -107,26 +106,34 @@ class Survey extends PureComponent {
     followRecords.unshift(param);
 
     let _param = {
-      ...detail,
+      id:detail.id,
+      deptId:detail.deptId,
     }
-    _param.followRecords = JSON.stringify(followRecords)
+    _param.followRecords = JSON.stringify({
+      list:followRecords
+    })
 
     console.log(_param,"_param")
 
     updateData(_param).then(res=>{
-
+      if(res.code === 200){
+        message.success(res.msg);
+        this.props.getEditDetails()
+      }
     })
   }
 
   handleReminderTime = () => {
-    this.set({
+    this.setState({
       reminderTimeVisible:true
     })
   }
 
   handleReminderTimeBack = (data) => {
-    this.set({
-      reminderTime:data
+    console.log(data)
+    this.setState({
+      reminderTime:data,
+      reminderTimeVisible:false
     })
   }
 
@@ -149,7 +156,7 @@ class Survey extends PureComponent {
 
     return (
       <>
-        <div style={{height:"200px"}} className={styles.main}>
+        <div style={{height:"170px",marginBottom:15}} className={styles.main}>
           <ul>
             {orderType.map(item=>{
               return (
@@ -165,26 +172,17 @@ class Survey extends PureComponent {
         </div>
         <div className={styles.timelineContent}>
           <Timeline>
-            <Timeline.Item>
-              <p>赵小刚 跟进</p>
-              <p>电话无人接听</p>
-              <p>2020-09-19</p>
-            </Timeline.Item>
-            <Timeline.Item>
-              <p>赵小刚 新增客户</p>
-              <p>上门拜访了客服，客户对产品很满意</p>
-              <p>2020-09-19</p>
-            </Timeline.Item>
-            <Timeline.Item>
-              <p>赵小刚 跟进</p>
-              <p>电话无人接听</p>
-              <p>2020-09-19</p>
-            </Timeline.Item>
-            <Timeline.Item>
-              <p>赵小刚 新增客户</p>
-              <p>上门拜访了客服，客户对产品很满意</p>
-              <p>2020-09-19</p>
-            </Timeline.Item>
+            {followRecords.map(item=>{
+              return (
+                <Timeline.Item>
+                  <p>{item.userName} {item.type === '1' ? '跟进了该客户' : "添加了计划提醒"} <span style={{color:"#eef8f9"}}>{item.reminderTime}</span></p>
+                  <p>{item.describe}</p>
+                  <p>{item.createTime}</p>
+                </Timeline.Item>
+              )
+            })}
+            
+            
           </Timeline>
         </div>
         <div className={styles.tabText}>
@@ -194,11 +192,13 @@ class Survey extends PureComponent {
             onChange={this.TextAreaChange} 
             placeholder='请输入内容（Alt+Enter快速提交）' 
           />
-          <div style={{float:"left",cursor:"pointer"}}>
+          <div 
+            onClick={this.handleReminderTime}
+            style={{float:"left",cursor:"pointer"}}
+          >
             <Icon 
               type="clock-circle" 
               style={{margin:"0 10px 0 15px"}}
-              onClick={this.handleReminderTime}
             />
             计划提醒
           </div>
@@ -212,11 +212,12 @@ class Survey extends PureComponent {
             >提交</Button>
           </div>
         </div>
-        {/* {reminderTimeVisible?(
+        {reminderTimeVisible?(
           <ReminderTimes 
+            reminderTimeVisible={reminderTimeVisible}
             handleReminderTimeBack={this.handleReminderTimeBack}
           />
-        ):""} */}
+        ):""}
       </>
     );
   }
