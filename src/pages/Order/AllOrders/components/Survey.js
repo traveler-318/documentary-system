@@ -12,7 +12,7 @@ import func from '../../../../utils/Func';
 import { getCookie } from '../../../../utils/support';
 import { updateData, getRegion, getDetails } from '../../../../services/newServices/order';
 import OrderList from './OrderList'
-import ReminderTime from './ReminderTime'
+import ReminderTime from './reminderTime'
 
 
 const FormItem = Form.Item;

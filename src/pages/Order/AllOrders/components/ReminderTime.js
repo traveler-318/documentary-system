@@ -1,13 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Modal, Checkbox, Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, message, Cascader, Radio, DatePicker } from 'antd';
+import { Modal, Checkbox, Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, message, Cascader, Radio } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
-
-import { tenantMode } from '../../../../defaultSettings';
-import { getCookie } from '../../../../utils/support';
-import {equipment} from '../../../../services/newServices/order'
-import {LOGISTICSCOMPANY} from '../data.js';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -17,7 +12,7 @@ const { RangePicker } = DatePicker;
     globalParameters,
 }))
 @Form.create()
-class Equipment extends PureComponent {
+class ReminderTime extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -126,4 +121,4 @@ class Equipment extends PureComponent {
   }
 }
 
-export default Equipment;
+export default ReminderTime;
