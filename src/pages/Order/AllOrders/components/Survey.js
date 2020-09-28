@@ -55,7 +55,7 @@ class Survey extends PureComponent {
     const { detail } = this.props;
     this.setState({
       detail,
-      followRecords:detail.followRecords
+      followRecords:detail.followRecords || []
     })
     let _type = orderType.map(item=>{
       let _item = {...item}
@@ -86,7 +86,9 @@ class Survey extends PureComponent {
     const { detail , describe, followRecords } = this.state;
     let param = {
       userName:detail.userName,
-      describe
+      describe,
+      createTime:moment(new Date(),'YYYY-MM-DD HH:mm:ss'),
+      type:"1",//1是跟进
     }
 
     followRecords.unshift(param);
@@ -98,7 +100,7 @@ class Survey extends PureComponent {
 
     console.log(_param,"_param")
 
-    updateData().then(res=>{
+    updateData(_param).then(res=>{
 
     })
   }
@@ -131,7 +133,7 @@ class Survey extends PureComponent {
           </ul>
           <p><label>订单号：</label>{detail.outOrderNo}</p>
           <p><label>订单时间：</label>{detail.createTime}</p>
-          <p> </p>
+          <p style={{height:5}}></p>
           <p><span><label>快递：</label>{detail.logisticsCompany}</span><span><label>产品：</label>{detail.productType}</span></p>
           <p><span><label>单号：</label>{detail.logisticsNumber}</span><span><label>SN：</label>{detail.productCoding}</span></p>
         </div>
