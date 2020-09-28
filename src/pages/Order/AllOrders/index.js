@@ -15,6 +15,7 @@ import {
   getList, 
   deleteData, 
   updateRemind,
+  logisticsRepeatPrint,
   updateReminds,
   toExamine
 } from '../../../services/newServices/order';
@@ -269,6 +270,17 @@ class AllOrdersList extends PureComponent {
       for(let i=0; i<selectedRows.length; i++){
         param.push(selectedRows[i].taskId)
       }
+
+      const {params} = {
+        orderIds:param
+      };
+      logisticsRepeatPrint(params).then(res=>{
+        if(res.code === 200){
+          message.success(res.msg);
+        }
+      })
+
+
     }
   }
 

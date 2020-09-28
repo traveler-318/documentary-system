@@ -82,6 +82,14 @@ export async function logisticsPrintRequest(params) {
     body: params,
   });
 }
+// 首次打印
+export async function logisticsRepeatPrint(params) {
+  return request('/api/order/order/repeatPrint', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 // 提醒
 export async function updateReminds(params) {
   return request('/api/order/order/updateReminds', {
