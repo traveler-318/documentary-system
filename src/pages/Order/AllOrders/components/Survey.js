@@ -64,6 +64,8 @@ class Survey extends PureComponent {
       }else{
         _item.className = ""
       }
+
+      return _item
     })
 
     console.log(_type,"_type")
