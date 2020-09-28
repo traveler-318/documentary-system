@@ -46,6 +46,13 @@ export async function getRemove(params) {
   });
 }
 
+// 售后列表
+export async function getAfterlists(params) {
+  return request('/api/agent/salesman/afterlist ', {
+    method: 'get',
+  });
+}
+
 // ============ 修改分组 ===============
 export async function getModifyGroup(params) {
   return request('/api/agent/salesman/batchUpdateSalesmanGroup', {

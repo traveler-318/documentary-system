@@ -7,7 +7,11 @@ import { CITY } from '../../../utils/city';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
 
-import {getSalesmangroup,getAddList } from '../../../services/newServices/sales';
+import {
+  getSalesmangroup,
+  getAddList,
+  getAfterlists
+} from '../../../services/newServices/sales';
 import router from 'umi/router';
 
 const FormItem = Form.Item;
@@ -33,11 +37,22 @@ class SenderAdd extends PureComponent {
         size:10,
         current:1
       },
+      afterlist:[]
     };
   }
 
   componentWillMount() {
-    this.getDataList()
+    this.getDataList();
+
+    this.getAfterlist();
+  }
+
+  getAfterlist = () => {
+    getAfterlists().then(res=>{
+      this.setState({
+        afterlist:res.data
+      })
+    })
   }
 
   getDataList = () => {
@@ -68,6 +83,34 @@ class SenderAdd extends PureComponent {
     });
   };
 
+  valinsChange = (rule, value, callback) => {
+    var rep = /[\W]/g;
+    var reg=/^\d{1,}$/;
+    if(value === "" || value === null){
+      return callback(new Error('姓名不能为空'));
+    }else if(reg.test(value)){
+      return callback(new Error('姓名请输入英文和数字'));
+    }else if(rep.test(value)){
+      return callback(new Error('姓名只能输入英文和数字'));
+    } else {
+      return callback();
+    }
+  }
+
+  valinsUserChange = (rule, value, callback) => {
+    var rep = /[\W]/g;
+    var reg=/^\d{1,}$/;
+    if(value === "" || value === null){
+      return callback(new Error('登录账号不能为空'));
+    }else if(reg.test(value)){
+      return callback(new Error('登录账号请输入英文和数字'));
+    }else if(rep.test(value)){
+      return callback(new Error('登录账号只能输入英文和数字'));
+    } else {
+      return callback();
+    }
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -82,7 +125,7 @@ class SenderAdd extends PureComponent {
       },
     };
 
-    const {data,authorizationType,groupingList}=this.state;
+    const {data,authorizationType,groupingList,afterlist}=this.state;
 
     const action = (
       <Button type="primary" onClick={this.handleSubmit}>
@@ -101,7 +144,7 @@ class SenderAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '姓名不能为空',
+                        validator:this.valinsChange
                       },
                     ],
                   })(<Input placeholder="请输入姓名" />)}
@@ -156,6 +199,38 @@ class SenderAdd extends PureComponent {
                     <Select placeholder="请选择分组">
                       {groupingList.map((item)=>{
                         return (<Option value={item.id}>{item.groupName}</Option>)
+                      })}
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="登录账号：">
+                  {getFieldDecorator('userAccount', {
+                    rules: [
+                      {
+                        required: true,
+                        validator:this.valinsUserChange
+                      },
+                    ],
+                  })(<Input placeholder="请输入登录账号" />)}
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="售后人员：">
+                  {getFieldDecorator('afterId', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择售后人员',
+                      },
+                    ],
+                  })(
+                    <Select placeholder="请选择售后人员">
+                      {afterlist.map((item)=>{
+                        return (<Option value={item.id}>{item.name}</Option>)
                       })}
                     </Select>
                   )}
