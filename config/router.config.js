@@ -514,17 +514,6 @@ export default [
             ],
           },
           {
-            path: '/order/order',
-            routes: [
-              { path: '/order/order', redirect: '/order/order/list' },
-              { path: '/order/order/list', component: './Order/Order/Order' },
-              { path: '/order/order/add', component: './Order/Order/OrderAdd' },
-              { path: '/order/order/edit', component: './Order/Order/OrderEdit' },
-              { path: '/order/order/view', component: './Order/Order/OrderView' },
-              // { path: '/sale/afterSale/add', component: './Sales/AfterSale/add' },
-            ],
-          },
-          {
             path: '/order/myOrder',
             routes: [
               { path: '/order/myOrder', redirect: '/order/myOrder/list' },

@@ -104,7 +104,6 @@ class ReminderTimes extends PureComponent {
             <Form style={{ marginTop: 8 }}>
                 <FormItem {...formAllItemLayout} label="提醒时间">
                   {getFieldDecorator('reminderTimes', {
-                    initialValue: reminderTimes,
                     rules: [
                       {
                         required: true,
