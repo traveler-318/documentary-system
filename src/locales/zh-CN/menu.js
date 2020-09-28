@@ -13,6 +13,7 @@ export default {
   'menu.logistics.additional': '附加信息',
   'menu.customer': '客服管理',
   'menu.customer.sales': '销售管理',
+  'menu.customer.afterSale': '售后管理',
   'menu.product': '产品管理',
   'menu.product.payBrand': '支付品牌',
   'menu.product.productType': '产品类型',

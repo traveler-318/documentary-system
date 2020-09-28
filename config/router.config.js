@@ -604,6 +604,15 @@ export default [
               { path: '/customer/sales/edit', component: './Customer/Sales/edit' },
             ],
           },
+          {
+            path: '/customer/afterSale',
+            routes: [
+              { path: '/customer/afterSale', redirect: '/customer/afterSale/list' },
+              { path: '/customer/afterSale/list', component: './Customer/AfterSale/index' },
+              { path: '/customer/afterSale/add', component: './Customer/AfterSale/add' },
+              { path: '/customer/afterSale/edit', component: './Customer/AfterSale/edit' },
+            ],
+          },
         ],
       },{
         path: '/product',
