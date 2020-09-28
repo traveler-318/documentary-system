@@ -12,12 +12,12 @@ const { RangePicker } = DatePicker;
     globalParameters,
 }))
 @Form.create()
-class ReminderTime extends PureComponent {
+class ReminderTimes extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
-        reminderTime:""
+        reminderTimes:""
     };
   }
 
@@ -32,7 +32,7 @@ class ReminderTime extends PureComponent {
 
   onChange = (value, dateString) => {
       this.setState({
-        reminderTime:value
+        reminderTimes:value
       })
     console.log('Selected Time: ', value);
     console.log('Formatted Selected Time: ', dateString);
@@ -40,7 +40,7 @@ class ReminderTime extends PureComponent {
   
   onOk = (value) => {
     this.setState({
-        reminderTime:value
+        reminderTimes:value
       })
     console.log('onOk: ', value);
   }
@@ -51,7 +51,7 @@ class ReminderTime extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         // 如果点击短信提醒，判断是否修改了设备品牌或者 设备序列号
-        this.props.handleReminderTimeBack(this.state.reminderTime)
+        this.props.handleReminderTimeBack(this.state.reminderTimes)
       }
     });
   };
@@ -64,7 +64,8 @@ class ReminderTime extends PureComponent {
 
     const {
       loading,
-      detail
+      detail,
+      reminderTimes
     } = this.state;
 
     const formItemLayout = {
@@ -103,8 +104,8 @@ class ReminderTime extends PureComponent {
         >
             <Form style={{ marginTop: 8 }}>
                 <FormItem {...formAllItemLayout} label="提醒时间">
-                  {getFieldDecorator('reminderTime', {
-                    initialValue: reminderTime,
+                  {getFieldDecorator('reminderTimes', {
+                    initialValue: reminderTimes,
                     rules: [
                       {
                         required: true,
@@ -122,4 +123,4 @@ class ReminderTime extends PureComponent {
   }
 }
 
-export default ReminderTime;
+export default ReminderTimes;
