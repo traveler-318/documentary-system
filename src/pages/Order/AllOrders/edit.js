@@ -13,7 +13,7 @@ import { getCookie } from '../../../utils/support';
 import { updateData, getDetails } from '../../../services/newServices/order';
 import {ORDERSTATUS} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
-import EditContent from './components/editContent'
+import Survey from './components/Survey'
 import { setListData } from '../../../utils/publicMethod';
 import OrderList from './components/OrderList';
 
@@ -319,7 +319,9 @@ class OrdersEdit extends PureComponent {
                 <div className={styles.tabContent}>
                   <Tabs defaultActiveKey="1" onChange={this.callback}>
                     <TabPane tab="概况" key="1">
-                      <EditContent />
+                      <Survey
+                        detail={detail}
+                      />
                     </TabPane>
                     <TabPane tab={`订单(${data.order})`} key="2">
                       <OrderList />

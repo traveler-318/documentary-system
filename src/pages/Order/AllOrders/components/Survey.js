@@ -22,12 +22,11 @@ const { TabPane } = Tabs;
   globalParameters,
 }))
 @Form.create()
-class OrdersEditContent extends PureComponent {
+class Survey extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
-      detail:{},
       edit:true,
       data:{
         order:'10',
@@ -35,58 +34,73 @@ class OrdersEditContent extends PureComponent {
         service0rder:'6',
         product:"9",
         ownership:"3"
-      }
+      },
+      describe:"",
+      orderType:[
+        {"name":"待审核",key:0},
+        {"name":"已审核",key:1},
+        {"name":"已发货",key:2},
+        {"name":"在途中",key:3},
+        {"name":"已签收",key:4},
+        {"name":"跟进中",key:5},
+        {"name":"已激活",key:6},
+        {"name":"已退回",key:7},
+      ],
+      followRecords:[]
     };
   }
 
-
   componentWillMount() {
-    // this.getEditDetails()
-
-
-    // // 获取详情数据
-    // this.setState({
-    //   detail:globalParameters.detailData
-    // })
-  }
-
-  // getEditDetails = () => {
-  //   const params={
-  //     id:this.props.match.params.id
-  //   }
-  //   getDetails(params).then(res=>{
-  //     console.log(res)
-  //     this.setState({
-  //       detail:res.data,
-  //     })
-  //   })
-  // }
-
-  handleChange = value => {
-  };
-
-  disabledDate = (current) => {
-    // Can not select days before today and today
-    return current && current > moment().endOf('day');
-  }
-
-  onChange = (value, selectedOptions) => {
+    const { orderType } = this.state;
+    const { detail } = this.props;
     this.setState({
-      cityparam:{
-        province:value[0],
-        city:value[1],
-        area:value[2],
+      detail,
+      followRecords:detail.followRecords
+    })
+    let _type = orderType.map(item=>{
+      let _item = {...item}
+      if(item.key <= detail.confirmTag){
+        _item.className = "clolor"
       }
     })
-  };
+
+    this.setState({
+      orderType:_type
+    })
+    
+  }
 
   TextAreaChange = (e) => {
-    console.log(e.target.value)
+      this.setState({
+        describe:e.target.value
+      })
   };
+
+  handleSubmit = () => {
+    const { detail , describe, followRecords } = this.state;
+    let param = {
+      userName:detail.userName,
+      describe
+    }
+
+    followRecords.unshift(param);
+
+    let _param = {
+      ...detail,
+      followRecords
+    }
+
+    console.log(_param,"_param")
+
+    updateData().then(res=>{
+
+    })
+  }
 
   render() {
     const {
       form: { getFieldDecorator },
+      detail
     } = this.props;
 
     const {
@@ -94,6 +108,8 @@ class OrdersEditContent extends PureComponent {
       loading,
       detail,
       edit,
+      describe,
+      followRecords
     } = this.state;
     console.log(detail)
 
@@ -101,19 +117,17 @@ class OrdersEditContent extends PureComponent {
       <>
         <div style={{height:"200px"}} className={styles.main}>
           <ul>
-            <li className={styles.color}>待审核</li>
-            <li>已审核</li>
-            <li>已发货</li>
-            <li>在途中</li>
-            <li>已签收</li>
-            <li>跟进中</li>
-            <li>已激活</li>
+            {orderType.map(item=>{
+              return (
+                <li className={item.className ? styles.color : ""}>{item.name}</li>
+              )
+            })}
           </ul>
-          <p><label>订单号：</label>21326564565</p>
-          <p><label>订单时间：</label>2020-09-10</p>
-          <p><label>订单时间：</label>2020-09-10</p>
-          <p><span><label>快递：</label>顺丰</span><span><label>产品：</label>顺丰</span></p>
-          <p><span><label>单号：</label>顺丰 </span><span><label>SN：</label>顺丰 </span></p>
+          <p><label>订单号：</label>{detail.outOrderNo}</p>
+          <p><label>订单时间：</label>{detail.createTime}</p>
+          <p> </p>
+          <p><span><label>快递：</label>{detail.logisticsCompany}</span><span><label>产品：</label>{detail.productType}</span></p>
+          <p><span><label>单号：</label>{detail.logisticsNumber}</span><span><label>SN：</label>{detail.productCoding}</span></p>
         </div>
         <div className={styles.timelineContent}>
           <Timeline>
@@ -140,14 +154,22 @@ class OrdersEditContent extends PureComponent {
           </Timeline>
         </div>
         <div className={styles.tabText}>
-          <TextArea rows={4} onChange={this.TextAreaChange} placeholder='请输入内容（Alt+Enter快速提交）' />
+          <TextArea 
+            rows={4} 
+            value={describe}
+            onChange={this.TextAreaChange} 
+            placeholder='请输入内容（Alt+Enter快速提交）' 
+          />
           <div style={{float:"left"}}>
             <Icon type="clock-circle" style={{margin:"0 10px 0 15px"}} />
             计划提醒
           </div>
           <div style={{float:"right"}}>
             <Button>清空</Button>
-            <Button type="primary">提交</Button>
+            <Button 
+              type="primary"
+              onClick={this.handleSubmit}
+            >提交</Button>
           </div>
         </div>
       </>
@@ -155,4 +177,4 @@ class OrdersEditContent extends PureComponent {
   }
 }
 
-export default OrdersEditContent;
+export default Survey;
