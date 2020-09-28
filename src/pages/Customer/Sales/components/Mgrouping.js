@@ -177,9 +177,7 @@ class Logistics extends PureComponent {
           width={550}
           onCancel={handleCancelGrouping}
           footer={[
-            <Button key="back" onClick={handleCancelGrouping}>
-              取消
-            </Button>,
+
           ]}
         >
           <div style={{height:'50px'}}>
