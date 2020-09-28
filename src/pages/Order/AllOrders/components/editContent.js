@@ -99,119 +99,56 @@ class OrdersEditContent extends PureComponent {
 
     return (
       <>
-        <div className={styles.titleBtn}>
-          {/* <Button icon="plus">工单</Button>
-                  <Button  icon="plus">产品</Button>
-                  <Button  icon="plus">地址</Button> */}
+        <div style={{height:"200px"}} className={styles.main}>
+          <ul>
+            <li className={styles.color}>待审核</li>
+            <li>已审核</li>
+            <li>已发货</li>
+            <li>在途中</li>
+            <li>已签收</li>
+            <li>跟进中</li>
+            <li>已激活</li>
+          </ul>
+          <p><label>订单号：</label>21326564565</p>
+          <p><label>订单时间：</label>2020-09-10</p>
+          <p><label>订单时间：</label>2020-09-10</p>
+          <p><span><label>快递：</label>顺丰</span><span><label>产品：</label>顺丰</span></p>
+          <p><span><label>单号：</label>顺丰 </span><span><label>SN：</label>顺丰 </span></p>
         </div>
-        <div className={styles.tabContent}>
-          <Tabs defaultActiveKey="1" onChange={this.callback}>
-            <TabPane tab="概况" key="1">
-              <div style={{height:"200px"}} className={styles.main}>
-                <ul>
-                  <li className={styles.color}>待审核</li>
-                  <li>已审核</li>
-                  <li>已发货</li>
-                  <li>在途中</li>
-                  <li>已签收</li>
-                  <li>跟进中</li>
-                  <li>已激活</li>
-                </ul>
-                <p><label>订单号：</label>21326564565</p>
-                <p><label>订单时间：</label>2020-09-10</p>
-                <p><label>订单时间：</label>2020-09-10</p>
-                <p><span><label>快递：</label>顺丰</span><span><label>产品：</label>顺丰</span></p>
-                <p><span><label>单号：</label>顺丰 </span><span><label>SN：</label>顺丰 </span></p>
-              </div>
-              <div className={styles.timelineContent}>
-                <Timeline>
-                  <Timeline.Item>
-                    <p>赵小刚 跟进</p>
-                    <p>电话无人接听</p>
-                    <p>2020-09-19</p>
-                  </Timeline.Item>
-                  <Timeline.Item>
-                    <p>赵小刚 新增客户</p>
-                    <p>上门拜访了客服，客户对产品很满意</p>
-                    <p>2020-09-19</p>
-                  </Timeline.Item>
-                  <Timeline.Item>
-                    <p>赵小刚 跟进</p>
-                    <p>电话无人接听</p>
-                    <p>2020-09-19</p>
-                  </Timeline.Item>
-                  <Timeline.Item>
-                    <p>赵小刚 新增客户</p>
-                    <p>上门拜访了客服，客户对产品很满意</p>
-                    <p>2020-09-19</p>
-                  </Timeline.Item>
-                </Timeline>
-              </div>
-              <div className={styles.tabText}>
-                <TextArea rows={4} onChange={this.TextAreaChange} placeholder='请输入内容（Alt+Enter快速提交）' />
-                <div style={{float:"left"}}>
-                  <Icon type="clock-circle" style={{margin:"0 10px 0 15px"}} />
-                  计划提醒
-                </div>
-                <div style={{float:"right"}}>
-                  <Button>清空</Button>
-                  <Button type="primary">提交</Button>
-                </div>
-              </div>
-            </TabPane>
-            <TabPane tab={`订单(${data.order})`} key="2">
-              <OrderList />
-            </TabPane>
-            <TabPane tab={`跟进(${data.followUp})`} key="3">
-              <div className={styles.timelineContent}>
-                <Timeline>
-                  <Timeline.Item>
-                    <p>赵小刚 跟进</p>
-                    <p>电话无人接听</p>
-                    <p>2020-09-19</p>
-                  </Timeline.Item>
-                  <Timeline.Item>
-                    <p>赵小刚 新增客户</p>
-                    <p>上门拜访了客服，客户对产品很满意</p>
-                    <p>2020-09-19</p>
-                  </Timeline.Item>
-                  <Timeline.Item>
-                    <p>赵小刚 跟进</p>
-                    <p>电话无人接听</p>
-                    <p>2020-09-19</p>
-                  </Timeline.Item>
-                  <Timeline.Item>
-                    <p>赵小刚 新增客户</p>
-                    <p>上门拜访了客服，客户对产品很满意</p>
-                    <p>2020-09-19</p>
-                  </Timeline.Item>
-                </Timeline>
-              </div>
-              <div className={styles.tabText}>
-                <TextArea rows={4} onChange={this.TextAreaChange} placeholder='请输入内容（Alt+Enter快速提交）' />
-                <div style={{float:"left"}}>
-                  <Icon type="clock-circle" style={{margin:"0 10px 0 15px"}} />
-                  计划提醒
-                </div>
-                <div style={{float:"right"}}>
-                  <Button>清空</Button>
-                  <Button type="primary">提交</Button>
-                </div>
-              </div>
-            </TabPane>
-            {/* <TabPane tab={`服务(${data.service0rder})`} key="4">
-                      服务工单()
-                    </TabPane>
-                    <TabPane tab={`产品(${data.product})`} key="5">
-                      产品记录()
-                    </TabPane>
-                    <TabPane tab={`归属(${data.ownership})`} key="6">
-                      归属记录
-                    </TabPane>
-                    <TabPane tab="操作" key="7">
-                      操作日志()
-                    </TabPane> */}
-          </Tabs>
+        <div className={styles.timelineContent}>
+          <Timeline>
+            <Timeline.Item>
+              <p>赵小刚 跟进</p>
+              <p>电话无人接听</p>
+              <p>2020-09-19</p>
+            </Timeline.Item>
+            <Timeline.Item>
+              <p>赵小刚 新增客户</p>
+              <p>上门拜访了客服，客户对产品很满意</p>
+              <p>2020-09-19</p>
+            </Timeline.Item>
+            <Timeline.Item>
+              <p>赵小刚 跟进</p>
+              <p>电话无人接听</p>
+              <p>2020-09-19</p>
+            </Timeline.Item>
+            <Timeline.Item>
+              <p>赵小刚 新增客户</p>
+              <p>上门拜访了客服，客户对产品很满意</p>
+              <p>2020-09-19</p>
+            </Timeline.Item>
+          </Timeline>
+        </div>
+        <div className={styles.tabText}>
+          <TextArea rows={4} onChange={this.TextAreaChange} placeholder='请输入内容（Alt+Enter快速提交）' />
+          <div style={{float:"left"}}>
+            <Icon type="clock-circle" style={{margin:"0 10px 0 15px"}} />
+            计划提醒
+          </div>
+          <div style={{float:"right"}}>
+            <Button>清空</Button>
+            <Button type="primary">提交</Button>
+          </div>
         </div>
       </>
     );
