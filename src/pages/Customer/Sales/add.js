@@ -42,7 +42,9 @@ class SenderAdd extends PureComponent {
   }
 
   componentWillMount() {
-    this.getDataList()
+    this.getDataList();
+
+    this.getAfterlist();
   }
 
   getAfterlist = () => {
@@ -123,7 +125,7 @@ class SenderAdd extends PureComponent {
       },
     };
 
-    const {data,authorizationType,groupingList}=this.state;
+    const {data,authorizationType,groupingList,afterlist}=this.state;
 
     const action = (
       <Button type="primary" onClick={this.handleSubmit}>
