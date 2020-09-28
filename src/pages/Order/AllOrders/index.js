@@ -189,7 +189,7 @@ class AllOrdersList extends PureComponent {
   };
 
   // =========首次打印===========
-  bulkDelivery = () => {
+  first = () => {
     const {selectedRows} = this.state;
     const { dispatch } = this.props;
     const  tips=[];
@@ -265,13 +265,10 @@ class AllOrdersList extends PureComponent {
       if(tips.length > 0 ){
         return false;
       }
-      dispatch({
-        type: `globalParameters/setDetailData`,
-        payload: selectedRows,
-      });
-      this.setState({
-        LogisticsConfigVisible:true
-      })
+      let param = [];
+      for(let i=0; i<selectedRows.length; i++){
+        param.push(selectedRows[i].taskId)
+      }
     }
   }
 
@@ -358,12 +355,13 @@ class AllOrdersList extends PureComponent {
         <Menu.Item key="6" onClick={this.repeat}>
           重复打印
         </Menu.Item>
-        <Menu.Item key="7" onClick={this.bulkDelivery}>
+        <Menu.Item key="7" onClick={this.first}>
           首次打印
         </Menu.Item>
       </SubMenu>
     </Menu>
   );
+
   handleMenuClick = (menuRow) => {
     console.log('click', menuRow);
     const {selectedRows} = this.state;

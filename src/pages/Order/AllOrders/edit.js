@@ -26,7 +26,7 @@ const { TabPane } = Tabs;
   globalParameters,
 }))
 @Form.create()
-class OrdersAdd extends PureComponent {
+class OrdersEdit extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -412,7 +412,6 @@ class OrdersAdd extends PureComponent {
                 </div>
               </Col>
             </Row>
-
           </Card>
         </Form>
       </Panel>
@@ -420,4 +419,4 @@ class OrdersAdd extends PureComponent {
   }
 }
 
-export default OrdersAdd;
+export default OrdersEdit;
