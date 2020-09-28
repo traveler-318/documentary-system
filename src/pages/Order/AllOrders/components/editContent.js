@@ -8,9 +8,9 @@ import Panel from '../../../../components/Panel';
 import FormTitle from '../../../../components/FormTitle';
 import styles from '../edit.less';
 import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../../actions/user';
-import func from '../../../utils/Func';
+import func from '../../../../utils/Func';
 import { getCookie } from '../../../../utils/support';
-import {updateData,getRegion} from '../../../../services/newServices/order'
+import { updateData, getRegion, getDetails } from '../../../../services/newServices/order';
 import OrderList from './OrderList'
 
 
@@ -41,13 +41,26 @@ class OrdersEditContent extends PureComponent {
 
 
   componentWillMount() {
-    const { globalParameters } = this.props;
+    // this.getEditDetails()
 
-    // 获取详情数据
-    this.setState({
-      detail:globalParameters.detailData
-    })
+
+    // // 获取详情数据
+    // this.setState({
+    //   detail:globalParameters.detailData
+    // })
   }
+
+  // getEditDetails = () => {
+  //   const params={
+  //     id:this.props.match.params.id
+  //   }
+  //   getDetails(params).then(res=>{
+  //     console.log(res)
+  //     this.setState({
+  //       detail:res.data,
+  //     })
+  //   })
+  // }
 
   handleChange = value => {
   };
@@ -94,6 +107,22 @@ class OrdersEditContent extends PureComponent {
         <div className={styles.tabContent}>
           <Tabs defaultActiveKey="1" onChange={this.callback}>
             <TabPane tab="概况" key="1">
+              <div style={{height:"200px"}} className={styles.main}>
+                <ul>
+                  <li className={styles.color}>待审核</li>
+                  <li>已审核</li>
+                  <li>已发货</li>
+                  <li>在途中</li>
+                  <li>已签收</li>
+                  <li>跟进中</li>
+                  <li>已激活</li>
+                </ul>
+                <p><label>订单号：</label>21326564565</p>
+                <p><label>订单时间：</label>2020-09-10</p>
+                <p><label>订单时间：</label>2020-09-10</p>
+                <p><span><label>快递：</label>顺丰</span><span><label>产品：</label>顺丰</span></p>
+                <p><span><label>单号：</label>顺丰 </span><span><label>SN：</label>顺丰 </span></p>
+              </div>
               <div className={styles.timelineContent}>
                 <Timeline>
                   <Timeline.Item>

@@ -444,8 +444,7 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: row,
     });
-
-    router.push('/order/allOrders/edit');
+    router.push(`/order/allOrders/edit/${row.id}`);
   }
 
   renderRightButton = () => (

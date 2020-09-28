@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, Icon , Select, DatePicker, Tabs, Cascader, Radio,Timeline,} from 'antd';
+import { Form, Input, Card, Row, Col, Button, Icon , Select, message, Tabs, Cascader, Radio,Timeline,} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -7,15 +7,14 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import FormTitle from '../../../components/FormTitle';
 import styles from './edit.less';
-import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
-import func from '../../../utils/Func';
-import { tenantMode } from '../../../defaultSettings';
 import { CITY } from '../../../utils/city';
+import { getQueryString } from '../../../utils/utils';
 import { getCookie } from '../../../utils/support';
-import {updateData,getRegion} from '../../../services/newServices/order'
+import { updateData, getDetails } from '../../../services/newServices/order';
 import {ORDERSTATUS} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
-import OrderList from './components/OrderList'
+import EditContent from './components/editContent'
+import { setListData } from '../../../utils/publicMethod';
 
 
 const FormItem = Form.Item;
@@ -39,17 +38,31 @@ class OrdersEdit extends PureComponent {
         service0rder:'6',
         product:"9",
         ownership:"3"
-      }
+      },
+      ids:'',
     };
   }
 
 
   componentWillMount() {
-    const { globalParameters } = this.props;
 
+    const { globalParameters } = this.props;
     // 获取详情数据
     this.setState({
-      detail:globalParameters.detailData
+      detail:globalParameters.detailData,
+    })
+
+    this.getEditDetails()
+  }
+
+  getEditDetails = () => {
+    const params={
+      id:this.props.match.params.id
+    }
+    getDetails(params).then(res=>{
+      this.setState({
+        detail:res.data,
+      })
     })
   }
 
@@ -82,14 +95,25 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { cityparam, detail } = this.state;
+    const { detail } = this.state;
     form.validateFieldsAndScroll((err, values) => {
+      ORDERSTATUS.map(item => {
+        if(item.name === values.confirmTag){
+          values.confirmTag = item.key
+        }
+      })
+      values.id = detail.id
       if (!err) {
-        values = {...values,...cityparam};
-        values.id = detail.id
-        updateData(values).then(res=>{
+        const params = {
+          ...values
+        };
+        console.log(params)
+        updateData(params).then(res=>{
           message.success(res.msg);
-          router.push('/order/allOrders');
+          this.setState({
+            edit:true
+          })
+          // router.push('/order/allOrders');
         })
       }
     });
@@ -123,16 +147,6 @@ class OrdersEdit extends PureComponent {
     })
   };
 
-  Preservation = () => {
-    this.setState({
-      edit:true
-    })
-  };
-
-  callback = (key) => {
-
-  };
-
   getText = (key) => {
     let text = ""
     ORDERSTATUS.map(item=>{
@@ -154,7 +168,6 @@ class OrdersEdit extends PureComponent {
       detail,
       edit,
     } = this.state;
-    console.log(detail)
 
     const formItemLayout = {
       labelCol: {
@@ -180,7 +193,7 @@ class OrdersEdit extends PureComponent {
             <Row gutter={24} style={{ margin: 0 }}>
               <Col span={12} style={{ padding: 0 }} className={styles.leftContent}>
                 <div className={styles.titleBtn}>
-                  <Button type="primary" onClick={this.Preservation}>保存</Button>
+                  <Button type="primary" onClick={this.handleSubmit}>保存</Button>
                   <Button icon="edit" onClick={this.clickEdit}>编辑</Button>
                   {/* <Button  icon="delete">删除</Button> */}
                   <Button 
@@ -190,7 +203,7 @@ class OrdersEdit extends PureComponent {
                   {/* <Button  icon="folder">归档</Button> */}
                 </div>
                 <div className={styles.editList} style={{ padding: '20px' }}>
-                  <FormDetailsTitle title="客户信息" style={{ margin:'0'}} />
+                  <FormDetailsTitle title="订单信息" style={{ margin:'0'}} />
                   <FormItem {...formAllItemLayout} label="客户姓名">
                     {getFieldDecorator('userName', {
                       rules: [
@@ -213,12 +226,12 @@ class OrdersEdit extends PureComponent {
                         },
                       ],
                       initialValue: detail.userPhone,
-                    })(<Input disabled={detail.userPhone ? true : edit} placeholder="请输入手机号" />)}
+                    })(<Input disabled={detail.userPhone ? true : edit} placeholder="" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="备用手机号">
                     {getFieldDecorator('backPhone', {
                       initialValue: detail.backPhone,
-                    })(<Input disabled={detail.backPhone ? true : edit} placeholder="请输入手机号" />)}
+                    })(<Input disabled={detail.backPhone ? true : edit} placeholder="" />)}
                   </FormItem>
                   
                   <FormItem {...formAllItemLayout} label="所在地区">
@@ -243,7 +256,7 @@ class OrdersEdit extends PureComponent {
                       initialValue: detail.userAddress,
                     })(<Input disabled={edit} placeholder="请输入收货地址" />)}
                   </FormItem>
-                  <FormItem {...formAllItemLayout} label="客戶状态">
+{/*                  <FormItem {...formAllItemLayout} label="客戶状态">
                     {getFieldDecorator('userAddress', {
                       rules: [
                         {
@@ -252,18 +265,8 @@ class OrdersEdit extends PureComponent {
                       ],
                       initialValue: detail.userAddress,
                     })(<Input disabled={edit} placeholder="" />)}
-                  </FormItem>
-                  <FormItem {...formAllItemLayout} label="系统编号">
-                    {getFieldDecorator('userAddress', {
-                      rules: [
-                        {
-                          message: '',
-                        },
-                      ],
-                      initialValue: detail.userAddress,
-                    })(<Input disabled={edit} placeholder="" />)}
-                  </FormItem>
-                  <FormItem {...formAllItemLayout} label="订单状态">
+                  </FormItem>*/}
+{/*                  <FormItem {...formAllItemLayout} label="订单状态">
                     {getFieldDecorator('confirmTag', {
                       rules: [
                         {
@@ -272,18 +275,13 @@ class OrdersEdit extends PureComponent {
                       ],
                       initialValue: this.getText(detail.confirmTag),
                     })(<Input disabled={edit} placeholder="" />)}
-                  </FormItem>
-                  <FormItem {...formAllItemLayout} label="客户来源">
-                    {getFieldDecorator('salesman', {
-                      rules: [
-                        {
-                          message: '',
-                        },
-                      ],
-                      initialValue: detail.salesman,
+                  </FormItem>*/}
+                  <FormItem {...formAllItemLayout} label="订单来源">
+                    {getFieldDecorator('orderSource', {
+                      initialValue: detail.orderSource,
                     })(<Input disabled={edit} placeholder="" />)}
                   </FormItem>
-                  <FormItem {...formAllItemLayout} label="客户归属" className={styles.salesman}>
+                  <FormItem {...formAllItemLayout} label="订单归属" className={styles.salesman}>
                     {getFieldDecorator('salesman', {
                       rules: [
                         {
@@ -297,7 +295,7 @@ class OrdersEdit extends PureComponent {
                   <FormItem {...formAllItemLayout} label="微信号">
                     {getFieldDecorator('wechatId', {
                       initialValue: detail.wechatId,
-                    })(<Input disabled={detail.wechatId ? true : edit} placeholder="请输入微信号" />)}
+                    })(<Input disabled={detail.wechatId ? true : edit} placeholder="" />)}
                   </FormItem>
                   {/* <FormItem {...formAllItemLayout} label="电子邮箱">
                     {getFieldDecorator('userAddress', {
@@ -312,104 +310,7 @@ class OrdersEdit extends PureComponent {
                 </div>
               </Col>
               <Col span={12} style={{ padding: 0 }} className={styles.rightContent}>
-                <div className={styles.titleBtn}>
-                  {/* <Button icon="plus">工单</Button>
-                  <Button  icon="plus">产品</Button>
-                  <Button  icon="plus">地址</Button> */}
-                </div>
-                <div className={styles.tabContent}>
-                  <Tabs defaultActiveKey="1" onChange={this.callback}>
-                    <TabPane tab="概况" key="1">
-                      <div className={styles.timelineContent}>
-                        <Timeline>
-                          <Timeline.Item>
-                            <p>赵小刚 跟进</p>
-                            <p>电话无人接听</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                          <Timeline.Item>
-                            <p>赵小刚 新增客户</p>
-                            <p>上门拜访了客服，客户对产品很满意</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                          <Timeline.Item>
-                            <p>赵小刚 跟进</p>
-                            <p>电话无人接听</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                          <Timeline.Item>
-                            <p>赵小刚 新增客户</p>
-                            <p>上门拜访了客服，客户对产品很满意</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                        </Timeline>
-                      </div>
-                      <div className={styles.tabText}>
-                        <TextArea rows={4} onChange={this.TextAreaChange} placeholder='请输入内容（Alt+Enter快速提交）' />
-                        <div style={{float:"left"}}>
-                          <Icon type="clock-circle" style={{margin:"0 10px 0 15px"}} />
-                          计划提醒
-                        </div>
-                        <div style={{float:"right"}}>
-                          <Button>清空</Button>
-                          <Button type="primary">提交</Button>
-                        </div>
-                      </div>
-                    </TabPane>
-                    <TabPane tab={`订单(${data.order})`} key="2">
-                      <OrderList/>
-                    </TabPane>
-                    <TabPane tab={`跟进(${data.followUp})`} key="3">
-                      <div className={styles.timelineContent}>
-                        <Timeline>
-                          <Timeline.Item>
-                            <p>赵小刚 跟进</p>
-                            <p>电话无人接听</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                          <Timeline.Item>
-                            <p>赵小刚 新增客户</p>
-                            <p>上门拜访了客服，客户对产品很满意</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                          <Timeline.Item>
-                            <p>赵小刚 跟进</p>
-                            <p>电话无人接听</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                          <Timeline.Item>
-                            <p>赵小刚 新增客户</p>
-                            <p>上门拜访了客服，客户对产品很满意</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                        </Timeline>
-                      </div>
-                      <div className={styles.tabText}>
-                        <TextArea rows={4} onChange={this.TextAreaChange} placeholder='请输入内容（Alt+Enter快速提交）' />
-                        <div style={{float:"left"}}>
-                          <Icon type="clock-circle" style={{margin:"0 10px 0 15px"}} />
-                          计划提醒
-                        </div>
-                        <div style={{float:"right"}}>
-                          <Button>清空</Button>
-                          <Button type="primary">提交</Button>
-                        </div>
-                      </div>
-                    </TabPane>
-                    {/* <TabPane tab={`服务(${data.service0rder})`} key="4">
-                      服务工单()
-                    </TabPane>
-                    <TabPane tab={`产品(${data.product})`} key="5">
-                      产品记录()
-                    </TabPane>
-                    <TabPane tab={`归属(${data.ownership})`} key="6">
-                      归属记录
-                    </TabPane>
-                    <TabPane tab="操作" key="7">
-                      操作日志()
-                    </TabPane> */}
-                  </Tabs>
-                </div>
+                <EditContent />
               </Col>
             </Row>
           </Card>
