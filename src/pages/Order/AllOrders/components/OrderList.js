@@ -51,9 +51,16 @@ class OrderList extends PureComponent {
     }
     orderDetail(params).then(res=>{
       console.log(res)
+      const data=res.data.records;
+      let list=[]
+      for(let i=0; i<data.length; i++){
+        if(data[i].id !== detail.id){
+          list.push(data[i])
+        }
+      }
       this.setState({
         data:{
-          list:res.data.records
+          list:list
         }
       })
     })
@@ -84,6 +91,7 @@ class OrderList extends PureComponent {
       data,
       loading, 
     } = this.state;
+    console.log(data)
 
     const columns = [
         {

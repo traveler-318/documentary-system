@@ -268,7 +268,7 @@ class AllOrdersList extends PureComponent {
       }
       let param = [];
       for(let i=0; i<selectedRows.length; i++){
-        param.push(selectedRows[i].taskId)
+        param.push(selectedRows[i].id)
       }
 
       const {params} = {
