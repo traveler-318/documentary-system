@@ -102,3 +102,11 @@ export async function updateReminds(params) {
 export async function toExamine(params) {
   
 }
+
+// 详情关联订单
+export async function orderDetail(params) {
+  return request('/api/order/order/orderDetail', {
+    method: 'POST',
+    body: params,
+  });
+}

@@ -14,6 +14,7 @@ import { updateData, getDetails } from '../../../services/newServices/order';
 import {ORDERSTATUS} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import Survey from './components/Survey'
+import FollowUp from './components/FollowUp'
 import { setListData } from '../../../utils/publicMethod';
 import OrderList from './components/OrderList';
 
@@ -324,44 +325,12 @@ class OrdersEdit extends PureComponent {
                       />
                     </TabPane>
                     <TabPane tab={`订单(${data.order})`} key="2">
-                      <OrderList />
+                      <OrderList
+                        detail={detail}
+                      />
                     </TabPane>
                     <TabPane tab={`跟进(${data.followUp})`} key="3">
-                      <div className={styles.timelineContent}>
-                        <Timeline>
-                          <Timeline.Item>
-                            <p>赵小刚 跟进</p>
-                            <p>电话无人接听</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                          <Timeline.Item>
-                            <p>赵小刚 新增客户</p>
-                            <p>上门拜访了客服，客户对产品很满意</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                          <Timeline.Item>
-                            <p>赵小刚 跟进</p>
-                            <p>电话无人接听</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                          <Timeline.Item>
-                            <p>赵小刚 新增客户</p>
-                            <p>上门拜访了客服，客户对产品很满意</p>
-                            <p>2020-09-19</p>
-                          </Timeline.Item>
-                        </Timeline>
-                      </div>
-                      <div className={styles.tabText}>
-                        <TextArea rows={4} onChange={this.TextAreaChange} placeholder='请输入内容（Alt+Enter快速提交）' />
-                        <div style={{float:"left"}}>
-                          <Icon type="clock-circle" style={{margin:"0 10px 0 15px"}} />
-                          计划提醒
-                        </div>
-                        <div style={{float:"right"}}>
-                          <Button>清空</Button>
-                          <Button type="primary">提交</Button>
-                        </div>
-                      </div>
+                      <FollowUp />
                     </TabPane>
                     {/* <TabPane tab={`服务(${data.service0rder})`} key="4">
                       服务工单()
