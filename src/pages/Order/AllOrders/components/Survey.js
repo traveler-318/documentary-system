@@ -12,7 +12,7 @@ import func from '../../../../utils/Func';
 import { getCookie } from '../../../../utils/support';
 import { updateData, getRegion, getDetails } from '../../../../services/newServices/order';
 import OrderList from './OrderList'
-import ReminderTimes from './reminderTime'
+// import ReminderTimes from './reminderTime'
 
 
 const FormItem = Form.Item;
@@ -109,7 +109,7 @@ class Survey extends PureComponent {
     let _param = {
       ...detail,
     }
-    _param.followRecords = followRecords
+    _param.followRecords = JSON.stringify(followRecords)
 
     console.log(_param,"_param")
 
@@ -194,10 +194,10 @@ class Survey extends PureComponent {
             onChange={this.TextAreaChange} 
             placeholder='请输入内容（Alt+Enter快速提交）' 
           />
-          <div style={{float:"left"}}>
+          <div style={{float:"left",cursor:"pointer"}}>
             <Icon 
               type="clock-circle" 
-              style={{margin:"0 10px 0 15px",cursor:"pointer"}}
+              style={{margin:"0 10px 0 15px"}}
               onClick={this.handleReminderTime}
             />
             计划提醒
@@ -212,11 +212,11 @@ class Survey extends PureComponent {
             >提交</Button>
           </div>
         </div>
-        {reminderTimeVisible?(
+        {/* {reminderTimeVisible?(
           <ReminderTimes 
             handleReminderTimeBack={this.handleReminderTimeBack}
           />
-        ):""}
+        ):""} */}
       </>
     );
   }
