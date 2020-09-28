@@ -14,6 +14,8 @@ import { updateData, getRegion, getDetails } from '../../../../services/newServi
 import OrderList from './OrderList'
 import LogisticsDetails from './LogisticsDetails'
 import ReminderTimes from './time'
+import EditTime from './editTime'
+
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -52,6 +54,9 @@ class Survey extends PureComponent {
       reminderTime:"",
       reminderTimeVisible:false,
       logisticsDetailsVisible:false
+      editTimeVisible:false,
+      timeIndex:"",
+      editReminderTimes:""
     };
   }
 
@@ -84,6 +89,17 @@ class Survey extends PureComponent {
       orderType:_type
     })
 
+  }
+
+  // 修改时间
+
+  handleediTtime = (index,reminderTime) => {
+    console.log(index,"index")
+    this.setState({
+      editTimeVisible:true,
+      timeIndex:index,
+      editReminderTimes:reminderTime
+    })
   }
 
   // 删除
@@ -183,7 +199,8 @@ class Survey extends PureComponent {
     updateData(_param).then(res=>{
       if(res.code === 200){
         message.success(res.msg);
-        this.props.getEditDetails()
+        this.props.getEditDetails();
+        this.handleEmpty();
       }
     })
   }
@@ -196,9 +213,28 @@ class Survey extends PureComponent {
 
   handleReminderTimeBack = (data) => {
     console.log(data)
+    if(data){
+      this.setState({
+        reminderTime:data,
+        reminderTimeVisible:false
+      })
+    }else{
+      this.setState({
+        reminderTimeVisible:false
+      })
+    }
+  }
+
+  handleEditTimeBack = (data) => {
+
+    const {timeIndex,followRecords} = this.state;
+    if(data){
+      followRecords[timeIndex].reminderTime = data
+      this.handleUpdate(followRecords);
+    }
+
     this.setState({
-      reminderTime:data,
-      reminderTimeVisible:false
+      editTimeVisible:false
     })
   }
 
@@ -216,6 +252,9 @@ class Survey extends PureComponent {
       followRecords,
       orderType,
       reminderTimeVisible,
+      reminderTime,
+      editTimeVisible,
+      editReminderTimes
       logisticsDetailsVisible
     } = this.state;
     console.log(detail)
@@ -251,6 +290,13 @@ class Survey extends PureComponent {
                   <p>
                     <span style={{fontWeight:"bold"}}>{item.userName}</span>
                     {item.type === '1' ? '跟进了该客户' : "添加了计划提醒"}
+                    <span
+                      onClick={()=>this.handleediTtime(index,item.reminderTime)}
+                      style={{color:"rgb(90, 205, 216)",marginLeft:5,cursor:"pointer"}}
+                    >{item.reminderTime}</span>
+                    <span
+                    <span style={{fontWeight:"bold"}}>{item.userName}</span>
+                    {item.type === '1' ? '跟进了该客户' : "添加了计划提醒"}
                     <span style={{color:"rgb(90, 205, 216)",marginLeft:5}}>{item.reminderTime}</span>
                     <span
                       style={{float:"right",cursor:"pointer"}}
@@ -273,24 +319,31 @@ class Survey extends PureComponent {
             onChange={this.TextAreaChange}
             placeholder='请输入内容（Alt+Enter快速提交）'
           />
-          <div
-            onClick={this.handleReminderTime}
-            style={{float:"left",cursor:"pointer"}}
-          >
-            <Icon
-              type="clock-circle"
-              style={{margin:"0 10px 0 15px"}}
-            />
-            计划提醒
-          </div>
-          <div style={{float:"right"}}>
-            <Button
-              onClick={this.handleEmpty}
-            >清空</Button>
-            <Button
-              type="primary"
-              onClick={this.handleSubmit}
-            >提交</Button>
+          <div>
+            <div
+              onClick={this.handleReminderTime}
+              style={{float:"left",cursor:"pointer"}}
+            >
+              <Icon
+                type="clock-circle"
+                style={{margin:"0 10px 0 15px"}}
+              />
+              计划提醒
+            </div>
+            <div
+              style={{float:"left",cursor:"pointer"}}
+            >
+              {reminderTime}
+            </div>
+            <div style={{float:"right"}}>
+              <Button
+                onClick={this.handleEmpty}
+              >清空</Button>
+              <Button
+                type="primary"
+                onClick={this.handleSubmit}
+              >提交</Button>
+            </div>
           </div>
         </div>
         {reminderTimeVisible?(
@@ -304,6 +357,13 @@ class Survey extends PureComponent {
           <LogisticsDetails
             logisticsDetailsVisible={logisticsDetailsVisible}
             handleLogisticsDetails={this.handleLogisticsDetails}
+          />
+        ):""}
+        {editTimeVisible?(
+          <EditTime
+            editTimeVisible={editTimeVisible}
+            handleEditTimeBack={this.handleEditTimeBack}
+            editReminderTimes={editReminderTimes}
           />
         ):""}
       </>
