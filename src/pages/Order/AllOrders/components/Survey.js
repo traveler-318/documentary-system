@@ -12,6 +12,7 @@ import func from '../../../../utils/Func';
 import { getCookie } from '../../../../utils/support';
 import { updateData, getRegion, getDetails } from '../../../../services/newServices/order';
 import OrderList from './OrderList'
+import LogisticsDetails from './LogisticsDetails'
 import ReminderTimes from './time'
 import EditTime from './editTime'
 
@@ -52,6 +53,7 @@ class Survey extends PureComponent {
       followRecords:[],
       reminderTime:"",
       reminderTimeVisible:false,
+      logisticsDetailsVisible:false,
       editTimeVisible:false,
       timeIndex:"",
       editReminderTimes:""
@@ -59,7 +61,7 @@ class Survey extends PureComponent {
   }
 
   componentWillMount() {
-    
+
   }
 
   UNSAFE_componentWillReceiveProps(nex){
@@ -86,7 +88,7 @@ class Survey extends PureComponent {
     this.setState({
       orderType:_type
     })
-    
+
   }
 
   // 修改时间
@@ -105,7 +107,7 @@ class Survey extends PureComponent {
     const refresh = this.refreshTable;
     const { followRecords } = this.state;
     const handleUpdate = this.handleUpdate;
-    
+
     Modal.confirm({
       title: '删除确认',
       content: '确定删除选中记录?',
@@ -151,6 +153,18 @@ class Survey extends PureComponent {
       })
   };
 
+  //物流详情窗口
+  handleDetails = () => {
+    this.setState({
+      logisticsDetailsVisible:true
+    })
+  };
+  handleLogisticsDetails = () => {
+    this.setState({
+      logisticsDetailsVisible:false
+    })
+  };
+
   handleEmpty = () => {
     this.setState({
       describe:""
@@ -160,7 +174,7 @@ class Survey extends PureComponent {
   handleSubmit = () => {
     const { detail , describe, reminderTime } = this.state;
     let { followRecords } = this.state;
-   
+
     console.log(moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'))
     let param = {
       userName:detail.userName,
@@ -240,7 +254,8 @@ class Survey extends PureComponent {
       reminderTimeVisible,
       reminderTime,
       editTimeVisible,
-      editReminderTimes
+      editReminderTimes,
+      logisticsDetailsVisible
     } = this.state;
     console.log(detail)
 
@@ -258,7 +273,14 @@ class Survey extends PureComponent {
           <p><label>订单时间：</label>{detail.createTime}</p>
           <p style={{height:5}}></p>
           <p><span><label>快递：</label>{detail.logisticsCompany}</span><span><label>产品：</label>{detail.productType}</span></p>
-          <p><span><label>单号：</label>{detail.logisticsNumber}</span><span><label>SN：</label>{detail.productCoding}</span></p>
+          <p><span><label>单号：</label>{detail.logisticsNumber}
+            {
+              detail.logisticsNumber ?
+                (<Button key="primary" onClick={()=>this.handleDetails()} style={{border: "0",background: "none"}}>查看物流信息</Button>)
+                :""
+            }
+            </span>
+            <span><label>SN：</label>{detail.productCoding}</span></p>
         </div>
         <div className={styles.timelineContent}>
           <Timeline>
@@ -266,13 +288,16 @@ class Survey extends PureComponent {
               return (
                 <Timeline.Item>
                   <p>
-                    <span style={{fontWeight:"bold"}}>{item.userName}</span> 
-                    {item.type === '1' ? '跟进了该客户' : "添加了计划提醒"} 
-                    <span 
+                    <span style={{fontWeight:"bold"}}>{item.userName}</span>
+                    {item.type === '1' ? '跟进了该客户' : "添加了计划提醒"}
+                    <span
                       onClick={()=>this.handleediTtime(index,item.reminderTime)}
                       style={{color:"rgb(90, 205, 216)",marginLeft:5,cursor:"pointer"}}
                     >{item.reminderTime}</span>
-                    <span 
+                    <span style={{fontWeight:"bold"}}>{item.userName}</span>
+                    {item.type === '1' ? '跟进了该客户' : "添加了计划提醒"}
+                    <span style={{color:"rgb(90, 205, 216)",marginLeft:5}}>{item.reminderTime}</span>
+                    <span
                       style={{float:"right",cursor:"pointer"}}
                       onClick={()=>this.handleDelect(index)}
                     >
@@ -287,24 +312,24 @@ class Survey extends PureComponent {
           </Timeline>
         </div>
         <div className={styles.tabText}>
-          <TextArea 
-            rows={4} 
+          <TextArea
+            rows={4}
             value={describe}
-            onChange={this.TextAreaChange} 
-            placeholder='请输入内容（Alt+Enter快速提交）' 
+            onChange={this.TextAreaChange}
+            placeholder='请输入内容（Alt+Enter快速提交）'
           />
           <div>
-            <div 
+            <div
               onClick={this.handleReminderTime}
               style={{float:"left",cursor:"pointer"}}
             >
-              <Icon 
-                type="clock-circle" 
+              <Icon
+                type="clock-circle"
                 style={{margin:"0 10px 0 15px"}}
               />
               计划提醒
             </div>
-            <div 
+            <div
               style={{float:"left",cursor:"pointer"}}
             >
               {reminderTime}
@@ -313,7 +338,7 @@ class Survey extends PureComponent {
               <Button
                 onClick={this.handleEmpty}
               >清空</Button>
-              <Button 
+              <Button
                 type="primary"
                 onClick={this.handleSubmit}
               >提交</Button>
@@ -321,13 +346,20 @@ class Survey extends PureComponent {
           </div>
         </div>
         {reminderTimeVisible?(
-          <ReminderTimes 
+          <ReminderTimes
             reminderTimeVisible={reminderTimeVisible}
             handleReminderTimeBack={this.handleReminderTimeBack}
           />
         ):""}
+      {/* 物流详情 */}
+        {logisticsDetailsVisible?(
+          <LogisticsDetails
+            logisticsDetailsVisible={logisticsDetailsVisible}
+            handleLogisticsDetails={this.handleLogisticsDetails}
+          />
+        ):""}
         {editTimeVisible?(
-          <EditTime 
+          <EditTime
             editTimeVisible={editTimeVisible}
             handleEditTimeBack={this.handleEditTimeBack}
             editReminderTimes={editReminderTimes}
