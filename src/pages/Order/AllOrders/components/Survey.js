@@ -12,7 +12,7 @@ import func from '../../../../utils/Func';
 import { getCookie } from '../../../../utils/support';
 import { updateData, getRegion, getDetails } from '../../../../services/newServices/order';
 import OrderList from './OrderList'
-import ReminderTime from './reminderTime'
+import ReminderTimes from './reminderTime'
 
 
 const FormItem = Form.Item;
@@ -55,6 +55,7 @@ class Survey extends PureComponent {
   }
 
   componentWillMount() {
+    // 214324
     const { orderType } = this.state;
     const { detail } = this.props;
     this.setState({
@@ -212,8 +213,8 @@ class Survey extends PureComponent {
           </div>
         </div>
         {reminderTimeVisible?(
-          <ReminderTime 
-          handleReminderTimeBack={this.handleReminderTimeBack}
+          <ReminderTimes 
+            handleReminderTimeBack={this.handleReminderTimeBack}
           />
         ):""}
       </>
