@@ -53,7 +53,7 @@ class Survey extends PureComponent {
       followRecords:[],
       reminderTime:"",
       reminderTimeVisible:false,
-      logisticsDetailsVisible:false
+      logisticsDetailsVisible:false,
       editTimeVisible:false,
       timeIndex:"",
       editReminderTimes:""
@@ -254,7 +254,7 @@ class Survey extends PureComponent {
       reminderTimeVisible,
       reminderTime,
       editTimeVisible,
-      editReminderTimes
+      editReminderTimes,
       logisticsDetailsVisible
     } = this.state;
     console.log(detail)
@@ -294,7 +294,6 @@ class Survey extends PureComponent {
                       onClick={()=>this.handleediTtime(index,item.reminderTime)}
                       style={{color:"rgb(90, 205, 216)",marginLeft:5,cursor:"pointer"}}
                     >{item.reminderTime}</span>
-                    <span
                     <span style={{fontWeight:"bold"}}>{item.userName}</span>
                     {item.type === '1' ? '跟进了该客户' : "添加了计划提醒"}
                     <span style={{color:"rgb(90, 205, 216)",marginLeft:5}}>{item.reminderTime}</span>
