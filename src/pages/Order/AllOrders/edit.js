@@ -322,6 +322,7 @@ class OrdersEdit extends PureComponent {
                     <TabPane tab="概况" key="1">
                       <Survey
                         detail={detail}
+                        getEditDetails={this.getEditDetails}
                       />
                     </TabPane>
                     <TabPane tab={`订单(${data.order})`} key="2">
