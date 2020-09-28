@@ -100,7 +100,6 @@ class Survey extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      detail
     } = this.props;
 
     const {
