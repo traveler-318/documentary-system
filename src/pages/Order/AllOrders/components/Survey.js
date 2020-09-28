@@ -12,7 +12,7 @@ import func from '../../../../utils/Func';
 import { getCookie } from '../../../../utils/support';
 import { updateData, getRegion, getDetails } from '../../../../services/newServices/order';
 import OrderList from './OrderList'
-import ReminderTimes from './reminderTime'
+// import ReminderTimes from './reminderTime'
 
 
 const FormItem = Form.Item;
@@ -212,11 +212,11 @@ class Survey extends PureComponent {
             >提交</Button>
           </div>
         </div>
-        {reminderTimeVisible?(
+        {/* {reminderTimeVisible?(
           <ReminderTimes 
             handleReminderTimeBack={this.handleReminderTimeBack}
           />
-        ):""}
+        ):""} */}
       </>
     );
   }
