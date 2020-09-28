@@ -52,35 +52,16 @@ class OrderList extends PureComponent {
     orderDetail(params).then(res=>{
       console.log(res)
       this.setState({
-        data:res.data.records
+        data:{
+          list:res.data.records
+        }
       })
     })
   }
 
   // 详情
   handleDetsils = (row) => {
-   
-  }
-
-  // 列表删除
-  handleDelect = (row) => {
-    const refresh = this.refreshTable;
-    Modal.confirm({
-      title: '删除确认',
-      content: '确定删除选中记录?',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      async onOk() {
-        deleteData({
-          ids:row.id
-        }).then(res=>{
-          message.success(res.msg);
-          refresh();
-        })
-      },
-      onCancel() {},
-    });
+    router.push(`/order/allOrders/edit/${row.id}`);
   }
 
   getText = (key, type) => {
@@ -149,8 +130,6 @@ class OrderList extends PureComponent {
                 return(
                   <div>
                     <a onClick={()=>this.handleDetsils(row)}>详情</a>
-                    <Divider type="vertical" />
-                    <a onClick={()=>this.handleDelect(row)}>删除</a>
                   </div>
                 )
             },
