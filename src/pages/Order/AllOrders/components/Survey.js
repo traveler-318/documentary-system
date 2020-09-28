@@ -12,6 +12,7 @@ import func from '../../../../utils/Func';
 import { getCookie } from '../../../../utils/support';
 import { updateData, getRegion, getDetails } from '../../../../services/newServices/order';
 import OrderList from './OrderList'
+import ReminderTime from './reminderTime'
 
 
 const FormItem = Form.Item;
@@ -28,6 +29,7 @@ class Survey extends PureComponent {
     super(props);
     this.state = {
       edit:true,
+      detail:{},
       data:{
         order:'10',
         followUp:'2',
@@ -46,7 +48,9 @@ class Survey extends PureComponent {
         {"name":"已激活",key:6,className:""},
         {"name":"已退回",key:7,className:""},
       ],
-      followRecords:[]
+      followRecords:[],
+      reminderTime:"",
+      reminderTimeVisible:false
     };
   }
 
@@ -55,7 +59,7 @@ class Survey extends PureComponent {
     const { detail } = this.props;
     this.setState({
       detail,
-      followRecords:detail.followRecords
+      followRecords:detail.followRecords || []
     })
     let _type = orderType.map(item=>{
       let _item = {...item}
@@ -82,24 +86,46 @@ class Survey extends PureComponent {
       })
   };
 
+  handleEmpty = () => {
+    this.setState({
+      describe:""
+    })
+};
+
   handleSubmit = () => {
-    const { detail , describe, followRecords } = this.state;
+    const { detail , describe, followRecords, reminderTime } = this.state;
+    console.log(moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'))
     let param = {
       userName:detail.userName,
-      describe
+      describe,
+      createTime:moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
+      type:reminderTime === "" ? "1" : "2",//1是跟进-2提醒时间，
+      reminderTime
     }
 
     followRecords.unshift(param);
 
     let _param = {
       ...detail,
-      followRecords
     }
+    _param.followRecords = followRecords
 
     console.log(_param,"_param")
 
-    updateData().then(res=>{
+    updateData(_param).then(res=>{
 
+    })
+  }
+
+  handleReminderTime = () => {
+    this.set({
+      reminderTimeVisible:true
+    })
+  }
+
+  handleReminderTimeBack = (data) => {
+    this.set({
+      reminderTime:data
     })
   }
 
@@ -115,7 +141,8 @@ class Survey extends PureComponent {
       edit,
       describe,
       followRecords,
-      orderType
+      orderType,
+      reminderTimeVisible
     } = this.state;
     console.log(detail)
 
@@ -131,7 +158,7 @@ class Survey extends PureComponent {
           </ul>
           <p><label>订单号：</label>{detail.outOrderNo}</p>
           <p><label>订单时间：</label>{detail.createTime}</p>
-          <p> </p>
+          <p style={{height:5}}></p>
           <p><span><label>快递：</label>{detail.logisticsCompany}</span><span><label>产品：</label>{detail.productType}</span></p>
           <p><span><label>单号：</label>{detail.logisticsNumber}</span><span><label>SN：</label>{detail.productCoding}</span></p>
         </div>
@@ -167,17 +194,28 @@ class Survey extends PureComponent {
             placeholder='请输入内容（Alt+Enter快速提交）' 
           />
           <div style={{float:"left"}}>
-            <Icon type="clock-circle" style={{margin:"0 10px 0 15px"}} />
+            <Icon 
+              type="clock-circle" 
+              style={{margin:"0 10px 0 15px",cursor:"pointer"}}
+              onClick={this.handleReminderTime}
+            />
             计划提醒
           </div>
           <div style={{float:"right"}}>
-            <Button>清空</Button>
+            <Button
+              onClick={this.handleEmpty}
+            >清空</Button>
             <Button 
               type="primary"
               onClick={this.handleSubmit}
             >提交</Button>
           </div>
         </div>
+        {reminderTimeVisible?(
+          <ReminderTime 
+          handleReminderTimeBack={this.handleReminderTimeBack}
+          />
+        ):""}
       </>
     );
   }
