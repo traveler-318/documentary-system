@@ -55,6 +55,7 @@ class Survey extends PureComponent {
   }
 
   componentWillMount() {
+    // 214324
     const { orderType } = this.state;
     const { detail } = this.props;
     this.setState({
