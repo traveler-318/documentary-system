@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, message, Input, Card, Row, Col, Button, Icon , Select, DatePicker, Tabs, Cascader, Radio,Timeline,} from 'antd';
+import { Form, message, Input, Card, Row, Col, Button, Icon, Modal , Select, DatePicker, Tabs, Cascader, Radio,Timeline,} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -54,16 +54,22 @@ class Survey extends PureComponent {
   }
 
   componentWillMount() {
-    // 214324
+    
+  }
+
+  UNSAFE_componentWillReceiveProps(nex){
     const { orderType } = this.state;
+
     const { detail } = this.props;
+
     this.setState({
-      detail,
-      followRecords:detail.followRecords ? JSON.parse(detail.followRecords).list : []
+      detail:nex.detail,
+      followRecords:nex.detail.followRecords ? JSON.parse(nex.detail.followRecords).list : []
     })
+
     let _type = orderType.map(item=>{
       let _item = {...item}
-      if(item.key <= detail.confirmTag){
+      if(item.key <= nex.detail.confirmTag){
         _item.className = "clolor"
       }else{
         _item.className = ""
@@ -72,12 +78,55 @@ class Survey extends PureComponent {
       return _item
     })
 
-    console.log(_type,"_type")
-
     this.setState({
       orderType:_type
     })
     
+  }
+
+  // 删除
+  handleDelect = (row) => {
+    const refresh = this.refreshTable;
+    const { followRecords } = this.state;
+    const handleUpdate = this.handleUpdate;
+    
+    Modal.confirm({
+      title: '删除确认',
+      content: '确定删除选中记录?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        let newData = []
+        for(let i=0; i<followRecords.length; i++){
+          if(i != row){
+            newData.push(followRecords[i])
+          }
+        }
+        handleUpdate(newData)
+      },
+      onCancel() {},
+    });
+
+  }
+
+  handleUpdate = (data) => {
+    const { detail , describe } = this.state;
+
+    let _param = {
+      id:detail.id,
+      deptId:detail.deptId,
+    }
+    _param.followRecords = JSON.stringify({
+      list:data
+    })
+
+    updateData(_param).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg);
+        this.props.getEditDetails()
+      }
+    })
   }
 
   TextAreaChange = (e) => {
@@ -93,7 +142,9 @@ class Survey extends PureComponent {
 };
 
   handleSubmit = () => {
-    const { detail , describe, followRecords, reminderTime } = this.state;
+    const { detail , describe, reminderTime } = this.state;
+    let { followRecords } = this.state;
+   
     console.log(moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'))
     let param = {
       userName:detail.userName,
@@ -102,6 +153,8 @@ class Survey extends PureComponent {
       type:reminderTime === "" ? "1" : "2",//1是跟进-2提醒时间，
       reminderTime
     }
+
+    console.log(followRecords,"followRecords")
 
     followRecords.unshift(param);
 
@@ -112,8 +165,6 @@ class Survey extends PureComponent {
     _param.followRecords = JSON.stringify({
       list:followRecords
     })
-
-    console.log(_param,"_param")
 
     updateData(_param).then(res=>{
       if(res.code === 200){
@@ -172,17 +223,25 @@ class Survey extends PureComponent {
         </div>
         <div className={styles.timelineContent}>
           <Timeline>
-            {followRecords.map(item=>{
+            {followRecords.map((item,index)=>{
               return (
                 <Timeline.Item>
-                  <p>{item.userName} {item.type === '1' ? '跟进了该客户' : "添加了计划提醒"} <span style={{color:"#eef8f9"}}>{item.reminderTime}</span></p>
+                  <p>
+                    <span style={{fontWeight:"bold"}}>{item.userName}</span> 
+                    {item.type === '1' ? '跟进了该客户' : "添加了计划提醒"} 
+                    <span style={{color:"rgb(90, 205, 216)",marginLeft:5}}>{item.reminderTime}</span>
+                    <span 
+                      style={{float:"right",cursor:"pointer"}}
+                      onClick={()=>this.handleDelect(index)}
+                    >
+                      <Icon type="close" />
+                    </span>
+                  </p>
                   <p>{item.describe}</p>
                   <p>{item.createTime}</p>
                 </Timeline.Item>
               )
             })}
-            
-            
           </Timeline>
         </div>
         <div className={styles.tabText}>

@@ -330,9 +330,9 @@ class OrdersEdit extends PureComponent {
                         detail={detail}
                       />
                     </TabPane>
-                    <TabPane tab={`跟进(${data.followUp})`} key="3">
+                    {/* <TabPane tab={`跟进(${data.followUp})`} key="3">
                       <FollowUp />
-                    </TabPane>
+                    </TabPane> */}
                     {/* <TabPane tab={`服务(${data.service0rder})`} key="4">
                       服务工单()
                     </TabPane>
