@@ -70,9 +70,6 @@ class Survey extends PureComponent {
     const { detail } = this.props;
     let list = [];
 
-console.log(nex.detail.followRecords)
-console.log(JSON.parse(nex.detail.followRecords).list)
-
     if(nex.detail.followRecords && JSON.parse(nex.detail.followRecords).list){
       list = JSON.parse(nex.detail.followRecords).list
     }
