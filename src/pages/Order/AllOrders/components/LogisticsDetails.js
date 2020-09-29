@@ -10,7 +10,8 @@ import {
   Button,
   message,
   Radio,
-  Table
+  Timeline,
+  Table,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -65,37 +66,18 @@ class LogisticsDetails extends PureComponent {
       };
     console.log(params)
     logisticsQuery(params).then(res=>{
-      console.log(res)
-     // this.setState({
-     //   data:res.data.records
-     // })
+      if(res.code === 401){
+        message.success(res.msg);
+      }
+      if(res.code === 200){
+        const list=JSON.parse(res.data);
+         this.setState({
+           data:list.result.list
+         })
+
+      }
    })
   }
-
-  // ======确认==========
-
-  handleSubmit = e => {
-    e.preventDefault();
-    const {  form } = this.props;
-    form.validateFieldsAndScroll((err, values) => {
-      console.log(values);
-      values.deptId = getCookie("dept_id");
-      if (!err) {
-        const params = {
-          ...values,
-        };
-        console.log(params)
-        getSalesmangroupSubmit(params).then(res=>{
-          message.success('提交成功');
-          this.setState({
-            groupAddVisible:false,
-          })
-          this.getDataList()
-        })
-      }
-    });
-  };
-
 
   render() {
     const {
@@ -104,7 +86,7 @@ class LogisticsDetails extends PureComponent {
       handleLogisticsDetails,
       } = this.props;
 
-    const {data,groupAddVisible} = this.state;
+    const {data} = this.state;
 
     // confirmTag
     return (
@@ -118,7 +100,18 @@ class LogisticsDetails extends PureComponent {
 
           ]}
         >
-
+          <div>
+            <Timeline>
+              {data.map((item)=>{
+                return (
+                  <Timeline.Item>
+                    <p>{item.time}</p>
+                    <p>{item.status}</p>
+                  </Timeline.Item>
+                )
+              })}
+            </Timeline>
+          </div>
         </Modal>
       </div>
     );
