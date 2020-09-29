@@ -33,8 +33,6 @@ class LogisticsDetails extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      // 添加分组弹窗
-      groupAddVisible:false,
       data:[],
       params:{
         size:10,
@@ -62,8 +60,6 @@ class LogisticsDetails extends PureComponent {
      const params={
        logisticsNumber:details.logisticsNumber,
        userPhone:details.userPhone,
-       deptId:details.deptId,
-       logisticsCompany:details.logisticsCompany,
        outOrderNo:details.outOrderNo,
        logisticsType:type
       };
