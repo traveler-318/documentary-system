@@ -36,9 +36,7 @@ class OrderList extends PureComponent {
 
   // ============ 初始化数据 ===============
   componentWillMount() {
-    const { detail } = this.props;
     const { orderDetail } = this.props;
-    console.log(orderDetail)
     this.setState({
       data:{
         list:orderDetail

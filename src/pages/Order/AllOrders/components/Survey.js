@@ -153,12 +153,20 @@ class Survey extends PureComponent {
       })
   };
 
-  //物流详情窗口
+  // 物流详情窗口
+
   handleDetails = () => {
+    const { dispatch } = this.props;
+    const {detail} = this.state;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: detail,
+    });
     this.setState({
       logisticsDetailsVisible:true
     })
   };
+
   handleLogisticsDetails = () => {
     this.setState({
       logisticsDetailsVisible:false
@@ -180,7 +188,7 @@ class Survey extends PureComponent {
       userName:detail.userName,
       describe,
       createTime:moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
-      type:reminderTime === "" ? "1" : "2",//1是跟进-2提醒时间，
+      type:reminderTime === "" ? "1" : "2",// 1是跟进-2提醒时间，
       reminderTime
     }
 

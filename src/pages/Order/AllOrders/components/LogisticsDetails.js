@@ -16,7 +16,9 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
-import { getSalesmangroup,getSalesmangroupSubmit,getDeleteGroup } from '../../../../services/newServices/sales';
+import { logisticsQuery } from '../../../../services/newServices/order';
+import { getLogisticsQuery } from '../data';
+
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -43,18 +45,36 @@ class LogisticsDetails extends PureComponent {
 
 
   componentWillMount() {
-
-    //this.getDataList()
+    const { globalParameters } = this.props;
+    this.getDataList()
   }
 
-  //getDataList = () => {
-  //  const {params} = this.state;
-  //  getSalesmangroup(params).then(res=>{
-  //    this.setState({
-  //      data:res.data.records
-  //    })
-  //  })
-  //}
+  getDataList = () => {
+    const { globalParameters } = this.props;
+    const details = globalParameters.detailData;
+    const LogisticsQ = getLogisticsQuery().result;
+    let type=''
+    for(let key in LogisticsQ){
+      if(LogisticsQ[key] === details.logisticsCompany){
+        type = key;
+      }
+    }
+     const params={
+       logisticsNumber:details.logisticsNumber,
+       userPhone:details.userPhone,
+       deptId:details.deptId,
+       logisticsCompany:details.logisticsCompany,
+       outOrderNo:details.outOrderNo,
+       logisticsType:type
+      };
+    console.log(params)
+    logisticsQuery(params).then(res=>{
+      console.log(res)
+     // this.setState({
+     //   data:res.data.records
+     // })
+   })
+  }
 
   // ======确认==========
 

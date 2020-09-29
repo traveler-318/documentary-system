@@ -110,3 +110,11 @@ export async function orderDetail(params) {
     body: params,
   });
 }
+
+// 详情物流详情
+export async function logisticsQuery(params) {
+  return request('/api/order/order/logisticsQuery', {
+    method: 'POST',
+    body: params,
+  });
+}

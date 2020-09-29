@@ -269,12 +269,12 @@ class AuthorityList extends PureComponent {
       {
         title: '业务员姓名',
         dataIndex: 'userName',
-        width: 100,
+        width: 150,
       },
       {
         title: '分组',
         dataIndex: 'groupId',
-        width: 100,
+        width: 150,
         render: (res) => {
           let name='';
           for(let i=0; i<groupingList.length; i++){
@@ -320,7 +320,7 @@ class AuthorityList extends PureComponent {
       {
         title: '默认开关',
         dataIndex: 'salesmanStatus',
-        width: 100,
+        width: 150,
         render: (res,key) => {
           return(
             <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key)} />
@@ -330,6 +330,7 @@ class AuthorityList extends PureComponent {
       {
         title: '授权类型',
         dataIndex: 'authorizationType',
+        width: 150,
         render: (res) => {
           const value = res === 1 ? "免押金" :
             res === 2 ? "预授权" :
@@ -341,10 +342,14 @@ class AuthorityList extends PureComponent {
         },
       },
       {
+        title: '公众号通知',
+        dataIndex: 'openid'
+      },
+      {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 150,
+        width: 200,
         render: (res,row) => {
           return(
             <div>

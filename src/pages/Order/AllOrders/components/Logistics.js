@@ -7,7 +7,7 @@ import router from 'umi/router';
 import { tenantMode } from '../../../../defaultSettings';
 import { getCookie } from '../../../../utils/support';
 import { updateLogistics, logisticsRemind } from '../../../../services/newServices/order'
-import { LOGISTICSCOMPANY } from '../data.js';
+import { getLogisticsQuery } from '../data.js';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -31,6 +31,7 @@ class Logistics extends PureComponent {
 
   componentWillMount() {
     const { globalParameters } = this.props;
+
     // 获取详情数据
     this.setState({
       detail:globalParameters.detailData
