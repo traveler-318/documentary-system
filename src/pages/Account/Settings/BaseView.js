@@ -20,10 +20,10 @@ import { getToken } from '../../../utils/authority';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
-const GRADE = [
-  {name:"一级",key:1},
-  {name:"二级",key:2},
-]
+// const GRADE = [
+//   {name:"一级",key:1},
+//   {name:"二级",key:2},
+// ]
 
 @Form.create()
 class BaseView extends Component {
@@ -154,15 +154,15 @@ class BaseView extends Component {
               <Col span={12}>
               <FormItem
                 {...formItemLayout}
-                label={formatMessage({ id: 'app.settings.basic.avatar' })}
+                label={"头像"}
               >
                 {getFieldDecorator('avatar', {
-                  rules: [
-                    {
-                      required: true,
-                      message: formatMessage({ id: 'app.settings.basic.avatar' }, {}),
-                    },
-                  ],
+                  // rules: [
+                  //   {
+                  //     required: true,
+                  //     message: "请上传头像",
+                  //   },
+                  // ],
                 })(
                   <Upload
                     name="file"
@@ -183,13 +183,13 @@ class BaseView extends Component {
               </FormItem>
               <FormItem
                 {...formItemLayout}
-                label={formatMessage({ id: 'app.settings.basic.nickname' })}
+                label={"昵称"}
               >
                 {getFieldDecorator('name', {
                   rules: [
                     {
                       required: true,
-                      message: formatMessage({ id: 'app.settings.basic.nickname-message' }, {}),
+                      message: "请输入您的昵称!",
                     },
                   ],
                 })(<Input />)}
@@ -207,27 +207,27 @@ class BaseView extends Component {
                   ],
                 })(<Input />)}
               </FormItem> */}
-              <FormItem {...formItemLayout} label={formatMessage({ id: 'app.settings.basic.phone' })}>
+              <FormItem {...formItemLayout} label={"联系电话"}>
                 {getFieldDecorator('phone', {
                   rules: [
                     {
                       required: true,
-                      message: formatMessage({ id: 'app.settings.basic.phone-message' }, {}),
+                      message: "请输入您的联系电话!",
                     },
                   ],
                 })(<Input />)}
               </FormItem>
-              <FormItem {...formItemLayout} label={formatMessage({ id: 'app.settings.basic.email' })}>
+              <FormItem {...formItemLayout} label={"邮箱"}>
                 {getFieldDecorator('email', {
                   rules: [
                     {
                       required: true,
-                      message: formatMessage({ id: 'app.settings.basic.email-message' }, {}),
+                      message: "请输入您的邮箱!",
                     },
                   ],
                 })(<Input />)}
               </FormItem>
-              <FormItem {...formItemLayout} label={'所属领导'}>
+              {/* <FormItem {...formItemLayout} label={'所属领导'}>
                 {getFieldDecorator('leadershipName', {
                   rules: [
                     {
@@ -236,7 +236,7 @@ class BaseView extends Component {
                     },
                   ],
                 })(<Input />)}
-              </FormItem>
+              </FormItem> */}
 
               <FormItem {...formItemLayout} label={'提示内容'}>
                 {getFieldDecorator('promptContent', {
@@ -248,11 +248,11 @@ class BaseView extends Component {
                   ],
                 })(<Input />)}
               </FormItem>
-              <FormItem {...formItemLayout} label={'剩余金额'}>
+              {/* <FormItem {...formItemLayout} label={'剩余金额'}>
                 {getFieldDecorator('remainingMoney', {
                   rules: [{ validator: this.checkInteger }],
                 })(<Input />)}
-              </FormItem>
+              </FormItem> */}
               <FormItem {...formItemLayout} label={'网关访问域名'}>
                 {getFieldDecorator('serverAddress', {
                   rules: [
@@ -263,7 +263,7 @@ class BaseView extends Component {
                   ],
                 })(<Input />)}
               </FormItem>
-              <FormItem {...formItemLayout} label={'系统级别'}>
+              {/* <FormItem {...formItemLayout} label={'系统级别'}>
                 {getFieldDecorator('systemLevel', {
                   rules: [
                     {
@@ -278,7 +278,7 @@ class BaseView extends Component {
                     })}
                   </Select>
                 )}
-              </FormItem>
+              </FormItem> */}
               <FormItem {...formItemLayout} label={'当前对应的签名'}>
                 {getFieldDecorator('smsSignature')(
                   <Input />
@@ -289,13 +289,13 @@ class BaseView extends Component {
                   <Input />
                 )}
               </FormItem>
-              <FormItem {...formItemLayout} label={'剩余业务员数量'}>
+              {/* <FormItem {...formItemLayout} label={'剩余业务员数量'}>
                 {getFieldDecorator('currentQuota', {
                   rules: [{ validator: this.checkInteger }],
                 })(
                   <Input />
                 )}
-              </FormItem>
+              </FormItem> */}
               <FormItem {...formItemLayout} label={'有效期天数'}>
                 {getFieldDecorator('periodValidity', {
                   rules: [{ validator: this.checkInteger }],
@@ -312,7 +312,7 @@ class BaseView extends Component {
 
               {/* ------------------------------------------ */}
 
-              <Col span={12}>
+              <Col span={12} style={{marginTop:151}}>
                 <FormItem {...formItemLayout} label={'帐号启用'}>
                   {getFieldDecorator('status')(
                     <Radio.Group>

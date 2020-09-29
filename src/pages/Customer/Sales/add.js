@@ -83,20 +83,6 @@ class SenderAdd extends PureComponent {
     });
   };
 
-  valinsChange = (rule, value, callback) => {
-    var rep = /[\W]/g;
-    var reg=/^\d{1,}$/;
-    if(value === "" || value === null){
-      return callback(new Error('姓名不能为空'));
-    }else if(reg.test(value)){
-      return callback(new Error('姓名请输入英文和数字'));
-    }else if(rep.test(value)){
-      return callback(new Error('姓名只能输入英文和数字'));
-    } else {
-      return callback();
-    }
-  }
-
   valinsUserChange = (rule, value, callback) => {
     var rep = /[\W]/g;
     var reg=/^\d{1,}$/;
@@ -144,7 +130,7 @@ class SenderAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        validator:this.valinsChange
+                        message: '姓名不能为空',
                       },
                     ],
                   })(<Input placeholder="请输入姓名" />)}

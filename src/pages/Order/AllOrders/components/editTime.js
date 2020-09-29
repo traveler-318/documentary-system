@@ -12,37 +12,35 @@ const { RangePicker } = DatePicker;
     globalParameters,
 }))
 @Form.create()
-class ReminderTimes extends PureComponent {
+class EditTime extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
-        reminderTimes:""
+      editTime:""
     };
   }
 
 
   componentWillMount() {
-    const { globalParameters } = this.props;
+    const { editReminderTimes } = this.props;
+    console.log(editReminderTimes,"editReminderTimes")
     // 获取详情数据
     this.setState({
-      detail:globalParameters.detailData
+      editTime:editReminderTimes
     })
   }
 
   onChange = (value, dateString) => {
       this.setState({
-        reminderTimes:value
+        editTime:dateString
       })
-    console.log('Selected Time: ', value);
-    console.log('Formatted Selected Time: ', dateString);
   }
   
   onOk = (value) => {
     this.setState({
-        reminderTimes:value
-      })
-    console.log('onOk: ', value);
+      editTime:moment(value).format('YYYY-MM-DD HH:mm:ss')
+    })
   }
 
   handleSubmit = (e,sms_confirmation) => {
@@ -51,7 +49,7 @@ class ReminderTimes extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         // 如果点击短信提醒，判断是否修改了设备品牌或者 设备序列号
-        this.props.handleReminderTimeBack(this.state.reminderTimes)
+        this.props.handleEditTimeBack(this.state.editTime)
       }
     });
   };
@@ -59,13 +57,14 @@ class ReminderTimes extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      handleReminderTimeBack,
+      handleEditTimeBack,
+      editTimeVisible,
     } = this.props;
 
     const {
       loading,
       detail,
-      reminderTimes
+      editTime
     } = this.state;
 
     const formItemLayout = {
@@ -85,16 +84,16 @@ class ReminderTimes extends PureComponent {
         span: 20,
       },
     };
-    // 123213
-    // confirmTag
+    console.log(moment(editTime).valueOf(),"editTime")
+    let time = moment(editTime).valueOf()
     return (
         <Modal
-          title="设备序列号"
-          visible={equipmeentVisible}
-          width={560}
-          onCancel={handleReminderTimeBack("")}
+          title="提醒时间"
+          visible={editTimeVisible}
+          width={500}
+          onCancel={()=>handleEditTimeBack("")}
           footer={[
-            <Button key="back" onClick={handleReminderTimeBack("")}>
+            <Button key="back" onClick={()=>handleEditTimeBack("")}>
               取消
             </Button>,
             <Button key="submit" type="primary" loading={loading} onClick={(e)=>this.handleSubmit(e,false)}>
@@ -104,8 +103,8 @@ class ReminderTimes extends PureComponent {
         >
             <Form style={{ marginTop: 8 }}>
                 <FormItem {...formAllItemLayout} label="提醒时间">
-                  {getFieldDecorator('reminderTimes', {
-                    initialValue: reminderTimes,
+                  {getFieldDecorator('editTime', {
+                    initialValue: moment(editTime),
                     rules: [
                       {
                         required: true,
@@ -113,14 +112,18 @@ class ReminderTimes extends PureComponent {
                       },
                     ],
                   })(
-                    <DatePicker showTime placeholder="Select Time" onChange={onChange} onOk={onOk} />
+                    <DatePicker 
+                      showTime 
+                      placeholder="请选择提醒时间" 
+                      onChange={this.onChange} 
+                      onOk={this.onOk}
+                    />
                   )}
                 </FormItem>
-                
             </Form>
         </Modal>
     );
   }
 }
 
-export default ReminderTimes;
+export default EditTime;

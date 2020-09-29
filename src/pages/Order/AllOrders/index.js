@@ -480,7 +480,7 @@ class AllOrdersList extends PureComponent {
     this.setState({
       tabKey:key
     },()=>{
-      this.handleSearch(this.params.tabKey)
+      this.handleSearch(this.state.params)
     })
   }
 
