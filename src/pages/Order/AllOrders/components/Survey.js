@@ -68,10 +68,18 @@ class Survey extends PureComponent {
     const { orderType } = this.state;
 
     const { detail } = this.props;
+    let list = [];
+
+console.log(nex.detail.followRecords)
+console.log(JSON.parse(nex.detail.followRecords).list)
+
+    if(nex.detail.followRecords && JSON.parse(nex.detail.followRecords).list){
+      list = JSON.parse(nex.detail.followRecords).list
+    }
 
     this.setState({
       detail:nex.detail,
-      followRecords:nex.detail.followRecords ? JSON.parse(nex.detail.followRecords).list : []
+      followRecords:list
     })
 
     let _type = orderType.map(item=>{
@@ -265,7 +273,7 @@ class Survey extends PureComponent {
       editReminderTimes,
       logisticsDetailsVisible
     } = this.state;
-    console.log(detail)
+    console.log(followRecords,"followRecords")
 
     return (
       <>
