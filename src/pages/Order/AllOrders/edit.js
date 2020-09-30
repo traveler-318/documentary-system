@@ -277,7 +277,7 @@ class OrdersEdit extends PureComponent {
                         },
                       ],
                       initialValue: detail.userAddress,
-                    })(<Input disabled={edit} placeholder="请输入收货地址" />)}
+                    })(<Input disabled={edit && detail.confirmTag === 0} placeholder="请输入收货地址" />)}
                   </FormItem>
 {/*                  <FormItem {...formAllItemLayout} label="客戶状态">
                     {getFieldDecorator('userAddress', {
@@ -302,7 +302,7 @@ class OrdersEdit extends PureComponent {
                   <FormItem {...formAllItemLayout} label="订单来源">
                     {getFieldDecorator('orderSource', {
                       initialValue: detail.orderSource,
-                    })(<Input disabled={edit} placeholder="" />)}
+                    })(<Input disabled placeholder="" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="订单归属" className={styles.salesman}>
                     {getFieldDecorator('salesman', {
@@ -312,7 +312,7 @@ class OrdersEdit extends PureComponent {
                         },
                       ],
                       initialValue: detail.salesman,
-                    })(<Input disabled={edit} placeholder="" />)}
+                    })(<Input disabled placeholder="" />)}
                   </FormItem>
                   <FormDetailsTitle title="其他信息" />
                   <FormItem {...formAllItemLayout} label="微信号">
