@@ -208,6 +208,12 @@ class OrdersAdd extends PureComponent {
                 <FormItem {...formAllItemLayout} label="所在地区">
                   {getFieldDecorator('region', {
                       // initialValue: {['zhejiang', 'hangzhou', 'xihu']},
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择所在地区',
+                        },
+                      ],
                     })(
                     <Cascader
                       // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
@@ -226,48 +232,6 @@ class OrdersAdd extends PureComponent {
                     ],
                   })(<Input placeholder="请输入收货地址" />)}
                 </FormItem>
-                {/* <FormItem {...formAllItemLayout} label="订单号">
-                  {getFieldDecorator('outOrderNo', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入订单号',
-                      },
-                    ],
-                  })(<Input placeholder="请输入订单号" />)}
-                </FormItem> */}
-
-                
-                {/* <FormItem {...formAllItemLayout} label="性别">
-                  {getFieldDecorator('gender', {
-                      initialValue: null,
-                    })(
-                    <Radio.Group>
-                      {GENDER.map(item=>{
-                        return (
-                          <Radio key={item.key} value={item.key}>{item.name}</Radio>
-                        )
-                      })}
-                    </Radio.Group>
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="生日">
-                  {getFieldDecorator('account')(
-                    <DatePicker
-                    disabledDate={this.disabledDate}
-                    showToday={false}
-                    />
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="微信号">
-                  {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="邮箱">
-                  {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="QQ">
-                  {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem> */}
               </Col>
               <Col span={12}>
                 <FormTitle

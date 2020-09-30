@@ -100,7 +100,10 @@ export async function updateReminds(params) {
 
 // 审核
 export async function toExamine(params) {
-  
+  return request('/api/order/order/batchUpdateConfirmTag', {
+    method: 'POST',
+    body: params,
+  });
 }
 
 // 详情关联订单

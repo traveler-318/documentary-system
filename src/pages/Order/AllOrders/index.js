@@ -304,11 +304,11 @@ class AllOrdersList extends PureComponent {
 
     toExamine({
       confirmTag:1,
-      list:_data
+      orderIds:_data
     }).then(res=>{
       if(res.code === 200){
         message.success(res.msg);
-        
+        this.getDataList();
       }
     })
   }
