@@ -145,23 +145,6 @@ class ProductTypeEdit extends PureComponent {
           ]}
         >
           <Form style={{ marginTop: 8 }}>
-            <FormItem {...formAllItemLayout} label="产品类别">
-              {getFieldDecorator('productTypeName', {
-                initialValue: details.productTypeName,
-                rules: [
-                  {
-                    required: true,
-                    message: '请选择产品类别名称',
-                  },
-                ],
-              })(
-                <Select placeholder="请选择产品类别名称">
-                  {productType.map((item)=>{
-                    return (<Option key={item.key} value={item.name}>{item.name}</Option>)
-                  })}
-                </Select>
-              )}
-            </FormItem>
             <FormItem {...formAllItemLayout} label="支付公司">
               {getFieldDecorator('payPanyName', {
                 initialValue: details.payPanyName,
@@ -175,6 +158,23 @@ class ProductTypeEdit extends PureComponent {
                 <Select placeholder="请选择支付公司" onSelect={this.onChange}>
                   {data.map((item)=>{
                     return (<Option key={item.id} value={item.payName}>{item.payName}</Option>)
+                  })}
+                </Select>
+              )}
+            </FormItem>
+            <FormItem {...formAllItemLayout} label="产品类别">
+              {getFieldDecorator('productTypeName', {
+                initialValue: details.productTypeName,
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择产品类别名称',
+                  },
+                ],
+              })(
+                <Select placeholder="请选择产品类别名称">
+                  {productType.map((item)=>{
+                    return (<Option key={item.key} value={item.name}>{item.name}</Option>)
                   })}
                 </Select>
               )}

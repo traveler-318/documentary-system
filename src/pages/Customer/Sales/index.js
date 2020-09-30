@@ -338,6 +338,11 @@ class AuthorityList extends PureComponent {
 
     const columns = [
       {
+        title: '业务员账号',
+        dataIndex: 'userAccount',
+        width: 150,
+      },
+      {
         title: '业务员姓名',
         dataIndex: 'userName',
         width: 150,
