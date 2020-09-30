@@ -13,7 +13,7 @@ import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
-import { createData, getRegion } from '../../../services/newServices/order'
+import { createData, getRegion, productTreelist } from '../../../services/newServices/order'
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
 import { 
   LOGISTICSCOMPANY,
@@ -49,6 +49,13 @@ class OrdersAdd extends PureComponent {
   componentWillMount() {
     this.getSalesmanList();
     this.assemblingData();
+    this.getTreeList();
+  }
+
+  getTreeList = () => {
+    productTreelist().then(res=>{
+      console.log(res,"productTreelist")
+    })
   }
 
   assemblingData = () => {

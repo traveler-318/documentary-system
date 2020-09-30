@@ -121,3 +121,11 @@ export async function logisticsQuery(params) {
     body: params,
   });
 }
+
+// 产品分类
+export async function productTreelist(params) {
+  return request('/api/business/paypany/treelist', {
+    method: 'POST',
+    body: params,
+  });
+}
