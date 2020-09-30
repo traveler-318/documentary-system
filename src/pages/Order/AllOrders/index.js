@@ -294,23 +294,33 @@ class AllOrdersList extends PureComponent {
   // 批量审核
   batchAudit = () => {
     const {selectedRows} = this.state;
+    const getList = this.getDataList
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
 
-    let _data = selectedRows.map(item=>{
-      return item.id
-    })
-
-    toExamine({
-      confirmTag:1,
-      orderIds:_data
-    }).then(res=>{
-      if(res.code === 200){
-        message.success(res.msg);
-        this.getDataList();
-      }
-    })
+    Modal.confirm({
+      title: '提醒',
+      content: "确定审核此订单吗？",
+      okText: '确定',
+      okType: 'info',
+      cancelText: '取消',
+      onOk() {
+        let _data = selectedRows.map(item=>{
+          return item.id
+        })
+        toExamine({
+          confirmTag:1,
+          orderIds:_data
+        }).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+            getList();
+          }
+        })
+      },
+      onCancel() {},
+    });
   }
 
   // 批量发货
@@ -324,7 +334,7 @@ class AllOrdersList extends PureComponent {
   }
 
   // 测试
-  
+
   // 左侧操作按钮
   renderLeftButton = () => (
     <>
