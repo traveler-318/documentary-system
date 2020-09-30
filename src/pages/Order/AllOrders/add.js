@@ -48,13 +48,14 @@ class OrdersAdd extends PureComponent {
 
   componentWillMount() {
     this.getSalesmanList();
-    this.assemblingData();
+    // this.assemblingData();
     this.getTreeList();
   }
 
   getTreeList = () => {
     productTreelist().then(res=>{
-      console.log(res,"productTreelist")
+      console.log(res.data,"productTreelist")
+      this.setState({productList:res.data})
     })
   }
 
@@ -290,7 +291,7 @@ class OrdersAdd extends PureComponent {
                     })(
                       <Cascader 
                         options={productList}
-                        fieldNames={{ label: 'name', value: 'name'}}
+                        fieldNames={{ label: 'value'}}
                         onChange={(value, selectedOptions)=>{
                           console.log("123")
                         }}

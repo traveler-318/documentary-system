@@ -13,11 +13,8 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
-import { getProductattributeAdd } from '../../../../services/newServices/product';
+import { getProductattributeAdd, getPaypanyList, getProductcategoryList } from '../../../../services/newServices/product';
 import {paymentCompany,} from '../../../Order/AllOrders/data.js';
-
-import { getPaypanyList } from '../../../../services/newServices/product';
-import { getProductcategoryList } from '../../../../services/newServices/product';
 
 const { Option } = Select;
 const FormItem = Form.Item;
