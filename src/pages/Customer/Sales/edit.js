@@ -135,6 +135,19 @@ class SenderAdd extends PureComponent {
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
+                <FormItem {...formItemLayout} label="登录账号：">
+                  {getFieldDecorator('userAccount', {
+                    initialValue: data.userAccount,
+                    rules: [
+                      {
+                        required: true,
+                        validator:this.valinsUserChange
+                      },
+                    ],
+                  })(<Input placeholder="请输入登录账号" />)}
+                </FormItem>
+              </Col>
+              <Col span={10}>
                 <FormItem {...formItemLayout} label="姓名：">
                   {getFieldDecorator('userName', {
                     initialValue: data.userName,
@@ -147,7 +160,10 @@ class SenderAdd extends PureComponent {
                   })(<Input placeholder="请输入姓名" />)}
                 </FormItem>
               </Col>
-              <Col span={10}>
+             
+            </Row>
+            <Row gutter={24}>
+            <Col span={10}>
                 <FormItem {...formItemLayout} label="手机号：">
                   {getFieldDecorator('userPhone', {
                     initialValue: data.userPhone,
@@ -164,27 +180,7 @@ class SenderAdd extends PureComponent {
                   })(<Input placeholder="请输入手机号" />)}
                 </FormItem>
               </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="授权类型：">
-                  {getFieldDecorator('authorizationType', {
-                    initialValue: data.authorizationType,
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择授权类型',
-                      },
-                    ],
-                  })(
-                    <Select placeholder="请选择授权类型">
-                      {authorizationType.map((item)=>{
-                        return (<Option key={item.key} value={item.key}>{item.value}</Option>)
-                      })}
-                    </Select>
-                  )}
-                </FormItem>
-              </Col>
+              
               <Col span={10}>
                 <FormItem {...formItemLayout} label="分组：">
                   {getFieldDecorator('groupId', {
@@ -206,17 +202,23 @@ class SenderAdd extends PureComponent {
               </Col>
             </Row>
             <Row gutter={24}>
-              <Col span={10}>
-                <FormItem {...formItemLayout} label="登录账号：">
-                  {getFieldDecorator('userAccount', {
-                    initialValue: data.userAccount,
+            <Col span={10}>
+                <FormItem {...formItemLayout} label="授权类型：">
+                  {getFieldDecorator('authorizationType', {
+                    initialValue: data.authorizationType,
                     rules: [
                       {
                         required: true,
-                        validator:this.valinsUserChange
+                        message: '请选择授权类型',
                       },
                     ],
-                  })(<Input placeholder="请输入登录账号" />)}
+                  })(
+                    <Select placeholder="请选择授权类型">
+                      {authorizationType.map((item)=>{
+                        return (<Option key={item.key} value={item.key}>{item.value}</Option>)
+                      })}
+                    </Select>
+                  )}
                 </FormItem>
               </Col>
               <Col span={10}>

@@ -40,7 +40,7 @@ class OrdersAdd extends PureComponent {
       salesmanList:[],
       loading:false,
       cityparam:{},
-      productList:{},
+      productList:[],
       selectedOptions:[]
     };
   }
@@ -48,14 +48,14 @@ class OrdersAdd extends PureComponent {
 
   componentWillMount() {
     this.getSalesmanList();
-    this.assemblingData();
-    // this.getTreeList();
+    // this.assemblingData();
+    this.getTreeList();
   }
 
   getTreeList = () => {
     productTreelist().then(res=>{
       console.log(res.data,"productTreelist")
-      this.setState({productList:TheFirstLevel})
+      this.setState({productList:res.data})
     })
   }
 
@@ -74,7 +74,8 @@ class OrdersAdd extends PureComponent {
         children:TheSecondLevel
       }
     })
-    this.setState({productList:TheFirstLevel})
+    console.log(TheFirstLevel,"TheFirstLevel")
+    // this.setState({productList:TheFirstLevel})
   }
 
   // 获取业务员数据
@@ -291,7 +292,7 @@ class OrdersAdd extends PureComponent {
                     })(
                       <Cascader 
                         options={productList}
-                        fieldNames={{ label: 'name', value: 'name'}}
+                        fieldNames={{ label: 'value'}}
                         onChange={(value, selectedOptions)=>{
                           console.log("123")
                         }}

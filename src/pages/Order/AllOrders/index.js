@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
-
+import { Resizable } from 'react-resizable';
 
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
@@ -31,6 +31,25 @@ const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
+
+const ResizeableTitle = props => {
+  const { onResize, width, ...restProps } = props;
+
+  if (!width) {
+    return <th {...restProps} />;
+  }
+
+  return (
+    <Resizable
+      width={width}
+      height={0}
+      onResize={onResize}
+      draggableOpts={{ enableUserSelectHack: false }}
+    >
+      <th {...restProps} />
+    </Resizable>
+  );
+};
 
 @connect(({ globalParameters }) => ({
   globalParameters,
@@ -61,6 +80,119 @@ class AllOrdersList extends PureComponent {
       LogisticsConfigVisible:false,
       // 详情弹窗
       detailsVisible:false,
+      columns:[
+        {
+          title: '姓名',
+          dataIndex: 'userName',
+          width: 100,
+        },
+        {
+          title: '手机号',
+          dataIndex: 'userPhone',
+          width: 100,
+        },
+        {
+          title: '收货地址',
+          dataIndex: 'userAddress',
+          width: 200,
+          ellipsis: true,
+        },
+        {
+          title: '产品分类',
+          dataIndex: 'productType',
+          width: 130,
+        },
+        {
+          title: '产品型号',
+          dataIndex: 'productName',
+          width: 100,
+        },
+        {
+          title: 'SN码',
+          dataIndex: 'productCoding',
+          width: 200,
+          ellipsis: true,
+        },
+        {
+          title: '订单状态',
+          dataIndex: 'confirmTag',
+          width: 100,
+          render: (key)=>{
+            return (
+              <div>{this.getText(key,ORDERSTATUS)} </div>
+            )
+          }
+        },
+        {
+          title: '订单类型',
+          dataIndex: 'orderType',
+          width: 100,
+          render: (key)=>{
+            return (
+              <div>{this.getText(key,ORDERTYPE)} </div>
+            )
+          }
+        },
+        {
+          title: '订单来源',
+          dataIndex: 'orderSource',
+          width: 100,
+          render: (key)=>{
+            return (
+              <div>{this.getText(key,ORDERSOURCE)} </div>
+            )
+          }
+        },
+        {
+          title: '销售',
+          dataIndex: 'salesman',
+          width: 100,
+        },
+        {
+          title: '快递公司',
+          dataIndex: 'logisticsCompany',
+          width: 130,
+        },
+        {
+          title: '快递单号',
+          dataIndex: 'logisticsNumber',
+          width: 130,
+        },
+        {
+          title: '下单时间',
+          dataIndex: 'createTime',
+          width: 160,
+        },
+        {
+          title: '操作',
+          key: 'operation',
+          fixed: 'right',
+          width: 280,
+          render: (text,row) => {
+              return(
+                  <div>
+                      <a onClick={()=>this.handleDelect(row)}>删除</a>
+                      <Divider type="vertical" />
+                      {/* <a>跟进</a>
+                      <Divider type="vertical" />
+                      <a onClick={()=>this.handleEdit(row)}>编辑</a>
+                      <Divider type="vertical" />
+                      <a>置顶</a>
+                      <Divider type="vertical" />
+                      <a>归档</a>
+                      <Divider type="vertical" /> */}
+                      <a onClick={()=>this.handleEdit(row)}>详情</a>
+                      {/* <Divider type="vertical" /> */}
+                      {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
+                      {/* <Divider type="vertical" />
+                      <a >短信</a> */}
+                      {/* <Divider type="vertical" /> */}
+                      {/* <a onClick={()=>this.handleReminds([row])}>提醒</a> */}
+                  </div>
+              )
+          },
+        },
+      ]
     };
   }
 
@@ -595,6 +727,23 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  handleResize = index => (e, { size }) => {
+    this.setState(({ columns }) => {
+      const nextColumns = [...columns];
+      nextColumns[index] = {
+        ...nextColumns[index],
+        width: size.width,
+      };
+      return { columns: nextColumns };
+    });
+  };
+
+  components = {
+    header: {
+      cell: ResizeableTitle,
+    },
+  };
+
   render() {
     const code = 'allOrdersList';
 
@@ -611,10 +760,18 @@ class AllOrdersList extends PureComponent {
       LogisticsConfigVisible,
       selectedRows, 
       detailsVisible,
-      selectedRowKeys
+      selectedRowKeys,
     } = this.state;
 
     console.log(selectedRowKeys,"selectedRowKeys")
+
+    const columns = this.state.columns.map((col, index) => ({
+      ...col,
+      onHeaderCell: column => ({
+        width: column.width,
+        onResize: this.handleResize(index),
+      }),
+    }));
 
     const TabPanes = () => (
       <div className={styles.tabs}>
@@ -628,120 +785,6 @@ class AllOrdersList extends PureComponent {
         })}
       </div>
     );
-
-    const columns = [
-      {
-        title: '姓名',
-        dataIndex: 'userName',
-        width: 100,
-      },
-      {
-        title: '手机号',
-        dataIndex: 'userPhone',
-        width: 100,
-      },
-      {
-        title: '收货地址',
-        dataIndex: 'userAddress',
-        width: 200,
-        ellipsis: true,
-      },
-      {
-        title: '产品分类',
-        dataIndex: 'productType',
-        width: 130,
-      },
-      {
-        title: '产品型号',
-        dataIndex: 'productName',
-        width: 100,
-      },
-      {
-        title: 'SN码',
-        dataIndex: 'productCoding',
-        width: 200,
-        ellipsis: true,
-      },
-      {
-        title: '订单状态',
-        dataIndex: 'confirmTag',
-        width: 100,
-        render: (key)=>{
-          return (
-            <div>{this.getText(key,ORDERSTATUS)} </div>
-          )
-        }
-      },
-      {
-        title: '订单类型',
-        dataIndex: 'orderType',
-        width: 100,
-        render: (key)=>{
-          return (
-            <div>{this.getText(key,ORDERTYPE)} </div>
-          )
-        }
-      },
-      {
-        title: '订单来源',
-        dataIndex: 'orderSource',
-        width: 100,
-        render: (key)=>{
-          return (
-            <div>{this.getText(key,ORDERSOURCE)} </div>
-          )
-        }
-      },
-      {
-        title: '销售',
-        dataIndex: 'salesman',
-        width: 100,
-      },
-      {
-        title: '快递公司',
-        dataIndex: 'logisticsCompany',
-        width: 130,
-      },
-      {
-        title: '快递单号',
-        dataIndex: 'logisticsNumber',
-        width: 130,
-      },
-      {
-        title: '下单时间',
-        dataIndex: 'createTime',
-        width: 160,
-      },
-      {
-        title: '操作',
-        key: 'operation',
-        fixed: 'right',
-        width: 280,
-        render: (text,row) => {
-            return(
-                <div>
-                    <a onClick={()=>this.handleDelect(row)}>删除</a>
-                    <Divider type="vertical" />
-                    {/* <a>跟进</a>
-                    <Divider type="vertical" />
-                    <a onClick={()=>this.handleEdit(row)}>编辑</a>
-                    <Divider type="vertical" />
-                    <a>置顶</a>
-                    <Divider type="vertical" />
-                    <a>归档</a>
-                    <Divider type="vertical" /> */}
-                    <a onClick={()=>this.handleEdit(row)}>详情</a>
-                    {/* <Divider type="vertical" /> */}
-                    {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
-                    {/* <Divider type="vertical" />
-                    <a >短信</a> */}
-                    {/* <Divider type="vertical" /> */}
-                    {/* <a onClick={()=>this.handleReminds([row])}>提醒</a> */}
-                </div>
-            )
-        },
-      },
-    ];
 
     return (
       <Panel>
@@ -761,6 +804,9 @@ class AllOrdersList extends PureComponent {
           counterElection={true}
           onChangeCheckbox={this.onChangeCheckbox}
           selectedKey={selectedRowKeys}
+          tblProps={
+            {components:this.components}
+          }
           // multipleChoice={true}
         />
         {/* 详情 */}
