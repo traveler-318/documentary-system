@@ -100,7 +100,10 @@ export async function updateReminds(params) {
 
 // 审核
 export async function toExamine(params) {
-  
+  return request('/api/order/order/batchUpdateConfirmTag', {
+    method: 'POST',
+    body: params,
+  });
 }
 
 // 详情关联订单
@@ -114,6 +117,14 @@ export async function orderDetail(params) {
 // 详情物流详情
 export async function logisticsQuery(params) {
   return request('/api/order/order/logisticsQuery', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 产品分类
+export async function productTreelist(params) {
+  return request('/api/business/paypany/treelist', {
     method: 'POST',
     body: params,
   });

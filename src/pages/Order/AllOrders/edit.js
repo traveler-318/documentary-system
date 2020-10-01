@@ -209,6 +209,8 @@ class OrdersEdit extends PureComponent {
         span: 20,
       },
     };
+console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
+
     return (
       <Panel title="详情" back="/order/AllOrders">
         <Form style={{ marginTop: 8 }}>
@@ -264,7 +266,7 @@ class OrdersEdit extends PureComponent {
                       <Cascader
                         // defaultValue={[detail.province, detail.city, detail.area]}
                         options={CITY}
-                        disabled={edit && detail.confirmTag === 0}
+                        disabled={detail.confirmTag === 0 ? edit : true}
                         onChange={this.onChange}
                       />
                     )}
@@ -277,7 +279,7 @@ class OrdersEdit extends PureComponent {
                         },
                       ],
                       initialValue: detail.userAddress,
-                    })(<Input disabled={edit} placeholder="请输入收货地址" />)}
+                    })(<Input disabled={detail.confirmTag === 0 ? edit : true} placeholder="请输入收货地址" />)}
                   </FormItem>
 {/*                  <FormItem {...formAllItemLayout} label="客戶状态">
                     {getFieldDecorator('userAddress', {
@@ -302,7 +304,7 @@ class OrdersEdit extends PureComponent {
                   <FormItem {...formAllItemLayout} label="订单来源">
                     {getFieldDecorator('orderSource', {
                       initialValue: detail.orderSource,
-                    })(<Input disabled={edit} placeholder="" />)}
+                    })(<Input disabled placeholder="" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="订单归属" className={styles.salesman}>
                     {getFieldDecorator('salesman', {
@@ -312,7 +314,7 @@ class OrdersEdit extends PureComponent {
                         },
                       ],
                       initialValue: detail.salesman,
-                    })(<Input disabled={edit} placeholder="" />)}
+                    })(<Input disabled placeholder="" />)}
                   </FormItem>
                   <FormDetailsTitle title="其他信息" />
                   <FormItem {...formAllItemLayout} label="微信号">

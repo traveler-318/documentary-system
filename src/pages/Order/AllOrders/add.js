@@ -13,7 +13,7 @@ import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
-import { createData, getRegion } from '../../../services/newServices/order'
+import { createData, getRegion, productTreelist } from '../../../services/newServices/order'
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
 import { 
   LOGISTICSCOMPANY,
@@ -40,7 +40,7 @@ class OrdersAdd extends PureComponent {
       salesmanList:[],
       loading:false,
       cityparam:{},
-      productList:{},
+      productList:[],
       selectedOptions:[]
     };
   }
@@ -48,7 +48,15 @@ class OrdersAdd extends PureComponent {
 
   componentWillMount() {
     this.getSalesmanList();
-    this.assemblingData();
+    // this.assemblingData();
+    this.getTreeList();
+  }
+
+  getTreeList = () => {
+    productTreelist().then(res=>{
+      console.log(res.data,"productTreelist")
+      this.setState({productList:res.data})
+    })
   }
 
   assemblingData = () => {
@@ -66,7 +74,8 @@ class OrdersAdd extends PureComponent {
         children:TheSecondLevel
       }
     })
-    this.setState({productList:TheFirstLevel})
+    console.log(TheFirstLevel,"TheFirstLevel")
+    // this.setState({productList:TheFirstLevel})
   }
 
   // 获取业务员数据
@@ -208,6 +217,12 @@ class OrdersAdd extends PureComponent {
                 <FormItem {...formAllItemLayout} label="所在地区">
                   {getFieldDecorator('region', {
                       // initialValue: {['zhejiang', 'hangzhou', 'xihu']},
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择所在地区',
+                        },
+                      ],
                     })(
                     <Cascader
                       // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
@@ -226,48 +241,6 @@ class OrdersAdd extends PureComponent {
                     ],
                   })(<Input placeholder="请输入收货地址" />)}
                 </FormItem>
-                {/* <FormItem {...formAllItemLayout} label="订单号">
-                  {getFieldDecorator('outOrderNo', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入订单号',
-                      },
-                    ],
-                  })(<Input placeholder="请输入订单号" />)}
-                </FormItem> */}
-
-                
-                {/* <FormItem {...formAllItemLayout} label="性别">
-                  {getFieldDecorator('gender', {
-                      initialValue: null,
-                    })(
-                    <Radio.Group>
-                      {GENDER.map(item=>{
-                        return (
-                          <Radio key={item.key} value={item.key}>{item.name}</Radio>
-                        )
-                      })}
-                    </Radio.Group>
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="生日">
-                  {getFieldDecorator('account')(
-                    <DatePicker
-                    disabledDate={this.disabledDate}
-                    showToday={false}
-                    />
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="微信号">
-                  {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="邮箱">
-                  {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="QQ">
-                  {getFieldDecorator('account')(<Input placeholder="请输入手机号2" />)}
-                </FormItem> */}
               </Col>
               <Col span={12}>
                 <FormTitle
@@ -319,7 +292,7 @@ class OrdersAdd extends PureComponent {
                     })(
                       <Cascader 
                         options={productList}
-                        fieldNames={{ label: 'name', value: 'name'}}
+                        fieldNames={{ label: 'value'}}
                         onChange={(value, selectedOptions)=>{
                           console.log("123")
                         }}

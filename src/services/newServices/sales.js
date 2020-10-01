@@ -80,11 +80,21 @@ export async function getDeleteGroup(params) {
     method: 'POST',
   });
 }
-
-// ============ 绑定 ===============
+// ============ 公众号绑定 ===============
 export async function getWeChatBinding(params) {
   return request(`/api/agent/salesman/weChatBinding/${params}`, {
     method: 'GET',
   });
 }
-
+// ============ 公众号解绑 ===============
+export async function getUnWeChatBind(params,openId) {
+  return request(`/api/agent/salesman/unWeChatBind/${params}/${openId}`, {
+    method: 'GET',
+  });
+}
+// ============ 微信测试消息 ===============
+export async function getSendTest(params) {
+  return request(`/api/agent/salesman/sendTest/${params}`, {
+    method: 'GET',
+  });
+}

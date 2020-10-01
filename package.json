@@ -65,6 +65,7 @@
     "react-dom": "^16.7.0",
     "react-fittext": "^1.0.0",
     "react-media": "^1.9.2",
+    "react-resizable": "^1.11.0",
     "roadhog-api-doc": "^1.1.2"
   },
   "devDependencies": {

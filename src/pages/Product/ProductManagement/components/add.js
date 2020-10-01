@@ -13,11 +13,8 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
-import { getProductattributeAdd } from '../../../../services/newServices/product';
+import { getProductattributeAdd, getPaypanyList, getProductcategoryList } from '../../../../services/newServices/product';
 import {paymentCompany,} from '../../../Order/AllOrders/data.js';
-
-import { getPaypanyList } from '../../../../services/newServices/product';
-import { getProductcategoryList } from '../../../../services/newServices/product';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -202,7 +199,7 @@ class Logistics extends PureComponent {
               })(
                 <Select placeholder="请选择支付类型" onChange={(key,row)=>{this.onChange(key,row,"productTypeId")}}>
                   {productcategoryList.map((item)=>{
-                    return (<Option key={item.id} value={item.payPanyName}>{item.payPanyName}</Option>)
+                    return (<Option key={item.id} value={item.productTypeName}>{item.productTypeName}</Option>)
                   })}
                 </Select>
               )}
@@ -217,17 +214,6 @@ class Logistics extends PureComponent {
                   },
                 ],
               })(<Input placeholder="请输入产品名称" />)}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="排序编号">
-              {getFieldDecorator('sortNumber', {
-                initialValue: data.sortNumber,
-                rules: [
-                  {
-                    required: true,
-                    validator:this.valinsPayChange
-                  },
-                ], 
-              })(<Input placeholder="请输入排序编号" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="价格">
               {getFieldDecorator('price', {
@@ -250,6 +236,17 @@ class Logistics extends PureComponent {
                   },
                 ],
               })(<Input placeholder="请输入结算价" />)}
+            </FormItem>
+            <FormItem {...formAllItemLayout} label="排序编号">
+              {getFieldDecorator('sortNumber', {
+                initialValue: data.sortNumber,
+                rules: [
+                  {
+                    required: true,
+                    validator:this.valinsPayChange
+                  },
+                ], 
+              })(<Input placeholder="请输入排序编号" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="自定义名称1">
               {getFieldDecorator('customOne', {

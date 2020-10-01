@@ -16,7 +16,8 @@ import {
   updateData,
   getRegion,
   logisticsSubscription,
-  getDetails
+  getDetails,
+  productTreelist
 } from '../../../../services/newServices/order'
 import { 
   LOGISTICSCOMPANY,
@@ -93,8 +94,8 @@ class LogisticsConfiguration extends PureComponent {
     this.getDetailsData(globalParameters.listParam[globalParameters.listParam.length-1]);
 
     // 拼装对应产品
-    this.assemblingData();
-    
+    // this.assemblingData();
+    this.getTreeList();
   }
 
   getDetailsData = (id) => {
@@ -213,6 +214,13 @@ class LogisticsConfiguration extends PureComponent {
         callBack();
       })
     });
+  }
+
+  getTreeList = () => {
+    productTreelist().then(res=>{
+      console.log(res.data,"productTreelist")
+      this.setState({productList:res.data})
+    })
   }
 
   assemblingData = () => {
@@ -435,7 +443,7 @@ class LogisticsConfiguration extends PureComponent {
                     // <Input placeholder="请输入对应产品" />
                     <Cascader 
                       options={productList}
-                      fieldNames={{ label: 'name', value: 'name'}}
+                      fieldNames={{ label: 'value'}}
                       onChange={(value, selectedOptions)=>{
                         console.log("123")
                       }}

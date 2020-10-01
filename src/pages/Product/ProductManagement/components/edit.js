@@ -13,11 +13,8 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
-import { getProductattributeUpdate } from '../../../../services/newServices/product';
+import { getProductattributeUpdate, getPaypanyList, getProductcategoryList } from '../../../../services/newServices/product';
 import {paymentCompany,} from '../../../Order/AllOrders/data.js';
-
-import { getPaypanyList } from '../../../../services/newServices/product';
-import { getProductcategoryList } from '../../../../services/newServices/product';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -227,17 +224,7 @@ class Logistics extends PureComponent {
                 ],
               })(<Input placeholder="请输入产品名称" />)}
             </FormItem>
-            <FormItem {...formAllItemLayout} label="排序编号">
-              {getFieldDecorator('sortNumber', {
-                initialValue: details.sortNumber,
-                rules: [
-                  {
-                    required: true,
-                    validator:this.valinsPayChange
-                  },
-                ],
-              })(<Input placeholder="请输入排序编号" />)}
-            </FormItem>
+            
             <FormItem {...formAllItemLayout} label="价格">
               {getFieldDecorator('price', {
                 initialValue: details.price,
@@ -259,6 +246,17 @@ class Logistics extends PureComponent {
                   },
                 ],
               })(<Input placeholder="请输入结算价" />)}
+            </FormItem>
+            <FormItem {...formAllItemLayout} label="排序编号">
+              {getFieldDecorator('sortNumber', {
+                initialValue: details.sortNumber,
+                rules: [
+                  {
+                    required: true,
+                    validator:this.valinsPayChange
+                  },
+                ],
+              })(<Input placeholder="请输入排序编号" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="自定义名称1">
               {getFieldDecorator('customOne', {

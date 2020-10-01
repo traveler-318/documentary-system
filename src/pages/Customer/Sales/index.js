@@ -21,11 +21,12 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 
-import { getList,getSalesmangroup,updateStatus,getWeChatBinding } from '../../../services/newServices/sales';
+import { getList,getSalesmangroup,updateStatus,getSendTest,getUnWeChatBind,getWeChatBinding } from '../../../services/newServices/sales';
 import Grouping from './components/Mgrouping'
 import Recharge from './components/recharge'
 import AggregateCode from './components/aggregateCode'
 import ModifyGroup from './components/modifyGroup'
+import BindingQRCode from './components/bindingQRCode'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -44,13 +45,15 @@ class AuthorityList extends PureComponent {
       handleRechargeVisible:false,
       handleAggregateCodeVisible:false,
       ModifyGroupVisible:false,
+      bindingQRCodeVisible:false,
       selectDataArrL:[],
       selectedRowKeys:[],
       params:{
         size:10,
         current:1
       },
-      groupingList:[]
+      groupingList:[],
+      countDownTimer:30
     };
   }
 
@@ -152,7 +155,6 @@ class AuthorityList extends PureComponent {
   };
 
   onSelectRow = (rows,key) => {
-    console.log(rows,"rows")
     this.setState({
       selectDataArrL: rows,
       selectedRowKeys: key
@@ -204,7 +206,6 @@ class AuthorityList extends PureComponent {
   // =========聚合码弹窗========
 
   handleAggregateCode = (res) => {
-    console.log(res)
     if(res.salesmanStatus === 0){
       message.success('当前业务员关闭状态,不能生成聚合码');
       return false
@@ -227,28 +228,69 @@ class AuthorityList extends PureComponent {
   }
 
   handleBinding = (row,type) => {
-    if(type === '0'){
+    if(type ==="0"){
       Modal.confirm({
         title: '提醒',
-        content: "是否确认解绑？",
+        content: '是否确认解绑?',
         okText: '确定',
-        okType: 'info',
+        okType: 'danger',
         cancelText: '取消',
         onOk() {
-
+          getUnWeChatBind(row.userAccount,row.openid).then(res=>{
+            message.success(res.msg);
+            this.getDataList();
+          })
         },
         onCancel() {},
       });
     }else {
       getWeChatBinding(row.userAccount).then(res=>{
         console.log(res)
+        const imgUrl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+res.data;
+        this.setState({
+          bindingQRCodeVisible:true,
+          bindingQRCode:imgUrl
+        })
+        this.countDown();
       })
     }
-
   }
 
-  handleTest = () => {
+  countDown= () =>{
+    setTimeout(()=>{
+      this.setState({
+        countDownTimer: this.state.countDownTimer - 1,
+      })
+      if(this.state.countDownTimer === 0){
+        this.getDataList();
+        this.setState({
+          bindingQRCodeVisible:false,
+          countDownTimer:30
+        })
+      }else{
+        this.countDown();
+      }
+    },1000)
+  }
 
+
+  // =========关闭二维码弹窗========
+
+  handleCancelBindingQRCode = () => {
+    this.setState({
+      bindingQRCodeVisible:false
+    })
+  }
+
+
+  handleTest = (row) => {
+    if(row.openid === ""){
+      message.success('请点击绑定按钮进行二维码绑定操作!如已绑定请点击刷新页面后点击测试消息发送!');
+      return false
+    }
+    getSendTest(row.openid).then(res=>{
+      message.success(res.msg);
+    })
   }
 
 
@@ -287,9 +329,19 @@ class AuthorityList extends PureComponent {
     const {
       selectedRowKeys,
       selectDataArrL,
-      data,loading,handleGroupingVisible,handleRechargeVisible,groupingList,handleAggregateCodeVisible,ModifyGroupVisible} = this.state;
+      data,loading,
+      handleGroupingVisible,
+      handleRechargeVisible,
+      groupingList,handleAggregateCodeVisible,
+      ModifyGroupVisible,bindingQRCodeVisible,bindingQRCode,countDownTimer
+    } = this.state;
 
     const columns = [
+      {
+        title: '业务员账号',
+        dataIndex: 'userAccount',
+        width: 150,
+      },
       {
         title: '业务员姓名',
         dataIndex: 'userName',
@@ -368,19 +420,14 @@ class AuthorityList extends PureComponent {
       {
         title: '公众号通知',
         dataIndex: 'openid',
-        width: 150,
         render: (res,row) => {
           return(
             <div>
               {
                 res === '' ?
-                  ( <a onClick={()=>this.handleBinding(row,"1")}>绑定</a>)
-                  :(<>
-                <a onClick={()=>this.handleBinding(row,"0")}>解绑</a>
-                <a onClick={()=>this.handleTest(row)}>ces</a>
-                </>)
+                  (<a onClick={()=>this.handleBinding(row,"1")}>绑定</a>)
+                  :(<><a onClick={()=>this.handleBinding(row,"0")}>解绑</a><Divider type="vertical" /><a onClick={()=>this.handleTest(row)}>测试</a></>)
               }
-
             </div>
           )
         },
@@ -443,6 +490,15 @@ class AuthorityList extends PureComponent {
           <AggregateCode
             handleAggregateCodeVisible={handleAggregateCodeVisible}
             handleCancelAggregateCode={this.handleCancelAggregateCode}
+          />
+        ):""}
+        {/* 二维码 */}
+        {bindingQRCodeVisible?(
+          <BindingQRCode
+            bindingQRCodeVisible={bindingQRCodeVisible}
+            bindingQRCode={bindingQRCode}
+            countDownTimer={countDownTimer}
+            handleCancelBindingQRCode={this.handleCancelBindingQRCode}
           />
         ):""}
       </Panel>

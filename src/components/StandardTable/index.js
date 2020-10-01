@@ -98,6 +98,8 @@ class StandardTable extends PureComponent {
       }),
     };
 
+    console.log(rest.tblProps)
+
     return (
       <div className={styles.standardTable}>
         {alert ? (
