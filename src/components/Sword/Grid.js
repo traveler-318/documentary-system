@@ -121,10 +121,15 @@ export default class Grid extends PureComponent {
     const { path, alias } = btn;
     const { btnCallBack } = this.props;
     const refresh = (temp = true) => this.refreshTable(temp);
+    console.log(btn.path, keys, rows[0].parentId)
     if (alias === 'add') {
       if (keys.length > 1) {
         message.warn('父记录只能选择一条!');
         return;
+      }
+      if(btn.path === "/system/dept/add" && rows[0].parentId != "0"){
+        message.warn('不能对子节点新增数据!');
+          return;
       }
       if (keys.length === 1) {
         router.push(`${path}/${keys[0]}`);
