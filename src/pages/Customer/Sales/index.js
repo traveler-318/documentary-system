@@ -21,7 +21,7 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 
-import { getList,getSalesmangroup,updateStatus } from '../../../services/newServices/sales';
+import { getList,getSalesmangroup,updateStatus,getWeChatBinding } from '../../../services/newServices/sales';
 import Grouping from './components/Mgrouping'
 import Recharge from './components/recharge'
 import AggregateCode from './components/aggregateCode'
@@ -166,7 +166,6 @@ class AuthorityList extends PureComponent {
 // =========分组弹窗========
 
   handleGrouping = () => {
-    console.log("111")
     this.setState({
       handleGroupingVisible:true
     })
@@ -225,6 +224,31 @@ class AuthorityList extends PureComponent {
     this.setState({
       handleAggregateCodeVisible:false
     })
+  }
+
+  handleBinding = (row,type) => {
+    if(type === '0'){
+      Modal.confirm({
+        title: '提醒',
+        content: "是否确认解绑？",
+        okText: '确定',
+        okType: 'info',
+        cancelText: '取消',
+        onOk() {
+
+        },
+        onCancel() {},
+      });
+    }else {
+      getWeChatBinding(row.userAccount).then(res=>{
+        console.log(res)
+      })
+    }
+
+  }
+
+  handleTest = () => {
+
   }
 
 
@@ -343,7 +367,23 @@ class AuthorityList extends PureComponent {
       },
       {
         title: '公众号通知',
-        dataIndex: 'openid'
+        dataIndex: 'openid',
+        width: 150,
+        render: (res,row) => {
+          return(
+            <div>
+              {
+                res === '' ?
+                  ( <a onClick={()=>this.handleBinding(row,"1")}>绑定</a>)
+                  :(<>
+                <a onClick={()=>this.handleBinding(row,"0")}>解绑</a>
+                <a onClick={()=>this.handleTest(row)}>ces</a>
+                </>)
+              }
+
+            </div>
+          )
+        },
       },
       {
         title: '操作',

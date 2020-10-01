@@ -10,7 +10,7 @@ import styles from './edit.less';
 import { CITY } from '../../../utils/city';
 import { getQueryString } from '../../../utils/utils';
 import { getCookie } from '../../../utils/support';
-import { updateData, getDetails,orderDetail } from '../../../services/newServices/order';
+import { updateData, getDetails,orderDetail,updateReminds } from '../../../services/newServices/order';
 import {ORDERSTATUS} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import Survey from './components/Survey'

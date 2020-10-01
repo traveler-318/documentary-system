@@ -80,3 +80,11 @@ export async function getDeleteGroup(params) {
     method: 'POST',
   });
 }
+
+// ============ 绑定 ===============
+export async function getWeChatBinding(params) {
+  return request(`/api/agent/salesman/weChatBinding/${params}`, {
+    method: 'GET',
+  });
+}
+
