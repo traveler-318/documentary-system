@@ -368,26 +368,6 @@ class AuthorityList extends PureComponent {
         dataIndex: 'userPhone',
         width: 150,
       },
-      // {
-      //   title: '客户数',
-      //   dataIndex: 'resultsTotalNumber',
-      //   width: 100,
-      // },
-      // {
-      //   title: '已履约',
-      //   dataIndex: 'performanceNumber',
-      //   width: 100,
-      // },
-      // {
-      //   title: '待履约',
-      //   dataIndex: 'stayPerformanceNumber',
-      //   width: 100,
-      // },
-      // {
-      //   title: '已逾期',
-      //   dataIndex: 'defaultNumber',
-      //   width: 100,
-      // },
       {
         title: '创建时间',
         dataIndex: 'createTime',
@@ -420,6 +400,7 @@ class AuthorityList extends PureComponent {
       {
         title: '公众号通知',
         dataIndex: 'openid',
+        width: 150,
         render: (res,row) => {
           return(
             <div>
