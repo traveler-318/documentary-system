@@ -29,8 +29,8 @@ class SenderAdd extends PureComponent {
       authorizationType:[
         // {value:"免押金",key:1},
         // {value:"预授权",key:2},
-        {value:"伪授权",key:3},
-        {value:"免费",key:4},
+        {value:"伪授权",key:1},
+        {value:"免费",key:2},
       ],
       groupingList:[],
       params:{

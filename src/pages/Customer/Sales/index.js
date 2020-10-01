@@ -388,10 +388,8 @@ class AuthorityList extends PureComponent {
         dataIndex: 'authorizationType',
         width: 150,
         render: (res) => {
-          const value = res === 1 ? "免押金" :
-            res === 2 ? "预授权" :
-              res === 3 ? "伪授权" :
-                res === 4 ? "免费" : "";
+          const value = res === 1 ? "伪授权" :
+                res === 2 ? "免费" : "";
           return(
             value
           )

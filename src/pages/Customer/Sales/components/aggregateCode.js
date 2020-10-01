@@ -36,7 +36,10 @@ class Logistics extends PureComponent {
   }
 
   componentWillMount() {
-
+    const { handleAggregateCodeVisible } = this.props;
+    this.setState({
+      handleAggregateCodeVisible:handleAggregateCodeVisible
+    })
   }
 
   handleChange = value => {
@@ -81,11 +84,12 @@ class Logistics extends PureComponent {
         }
         const serverAddress = getCookie("serverAddress");
         const { globalParameters } = this.props;
-        console.log(globalParameters.qrcodeSuffix)
-        console.log(globalParameters.userName)
-        console.log(values.payAmount)
+        console.log(globalParameters)
+        const url = serverAddress+globalParameters.qrcodeSuffix+"salesman="+globalParameters.userName+"&belongs="+globalParameters.tenantId+"&payAmount="+values.payAmount;
         this.setState({
-          qrUrl:'',
+          handleAggregateCodeVisible:false,
+          groupAddVisible:true,
+          qrUrl:url,
         })
       }
     });
@@ -101,7 +105,6 @@ class Logistics extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      handleAggregateCodeVisible,
       handleCancelAggregateCode,
     } = this.props;
 
@@ -114,8 +117,9 @@ class Logistics extends PureComponent {
       },
     };
 
-    const {groupAddVisible,qrUrl} = this.state;
+    const {groupAddVisible,qrUrl,handleAggregateCodeVisible} = this.state;
 
+    console.log(handleAggregateCodeVisible)
 
     // confirmTag
     return (
@@ -148,16 +152,19 @@ class Logistics extends PureComponent {
         <Modal
           title="聚合码"
           visible={groupAddVisible}
-          width={550}
+          width={300}
           onCancel={this.handleCancelGroupAdd}
+          footer={[
+
+          ]}
         >
-          {/*<div>
+          <div>
             <QRCode
               value={qrUrl}
-              size={200}
+              size={250}
               fgColor="#000000"
             />
-          </div>*/}
+          </div>
         </Modal>
       </div>
     );

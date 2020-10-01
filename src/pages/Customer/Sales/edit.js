@@ -27,8 +27,8 @@ class SenderAdd extends PureComponent {
       authorizationType:[
         // {value:"免押金",key:1},
         // {value:"预授权",key:2},
-        {value:"伪授权",key:3},
-        {value:"免费",key:4},
+        {value:"伪授权",key:1},
+        {value:"免费",key:2},
       ],
       groupingList:[],
       params:{
@@ -160,7 +160,7 @@ class SenderAdd extends PureComponent {
                   })(<Input placeholder="请输入姓名" />)}
                 </FormItem>
               </Col>
-             
+
             </Row>
             <Row gutter={24}>
             <Col span={10}>
@@ -180,7 +180,7 @@ class SenderAdd extends PureComponent {
                   })(<Input placeholder="请输入手机号" />)}
                 </FormItem>
               </Col>
-              
+
               <Col span={10}>
                 <FormItem {...formItemLayout} label="分组：">
                   {getFieldDecorator('groupId', {
