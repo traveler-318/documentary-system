@@ -211,6 +211,7 @@ class AllOrdersList extends PureComponent {
       this.setState({
         data:setListData(res.data),
         loading:false,
+        selectedRowKeys:[]
       })
     })
   }
@@ -426,34 +427,63 @@ class AllOrdersList extends PureComponent {
   // 批量审核
   batchAudit = () => {
     const {selectedRows} = this.state;
-    const getList = this.getDataList
+
+    const setAudit = this.setAudit;
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
 
-    Modal.confirm({
+    let modal = Modal.confirm({
       title: '提醒',
       content: "确定审核此订单吗？",
       okText: '确定',
       okType: 'info',
       cancelText: '取消',
       onOk() {
-        let _data = selectedRows.map(item=>{
-          return item.id
-        })
-        toExamine({
-          confirmTag:1,
-          orderIds:_data
-        }).then(res=>{
-          if(res.code === 200){
-            message.success(res.msg);
-            getList();
+        let type = false, _data = []
+        selectedRows.map(item=>{
+          if(item.confirmTag === 0){
+            _data.push(item.id)
+          }else{
+            type = true;
           }
         })
+        console.log(_data,"_data")
+        if(!_data || _data.length === 0){
+          modal.destroy();
+          return message.error("您选择的数据中未包含未审核的数据");
+        }
+        if(type){
+          Modal.confirm({
+            title: '提醒',
+            content: "您选择的数据中包含已审核的数据，我们将不会对这些数据操作",
+            okText: '确定',
+            okType: 'info',
+            cancelText: '取消',
+            onOk() {
+              setAudit(_data)
+            },
+            onCancel() {},
+          });
+        }else{
+          setAudit(_data)
+        }
       },
       onCancel() {},
     });
   }
+  setAudit = (_data) => {
+    toExamine({
+      confirmTag:1,
+      orderIds:_data
+    }).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg);
+        this.getDataList();
+      }
+    })
+  }
+
 
   // 批量发货
   bulkDelivery = () => {
