@@ -1,6 +1,26 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Table, Alert, Checkbox } from 'antd';
 import styles from './index.less';
+import { Resizable } from 'react-resizable';
+
+const ResizeableTitle = props => {
+  const { onResize, width, ...restProps } = props;
+
+  if (!width) {
+    return <th {...restProps} />;
+  }
+
+  return (
+    <Resizable
+      width={width}
+      height={0}
+      onResize={onResize}
+      draggableOpts={{ enableUserSelectHack: false }}
+    >
+      <th {...restProps} />
+    </Resizable>
+  );
+};
 
 function initTotalList(columns) {
   const totalList = [];
@@ -77,6 +97,24 @@ class StandardTable extends PureComponent {
     }
   }
 
+  components = {
+    header: {
+      cell: ResizeableTitle,
+    },
+  };
+
+  handleResize = index => (e, { size }) => {
+    // this.setState(({ columns }) => {
+      const nextColumns = [...this.props.columns];
+      nextColumns[index] = {
+        ...nextColumns[index],
+        width: size.width,
+      };
+      cons
+      return { columns: nextColumns };
+    // });
+  };
+
   render() {
     const { selectedRowKeys, needTotalList, expandProps } = this.state;
     const { data = {}, counterElection, multipleChoice, rowKey, alert = false, ...rest } = this.props;
@@ -99,6 +137,14 @@ class StandardTable extends PureComponent {
     };
 
     console.log(rest.tblProps)
+
+    const columns = this.props.columns.map((col, index) => ({
+      ...col,
+      onHeaderCell: column => ({
+        width: column.width,
+        onResize: this.handleResize(index),
+      }),
+    }));
 
     return (
       <div className={styles.standardTable}>
@@ -137,6 +183,7 @@ class StandardTable extends PureComponent {
           {...rest}
           {...rest.tblProps}
           {...expandProps}
+          components={this.components}
         />
         {counterElection?(
           <div className={styles.counterElection}>
