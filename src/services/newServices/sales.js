@@ -98,3 +98,9 @@ export async function getSendTest(params) {
     method: 'GET',
   });
 }
+// ============ 获取当前系统二维码路由 ===============
+export async function getCodeUrl() {
+  return request(`/api/agent/salesman/codeUrl`, {
+    method: 'GET',
+  });
+}

@@ -12,6 +12,8 @@ import router from 'umi/router';
 
 import { tenantMode } from '../../../../defaultSettings';
 import { getCookie } from '../../../../utils/support';
+import { getCodeUrl } from '../../../../services/newServices/sales';
+
 
 import QRCode  from 'qrcode.react';
 
@@ -29,8 +31,7 @@ class Logistics extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      // 添加分组弹窗
-      groupAddVisible:false,
+      codeUrl:'',
       data:{},
     };
   }
@@ -40,19 +41,21 @@ class Logistics extends PureComponent {
     this.setState({
       handleAggregateCodeVisible:handleAggregateCodeVisible
     })
+    this.getUrl()
+  }
+
+  getUrl = () => {
+    getCodeUrl().then(res=>{
+      console.log(res)
+      this.setState({
+        codeUrl:res.data
+      })
+    })
   }
 
   handleChange = value => {
     console.log("1111")
   };
-
-  // ======添加分组弹窗==========
-
-  groupAdd = () =>{
-    this.setState({
-      groupAddVisible:true,
-    })
-  }
 
   // ======关闭弹窗==========
 
@@ -84,8 +87,11 @@ class Logistics extends PureComponent {
         }
         const serverAddress = getCookie("serverAddress");
         const { globalParameters } = this.props;
+        const { codeUrl } = this.state;
         console.log(globalParameters)
-        const url = serverAddress+globalParameters.qrcodeSuffix+"salesman="+globalParameters.userName+"&belongs="+globalParameters.tenantId+"&payAmount="+values.payAmount;
+        //const url = codeUrl+"&userName="+globalParameters.detailData.userName+"&deptId="+globalParameters.detailData.deptId+"&payAmount="+values.payAmount;
+        const url = codeUrl+globalParameters.detailData.userAccount+"_"+values.payAmount;
+
         this.setState({
           handleAggregateCodeVisible:false,
           groupAddVisible:true,
