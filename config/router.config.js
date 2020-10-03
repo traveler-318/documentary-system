@@ -240,6 +240,7 @@ export default [
               { path: '/system/user', redirect: '/system/user/list' },
               { path: '/system/user/list', component: './System/User/User' },
               { path: '/system/user/add', component: './System/User/UserAdd' },
+              { path: '/system/user/add/:id', component: './System/User/UserAdd' },
               { path: '/system/user/edit/:id', component: './System/User/UserEdit' },
               { path: '/system/user/view/:id', component: './System/User/UserView' },
             ],
