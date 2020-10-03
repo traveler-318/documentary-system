@@ -221,10 +221,10 @@ class AllOrdersList extends PureComponent {
     getSalesmanLists({size:100,current:1}).then(res=>{
       const list={
         userName:"全部",
-        id:""
+        id:"",
+        userAccount:''
       };
-      res.data.records.unshift(list)
-      console.log(res.data.records)
+      res.data.records.unshift(list);
       this.setState({
         salesmanList:res.data.records
       })
@@ -290,7 +290,7 @@ class AllOrdersList extends PureComponent {
                 })(
                 <Select placeholder={"请选择销售"} style={{ width: 120 }}>
                   {salesmanList.map(item=>{
-                    return (<Option value={item.userName}>{item.userName}</Option>)
+                    return (<Option value={item.userAccount}>{item.userName}</Option>)
                   })}
                 </Select>
               )}
