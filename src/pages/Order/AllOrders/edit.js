@@ -124,9 +124,14 @@ class OrdersEdit extends PureComponent {
     const { form } = this.props;
     const { detail } = this.state;
     form.validateFieldsAndScroll((err, values) => {
-      ORDERSTATUS.map(item => {
-        if(item.name === values.confirmTag){
-          values.confirmTag = item.key
+      //ORDERSTATUS.map(item => {
+      //  if(item.name === values.confirmTag){
+      //    values.confirmTag = item.key
+      //  }
+      //})
+      ORDERSOURCE.map(item => {
+        if(item.name === values.orderSource){
+          values.orderSource = item.key
         }
       })
       values.id = detail.id

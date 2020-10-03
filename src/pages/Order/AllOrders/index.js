@@ -11,9 +11,9 @@ import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY } from './data.js';
-import { 
-  getList, 
-  deleteData, 
+import {
+  getList,
+  deleteData,
   updateRemind,
   logisticsRepeatPrint,
   updateReminds,
@@ -219,6 +219,12 @@ class AllOrdersList extends PureComponent {
   // 获取业务员数据
   getSalesmanList = () => {
     getSalesmanLists({size:100,current:1}).then(res=>{
+      const list={
+        userName:"全部",
+        id:""
+      };
+      res.data.records.unshift(list)
+      console.log(res.data.records)
       this.setState({
         salesmanList:res.data.records
       })
@@ -503,11 +509,11 @@ class AllOrdersList extends PureComponent {
       <Button type="primary" icon="plus" onClick={()=>{
         router.push(`/order/AllOrders/add`);
       }}>添加</Button>
-      <Button 
+      <Button
         icon="menu-unfold"
         onClick={this.batchAudit}
       >审核</Button>
-      <Button 
+      <Button
         icon="appstore"
         onClick={this.bulkDelivery}
       >发货</Button>
@@ -781,14 +787,14 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
-    const { 
-      data, 
-      loading, 
-      tabKey, 
-      logisticsVisible, 
+    const {
+      data,
+      loading,
+      tabKey,
+      logisticsVisible,
       TransferVisible,
       LogisticsConfigVisible,
-      selectedRows, 
+      selectedRows,
       detailsVisible,
       selectedRowKeys,
     } = this.state;
