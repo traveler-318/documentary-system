@@ -198,7 +198,7 @@ class AllOrdersList extends PureComponent {
 
   // ============ 初始化数据 ===============
   componentWillMount() {
-    this.getDataList();
+    // this.getDataList();
     this.getSalesmanList();
   }
 
