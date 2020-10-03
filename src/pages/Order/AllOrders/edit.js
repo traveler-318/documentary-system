@@ -244,7 +244,7 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                         },
                       ],
                       initialValue: detail.userName,
-                    })(<Input disabled={edit} placeholder="请输入客户姓名" />)}
+                    })(<Input disabled={detail.confirmTag === 0 ? edit : true} placeholder="请输入客户姓名" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="手机号">
                     {getFieldDecorator('userPhone', {
