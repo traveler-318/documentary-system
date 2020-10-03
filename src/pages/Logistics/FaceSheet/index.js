@@ -206,22 +206,22 @@ class FaceSheetList extends PureComponent {
       {
         title: '打印设备码',
         dataIndex: 'siid',
-        width: 200,
+        width: 150,
       },
       {
         title: '快递模板ID',
         dataIndex: 'tempid_value',
-        width: 200,
+        width: 150,
       },
       {
         title: '宽',
         dataIndex: 'width',
-        width: 150,
+        width: 100,
       },
       {
         title: '高',
         dataIndex: 'height',
-        width: 150,
+        width: 100,
       },
       {
         title: '打印设备名称',
@@ -231,7 +231,7 @@ class FaceSheetList extends PureComponent {
       {
         title: '打印设备状态',
         dataIndex: 'online_value',
-        width: 200,
+        width: 100,
         render: (res) => {
           return(
             <div>

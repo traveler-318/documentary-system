@@ -92,6 +92,7 @@ class Logistics extends PureComponent {
         //const url = codeUrl+"&userName="+globalParameters.detailData.userName+"&deptId="+globalParameters.detailData.deptId+"&payAmount="+values.payAmount;
         const url = codeUrl+globalParameters.detailData.userAccount+"_"+values.payAmount;
 
+        console.log(url)
         this.setState({
           handleAggregateCodeVisible:false,
           groupAddVisible:true,

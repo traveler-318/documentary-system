@@ -11,7 +11,7 @@ import { CITY } from '../../../utils/city';
 import { getQueryString } from '../../../utils/utils';
 import { getCookie } from '../../../utils/support';
 import { updateData, getDetails,orderDetail,updateReminds } from '../../../services/newServices/order';
-import {ORDERSTATUS} from './data.js';
+import {ORDERSTATUS,ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import Survey from './components/Survey'
 import { setListData } from '../../../utils/publicMethod';
@@ -48,6 +48,7 @@ class OrdersEdit extends PureComponent {
   componentWillMount() {
 
     const { globalParameters } = this.props;
+    console.log(globalParameters)
     // 获取详情数据
     this.setState({
       detail:globalParameters.detailData,
@@ -55,6 +56,7 @@ class OrdersEdit extends PureComponent {
 
     this.getEditDetails()
   }
+
 
   getEditDetails = () => {
     const params={
@@ -168,9 +170,9 @@ class OrdersEdit extends PureComponent {
     })
   };
 
-  getText = (key) => {
+  getText = (key, type) => {
     let text = ""
-    ORDERSTATUS.map(item=>{
+    type.map(item=>{
       if(item.key === key){
         text = item.name
       }
@@ -298,12 +300,12 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                           message: '',
                         },
                       ],
-                      initialValue: this.getText(detail.confirmTag),
+                      initialValue: this.getText(detail.confirmTag,ORDERSTATUS),
                     })(<Input disabled={edit} placeholder="" />)}
                   </FormItem>*/}
                   <FormItem {...formAllItemLayout} label="订单来源">
                     {getFieldDecorator('orderSource', {
-                      initialValue: detail.orderSource,
+                      initialValue: this.getText(detail.orderSource,ORDERSOURCE),
                     })(<Input disabled placeholder="" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="订单归属" className={styles.salesman}>

@@ -187,12 +187,12 @@ class GoodsList extends PureComponent {
       {
         title: '物品总数量',
         dataIndex: 'count',
-        width: 300,
+        width: 100,
       },
       {
         title: '物品总重量',
         dataIndex: 'weight',
-        width: 200,
+        width: 100,
       },
       {
         title: '物品总体积',
