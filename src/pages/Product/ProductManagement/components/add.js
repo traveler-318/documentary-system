@@ -83,11 +83,11 @@ class Logistics extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
       if (!err) {
-        const {payPanyId,productTypeId} = this.state;
+        const {payPanyId,productTypeName} = this.state;
         const params = {
           ...values,
           payPanyId,
-          productTypeId,
+          productTypeName,
           deptId:getCookie("dept_id"),
           price:values.price ? Number(values.price) : null,
           settlePrice:values.settlePrice ? Number(values.settlePrice) : null,
@@ -110,7 +110,7 @@ class Logistics extends PureComponent {
       })
     }else{
       this.setState({
-        productTypeId:row.key
+        productTypeName:row.props.children
       })
     }
     
@@ -188,8 +188,8 @@ class Logistics extends PureComponent {
               )}
             </FormItem>
             <FormItem {...formAllItemLayout} label="支付类型">
-              {getFieldDecorator('productTypeName', {
-                initialValue: data.productTypeName,
+              {getFieldDecorator('productTypeId', {
+                initialValue: data.productTypeId,
                 rules: [
                   {
                     required: true,
@@ -199,7 +199,7 @@ class Logistics extends PureComponent {
               })(
                 <Select placeholder="请选择支付类型" onChange={(key,row)=>{this.onChange(key,row,"productTypeId")}}>
                   {productcategoryList.map((item)=>{
-                    return (<Option key={item.id} value={item.productTypeName}>{item.productTypeName}</Option>)
+                    return (<Option key={item.id} value={item.id}>{item.productTypeName}</Option>)
                   })}
                 </Select>
               )}
