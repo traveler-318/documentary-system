@@ -694,16 +694,9 @@ class AllOrdersList extends PureComponent {
   handleShowLogistics = (data) => {
     const { dispatch } = this.props;
 
-    let listId = [];
-    data.map(item=>{
-      listId.push(item.id)
-    })
-
-    console.log(listId,"listId")
-
     dispatch({
       type: `globalParameters/setListId`,
-      payload: listId,
+      payload: data,
     });
     router.push('/order/allOrders/logisticsConfiguration');
 

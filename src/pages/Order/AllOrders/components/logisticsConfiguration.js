@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, message, Cascader, Radio } from 'antd';
+import { Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, message, Cascader, Radio, Modal } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -17,7 +17,8 @@ import {
   getRegion,
   logisticsSubscription,
   getDetails,
-  productTreelist
+  productTreelist,
+  logisticsPrintRequest
 } from '../../../../services/newServices/order'
 import { 
   LOGISTICSCOMPANY,
@@ -91,7 +92,7 @@ class LogisticsConfiguration extends PureComponent {
 
     
     // 获取详情数据
-    this.getDetailsData(globalParameters.listParam[globalParameters.listParam.length-1]);
+    this.getDetailsData(globalParameters.listParam[0].id);
 
     // 拼装对应产品
     // this.assemblingData();
@@ -115,9 +116,9 @@ class LogisticsConfiguration extends PureComponent {
       },()=>{
         
       })
-      this.getDetailsData(listID[currentIndex - 1]);
+      this.getDetailsData(listID[currentIndex - 1].id);
     }else{
-      this.getDetailsData(listID[currentIndex + 1]);
+      this.getDetailsData(listID[currentIndex + 1].id);
       this.setState({
         currentIndex:currentIndex + 1
       },()=>{
@@ -164,7 +165,7 @@ class LogisticsConfiguration extends PureComponent {
     })
     Promise.all([promise1, promise2, promise3, promise4, promise5]).then((values,type) => {
       console.log(values,type,"values");
-      let _dataList = [],senderItem={},printTemplateItem={},deliveryItem={},goodsItem={},additionalItem={}
+      let _dataList = [],authorizationItem={},printTemplateItem={},senderItem={},goodsItem={},additionalItem={}
 
       values.map((item,index)=>{
         // if(item.length === 0){
@@ -188,42 +189,28 @@ class LogisticsConfiguration extends PureComponent {
         for(let i=0; i<item.length; i++){
           if(item[i].status === 1){
             if(index === 0){
-              senderItem = item[i];
-              // this.setState({
-              //   senderItem:item[i]
-              // })
+              authorizationItem = item[i];
             }else if(index === 1){
-              printTemplateItem= item[i]
-              // this.setState({
-              //   printTemplateItem:item[i]
-              // })
+              printTemplateItem= item[i] //faceSheetItem
             }else if(index === 2){
-              deliveryItem = item[i]
-              // this.setState({
-              //   deliveryItem:item[i]
-              // })
+              senderItem = item[i]
             }else if(index === 3){
               goodsItem = item[i]
-              // this.setState({
-              //   goodsItem:item[i]
-              // })
             }else if(index === 4){
               additionalItem = item[i]
-              // this.setState({
-              //   additionalItem:item[i]
-              // })
             }
           }
         }
         
       });
-      if(JSON.stringify(senderItem) === "{}"){
+      console.log(senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem)
+      if(JSON.stringify(authorizationItem) === "{}"){
         // 授权配置
         return message.error("请设置默认基础授权配置");
       }else if(JSON.stringify(printTemplateItem) === "{}"){
         // 打印模板
         return message.error("请设置默认打印模板");
-      }else if(JSON.stringify(deliveryItem) === "{}"){
+      }else if(JSON.stringify(senderItem) === "{}"){
         // 寄件配置
         return message.error("请设置默认寄件人信息");
       }else if(JSON.stringify(goodsItem) === "{}"){
@@ -233,8 +220,13 @@ class LogisticsConfiguration extends PureComponent {
         // 附加信息
         return message.error("请设置默认附加信息");
       }
-      console.log(senderItem, printTemplateItem, deliveryItem, goodsItem, additionalItem)
-      callBack();
+
+      if(authorizationItem.online === '0'){
+        message.success('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
+        return false;
+      }
+
+      callBack({senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem});
     });
   }
 
@@ -291,9 +283,10 @@ class LogisticsConfiguration extends PureComponent {
     // values.productName = values.productName.join("/");
     logisticsSubscription(values).then(res=>{
       if(res.code === 200){
-        message.success(res.msg);
         if(callBack){
           callBack()
+        }else{
+          this.saveSuccess(res.msg);
         }
       }else{
         message.error(res.msg);
@@ -322,7 +315,41 @@ class LogisticsConfiguration extends PureComponent {
         this.saveData(values,()=>{
           // 获取物流配置
           this.getDefaultData((res)=>{
-            // 获取物流配置成功
+            console.log(res,"获取物流配置成功");
+            const { listID } = this.state;
+            res.senderItem.printAddr = res.senderItem.administrative_areas +""+ res.senderItem.printAddr;
+            // senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem
+            let param = {
+              recMan: [],
+              ...res.goodsItem,
+              ...res.printTemplateItem,
+              ...res.additionalItem,
+              sendMan:{
+                ...res.senderItem,
+              },
+              subscribe:values.shipmentRemind, //物流订阅
+              shipmentRemind:values.smsConfirmation, //发货提醒
+              ...res.authorizationItem
+            };
+            for(let i=0; i<listID.length; i++){
+              param.recMan.push(
+                {
+                  "mobile": listID[i].userPhone,
+                  "name": listID[i].userName,
+                  "printAddr": listID[i].userAddress,
+                  "out_order_no": listID[i].outOrderNo,
+                  "id":listID[i].id,
+                  'salesman':listID[i].salesman,
+                }
+              )
+            }
+            logisticsPrintRequest(param).then(response=>{
+              if(response.code === 200){
+                this.saveSuccess(response.msg);
+              }else{
+                message.error(response.msg);
+              }
+            })
           });
         })
       }
@@ -331,6 +358,36 @@ class LogisticsConfiguration extends PureComponent {
 
   handleChange = value => {
   };
+
+  saveSuccess = (msg) => {
+    const {currentIndex, listID} = this.state;
+    if(currentIndex === listID.length-1){
+      Modal.success({
+        title: '操作成功',
+        content: msg,
+        okText: '确定',
+        async onOk() {
+          
+        },
+        onCancel() {},
+      });
+    }else{
+      const next = this.handleSwitch
+      Modal.confirm({
+        title: '操作成功',
+        content: msg,
+        okText: '处理下一条',
+        cancelText: '取消',
+        async onOk() {
+          next(1);
+        },
+        onCancel() {},
+      });
+    }
+    
+  }
+
+  
 
   disabledDate = (current) => {
     // Can not select days before today and today
