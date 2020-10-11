@@ -165,54 +165,76 @@ class LogisticsConfiguration extends PureComponent {
     Promise.all([promise1, promise2, promise3, promise4, promise5]).then((values,type) => {
       console.log(values,type,"values");
       let _dataList = [],senderItem={},printTemplateItem={},deliveryItem={},goodsItem={},additionalItem={}
-      values.map((item,index)=>{
-        if(item.length === 0){
-          if(index === 0){
-            // 授权配置
-            return message.error("请设置基础授权配置");
-          }else if(index === 1){
-            // 打印模板
-            return message.error("请设置打印模板");
-          }else if(index === 2){
-            // 寄件配置
-            return message.error("请设置寄件人信息");
-          }else if(index === 3){
-            // 物品
-            return message.error("请设置物品信息");
-          }else if(index === 4){
-            // 附加信息
-            return message.error("请设置附加信息");
-          }
 
-        }
+      values.map((item,index)=>{
+        // if(item.length === 0){
+        //   if(index === 0){
+        //     // 授权配置
+        //     return message.error("请设置默认基础授权配置");
+        //   }else if(index === 1){
+        //     // 打印模板
+        //     return message.error("请设置默认打印模板");
+        //   }else if(index === 2){
+        //     // 寄件配置
+        //     return message.error("请设置默认寄件人信息");
+        //   }else if(index === 3){
+        //     // 物品
+        //     return message.error("请设置默认物品信息");
+        //   }else if(index === 4){
+        //     // 附加信息
+        //     return message.error("请设置默认附加信息");
+        //   }
+        // }
         for(let i=0; i<item.length; i++){
           if(item[i].status === 1){
             if(index === 0){
-              // _dataList.push(item[i])
-              this.setState({
-                senderItem:item[i]
-              })
+              senderItem = item[i];
+              // this.setState({
+              //   senderItem:item[i]
+              // })
             }else if(index === 1){
-              this.setState({
-                printTemplateItem:item[i]
-              })
+              printTemplateItem= item[i]
+              // this.setState({
+              //   printTemplateItem:item[i]
+              // })
             }else if(index === 2){
-              this.setState({
-                deliveryItem:item[i]
-              })
+              deliveryItem = item[i]
+              // this.setState({
+              //   deliveryItem:item[i]
+              // })
             }else if(index === 3){
-              this.setState({
-                goodsItem:item[i]
-              })
+              goodsItem = item[i]
+              // this.setState({
+              //   goodsItem:item[i]
+              // })
             }else if(index === 4){
-              this.setState({
-                additionalItem:item[i]
-              })
+              additionalItem = item[i]
+              // this.setState({
+              //   additionalItem:item[i]
+              // })
             }
           }
         }
-        callBack();
-      })
+        
+      });
+      if(JSON.stringify(senderItem) === "{}"){
+        // 授权配置
+        return message.error("请设置默认基础授权配置");
+      }else if(JSON.stringify(printTemplateItem) === "{}"){
+        // 打印模板
+        return message.error("请设置默认打印模板");
+      }else if(JSON.stringify(deliveryItem) === "{}"){
+        // 寄件配置
+        return message.error("请设置默认寄件人信息");
+      }else if(JSON.stringify(goodsItem) === "{}"){
+        // 物品
+        return message.error("请设置默认物品信息");
+      }else if(JSON.stringify(additionalItem) === "{}"){
+        // 附加信息
+        return message.error("请设置默认附加信息");
+      }
+      console.log(senderItem, printTemplateItem, deliveryItem, goodsItem, additionalItem)
+      callBack();
     });
   }
 
@@ -299,7 +321,7 @@ class LogisticsConfiguration extends PureComponent {
         // 先保存数据
         this.saveData(values,()=>{
           // 获取物流配置
-          this.getDefaultData(()=>{
+          this.getDefaultData((res)=>{
             // 获取物流配置成功
           });
         })
@@ -375,9 +397,9 @@ class LogisticsConfiguration extends PureComponent {
           <Button style={{marginRight:10}} type="primary" onClick={this.handlePrinting} loading={loading}>
             保存并打印
           </Button>
-          <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
+          {/* <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
             保存并处理下一条
-          </Button>
+          </Button> */}
           <Button icon="reload" onClick={this.handleSubmit} loading={loading}>
             重置
           </Button>
@@ -462,7 +484,7 @@ class LogisticsConfiguration extends PureComponent {
                   })(
                   <Select placeholder={"请选择类型"}>
                     {ORDERTYPE.map(item=>{
-                      return (<Option value={item.name}>{item.name}</Option>)
+                      return (<Option value={item.key}>{item.name}</Option>)
                     })}
                   </Select>
                   )}
@@ -515,7 +537,7 @@ class LogisticsConfiguration extends PureComponent {
               <Col span={12}>
                 {/* <div style={{height:287}}></div> */}
                 <div style={tipsStyle}>如您需要此订单进入自动化流程，请打开本开关</div>
-                <FormItem {...formAllItemLayout} label="设备提醒">
+                {/* <FormItem {...formAllItemLayout} label="设备提醒">
                   {getFieldDecorator('product', {
                     initialValue: 1,
                   })(
@@ -524,7 +546,7 @@ class LogisticsConfiguration extends PureComponent {
                       <Radio value={0}>关</Radio>
                     </Radio.Group>
                   )}
-                </FormItem>
+                </FormItem> */}
                 <FormItem {...formAllItemLayout} label="发货提醒">
                   {getFieldDecorator('smsConfirmation', {
                     initialValue: 1,
