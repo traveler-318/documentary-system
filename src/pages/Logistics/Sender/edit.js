@@ -43,10 +43,12 @@ class SenderEdit extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
       values.addrCoding=JSON.stringify(values.addrCoding);
+      const { cityparam } = this.state;
       if (!err) {
         const params = {
           ...values,
           id:data.id,
+          administrativeAreas:cityparam.name
         };
         getDeliverySubmit(params).then(res=>{
           if(res.code === 200){
@@ -58,8 +60,15 @@ class SenderEdit extends PureComponent {
     });
   };
 
-  onChange = value => {
-
+  onChange = (value, selectedOptions) => {
+    this.setState({
+      cityparam:{
+        province:value[0],
+        city:value[1],
+        area:value[2],
+        name:`${selectedOptions[0].label}${selectedOptions[1].label}${selectedOptions[2].label}`
+      }
+    })
   };
 
 

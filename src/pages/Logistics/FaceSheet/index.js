@@ -231,7 +231,7 @@ class FaceSheetList extends PureComponent {
       {
         title: '打印设备状态',
         dataIndex: 'online_value',
-        width: 100,
+        width: 200,
         render: (res) => {
           return(
             <div>
