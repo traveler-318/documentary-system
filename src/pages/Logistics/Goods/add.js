@@ -123,7 +123,14 @@ class GoodsAdd extends PureComponent {
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="物品信息：">
-                  {getFieldDecorator('cargo')(<Input placeholder="请输入物品信息" />)}
+                  {getFieldDecorator('cargo',{
+                    rules: [
+                      {
+                        required: true,
+                        validator:"请输入物品信息"
+                      },
+                    ],
+                  })(<Input placeholder="请输入物品信息" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
@@ -131,6 +138,7 @@ class GoodsAdd extends PureComponent {
                   {getFieldDecorator('count',{
                     rules: [
                       {
+                        required: true,
                         validator:this.countChange,
                       },
                     ],

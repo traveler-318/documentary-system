@@ -79,6 +79,11 @@ export async function getSurfacesingleStatus(params) {
     body: params,
   });
 }
+export async function refreshStatus(params) {
+  return request(`/api/logistics/surfacesingle/refreshStatus/${params}`, {
+    method: 'GET',
+  });
+}
 
 
 // ============ 寄件配置 ===============

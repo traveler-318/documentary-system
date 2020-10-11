@@ -92,7 +92,6 @@ class SenderList extends PureComponent {
 
   // ============ 删除 ===============
   handleClick = ( res) => {
-    console.log(res)
     const params={
       ids: res.id
     }

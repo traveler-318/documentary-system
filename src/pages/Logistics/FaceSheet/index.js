@@ -24,6 +24,7 @@ import {
   getSurfacesingleList,
   getSurfacesingleRemove,
   getSurfacesingleStatus,
+  refreshStatus,
 } from '../../../services/newServices/logistics';
 import { TEMPID ,EXPRESS100DATA } from './data.js';
 import styles from './index.less';
@@ -79,8 +80,6 @@ class FaceSheetList extends PureComponent {
         }
         data[i].online_value = data[i].online === '0' ? '离线' : '在线';
       }
-
-
       this.setState({
         data:{
           list:data,
@@ -166,6 +165,36 @@ class FaceSheetList extends PureComponent {
         })
       },
       onCancel() {},
+    });
+  };
+
+  // 刷新
+  handleRefresh = (row) => {
+    this.setState({
+      loading:true
+    })
+    refreshStatus(row.siid).then(res => {
+      console.log(res)
+      this.setState({
+        loading:false
+      })
+      //const data = res.data.records;
+      //
+      //for(let i=0; i<data.length; i++){
+      //  data[i].index = i+1;
+      //  for(let j=0; j<EXPRESS100DATA.length; j++){
+      //    if(EXPRESS100DATA[j].num === data[i].kuaidicom){
+      //      data[i].kuaidicom_value = EXPRESS100DATA[j].name;
+      //      break;
+      //    }
+      //  }
+      //  for(let s=0; s< TEMPID.length; s++){
+      //    if(data[i].tempid  === TEMPID[s].id){
+      //      data[i].tempid_value = TEMPID[s].value
+      //    }
+      //  }
+      //  data[i].online_value = data[i].online === '0' ? '离线' : '在线';
+      //}
     });
   };
 
@@ -258,6 +287,8 @@ class FaceSheetList extends PureComponent {
         render: (res,row) => {
           return(
             <div>
+              <Divider type="vertical" />
+              <a onClick={()=>this.handleRefresh(row)}>刷新</a>
               <Divider type="vertical" />
               <a onClick={()=>this.handleEdit(row)}>编辑</a>
               <Divider type="vertical" />
