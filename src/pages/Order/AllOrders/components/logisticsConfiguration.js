@@ -320,7 +320,7 @@ class LogisticsConfiguration extends PureComponent {
             res.senderItem.printAddr = res.senderItem.administrative_areas +""+ res.senderItem.printAddr;
             // senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem
             let param = {
-              recMan: [],
+              recMans: [],
               ...res.goodsItem,
               ...res.printTemplateItem,
               ...res.additionalItem,
@@ -332,7 +332,7 @@ class LogisticsConfiguration extends PureComponent {
               ...res.authorizationItem
             };
             for(let i=0; i<listID.length; i++){
-              param.recMan.push(
+              param.recMans.push(
                 {
                   "mobile": listID[i].userPhone,
                   "name": listID[i].userName,
