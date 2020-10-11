@@ -243,6 +243,7 @@ class FaceSheetList extends PureComponent {
       {
         title: '默认开关',
         dataIndex: 'status',
+        width:150,
         render: (res,key) => {
           return(
             <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key)} />
