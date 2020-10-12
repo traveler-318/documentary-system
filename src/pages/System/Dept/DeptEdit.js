@@ -100,6 +100,11 @@ class DeptEdit extends PureComponent {
       </Button>
     );
 
+    let _tree = tree.map(item=>{
+      delete item.children
+      return item
+    })
+
     return (
       <Panel title="修改" back="/system/dept" action={action}>
         <Form style={{ marginTop: 8 }}>
@@ -136,11 +141,11 @@ class DeptEdit extends PureComponent {
               <Col span={10}>
                 <FormItem {...formItemLayout} label="上级机构">
                   {getFieldDecorator('parentId', {
-                    initialValue: detail.parentId,
+                    initialValue: detail.parentId === '0' ? detail.id : detail.parentId,
                   })(
                     <TreeSelect
                       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                      treeData={tree}
+                      treeData={_tree}
                       placeholder="请选择上级机构"
                       allowClear
                       showSearch

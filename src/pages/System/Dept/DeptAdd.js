@@ -74,6 +74,11 @@ class DeptAdd extends PureComponent {
       </Button>
     );
 
+    let _tree = tree.map(item=>{
+      delete item.children
+      return item
+    })
+
     return (
       <Panel title="新增" back="/system/dept" action={action}>
         <Form style={{ marginTop: 8 }}>
@@ -113,7 +118,7 @@ class DeptAdd extends PureComponent {
                     <TreeSelect
                       disabled={func.notEmpty(detail.id)}
                       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                      treeData={tree}
+                      treeData={_tree}
                       allowClear
                       showSearch
                       treeNodeFilterProp="title"

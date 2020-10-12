@@ -6,6 +6,7 @@ import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
 import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
 import func from '../../../utils/Func';
+import { getCookie } from '../../../utils/support';
 import { tenantMode } from '../../../defaultSettings';
 
 const FormItem = Form.Item;
@@ -83,6 +84,15 @@ class UserAdd extends PureComponent {
         提交
       </Button>
     );
+    let _deptTree = []
+    deptTree.map(item=>{
+      if(item.id === getCookie("dept_id")){
+        _deptTree.push(item)
+      }
+      
+    })
+
+    console.log(_deptTree,"_deptTree")
 
     return (
       <Panel title="新增" back="/system/user" action={action}>
@@ -276,7 +286,7 @@ class UserAdd extends PureComponent {
                   })(
                     <TreeSelect
                       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                      treeData={deptTree}
+                      treeData={_deptTree}
                       allowClear
                       showSearch
                       treeNodeFilterProp="title"

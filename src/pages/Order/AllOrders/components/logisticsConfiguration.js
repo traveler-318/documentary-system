@@ -108,14 +108,17 @@ class LogisticsConfiguration extends PureComponent {
         _data.productType = `${_value.productType[0]}/${_value.productType[1]}`;
 
         _data.logisticsCompany = _value.logisticsCompany;
-        _data.productCoding = _data.productCoding || "";
+        // _data.productCoding = _data.productCoding || "";
 
         _data.smsConfirmation = _value.smsConfirmation;
         _data.shipmentRemind = _value.shipmentRemind;
       }
       console.log(_data,"_data_data_data")
       this.setState({
-        detail:{..._data}
+        detail:{..._data},
+      },()=>{
+        const { form } = this.props;
+        form.setFieldsValue({ productCoding: _data.productCoding,logisticsNumber: _data.logisticsNumber});
       })
     })
   }
@@ -434,7 +437,7 @@ class LogisticsConfiguration extends PureComponent {
       detail,
       productList,
       currentIndex,
-      listID
+      listID,
     } = this.state;
 
     console.log(listID,"listID")

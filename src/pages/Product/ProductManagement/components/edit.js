@@ -57,10 +57,13 @@ class Logistics extends PureComponent {
         paypanyList:res.data.records
       })
     })
+  }
 
+  getProductcategoryLists = (key) => {
     getProductcategoryList({
       size:100,
-      current:1
+      current:1,
+      id:key
     }).then(res=>{
       this.setState({
         productcategoryList:res.data.records
@@ -129,6 +132,7 @@ class Logistics extends PureComponent {
       this.setState({
         payPanyId:row.key
       })
+      this.getProductcategoryLists(row.key)
     }else{
       this.setState({
         productTypeName:row.props.children
