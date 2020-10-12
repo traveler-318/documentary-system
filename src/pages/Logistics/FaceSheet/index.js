@@ -178,23 +178,33 @@ class FaceSheetList extends PureComponent {
       this.setState({
         loading:false
       })
-      //const data = res.data.records;
-      //
-      //for(let i=0; i<data.length; i++){
-      //  data[i].index = i+1;
-      //  for(let j=0; j<EXPRESS100DATA.length; j++){
-      //    if(EXPRESS100DATA[j].num === data[i].kuaidicom){
-      //      data[i].kuaidicom_value = EXPRESS100DATA[j].name;
-      //      break;
-      //    }
-      //  }
-      //  for(let s=0; s< TEMPID.length; s++){
-      //    if(data[i].tempid  === TEMPID[s].id){
-      //      data[i].tempid_value = TEMPID[s].value
-      //    }
-      //  }
-      //  data[i].online_value = data[i].online === '0' ? '离线' : '在线';
-      //}
+      const data = res.data;
+
+      for(let i=0; i<data.length; i++){
+        data[i].index = i+1;
+        for(let j=0; j<EXPRESS100DATA.length; j++){
+          if(EXPRESS100DATA[j].num === data[i].kuaidicom){
+            data[i].kuaidicom_value = EXPRESS100DATA[j].name;
+            break;
+          }
+        }
+        for(let s=0; s< TEMPID.length; s++){
+          if(data[i].tempid  === TEMPID[s].id){
+            data[i].tempid_value = TEMPID[s].value
+          }
+        }
+        data[i].online_value = data[i].online === '0' ? '离线' : '在线';
+      }
+      this.setState({
+        data:{
+          list:data,
+          pagination:{
+            current: res.data.current,
+            pageSize: res.data.size,
+            total: res.data.total
+          }
+        }
+      })
     });
   };
 
@@ -226,6 +236,7 @@ class FaceSheetList extends PureComponent {
       form,
     } = this.props;
     const {data,loading} = this.state;
+    console.log(data)
     const columns = [
       {
         title: '快递公司编码',
