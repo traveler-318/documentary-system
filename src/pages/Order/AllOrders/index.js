@@ -609,6 +609,8 @@ class AllOrdersList extends PureComponent {
         updateReminds(_data).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
+          }else{
+            message.error(res.msg);
           }
         })
       },

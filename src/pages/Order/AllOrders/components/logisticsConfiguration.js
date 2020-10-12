@@ -101,8 +101,21 @@ class LogisticsConfiguration extends PureComponent {
 
   getDetailsData = (id) => {
     getDetails({id}).then(res=>{
+      let _data = res.data
+      if(sessionStorage.logisticsConfigurationValues){
+        let _value = JSON.parse(sessionStorage.logisticsConfigurationValues);
+        _data.productName = _value.productType[2];
+        _data.productType = `${_value.productType[0]}/${_value.productType[1]}`;
+
+        _data.logisticsCompany = _value.logisticsCompany;
+        _data.productCoding = _data.productCoding || "";
+
+        _data.smsConfirmation = _value.smsConfirmation;
+        _data.shipmentRemind = _value.shipmentRemind;
+      }
+      console.log(_data,"_data_data_data")
       this.setState({
-        detail:res.data
+        detail:{..._data}
       })
     })
   }
@@ -271,6 +284,7 @@ class LogisticsConfiguration extends PureComponent {
     console.log(values,"123")
     const { detail } = this.state;
     console.log(detail,"detail")
+    sessionStorage.logisticsConfigurationValues = JSON.stringify(values);
     values.id = detail.id;
     values.deptId = getCookie("dept_id");
     values.confirmTag = detail.confirmTag;
@@ -443,7 +457,7 @@ class LogisticsConfiguration extends PureComponent {
       },
     };
 
-    console.log(this.props.globalParameters)
+    console.log(detail,"detaildetaildetail")
 
     return (
       <Panel title="发货配置" back="/order/AllOrders">
@@ -454,9 +468,6 @@ class LogisticsConfiguration extends PureComponent {
           <Button style={{marginRight:10}} type="primary" onClick={this.handlePrinting} loading={loading}>
             保存并打印
           </Button>
-          {/* <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
-            保存并处理下一条
-          </Button> */}
           <Button icon="reload" onClick={this.handleSubmit} loading={loading}>
             重置
           </Button>
@@ -519,7 +530,6 @@ class LogisticsConfiguration extends PureComponent {
                       },
                     ],
                   })(
-                    // <Input placeholder="请输入对应产品" />
                     <Cascader 
                       options={productList}
                       fieldNames={{ label: 'value'}}
@@ -606,7 +616,7 @@ class LogisticsConfiguration extends PureComponent {
                 </FormItem> */}
                 <FormItem {...formAllItemLayout} label="发货提醒">
                   {getFieldDecorator('smsConfirmation', {
-                    initialValue: 1,
+                    initialValue: detail.smsConfirmation || 1,
                   })(
                     <Radio.Group>
                       <Radio value={1}>开</Radio>
@@ -626,7 +636,7 @@ class LogisticsConfiguration extends PureComponent {
                 </FormItem> */}
                 <FormItem {...formAllItemLayout} label="物流订阅">
                   {getFieldDecorator('shipmentRemind', {
-                    initialValue:1,
+                    initialValue: detail.shipmentRemind || 1,
                   })(
                     <Radio.Group>
                       <Radio value={1}>开</Radio>
