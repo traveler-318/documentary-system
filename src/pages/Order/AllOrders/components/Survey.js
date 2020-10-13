@@ -197,8 +197,6 @@ class Survey extends PureComponent {
       reminderTime
     }
 
-    console.log(followRecords,"followRecords")
-
     followRecords.unshift(param);
 
     let _param = {
@@ -209,13 +207,18 @@ class Survey extends PureComponent {
       list:followRecords
     })
 
-    updateData(_param).then(res=>{
-      if(res.code === 200){
-        message.success(res.msg);
-        this.props.getEditDetails();
-        this.handleEmpty();
-      }
-    })
+    if(detail.confirmTag === 4){
+      updateData(_param).then(res=>{
+        if(res.code === 200){
+          message.success(res.msg);
+          this.props.getEditDetails();
+          this.handleEmpty();
+        }
+      })
+    }else {
+      message.warning("当物流签收后才能进入跟进状态");
+    }
+
   }
 
   handleReminderTime = () => {

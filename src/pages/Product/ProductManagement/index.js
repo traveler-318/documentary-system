@@ -208,9 +208,9 @@ class ProductManagement extends PureComponent {
         },
       },
       {
-        title: '支付公司',
-        dataIndex: 'payPanyName',
-        width: 300,
+        title: '产品',
+        dataIndex: 'productName',
+        width: 200,
       },
       {
         title: '类型',
@@ -218,9 +218,9 @@ class ProductManagement extends PureComponent {
         width: 200,
       },
       {
-        title: '产品',
-        dataIndex: 'productName',
-        width: 200,
+        title: '支付公司',
+        dataIndex: 'payPanyName',
+        width: 300,
       },
       {
         title: '价格',
