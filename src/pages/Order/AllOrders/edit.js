@@ -223,7 +223,7 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
         <Form style={{ marginTop: 8 }}>
           <Card bordered={false} className={styles.editContent}>
             <Row gutter={24} style={{ margin: 0 }}>
-              <Col span={12} style={{ padding: 0 }} className={styles.leftContent}>
+              <Col span={8} style={{ padding: 0 }} className={styles.leftContent}>
                 <div className={styles.titleBtn}>
                   <Button type="primary" onClick={this.handleSubmit}>保存</Button>
                   <Button icon="edit" onClick={this.clickEdit}>编辑</Button>
@@ -236,6 +236,9 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                 </div>
                 <div className={styles.editList} style={{ padding: '20px' }}>
                   <FormDetailsTitle title="订单信息" style={{ margin:'0'}} />
+                  <Form span={24}>
+                    
+                  
                   <FormItem {...formAllItemLayout} label="客户姓名">
                     {getFieldDecorator('userName', {
                       rules: [
@@ -339,9 +342,10 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                       initialValue: detail.userAddress,
                     })(<Input disabled={edit} placeholder="请输入电子邮箱" />)}
                   </FormItem> */}
+                  </Form>
                 </div>
               </Col>
-              <Col span={12} style={{ padding: 0 }} className={styles.rightContent}>
+              <Col span={16} style={{ padding: 0 }} className={styles.rightContent}>
                 <div className={styles.titleBtn}>
                   {/* <Button icon="plus">工单</Button>
                   <Button  icon="plus">产品</Button>

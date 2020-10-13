@@ -328,7 +328,7 @@ class Survey extends PureComponent {
         </div>
         <div className={styles.tabText}>
           <TextArea
-            rows={4}
+            rows={2}
             value={describe}
             onChange={this.TextAreaChange}
             placeholder='请输入内容（Alt+Enter快速提交）'
