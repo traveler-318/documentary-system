@@ -14,14 +14,14 @@ const GlobalFooter = ({ className, links, copyright }) => {
               title={link.key}
               target={link.blankTarget ? '_blank' : '_self'}
               href={link.href}
-              style={{color:"rgba(0, 0, 0, 0.45)"}}
+              style={{color:"rgba(0, 0, 0, 0.45) !important"}}
             >
               {link.title}
             </a>
           ))}
         </div>
       )}
-      {copyright && <div className={styles.copyright}>{copyright}</div>}
+      {copyright && <div className={styles.copyright} style={{color:"rgba(0, 0, 0, 0.45) !important"}}>{copyright}</div>}
     </footer>
   );
 };
