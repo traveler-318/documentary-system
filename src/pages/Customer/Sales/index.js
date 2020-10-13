@@ -310,7 +310,7 @@ class AuthorityList extends PureComponent {
           :""
         }
 
-        <Button type="primary" onClick={this.handleGrouping}>分组</Button>
+        <Button onClick={this.handleGrouping}>分组</Button>
 
   {/*
         <Button type="primary" onClick={this.handleRecharge}>充值</Button>

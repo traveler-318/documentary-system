@@ -104,7 +104,7 @@ class Logistics extends PureComponent {
           width={550}
           onCancel={handleCancelRecharge}
           footer={[
-            <Button key="primary" onClick={()=>this.handleSubmit()}>
+            <Button type="primary" key="primary" onClick={()=>this.handleSubmit()}>
               确认
             </Button>,
           ]}

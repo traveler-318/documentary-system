@@ -140,7 +140,7 @@ class Logistics extends PureComponent {
             <Button key="back" onClick={handleCancelAggregateCode}>
               取消
             </Button>,
-            <Button key="primary" onClick={()=>this.handleSubmit()}>
+            <Button type="primary" key="primary" onClick={()=>this.handleSubmit()}>
               确认
             </Button>
           ]}

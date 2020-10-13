@@ -13,21 +13,21 @@ import { title } from '../defaultSettings';
 import { getTopUrl, getQueryString, validateNull } from '../utils/utils';
 
 const links = [
-  {
-    key: 'help',
-    title: formatMessage({ id: 'layout.user.link.help' }),
-    href: '',
-  },
-  {
-    key: 'privacy',
-    title: formatMessage({ id: 'layout.user.link.privacy' }),
-    href: '',
-  },
-  {
-    key: 'terms',
-    title: formatMessage({ id: 'layout.user.link.terms' }),
-    href: '',
-  },
+  // {
+  //   key: 'help',
+  //   title: formatMessage({ id: 'layout.user.link.help' }),
+  //   href: '',
+  // },
+  // {
+  //   key: 'privacy',
+  //   title: formatMessage({ id: 'layout.user.link.privacy' }),
+  //   href: '',
+  // },
+  // {
+  //   key: 'terms',
+  //   title: formatMessage({ id: 'layout.user.link.terms' }),
+  //   href: '',
+  // },
 ];
 
 const copyright = (
@@ -38,7 +38,8 @@ const copyright = (
       target="_blank"
       rel="noopener noreferrer"
       href="https://www.ruanmao.cn"
-      style={{color:"rgba(0, 0, 0, 0.45)"}}
+      // style={{color:"rgba(0, 0, 0, 0.45)"}}
+      className={styles.textColor}
     >
       Copyright <Icon type="copyright" /> 2020 厦门软猫科技有限公司{' '}
     </a>
