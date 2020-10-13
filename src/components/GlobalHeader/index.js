@@ -47,7 +47,7 @@ class GlobalHeader extends PureComponent {
           <Icon type={collapsed ? 'menu-unfold' : 'menu-fold'} />
         </span>
 
-        <span
+        {/* <span
           className={styles.triggerSmall}
           onClick={() => {
             this.loadMenu(0);
@@ -55,9 +55,9 @@ class GlobalHeader extends PureComponent {
         >
           <Icon type="home" style={{ paddingRight: '5px' }} />
           首页
-        </span>
+        </span> */}
 
-        {topMenuData.map(menu => (
+        {/* {topMenuData.map(menu => (
           <span
             className={styles.triggerSmall}
             onClick={() => {
@@ -67,7 +67,7 @@ class GlobalHeader extends PureComponent {
             <Icon type={menu.source} style={{ paddingRight: '5px' }} />
             {menu.name}
           </span>
-        ))}
+        ))} */}
 
         <RightContent {...this.props} />
       </div>

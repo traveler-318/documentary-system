@@ -242,16 +242,19 @@ class FaceSheetList extends PureComponent {
         title: '快递公司编码',
         dataIndex: 'kuaidicom_value',
         width: 200,
+        ellipsis: true,
       },
       {
         title: '打印设备码',
         dataIndex: 'siid',
         width: 150,
+        ellipsis: true,
       },
       {
         title: '快递模板ID',
         dataIndex: 'tempid_value',
         width: 150,
+        ellipsis: true,
       },
       {
         title: '宽',

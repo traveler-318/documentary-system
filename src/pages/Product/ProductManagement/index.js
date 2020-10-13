@@ -250,7 +250,7 @@ class ProductManagement extends PureComponent {
       {
         title: '创建时间',
         dataIndex: 'createTime',
-        width: 150,
+        width: 160,
       },
       {
         title: '操作',

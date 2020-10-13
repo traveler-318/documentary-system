@@ -197,11 +197,13 @@ class SenderList extends PureComponent {
             Areas
           )
         },
+        ellipsis: true,
       },
       {
         title: '寄件人公司名称',
         dataIndex: 'company',
         width: 200,
+        ellipsis: true,
       },
       {
         title: '默认开关',

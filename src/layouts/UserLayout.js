@@ -7,7 +7,7 @@ import DocumentTitle from 'react-document-title';
 import GlobalFooter from '../components/GlobalFooter';
 import SelectLang from '../components/SelectLang';
 import styles from './UserLayout.less';
-import logo from '../assets/logo.svg';
+import loginLogo from '../assets/loginLogo.svg';
 import getPageTitle from '../utils/getPageTitle';
 import { title } from '../defaultSettings';
 import { getTopUrl, getQueryString, validateNull } from '../utils/utils';
@@ -114,7 +114,7 @@ class UserLayout extends Component {
               <div className={styles.top}>
                 <div className={styles.header}>
                   <Link to="/">
-                    <img alt="logo" className={styles.logo} src={logo} />
+                    <img alt="logo" className={styles.logo} src={loginLogo} />
                     <span className={styles.title}>{title}</span>
                   </Link>
                 </div>

@@ -89,7 +89,7 @@ class AllOrdersList extends PureComponent {
         {
           title: '手机号',
           dataIndex: 'userPhone',
-          width: 100,
+          width: 110,
         },
         {
           title: '收货地址',
@@ -105,7 +105,7 @@ class AllOrdersList extends PureComponent {
         {
           title: '产品型号',
           dataIndex: 'productName',
-          width: 100,
+          width: 160,
         },
         {
           title: 'SN码',
@@ -167,7 +167,7 @@ class AllOrdersList extends PureComponent {
           title: '操作',
           key: 'operation',
           fixed: 'right',
-          width: 280,
+          width: 110,
           render: (text,row) => {
               return(
                   <div>
@@ -522,6 +522,8 @@ class AllOrdersList extends PureComponent {
         onClick={this.batchReminders}
       >提醒</Button>
       <Button icon="download">导入</Button>
+      {/* <Button icon="upload">导出</Button> */}
+      {/* <Button icon="loading-3-quarters" onClick={this.handleShowTransfer}>转移客户</Button> */}
       <Dropdown overlay={this.moreMenu()}>
         <Button>
           更多 <Icon type="down" />
@@ -543,14 +545,14 @@ class AllOrdersList extends PureComponent {
         <Icon type="highlight" />
         批量编辑
       </Menu.Item> */}
-      <SubMenu key="sub1" title="批量物流下单">
+      {/* <SubMenu key="sub1" title="批量物流下单">
         <Menu.Item key="6" onClick={this.repeat}>
           重复打印
         </Menu.Item>
         <Menu.Item key="7" onClick={this.first}>
           首次打印
         </Menu.Item>
-      </SubMenu>
+      </SubMenu> */}
     </Menu>
   );
 
@@ -817,9 +819,22 @@ class AllOrdersList extends PureComponent {
       </div>
     );
 
+
+
     return (
       <Panel>
-        <TabPanes/>
+        {/* <TabPanes/> */}
+        <Tabs type="card" onChange={this.statusChange}>
+        {ORDERSTATUS.map(item=>{
+          return (
+            // <div
+            //   onClick={()=>this.statusChange(item.key)}
+            //   className={item.key === tabKey ? styles.status_item_select : styles.status_item}
+            // >{item.name}</div>
+            <TabPane tab={item.name} key={item.key}></TabPane>
+          )
+        })}
+        </Tabs>
         <Grid
           code={code}
           form={form}
@@ -831,7 +846,7 @@ class AllOrdersList extends PureComponent {
           columns={columns}
           scroll={{ x: 1000 }}
           renderLeftButton={this.renderLeftButton}
-          renderRightButton={this.renderRightButton}
+          // renderRightButton={this.renderRightButton}
           counterElection={true}
           onChangeCheckbox={this.onChangeCheckbox}
           selectedKey={selectedRowKeys}

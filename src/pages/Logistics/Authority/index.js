@@ -193,11 +193,13 @@ class AuthorityList extends PureComponent {
         title: '授权ID',
         dataIndex: 'partnerId',
         width: 150,
+        ellipsis: true,
       },
       {
         title: '授权key',
         dataIndex: 'partnerKey',
         width: 150,
+        ellipsis: true,
       },
       {
         title: '快递员名称',
@@ -208,6 +210,7 @@ class AuthorityList extends PureComponent {
         title: '当地网点名称',
         dataIndex: 'net',
         width: 200,
+        ellipsis: true,
       },
       {
         title: '默认开关',

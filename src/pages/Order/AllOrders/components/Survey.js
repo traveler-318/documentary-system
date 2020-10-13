@@ -49,6 +49,8 @@ class Survey extends PureComponent {
         {"name":"跟进中",key:5,className:""},
         {"name":"已激活",key:6,className:""},
         {"name":"已退回",key:7,className:""},
+        {"name":"已取消",key:8,className:""},
+        {"name":"已过期",key:9,className:""},
       ],
       followRecords:[],
       reminderTime:"",
