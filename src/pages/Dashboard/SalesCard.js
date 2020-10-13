@@ -40,7 +40,7 @@ const SalesCard = memo(
               <RangePicker
                 value={rangePickerValue}
                 onChange={handleRangePickerChange}
-                style={{ width: 256 }}
+                style={{ width: 220 }}
               />
             </div>
           }

@@ -1,6 +1,6 @@
 module.exports = {
-  title: 'Sword 企业级开发平台',
-  name: 'Sword Admin',
+  title: '跟单宝',
+  name: '跟单宝',
   clientId: 'sword', // 客户端id
   clientSecret: 'sword_secret', // 客户端密钥
   tenantMode: true, // 开启租户模式

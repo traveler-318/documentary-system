@@ -390,8 +390,8 @@ class LogisticsConfig extends PureComponent {
             附加信息
           </Button>
           <div className={styles.checkbox}>
-            <Checkbox onChange={this.onChange} checked={checked} style={{color:"#409eff"}}>物流订阅</Checkbox>
-            <Checkbox onChange={this.onChange1} checked={checked1} style={{color:"#409eff"}}>发货提醒</Checkbox>
+            <Checkbox onChange={this.onChange} checked={checked} style={{color:"#52b7b4"}}>物流订阅</Checkbox>
+            <Checkbox onChange={this.onChange1} checked={checked1} style={{color:"#52b7b4"}}>发货提醒</Checkbox>
           </div>
         </Modal>
         <Modal
