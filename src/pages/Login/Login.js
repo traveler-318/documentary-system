@@ -101,7 +101,7 @@ class LoginPage extends Component {
             this.loginForm = form;
           }}
         >
-          <Tab key="account" tab={formatMessage({ id: 'app.login.tab-login-credentials' })}>
+          {/* <Tab key="account" tab={formatMessage({ id: 'app.login.tab-login-credentials' })}> */}
             {login.status === 'error' &&
               login.type === 'account' &&
               !submitting &&
@@ -146,8 +146,8 @@ class LoginPage extends Component {
               }}
             />
             {captchaMode ? <Captcha name="code" mode="image" defaultValue={num} /> : null}
-          </Tab>
-          <Tab key="social" tab={formatMessage({ id: 'app.login.tab-login-social' })}>
+          {/* </Tab> */}
+          {/* <Tab key="social" tab={formatMessage({ id: 'app.login.tab-login-social' })}>
             <Card className={styles.card} bordered={false}>
               <Row gutter={24} className={styles.iconPreview}>
                 <Col span={4} key="github">
@@ -206,7 +206,7 @@ class LoginPage extends Component {
                 </Col>
               </Row>
             </Card>
-          </Tab>
+          </Tab> */}
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               <FormattedMessage id="app.login.remember-me" />
