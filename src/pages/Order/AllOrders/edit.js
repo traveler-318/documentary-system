@@ -289,7 +289,7 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                         },
                       ],
                       initialValue: detail.userAddress,
-                    })(<Input disabled={detail.confirmTag === 0 ? edit : true} placeholder="请输入收货地址" />)}
+                    })(<Input title={detail.userAddress} disabled={detail.confirmTag === 0 ? edit : true} placeholder="请输入收货地址" />)}
                   </FormItem>
 {/*                  <FormItem {...formAllItemLayout} label="客戶状态">
                     {getFieldDecorator('userAddress', {
