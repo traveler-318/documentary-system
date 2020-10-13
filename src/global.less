@@ -61,11 +61,14 @@ ol {
   }
 }
 :global{
-  .ant-btn-primary{
+  .ant-btn.ant-btn-primary{
     background-color: #52b7b4 !important;
     border-color: #52b7b4 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
   }
-  .ant-btn-primary:active{
+  .ant-btn.ant-btn-primary:active{
     background-color: #52b7b4 !important;
     border-color: #52b7b4 !important;
   }
@@ -114,5 +117,46 @@ ol {
   }
   .ant-table-thead > tr.ant-table-row-hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td, .ant-table-tbody > tr.ant-table-row-hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td, .ant-table-thead > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td, .ant-table-tbody > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected) > td {
     background: #eef8f7;
+  }
+  .ant-btn{
+    border-color: #52b7b4 !important;
+    color: #52b7b4 !important;
+  }
+
+  .ant-menu-dark .ant-menu-vertical{
+    background: #eaedf1 !important;
+    color: #373d41 !important;
+    a{
+      color: #373d41 !important;
+    }
+  }
+  .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected{
+    background-color: #ffffff !important;
+  }
+  .ant-btn-danger{
+    color: #fff !important;
+    background-color: #ff7875 !important;
+    border-color: #ff7875 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  .ant-btn-danger:hover{
+    color: #fff !important;
+    background-color: #ff7875 !important;
+    border-color: #ff7875 !important;
+  }
+  .ant-input:focus{
+    border-color: #52b7b4 !important;
+    box-shadow: 0 0 0 2px rgba(82, 183, 180, 0.2) !important;
+  }
+  .ant-checkbox-checked .ant-checkbox-inner{
+    background-color: #52b7b4 !important;
+    border-color: #52b7b4 !important;
+  }
+  .ant-checkbox-indeterminate .ant-checkbox-inner::after{
+    background-color: #52b7b4 !important;
+  }
+  .ant-checkbox-input:focus + .ant-checkbox-inner{
+    border-color: #52b7b4 !important;
   }
 }

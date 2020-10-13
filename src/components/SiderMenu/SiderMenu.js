@@ -7,6 +7,8 @@ import PageLoading from '../PageLoading';
 import { getDefaultCollapsedSubMenus } from './SiderMenuUtils';
 import { name } from '../../defaultSettings';
 
+import siderLogo from '../../assets/siderLogo.svg'
+
 const BaseMenu = React.lazy(() => import('./BaseMenu'));
 const { Sider } = Layout;
 
@@ -79,7 +81,7 @@ export default class SiderMenu extends PureComponent {
       >
         <div className={styles.logo} id="logo">
           <Link to="/">
-            <img src={logo} alt="logo" />
+            <img src={siderLogo} alt="logo" />
             <h1>{name}</h1>
           </Link>
         </div>

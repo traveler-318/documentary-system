@@ -32,15 +32,15 @@ const links = [
 
 const copyright = (
   <Fragment>
-    Copyright <Icon type="copyright" /> 2020 BladeX{' '}
     <a
       key="github"
       title="git"
       target="_blank"
       rel="noopener noreferrer"
-      href="https://git.bladex.vip/blade/BladeX"
+      href="https://www.ruanmao.cn"
+      style={{color:"rgba(0, 0, 0, 0.45)"}}
     >
-      <Icon type="github" />{' '}
+      Copyright <Icon type="copyright" /> 2020 厦门软猫科技有限公司{' '}
     </a>
   </Fragment>
 );
