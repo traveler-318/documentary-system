@@ -171,8 +171,10 @@ class AllOrdersList extends PureComponent {
           render: (text,row) => {
               return(
                   <div>
-                      <a onClick={()=>this.handleDelect(row)}>删除</a>
-                      <Divider type="vertical" />
+                    <a onClick={()=>this.handleEdit(row)}>详情</a>
+                    <Divider type="vertical" />
+                    <a onClick={()=>this.handleDelect(row)}>删除</a>
+                     
                       {/* <a>跟进</a>
                       <Divider type="vertical" />
                       <a onClick={()=>this.handleEdit(row)}>编辑</a>
@@ -181,7 +183,7 @@ class AllOrdersList extends PureComponent {
                       <Divider type="vertical" />
                       <a>归档</a>
                       <Divider type="vertical" /> */}
-                      <a onClick={()=>this.handleEdit(row)}>详情</a>
+                      
                       {/* <Divider type="vertical" /> */}
                       {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
                       {/* <Divider type="vertical" />

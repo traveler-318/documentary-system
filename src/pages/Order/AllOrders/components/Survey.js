@@ -29,6 +29,7 @@ class Survey extends PureComponent {
 
   constructor(props) {
     super(props);
+    this.myRef = React.createRef();
     this.state = {
       edit:true,
       detail:{},
@@ -63,7 +64,13 @@ class Survey extends PureComponent {
   }
 
   componentWillMount() {
-
+    
+  }
+  componentDidMount() {
+    let offsetLeftDistance = document.documentElement.clientWidth - this.myRef.current.clientWidth
+    this.setState({
+      offsetLeftDistance
+    })
   }
 
   UNSAFE_componentWillReceiveProps(nex){
@@ -273,13 +280,14 @@ class Survey extends PureComponent {
       reminderTime,
       editTimeVisible,
       editReminderTimes,
-      logisticsDetailsVisible
+      logisticsDetailsVisible,
+      offsetLeftDistance
     } = this.state;
     console.log(followRecords,"followRecords")
 
     return (
       <>
-        <div style={{marginBottom:15,paddingBottom:5}} className={styles.main}>
+        <div style={{marginBottom:15,paddingBottom:5}} className={styles.main} ref={this.myRef}>
           <ul>
             {orderType.map(item=>{
               return (
@@ -326,7 +334,14 @@ class Survey extends PureComponent {
             })}
           </Timeline>
         </div>
-        <div className={styles.tabText}>
+        <div className={styles.tabText}
+          style={{
+            position:"fixed",
+            bottom:0,
+            left:offsetLeftDistance-24,
+            right:"24px"
+          }}
+        >
           <TextArea
             rows={2}
             value={describe}
@@ -336,7 +351,7 @@ class Survey extends PureComponent {
           <div>
             <div
               onClick={this.handleReminderTime}
-              style={{float:"left",cursor:"pointer",paddingTop:6}}
+              style={{float:"left",cursor:"pointer",paddingTop:7}}
             >
               <Icon
                 type="clock-circle"
@@ -345,7 +360,7 @@ class Survey extends PureComponent {
               计划提醒
             </div>
             <div
-              style={{float:"left",cursor:"pointer",paddingTop:6}}
+              style={{float:"left",cursor:"pointer",paddingTop:7}}
             >
               {reminderTime}
             </div>

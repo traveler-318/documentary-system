@@ -116,10 +116,10 @@ export default class GlobalHeaderRight extends PureComponent {
             console.log('enter', value); // eslint-disable-line
           }}
         />
-        <Tooltip title={formatMessage({ id: 'component.globalHeader.help' })}>
+        <Tooltip title={"使用文档"}>
           <a
             target="_blank"
-            href="https://pro.ant.design/docs/getting-started"
+            href="https://www.yuque.com/gdb"
             rel="noopener noreferrer"
             className={styles.action}
           >
