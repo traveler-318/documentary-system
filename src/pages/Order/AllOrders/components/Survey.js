@@ -336,7 +336,7 @@ class Survey extends PureComponent {
           <div>
             <div
               onClick={this.handleReminderTime}
-              style={{float:"left",cursor:"pointer"}}
+              style={{float:"left",cursor:"pointer",paddingTop:6}}
             >
               <Icon
                 type="clock-circle"
@@ -345,7 +345,7 @@ class Survey extends PureComponent {
               计划提醒
             </div>
             <div
-              style={{float:"left",cursor:"pointer"}}
+              style={{float:"left",cursor:"pointer",paddingTop:6}}
             >
               {reminderTime}
             </div>

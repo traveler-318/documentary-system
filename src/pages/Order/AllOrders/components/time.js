@@ -38,9 +38,9 @@ class ReminderTimes extends PureComponent {
   
   onOk = (value) => {
     this.setState({
-      reminderTimes:moment(value).format('YYYY-MM-DD HH:mm:ss')
+      reminderTimes:moment(value).format('YYYY-MM-DD HH:mm')
     })
-    console.log('onOk: ', moment(value).format('YYYY-MM-DD HH:mm:ss'));
+    console.log('onOk: ', moment(value).format('YYYY-MM-DD HH:mm'));
   }
 
   handleSubmit = (e,sms_confirmation) => {
@@ -66,6 +66,7 @@ class ReminderTimes extends PureComponent {
       detail,
       reminderTimes
     } = this.state;
+    console.log(reminderTimes)
 
     const formItemLayout = {
       labelCol: {
@@ -111,10 +112,11 @@ class ReminderTimes extends PureComponent {
                       },
                     ],
                   })(
-                    <DatePicker 
-                      showTime 
-                      placeholder="请选择提醒时间" 
-                      onChange={this.onChange} 
+                    <DatePicker
+                      showTime={{ format: 'HH:mm' }}
+                      format="YYYY-MM-DD HH:mm"
+                      placeholder="请选择提醒时间"
+                      onChange={this.onChange}
                       onOk={this.onOk}
                     />
                   )}
