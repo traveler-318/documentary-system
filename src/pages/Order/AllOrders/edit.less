@@ -24,8 +24,16 @@
           border-right: none;
           height: 45px;
           line-height: 45px;
+          border-bottom: none;
         }
       }
+      .ant-form-item:last-child .ant-form-item-label{
+        border-bottom: 1px solid #ccc;
+      }
+      .ant-form-item:last-child input{
+        border-bottom: 1px solid #ccc;
+      }
+
       .ant-form-item-control{
         line-height: 39px;
       }
@@ -34,6 +42,7 @@
         input{
           height: 45px;
           border-radius:0;
+          border-bottom: none;
         }
         .ant-input[disabled]{
           background: #fbfbfb;
@@ -51,7 +60,16 @@
     }
   .salesman{
     margin-bottom: 10px;
+    :global{
+      .ant-form-item-label{
+        border-bottom: 1px solid #ccc;
+      }
+    }
+    input{
+      border-bottom: 1px solid #ccc;
+    }
   }
+
 }
 .titleBtn{
   height: 63px;

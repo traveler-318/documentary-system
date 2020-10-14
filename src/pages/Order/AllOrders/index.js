@@ -89,7 +89,7 @@ class AllOrdersList extends PureComponent {
         {
           title: '手机号',
           dataIndex: 'userPhone',
-          width: 110,
+          width: 120,
         },
         {
           title: '收货地址',
@@ -161,7 +161,7 @@ class AllOrdersList extends PureComponent {
         {
           title: '下单时间',
           dataIndex: 'createTime',
-          width: 160,
+          width: 170,
         },
         {
           title: '操作',

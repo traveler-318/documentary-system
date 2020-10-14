@@ -279,7 +279,7 @@ class Survey extends PureComponent {
 
     return (
       <>
-        <div style={{height:"170px",marginBottom:15}} className={styles.main}>
+        <div style={{marginBottom:15,paddingBottom:5}} className={styles.main}>
           <ul>
             {orderType.map(item=>{
               return (
