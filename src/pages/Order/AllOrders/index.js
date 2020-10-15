@@ -17,7 +17,8 @@ import {
   updateRemind,
   logisticsRepeatPrint,
   updateReminds,
-  toExamine
+  toExamine,
+  synCheck
 } from '../../../services/newServices/order';
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
 import styles from './index.less';
@@ -25,7 +26,7 @@ import Logistics from './components/Logistics'
 import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
-
+import ImportData from './components/ImportData'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -80,6 +81,8 @@ class AllOrdersList extends PureComponent {
       LogisticsConfigVisible:false,
       // 详情弹窗
       detailsVisible:false,
+      // 免押宝导入弹窗
+      noDepositVisible:false,
       columns:[
         {
           title: '姓名',
@@ -523,7 +526,9 @@ class AllOrdersList extends PureComponent {
         icon="bell"
         onClick={this.batchReminders}
       >提醒</Button>
-      <Button icon="download">导入</Button>
+      <Button icon="download"
+        onClick={this.importData}
+      >导入</Button>
       {/* <Button icon="upload">导出</Button> */}
       {/* <Button icon="loading-3-quarters" onClick={this.handleShowTransfer}>转移客户</Button> */}
       <Dropdown overlay={this.moreMenu()}>
@@ -633,6 +638,25 @@ class AllOrdersList extends PureComponent {
 
   refreshTable = () => {
     this.getDataList();
+  }
+
+  // 导入数据
+  importData = () => {
+    // 检查是否设置同步账号
+    synCheck().then(res=>{
+      if(res.code === 200){
+        // 成功打开面押宝同步弹窗
+        this.setState({
+          noDepositVisible:true
+        })
+      }
+    })
+  }
+
+  handleCancelNoDeposit = () => {
+    this.setState({
+      noDepositVisible:false
+    })
   }
 
   // 修改数据
@@ -886,6 +910,14 @@ class AllOrdersList extends PureComponent {
             LogisticsConfigVisible={LogisticsConfigVisible}
             LogisticsConfigList={selectedRows}
             handleCancelLogisticsConfig={this.handleCancelLogisticsConfig}
+          />
+        ):""}
+
+        {/* 免押宝导入弹窗 */}
+        {noDepositVisible?(
+          <ImportData
+            noDepositVisible={noDepositVisible}
+            handleCancelNoDeposit={handleCancelNoDeposit}
           />
         ):""}
 

@@ -129,3 +129,27 @@ export async function productTreelist(params) {
     body: params,
   });
 }
+
+// 检查是否设置同步账号
+export async function synCheck(params = {}) {
+  return request('/api/order/mall/syn_check', {
+    method: 'get',
+    body: params,
+  });
+}
+
+// 同步账号进行发送短信
+export async function synSmsCertification(params = {}) {
+  return request('/api/order/mall/syn_sms_certification', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 同步账号进行发送短信
+export async function synbinding(params = {}) {
+  return request('/api/order/mall/synbinding', {
+    method: 'POST',
+    body: params,
+  });
+}
