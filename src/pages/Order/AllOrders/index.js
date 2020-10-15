@@ -10,7 +10,7 @@ import Grid from '../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
-import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY } from './data.js';
+import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY, LOGISTICSSTATUS } from './data.js';
 import {
   getList,
   deleteData,
@@ -164,6 +164,16 @@ class AllOrdersList extends PureComponent {
           title: '快递单号',
           dataIndex: 'logisticsNumber',
           width: 130,
+        },
+        {
+          title: '物流状态',
+          dataIndex: 'logisticsStatus',
+          width: 100,
+          render: (key)=>{
+            return (
+              <div>{this.getLogisticsStatusValue(key)} </div>
+            )
+          }
         },
         {
           title: '下单时间',
@@ -322,6 +332,17 @@ class AllOrdersList extends PureComponent {
           })(
             <Select placeholder={"请选择订单来源"} style={{ width: 120 }}>
               {ORDERSOURCE.map(item=>{
+                return (<Option value={item.key}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="物流状态">
+          {getFieldDecorator('logisticsStatus', {
+            initialValue: "全部",
+          })(
+            <Select placeholder={"请选择物流状态"} style={{ width: 120 }}>
+              {LOGISTICSSTATUS.map(item=>{
                 return (<Option value={item.key}>{item.name}</Option>)
               })}
             </Select>
@@ -812,6 +833,21 @@ class AllOrdersList extends PureComponent {
     if(key === 5){ text = "电销" }
     if(key === 6){ text = "网销" }
     if(key === 7){ text = "地推" }
+    return text;
+  }
+
+   // 获取物流状态
+   getLogisticsStatusValue = (value) => {
+    let text = 
+    value === '-1' ? "单号错误" :
+    value === '0' ? "暂无轨迹":
+    value === '1' ? "快递收件":
+    value === '2' ? "在途中":
+    value === '3' ? "已签收":
+    value === '4' ? "问题件":
+    value === '5' ? "疑难件":
+    value === '6' ? "退件签收":
+    value === '7' ? "快递揽件":"";
     return text;
   }
 

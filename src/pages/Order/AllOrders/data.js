@@ -64,6 +64,20 @@ export const TIMETYPE = [
     {name:"物流打印时间",key:3},
 ]
 
+// 物流状态
+export const LOGISTICSSTATUS = [
+    {"name":"全部",key:null},
+    {"name":"单号错误",key:'-1'},
+    {"name":"暂无轨迹",key:'0'},
+    {"name":"快递收件",key:'1'},
+    {"name":"在途中",key:'2'},
+    {"name":"已签收",key:'3'},
+    {"name":"问题件",key:'4'},
+    {"name":"疑难件",key:'5'},
+    {"name":"退件签收",key:'6'},
+    {"name":"快递揽件",key:'7'}
+]
+
 // 物流 LogisticsCompany
 
 export const LOGISTICSCOMPANY = {
