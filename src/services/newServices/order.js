@@ -157,3 +157,12 @@ export async function getVCode(name,tenantId,send_type) {
     method: 'GET',
   });
 }
+
+
+// 同步账号进行发送短信
+export async function syndata(params = {}) {
+  return request('/api/order/mall/syndata', {
+    method: 'POST',
+    body: params,
+  });
+}

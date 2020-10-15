@@ -10,7 +10,7 @@ import Grid from '../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
-import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY } from './data.js';
+import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY, LOGISTICSSTATUS } from './data.js';
 import {
   getList,
   deleteData,
@@ -18,7 +18,8 @@ import {
   logisticsRepeatPrint,
   updateReminds,
   toExamine,
-  synCheck
+  synCheck,
+  syndata
 } from '../../../services/newServices/order';
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
 import styles from './index.less';
@@ -125,7 +126,7 @@ class AllOrdersList extends PureComponent {
           width: 100,
           render: (key)=>{
             return (
-              <div>{this.getText(key,ORDERSTATUS)} </div>
+              <div>{this.getORDERSTATUS(key)} </div>
             )
           }
         },
@@ -135,7 +136,7 @@ class AllOrdersList extends PureComponent {
           width: 100,
           render: (key)=>{
             return (
-              <div>{this.getText(key,ORDERTYPE)} </div>
+              <div>{this.getORDERTYPE(key)} </div>
             )
           }
         },
@@ -145,7 +146,7 @@ class AllOrdersList extends PureComponent {
           width: 100,
           render: (key)=>{
             return (
-              <div>{this.getText(key,ORDERSOURCE)} </div>
+              <div>{this.getORDERSOURCE(key)} </div>
             )
           }
         },
@@ -163,6 +164,16 @@ class AllOrdersList extends PureComponent {
           title: '快递单号',
           dataIndex: 'logisticsNumber',
           width: 130,
+        },
+        {
+          title: '物流状态',
+          dataIndex: 'logisticsStatus',
+          width: 100,
+          render: (key)=>{
+            return (
+              <div>{this.getLogisticsStatusValue(key)} </div>
+            )
+          }
         },
         {
           title: '下单时间',
@@ -242,9 +253,10 @@ class AllOrdersList extends PureComponent {
   // ============ 查询 ===============
   handleSearch = params => {
     const { dateRange } = params;
-
+    const { tabKey } = this.state;
     let payload = {
       ...params,
+      confirmTag:tabKey
     };
     if (dateRange) {
       payload = {
@@ -257,9 +269,9 @@ class AllOrdersList extends PureComponent {
     if(payload.salesman && payload.salesman === "全部"){
       payload.salesman = null;
     }
-    if(payload.confirmTag && payload.confirmTag === "全部"){
-      payload.confirmTag = null;
-    }
+    // if(payload.confirmTag && payload.confirmTag === "全部"){
+    //   payload.confirmTag = null;
+    // }
     if(payload.orderSource && payload.orderSource === "全部"){
       payload.orderSource = null;
     }
@@ -284,40 +296,35 @@ class AllOrdersList extends PureComponent {
     return (
       <div className={"default_search_form"}>
         <Form.Item label="姓名">
-            {getFieldDecorator('userName')(<Input placeholder="请输入姓名" />)}
-          </Form.Item>
-          <Form.Item label="订单类型">
-            {getFieldDecorator('orderType', {
-                initialValue: null,
-              })(
-              <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
-                {ORDERTYPPE.map(item=>{
-                  return (<Option value={item.key}>{item.name}</Option>)
-                })}
-              </Select>
-            )}
-          </Form.Item>
-          <Form.Item label="销售">
-            {getFieldDecorator('salesman', {
-                  initialValue: "全部",
-                })(
-                <Select placeholder={"请选择销售"} style={{ width: 120 }}>
-                  {salesmanList.map(item=>{
-                    return (<Option value={item.userAccount}>{item.userName}</Option>)
-                  })}
-                </Select>
-              )}
-          </Form.Item>
-        <Form.Item label="订单状态">
-          {getFieldDecorator('confirmTag', {
-            initialValue: "全部",
-          })(
-            <Select placeholder={"请选择订单状态"} style={{ width: 120 }}>
-              {ORDERSTATUS.map(item=>{
+          {getFieldDecorator('userName')(<Input placeholder="请输入姓名" />)}
+        </Form.Item>
+        <Form.Item label="手机号">
+          {getFieldDecorator('userPhone')(<Input placeholder="请输入手机号" />)}
+        </Form.Item>
+        <Form.Item label="SN码">
+              {getFieldDecorator('productCoding')(<Input placeholder="请输入SN码" />)}
+            </Form.Item>
+        <Form.Item label="订单类型">
+          {getFieldDecorator('orderType', {
+              initialValue: null,
+            })(
+            <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
+              {ORDERTYPPE.map(item=>{
                 return (<Option value={item.key}>{item.name}</Option>)
               })}
             </Select>
           )}
+        </Form.Item>
+        <Form.Item label="销售">
+          {getFieldDecorator('salesman', {
+                initialValue: "全部",
+              })(
+              <Select placeholder={"请选择销售"} style={{ width: 120 }}>
+                {salesmanList.map(item=>{
+                  return (<Option value={item.userAccount}>{item.userName}</Option>)
+                })}
+              </Select>
+            )}
         </Form.Item>
         <Form.Item label="订单来源">
           {getFieldDecorator('orderSource', {
@@ -330,6 +337,29 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
+        <Form.Item label="物流状态">
+          {getFieldDecorator('logisticsStatus', {
+            initialValue: "全部",
+          })(
+            <Select placeholder={"请选择物流状态"} style={{ width: 120 }}>
+              {LOGISTICSSTATUS.map(item=>{
+                return (<Option value={item.key}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item>
+        {/* <Form.Item label="订单状态">
+          {getFieldDecorator('confirmTag', {
+            initialValue: "全部",
+          })(
+            <Select placeholder={"请选择订单状态"} style={{ width: 120 }}>
+              {ORDERSTATUS.map(item=>{
+                return (<Option value={item.key}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item> */}
+
           <div>
             {/* <Form.Item label="时间类型">
               {getFieldDecorator('timeType', {
@@ -349,9 +379,7 @@ class AllOrdersList extends PureComponent {
                 <RangePicker showTime size={"default"} />
               )}
             </Form.Item>
-            <Form.Item label="SN码">
-              {getFieldDecorator('productCoding')(<Input placeholder="请输入SN码" />)}
-            </Form.Item>
+
 
             <div style={{ float: 'right' }}>
               <Button type="primary" htmlType="submit">
@@ -579,9 +607,6 @@ class AllOrdersList extends PureComponent {
         icon="bell"
         onClick={this.batchReminders}
       >提醒</Button>
-      <Button icon="download"
-        onClick={this.importData}
-      >导入</Button>
       {/* <Button icon="upload">导出</Button> */}
       {/* <Button icon="loading-3-quarters" onClick={this.handleShowTransfer}>转移客户</Button> */}
       <Dropdown overlay={this.moreMenu()}>
@@ -593,11 +618,15 @@ class AllOrdersList extends PureComponent {
   );
   moreMenu = () => (
     <Menu onClick={this.handleMenuClick}>
+      <Menu.Item key="download" onClick={this.importData}>
+        <Icon type="download" />
+        免押同步
+      </Menu.Item>
       <Menu.Item key="3" onClick={this.exportFile}>
         <Icon type="upload" />
         导出
       </Menu.Item>
-      <Menu.Item key="4">
+      <Menu.Item key="4"  onClick={this.handleShowTransfer}>
         <Icon type="loading-3-quarters" />
         转移客户
       </Menu.Item>
@@ -619,13 +648,8 @@ class AllOrdersList extends PureComponent {
   handleMenuClick = (menuRow) => {
     console.log('click', menuRow);
     const {selectedRows} = this.state;
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
-    }
-    // 转移客户
-    if(menuRow.key === "4"){
-      this.handleShowTransfer();
-    }
+
+
   }
 
   // 删除
@@ -696,15 +720,32 @@ class AllOrdersList extends PureComponent {
   // 导入数据
   importData = () => {
     // 检查是否设置同步账号
-    console.log("导入数据")
-
     synCheck().then(res=>{
       console.log(res,"调用接口")
-      if(res.code === 200 && res.data){
-        // 成功打开面押宝同步弹窗
+      if(res.code === 200 && !res.data){
+        // 成功打开面押宝同步弹窗  - false=没有同步，就开打弹窗进行同步验证
         this.setState({
           noDepositVisible:true
         })
+      }else{
+        // return message.error('当前系统已经绑定您指定的同步账号,请联系管理员进行排查!');
+        Modal.confirm({
+          title: '提醒',
+          content: "当前系统已经绑定您指定的同步账号,确定同步数据吗？",
+          okText: '确定',
+          okType: 'primary',
+          cancelText: '取消',
+          onOk() {
+            syndata().then(res=>{
+              if(res.code === 200){
+                message.success(res.msg);
+              }else{
+                message.error(res.msg);
+              }
+            })
+          },
+          onCancel() {},
+        });
       }
     })
   }
@@ -735,14 +776,80 @@ class AllOrdersList extends PureComponent {
   getText = (key, type) => {
     let text = ""
     type.map(item=>{
+      console.log(item.key === key,item.key,key)
       if(item.key === key){
         text = item.name
+        return item.name
       }
     })
-    return text
+
+  }
+  // 订单状态
+  getORDERSTATUS = (key) => {
+    let text = ""
+    if(key === 0){ text = "待审核" }
+    if(key === 1){ text = "已审核" }
+    if(key === 2){ text = "已发货" }
+    if(key === 3){ text = "在途中" }
+    if(key === 4){ text = "已签收" }
+    if(key === 5){ text = "跟进中" }
+    if(key === 6){ text = "已激活" }
+    if(key === 7){ text = "已退回" }
+    if(key === 8){ text = "已取消" }
+    if(key === 9){ text = "已过期" }
+    return text;
+  }
+  // 订单类型
+  getORDERTYPE = (key) => {
+    let text = ""
+    if(key === 1){
+      text = "免押"
+    }
+    if(key === 2){
+      text = "到付"
+    }
+    if(key === 3){
+      text = "收费"
+    }
+    if(key === 4){
+      text = "免押"
+    }
+    if(key === 5){
+      text = "其他"
+    }
+    return text;
+  }
+  // 订单来源
+  getORDERSOURCE = (key) => {
+    let text = ""
+    if(key === 1){ text = "新增" }
+    if(key === 2){ text = "导入" }
+    if(key === 3){ text = "客户" }
+    if(key === 4){ text = "销售" }
+    if(key === 5){ text = "电销" }
+    if(key === 6){ text = "网销" }
+    if(key === 7){ text = "地推" }
+    return text;
   }
 
+   // 获取物流状态
+   getLogisticsStatusValue = (value) => {
+    let text =
+    value === '-1' ? "单号错误" :
+    value === '0' ? "暂无轨迹":
+    value === '1' ? "快递收件":
+    value === '2' ? "在途中":
+    value === '3' ? "已签收":
+    value === '4' ? "问题件":
+    value === '5' ? "疑难件":
+    value === '6' ? "退件签收":
+    value === '7' ? "快递揽件":"";
+    return text;
+  }
+
+
   statusChange = (key) => {
+    console.log(key,"keykeykey")
     this.setState({
       tabKey:key
     },()=>{
@@ -805,6 +912,11 @@ class AllOrdersList extends PureComponent {
   handleShowTransfer = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
+
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+
     dispatch({
       type: `globalParameters/setListId`,
       payload: selectedRows,
@@ -909,15 +1021,15 @@ class AllOrdersList extends PureComponent {
       <Panel>
         {/* <TabPanes/> */}
         <Tabs type="card" onChange={this.statusChange}>
-        {ORDERSTATUS.map(item=>{
-          return (
-            // <div
-            //   onClick={()=>this.statusChange(item.key)}
-            //   className={item.key === tabKey ? styles.status_item_select : styles.status_item}
-            // >{item.name}</div>
-            <TabPane tab={item.name} key={item.key}></TabPane>
-          )
-        })}
+          {ORDERSTATUS.map(item=>{
+            return (
+              // <div
+              //   onClick={()=>this.statusChange(item.key)}
+              //   className={item.key === tabKey ? styles.status_item_select : styles.status_item}
+              // >{item.name}</div>
+              <TabPane tab={item.name} key={item.key}></TabPane>
+            )
+          })}
         </Tabs>
         <Grid
           code={code}
