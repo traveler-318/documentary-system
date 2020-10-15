@@ -158,3 +158,11 @@ export async function syndata(params = {}) {
     body: params,
   });
 }
+
+// 获取分组对应的销售
+export async function getSalesmanLists(id) {
+  return request(`/api/order/salesman/group/${id}`, {
+    method: 'get',
+  });
+}
+
