@@ -369,6 +369,11 @@ class AuthorityList extends PureComponent {
         width: 150,
       },
       {
+        title: '销售',
+        dataIndex: 'salesman',
+        width: 120,
+      },
+      {
         title: '创建时间',
         dataIndex: 'createTime',
         width: 200,

@@ -150,3 +150,11 @@ export async function synbinding(params = {}) {
     body: params,
   });
 }
+
+// 同步账号进行发送短信
+export async function syndata(params = {}) {
+  return request('/api/order/mall/syndata', {
+    method: 'POST',
+    body: params,
+  });
+}

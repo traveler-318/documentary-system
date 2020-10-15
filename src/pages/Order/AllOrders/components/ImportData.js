@@ -7,7 +7,7 @@ import router from 'umi/router';
 import { tenantMode } from '../../../../defaultSettings';
 import { getCookie } from '../../../../utils/support';
 import { synSmsCertification, synbinding } from '../../../../services/newServices/order'
-
+import SecurityVerification from './securityVerification'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -23,95 +23,34 @@ class Equipment extends PureComponent {
     super(props);
     this.state = {
       loading:false,
-      isSendCode:false,
-      timer:60,
-      smsType:false,
-      checkCode:false
+      verificationVisible:false,
+      param:{}
     };
   }
 
-    componentWillMount() {
-        
-    }
-
-    //   获取验证码
-    getCode = () => {
-        const { form } = this.props;
-        form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                // values.deptId = getCookie("dept_id");
-                // values = {...values};
-                synSmsCertification(values).then(res=>{
-                    if(res.code === 200){
-                        message.success(res.msg);
-                        this.setTimer();
-                        this.setState({
-                            isSendCode:true,
-                            smsType:true,
-                        })
-                    }
-                })
-            }
-        });
-    }
-    setTimer = () => {
-        setTimeout(()=>{
-            const { timer } = this.state;
-            if(timer === 0){
-                this.setState({
-                    isSendCode:false
-                })
-            }else{
-                timer = timer - 1;
-                
-                this.setState({
-                    timer
-                },()=>{
-                    this.setTimer();
-                })
-            }
-        },1000)
-    }
-    handleSubmit = (e) => {
-        const { smsType } = this.state;
-        this.setState({checkCode:true})
-        
-        e.preventDefault();
-        const { form } = this.props;
-        
-        form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-        
-            // this.setState({loading:true });
-            
-            // values.deptId = getCookie("dept_id");
-            // values = {...values};
-            if(!smsType){
-                message.error("请先发送短信验证码");
-                return false;
-            }
-
-            synbinding(values).then(res=>{
-                // this.setState({loading:false });
-                if(res.code === 200){
-                    message.success(res.msg);
-                }
-            })
-        }
-        });
-    };
-
-//   短信提醒
-  handleReminder = () => {
-
+  componentWillMount() {
+      
   }
-
-  handleChange = value => {
+  nextStep = (e) => {
+    e.preventDefault();
+    const { form } = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        this.setState({
+          verificationVisible:true,
+          param:values
+        })
+      }
+    });
   };
 
-  disabledDate = (current) => {
-    // Can not select days before today and today
-    return current && current > moment().endOf('day');
+  handleCancelVerification = (type) => {
+    this.setState({
+      verificationVisible:false,
+    })
+    if(type === "success"){
+      this.props.handleCancelNoDeposit();
+    }
   }
 
   render() {
@@ -123,9 +62,8 @@ class Equipment extends PureComponent {
 
     const {
       loading,
-      isSendCode,
-      timer,
-      checkCode
+      verificationVisible,
+      param
     } = this.state;
 
     const formAllItemLayout = {
@@ -136,77 +74,53 @@ class Equipment extends PureComponent {
         span: 20,
       },
     };
-    // confirmTag
     return (
-        <Modal
-          title="免押宝导入数据"
-          visible={noDepositVisible}
-          width={430}
-          onCancel={handleCancelNoDeposit}
-          footer={[
-            <Button key="back" onClick={handleCancelNoDeposit}>
-              取消
-            </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={(e)=>this.handleSubmit(e)}>
-              确定
-            </Button>,
-          ]}
-        >
-            <Form style={{ marginTop: 8 }}>
-                <FormItem {...formAllItemLayout} label="账号">
-                  {getFieldDecorator('synAccount', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入免押宝账号',
-                      },
-                    ],
-                  })(<Input placeholder="请输入免押宝账号" />)}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="密码">
-                  {getFieldDecorator('synPassword', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入免押宝密码',
-                      },
-                    ],
-                  })(<Input placeholder="请输入免押宝密码" />)}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="手机号">
-                  {getFieldDecorator('phone', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入手机号',
-                      },
-                    ],
-                  })(<Input placeholder="请输入手机号" />)}
-                </FormItem>
-                <Form.Item {...formAllItemLayout} label="验证码">
-                    <Row gutter={8}>
-                        <Col span={16}>
-                            {getFieldDecorator('code', {
-                                rules: [
-                                    {
-                                        required: checkCode,
-                                        message: '请输入验证码',
-                                    },
-                                    {
-                                        len: 6,
-                                        required: checkCode,
-                                        message: '请输入6位验证码',
-                                  },
-                                ],
-                            })(<Input placeholder="请输入验证码" />)}
-                        </Col>
-                        <Col span={8}>
-                            <Button disabled={isSendCode} onClick={this.getCode}>获取验证码{timer!=60?`${timer}s`:""}</Button>
-                        </Col>
-                    </Row>
-                </Form.Item>
-            </Form>
-        </Modal>
+        <>
+          <Modal
+            title="免押宝导入数据"
+            visible={noDepositVisible}
+            width={430}
+            onCancel={handleCancelNoDeposit}
+            footer={[
+              <Button key="back" onClick={handleCancelNoDeposit}>
+                取消
+              </Button>,
+              <Button key="submit" type="primary" loading={loading} onClick={(e)=>this.nextStep(e)}>
+                下一步
+              </Button>,
+            ]}
+          >
+              <Form style={{ marginTop: 8 }}>
+                  <FormItem {...formAllItemLayout} label="账号">
+                    {getFieldDecorator('synAccount', {
+                      rules: [
+                        {
+                          required: true,
+                          message: '请输入免押宝账号',
+                        },
+                      ],
+                    })(<Input placeholder="请输入免押宝账号" />)}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="密码">
+                    {getFieldDecorator('synPassword', {
+                      rules: [
+                        {
+                          required: true,
+                          message: '请输入免押宝密码',
+                        },
+                      ],
+                    })(<Input placeholder="请输入免押宝密码" />)}
+                  </FormItem>
+              </Form>
+          </Modal>
+          {verificationVisible?(
+            <SecurityVerification
+              verificationVisible={verificationVisible}
+              handleCancelVerification={this.handleCancelVerification}
+              param={param}
+            />
+          ):""}
+        </>
     );
   }
 }

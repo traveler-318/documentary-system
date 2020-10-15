@@ -240,6 +240,7 @@ class Export extends PureComponent {
                       <Checkbox
                         indeterminate={indeterminate}
                         onChange={this.handleCheckAllChange}
+                        checked = {true}
                       >
                         {item.value}
                       </Checkbox>
