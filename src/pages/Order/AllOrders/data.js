@@ -21,7 +21,7 @@ export const ORDERSTATUS = [
     {"name":"已过期",key:9},
     {"name":"全部",key:null},
 ]
- 
+
 
 export const ORDERTYPPE = [
     {name:"全部",key:null},
@@ -37,8 +37,8 @@ export const GENDER = [
     {name:"男",key:1},
     {name:"女",key:2},
 ]
- 
-// 订单类型 
+
+// 订单类型
 export const ORDERTYPE = [
     {name:"免费",key:1},
     {name:"免押",key:2},
@@ -46,7 +46,7 @@ export const ORDERTYPE = [
     {name:"收费",key:4},
     {name:"其他",key:5},
 ]
-// 订单来源 
+// 订单来源
 export const ORDERSOURCE = [
     {name:"新增",key:1},
     {name:"导入",key:2},
@@ -57,7 +57,7 @@ export const ORDERSOURCE = [
     {name:"地推",key:7},
 ]
 
-// 订单来源 
+// 订单来源
 export const TIMETYPE = [
     {name:"跟进时间",key:1},
     {name:"下单时间",key:2},
@@ -162,7 +162,7 @@ export const productType = [
 // 产品序列号
 export const productID = [
     {"name":"押金-99","key":0},
-]   
+]
 // 金额
 export const amountOfMoney = [
     {"name":"99","key":0},
@@ -199,7 +199,7 @@ export function getLogisticsQuery() {
 // 导出
 export function exportData() {
   return [
-    {value:"姓名",code:"userName"},
+    {value:"姓名",code:"userName",checked:false},
     {value:"手机号",code:"userPhone"},
     {value:"收货地址",code:"userAddress"},
     {value:"产品分类",code:"productType"},

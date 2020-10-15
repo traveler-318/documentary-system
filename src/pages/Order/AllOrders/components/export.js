@@ -6,7 +6,7 @@ import router from 'umi/router';
 
 import { tenantMode } from '../../../../defaultSettings';
 import { getCookie } from '../../../../utils/support';
-import { updateLogistics, logisticsRemind } from '../../../../services/newServices/order'
+import { getList,getVCode } from '../../../../services/newServices/order'
 import { exportData } from '../data.js';
 import { ORDERSOURCE } from '../data';
 import styles from '../index.less';
@@ -28,7 +28,7 @@ class Export extends PureComponent {
       loading:false,
       // 导出
       exportFileVisible:false,
-      detail:{},
+      params:{},
       rangeList:[
         {"value":"今日",code:1},
         {"value":"昨日",code:2},
@@ -41,11 +41,12 @@ class Export extends PureComponent {
       isIndeterminate:true,
       checkedList:[],
       downloadExcelParam:{
-        startTime:moment().format('YYYY-MM-DD')+" 00:00:00",
-        endTime: moment().format('YYYY-MM-DD')+" 23:59:59"
+        start_time:moment().format('YYYY-MM-DD')+" 00:00:00",
+        end_time: moment().format('YYYY-MM-DD')+" 23:59:59"
       },
-      startTime:'',
-      endTime:''
+      checked:false,
+      start_time:'',
+      end_time:''
     };
   }
 
@@ -53,7 +54,7 @@ class Export extends PureComponent {
     const { globalParameters } = this.props;
     // 获取详情数据
     this.setState({
-      detail:globalParameters.detailData
+      params:globalParameters.setDetailData
     })
   }
 
@@ -66,23 +67,64 @@ class Export extends PureComponent {
     return false
   }
 
+  getDataList = () => {
+    const {params,downloadExcelParam} = this.state;
+    console.log(downloadExcelParam)
+    let param={
+      ...params,
+      ...downloadExcelParam
+    }
+    console.log(param)
+    getList(param).then(res=>{
+      console.log(res)
+      if(res.data.records.length > 0){
+        this.setState({
+          exportFileVisible:true
+        })
+      }else {
+        message.error('当前条件下暂无可导出的数据,请修改查询条件');
+      }
+    })
+  }
+
+
   // 下一步
   dataExport = () => {
-    const {downloadExcelParam,checkedList}=this.state;
+    const {downloadExcelParam,checkedList,exportDataList}=this.state;
     console.log(checkedList)
     const oneMonth =31*24*3600*1000
-    if((new Date(downloadExcelParam.endTime).getTime()-new Date(downloadExcelParam.startTime).getTime()) > oneMonth){
+    if((new Date(downloadExcelParam.end_time).getTime()-new Date(downloadExcelParam.start_time).getTime()) > oneMonth){
       message.error('导出时间范围不可超过31天');
       return false;
     }else if(this.verification(checkedList)){
       message.error('请选择导出字段');
       return false;
     }
-
+    let fileds = "";
+    for(let i=0; i<exportDataList.length; i++){
+      if(exportDataList[i].checked){
+        fileds+= i === 0 ? exportDataList[i].code : ","+exportDataList[i].code
+      }
+    }
+    downloadExcelParam.fileds = fileds;
     this.setState({
-      exportFileVisible:true
+      downloadExcelParam
     })
+    //// 验证当前条件下是否有数据
+    this.getDataList()
+
   };
+
+  //获取验证码
+  getVerificationCode = () =>{
+    const tenantId=getCookie("tenantId");
+    const userName=getCookie("userName");
+    console.log(tenantId)
+    console.log(userName)
+    getVCode(userName,tenantId,2).then(res=>{
+      console.log(res)
+    })
+  }
 
   handleCancelExportFile = () =>{
     this.setState({
@@ -91,14 +133,30 @@ class Export extends PureComponent {
   }
 
 
-  handleChange = value => {
+  handleChange = (item,index) => {
+    const {exportDataList}=this.state;
+    let list=[...exportDataList]
+    list[index].checked=!list[index].checked;
+    let checkedL=list[index].checked? list[index] : [];
+    let checkedList=[]
+    checkedList.push(checkedL)
+    console.log(checkedList)
+    this.setState({
+      exportDataList:list,
+      checkedList:checkedList
+    })
   };
 
   handleCheckAllChange = e => {
     console.log(e.target.checked)
-    const {exportDataList}=this.state
+    const {exportDataList}=this.state;
+
+    for(let i=0; i<exportDataList.length; i++){
+      exportDataList[i].checked =e.target.checked ? true : false
+    }
     this.setState({
       isIndeterminate:false,
+      checked:e.target.checked ? true : false,
       checkedList: e.target.checked ? exportDataList : [],
     })
   };
@@ -114,29 +172,29 @@ class Export extends PureComponent {
     const downloadExcelParam={};
     // 本日
     if(item.code === 1){
-      downloadExcelParam.startTime = moment().format('YYYY-MM-DD')+" 00:00:00";
-      downloadExcelParam.endTime = moment().format('YYYY-MM-DD')+" 23:59:59";
+      downloadExcelParam.start_time = moment().format('YYYY-MM-DD')+" 00:00:00";
+      downloadExcelParam.end_time = moment().format('YYYY-MM-DD')+" 23:59:59";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 2){
       // 昨日
-      downloadExcelParam.startTime = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 00:00:00";
-      downloadExcelParam.endTime = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 23:59:59";
+      downloadExcelParam.start_time = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 00:00:00";
+      downloadExcelParam.end_time = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 23:59:59";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 3){
       // 本周
-      downloadExcelParam.startTime = moment().startOf('week').format('YYYY-MM-DD') +" 00:00:00";
-      downloadExcelParam.endTime = moment().endOf('week').format('YYYY-MM-DD')+" 23:59:59";
+      downloadExcelParam.start_time = moment().startOf('week').format('YYYY-MM-DD') +" 00:00:00";
+      downloadExcelParam.end_time = moment().endOf('week').format('YYYY-MM-DD')+" 23:59:59";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 4){
       // 本月
-      downloadExcelParam.startTime = moment().startOf('month').format('YYYY-MM-DD') +" 00:00:00";
-      downloadExcelParam.endTime = moment().endOf('month').format('YYYY-MM-DD') +" 00:00:00";
+      downloadExcelParam.start_time = moment().startOf('month').format('YYYY-MM-DD') +" 00:00:00";
+      downloadExcelParam.end_time = moment().endOf('month').format('YYYY-MM-DD') +" 00:00:00";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
@@ -147,8 +205,8 @@ class Export extends PureComponent {
 
   onOk = (value) => {
     const downloadExcelParam={};
-    downloadExcelParam.startTime = moment(value[0]).format('YYYY-MM-DD HH:mm');
-    downloadExcelParam.endTime = moment(value[1]).format('YYYY-MM-DD HH:mm');
+    downloadExcelParam.start_time = moment(value[0]).format('YYYY-MM-DD HH:mm');
+    downloadExcelParam.end_time = moment(value[1]).format('YYYY-MM-DD HH:mm');
     this.setState({
       downloadExcelParam:downloadExcelParam
     })
@@ -162,13 +220,12 @@ class Export extends PureComponent {
     } = this.props;
 
     const {
-      loading,
       rangeList,
       seleteTimeRange,
       exportDataList,
       exportFileVisible,
-      checkedList,
-      indeterminate,
+      checked,
+      isIndeterminate,
       downloadExcelParam,
     } = this.state;
 
@@ -199,7 +256,7 @@ class Export extends PureComponent {
             </Button>,
           ]}
         >
-          <div style={{padding:30}}>
+          <div style={{padding:"0 30px"}}>
             <Row gutter={24}>
               <Col span={4}>导出范围：</Col>
               <Col span={20}>
@@ -228,24 +285,24 @@ class Export extends PureComponent {
             <Row gutter={24}>
               <Col span={4}>导出字段：</Col>
               <Col span={20}>
-                <Checkbox indeterminate={indeterminate} onChange={this.handleCheckAllChange}>全部选择</Checkbox>
+                <Checkbox indeterminate={isIndeterminate} onChange={this.handleCheckAllChange}>全部选择</Checkbox>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={4}></Col>
               <Col span={20}>
                 {
-                  exportDataList.map((item) => (
+                  exportDataList.map((item,index) => {
+                    return (
                     <div className={styles.export_fields_item}>
                       <Checkbox
-                        indeterminate={indeterminate}
-                        onChange={this.handleCheckAllChange}
+                        checked={item.checked}
+                        onChange={()=>this.handleChange(item,index)}
                       >
                         {item.value}
                       </Checkbox>
-                      <CheckboxGroup options={item} value={checkedList}/>
-                    </div>
-                  ))}
+                    </div>)
+                  })}
 
               </Col>
             </Row>
@@ -256,9 +313,9 @@ class Export extends PureComponent {
           title="安全验证"
           visible={exportFileVisible}
           width={360}
-          onCancel={()=>this.handleCancelExportFile}
+          onCancel={this.handleCancelExportFile}
           footer={[
-            <Button key="back" onClick={()=>this.handleCancelExportFile}>
+            <Button key="back" onClick={this.handleCancelExportFile}>
               取消
             </Button>,
             <Button type="primary" onClick={()=>this.dataExport()}>
@@ -266,19 +323,18 @@ class Export extends PureComponent {
             </Button>,
           ]}
         >
-          <Input
+          <Input style={{marginBottom:20}}
+            value="15086913197"
             disabled
-            prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />}
+            prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)'}} />}
           />
-          <Input style={{width:'188px',float:'left'}}
+          <Input style={{width:'188px',marginRight:20}}
             placeholder='验证码'
             prefix={<Icon type="safety-certificate" style={{ color: 'rgba(0,0,0,.25)' }} />}
           />
-          <Button>获取验证码</Button>
+          <Button onClick={()=>this.getVerificationCode()}>获取验证码</Button>
         </Modal>
       </>
-
-
     );
   }
 }

@@ -150,3 +150,10 @@ export async function synbinding(params = {}) {
     body: params,
   });
 }
+
+
+export async function getVCode(name,tenantId,send_type) {
+  return request("/api/order/order/getVCode?userName=" + name + '&tenantId=' + tenantId +'&send_type=' + send_type, {
+    method: 'GET',
+  });
+}

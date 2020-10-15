@@ -180,7 +180,7 @@ class AllOrdersList extends PureComponent {
                     <a onClick={()=>this.handleEdit(row)}>详情</a>
                     <Divider type="vertical" />
                     <a onClick={()=>this.handleDelect(row)}>删除</a>
-                     
+
                       {/* <a>跟进</a>
                       <Divider type="vertical" />
                       <a onClick={()=>this.handleEdit(row)}>编辑</a>
@@ -189,7 +189,7 @@ class AllOrdersList extends PureComponent {
                       <Divider type="vertical" />
                       <a>归档</a>
                       <Divider type="vertical" /> */}
-                      
+
                       {/* <Divider type="vertical" /> */}
                       {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
                       {/* <Divider type="vertical" />
@@ -531,15 +531,11 @@ class AllOrdersList extends PureComponent {
 
   // 导出
   exportFile = () => {
-    const {selectedRows}=this.state;
-    console.log(selectedRows)
+    const {params}=this.state;
     const { dispatch } = this.props;
-    if(selectedRows.length === 0){
-      return false;
-    }
     dispatch({
       type: `globalParameters/setDetailData`,
-      payload: selectedRows,
+      payload: params,
     });
     this.setState({
       exportVisible:true
@@ -701,7 +697,7 @@ class AllOrdersList extends PureComponent {
   importData = () => {
     // 检查是否设置同步账号
     console.log("导入数据")
-   
+
     synCheck().then(res=>{
       console.log(res,"调用接口")
       if(res.code === 200 && res.data){

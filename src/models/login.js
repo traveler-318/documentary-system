@@ -47,6 +47,10 @@ export default {
         setCookie("dept_id",response.dept_id)
         // 网关地址
         setCookie("serverAddress",response.serverAddress)
+        // 租户id
+        setCookie("tenantId",response.tenant_id)
+        //账户名字
+        setCookie("userName",response.user_name)
         // --------结束
         const responseRoutes = yield call(dynamicRoutes);
         const responseButtons = yield call(dynamicButtons);
