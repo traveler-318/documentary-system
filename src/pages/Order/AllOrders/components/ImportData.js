@@ -25,7 +25,8 @@ class Equipment extends PureComponent {
       loading:false,
       isSendCode:false,
       timer:60,
-      smsType:false
+      smsType:false,
+      checkCode:false
     };
   }
 
@@ -73,9 +74,8 @@ class Equipment extends PureComponent {
     }
     handleSubmit = (e) => {
         const { smsType } = this.state;
-        if(!smsType){
-            message.error("请先发送短信验证码");
-        }
+        this.setState({checkCode:true})
+        
         e.preventDefault();
         const { form } = this.props;
         
@@ -86,6 +86,10 @@ class Equipment extends PureComponent {
             
             // values.deptId = getCookie("dept_id");
             // values = {...values};
+            if(!smsType){
+                message.error("请先发送短信验证码");
+                return false;
+            }
 
             synbinding(values).then(res=>{
                 // this.setState({loading:false });
@@ -120,17 +124,9 @@ class Equipment extends PureComponent {
     const {
       loading,
       isSendCode,
-      timer
+      timer,
+      checkCode
     } = this.state;
-
-    const formItemLayout = {
-      labelCol: {
-        span: 8,
-      },
-      wrapperCol: {
-        span: 16,
-      },
-    };
 
     const formAllItemLayout = {
       labelCol: {
@@ -145,7 +141,7 @@ class Equipment extends PureComponent {
         <Modal
           title="免押宝导入数据"
           visible={noDepositVisible}
-          width={560}
+          width={430}
           onCancel={handleCancelNoDeposit}
           footer={[
             <Button key="back" onClick={handleCancelNoDeposit}>
@@ -187,34 +183,25 @@ class Equipment extends PureComponent {
                     ],
                   })(<Input placeholder="请输入手机号" />)}
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="验证码">
-                  {getFieldDecorator('code', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入验证码',
-                      },
-                    ],
-                  })(<Input placeholder="请输入验证码" />)}
-                </FormItem>
-                <Form.Item label="验证码">
+                <Form.Item {...formAllItemLayout} label="验证码">
                     <Row gutter={8}>
                         <Col span={16}>
                             {getFieldDecorator('code', {
                                 rules: [
                                     {
-                                        required: true,
+                                        required: checkCode,
                                         message: '请输入验证码',
                                     },
                                     {
                                         len: 6,
+                                        required: checkCode,
                                         message: '请输入6位验证码',
                                   },
                                 ],
                             })(<Input placeholder="请输入验证码" />)}
                         </Col>
                         <Col span={8}>
-                            <Button disabled={isSendCode} onClick={this.getCode()}>获取验证码{timer!=60?`${timer}s`:""}</Button>
+                            <Button disabled={isSendCode} onClick={this.getCode}>获取验证码{timer!=60?`${timer}s`:""}</Button>
                         </Col>
                     </Row>
                 </Form.Item>
