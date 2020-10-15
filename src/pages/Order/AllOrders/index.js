@@ -19,9 +19,11 @@ import {
   updateReminds,
   toExamine,
   synCheck,
-  syndata
+  syndata,
+  getSalesmanLists
 } from '../../../services/newServices/order';
-import { getList as getSalesmanLists } from '../../../services/newServices/sales';
+// getList as getSalesmanLists,
+import { getSalesmangroup } from '../../../services/newServices/sales';
 import styles from './index.less';
 import Logistics from './components/Logistics'
 import Export from './components/export'
@@ -87,6 +89,7 @@ class AllOrdersList extends PureComponent {
       detailsVisible:false,
       // 免押宝导入弹窗
       noDepositVisible:false,
+      salesmangroup:[],
       columns:[
         {
           title: '姓名',
@@ -218,7 +221,23 @@ class AllOrdersList extends PureComponent {
   // ============ 初始化数据 ===============
   componentWillMount() {
     // this.getDataList();
-    this.getSalesmanList();
+    // this.getSalesmanList();
+    
+    // 获取分组数据
+    getSalesmangroup({
+      size:100,
+      current:1
+    }).then(res=>{
+      const list={
+        groupName:"全部",
+        id:"",
+        userAccount:''
+      };
+      res.data.records.unshift(list);
+      this.setState({
+        salesmangroup:res.data.records
+      })
+    })
   }
 
   getDataList = () => {
@@ -236,24 +255,28 @@ class AllOrdersList extends PureComponent {
   }
 
   // 获取业务员数据
-  getSalesmanList = () => {
-    getSalesmanLists({size:100,current:1}).then(res=>{
-      const list={
-        userName:"全部",
-        id:"",
-        userAccount:''
-      };
-      res.data.records.unshift(list);
-      this.setState({
-        salesmanList:res.data.records
-      })
+  getSalesmanList = (value = "all_all") => {
+    getSalesmanLists(value).then(res=>{
+      // if(res.code === 200){
+        let _data = ['text','cs'] //res.data
+        _data.unshift("全部");
+        this.setState({
+          salesmanList:_data
+        })
+      // }
     })
+  }
+
+  // 选择分组
+  changeGroup = (value) => {
+    console.log(value,"value")
+    // this.getSalesmanList(value)
   }
 
   // ============ 查询 ===============
   handleSearch = params => {
     const { dateRange } = params;
-    const { tabKey } = this.state;
+    const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
       confirmTag:tabKey
@@ -275,6 +298,24 @@ class AllOrdersList extends PureComponent {
     if(payload.orderSource && payload.orderSource === "全部"){
       payload.orderSource = null;
     }
+    if(payload.salesman == "全部"){
+      payload.salesman = salesmanList.join(",")
+    }
+
+    if(payload.groupId && !payload.salesman){
+      let text = ""
+      for(let i=0; i<salesmanList.length; i++){
+        if(salesmanList[i] != "全部"){
+          text += text === '' ? "'"+salesmanList[i]+"'" : ",'"+salesmanList[i]+"'"
+        }
+      }
+      console.log(text,"text")
+      payload.salesman = text;
+    }else{
+      payload.salesman = payload.salesman ? "'"+payload.salesman+"'" : payload.salesman
+    }
+
+
     delete payload.dateRange
     // console.log(payload,"params")
     this.setState({
@@ -291,7 +332,7 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList } = this.state;
+    const { salesmanList, salesmangroup } = this.state;
 
     return (
       <div className={"default_search_form"}>
@@ -315,13 +356,28 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
+        <Form.Item label="分组">
+          {getFieldDecorator('groupId', {
+                initialValue: "全部",
+              })(
+              <Select 
+                placeholder={"请选择分组"} 
+                style={{ width: 120 }}
+                onChange={this.changeGroup}
+              >
+                {salesmangroup.map(item=>{
+                  return (<Option value={item.id}>{item.groupName}</Option>)
+                })}
+              </Select>
+            )}
+        </Form.Item>
         <Form.Item label="销售">
           {getFieldDecorator('salesman', {
                 initialValue: "全部",
               })(
               <Select placeholder={"请选择销售"} style={{ width: 120 }}>
                 {salesmanList.map(item=>{
-                  return (<Option value={item.userAccount}>{item.userName}</Option>)
+                  return (<Option value={item}>{item}</Option>)
                 })}
               </Select>
             )}
