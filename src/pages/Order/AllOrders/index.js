@@ -647,7 +647,7 @@ class AllOrdersList extends PureComponent {
    
     synCheck().then(res=>{
       console.log(res,"调用接口")
-      if(res.code === 200){
+      if(res.code === 200 && res.data){
         // 成功打开面押宝同步弹窗
         this.setState({
           noDepositVisible:true
@@ -921,7 +921,7 @@ class AllOrdersList extends PureComponent {
         {noDepositVisible?(
           <ImportData
             noDepositVisible={noDepositVisible}
-            handleCancelNoDeposit={handleCancelNoDeposit}
+            handleCancelNoDeposit={this.handleCancelNoDeposit}
           />
         ):""}
 
