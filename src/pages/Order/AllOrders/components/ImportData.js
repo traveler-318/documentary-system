@@ -119,7 +119,8 @@ class Equipment extends PureComponent {
 
     const {
       loading,
-      isSendCode
+      isSendCode,
+      timer
     } = this.state;
 
     const formItemLayout = {
