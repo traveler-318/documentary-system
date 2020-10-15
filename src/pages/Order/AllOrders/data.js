@@ -195,3 +195,22 @@ export function getLogisticsQuery() {
     }
   }
 }
+
+// 导出
+export function exportData() {
+  return [
+    {value:"姓名",code:"userName"},
+    {value:"手机号",code:"userPhone"},
+    {value:"收货地址",code:"userAddress"},
+    {value:"产品分类",code:"productType"},
+    {value:"产品型号",code:"productName"},
+    {value:"SN码",code:"productCoding"},
+    {value:"订单状态",code:"confirmTag"},
+    {value:"订单类型",code:"orderType"},
+    {value:"订单来源",code:"orderSource"},
+    {value:"销售",code:"salesman"},
+    {value:"快递公司",code:"logisticsCompany"},
+    {value:"快递单号",code:"logisticsNumber"},
+    {value:"下单时间",code:"createTime"},
+  ]
+}

@@ -22,6 +22,7 @@ import {
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
 import styles from './index.less';
 import Logistics from './components/Logistics'
+import Export from './components/export'
 import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
@@ -74,6 +75,8 @@ class AllOrdersList extends PureComponent {
       selectedRows:[],
       // 物流弹窗
       logisticsVisible:false,
+      // 导出
+      exportVisible:false,
       // 转移客户
       TransferVisible:false,
       // 批量物流下单弹窗
@@ -251,7 +254,12 @@ class AllOrdersList extends PureComponent {
     if(payload.salesman && payload.salesman === "全部"){
       payload.salesman = null;
     }
-    payload.confirmTag = this.state.tabKey;
+    if(payload.confirmTag && payload.confirmTag === "全部"){
+      payload.confirmTag = null;
+    }
+    if(payload.orderSource && payload.orderSource === "全部"){
+      payload.orderSource = null;
+    }
     delete payload.dateRange
     // console.log(payload,"params")
     this.setState({
@@ -297,6 +305,28 @@ class AllOrdersList extends PureComponent {
                 </Select>
               )}
           </Form.Item>
+        <Form.Item label="订单状态">
+          {getFieldDecorator('confirmTag', {
+            initialValue: "全部",
+          })(
+            <Select placeholder={"请选择订单状态"} style={{ width: 120 }}>
+              {ORDERSTATUS.map(item=>{
+                return (<Option value={item.key}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="订单来源">
+          {getFieldDecorator('orderSource', {
+            initialValue: "全部",
+          })(
+            <Select placeholder={"请选择订单来源"} style={{ width: 120 }}>
+              {ORDERSOURCE.map(item=>{
+                return (<Option value={item.key}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item>
           <div>
             {/* <Form.Item label="时间类型">
               {getFieldDecorator('timeType', {
@@ -315,6 +345,9 @@ class AllOrdersList extends PureComponent {
               })(
                 <RangePicker showTime size={"default"} />
               )}
+            </Form.Item>
+            <Form.Item label="SN码">
+              {getFieldDecorator('productCoding')(<Input placeholder="请输入SN码" />)}
             </Form.Item>
 
             <div style={{ float: 'right' }}>
@@ -480,6 +513,7 @@ class AllOrdersList extends PureComponent {
       onCancel() {},
     });
   }
+
   setAudit = (_data) => {
     toExamine({
       confirmTag:1,
@@ -489,6 +523,29 @@ class AllOrdersList extends PureComponent {
         message.success(res.msg);
         this.getDataList();
       }
+    })
+  }
+
+  // 导出
+  exportFile = () => {
+    const {selectedRows}=this.state;
+    console.log(selectedRows)
+    const { dispatch } = this.props;
+    if(selectedRows.length === 0){
+      return false;
+    }
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: selectedRows,
+    });
+    this.setState({
+      exportVisible:true
+    })
+  }
+
+  handleCancelExport = () =>{
+    this.setState({
+      exportVisible:false
     })
   }
 
@@ -535,7 +592,7 @@ class AllOrdersList extends PureComponent {
   );
   moreMenu = () => (
     <Menu onClick={this.handleMenuClick}>
-      <Menu.Item key="3">
+      <Menu.Item key="3" onClick={this.exportFile}>
         <Icon type="upload" />
         导出
       </Menu.Item>
@@ -791,6 +848,7 @@ class AllOrdersList extends PureComponent {
       loading,
       tabKey,
       logisticsVisible,
+      exportVisible,
       TransferVisible,
       LogisticsConfigVisible,
       selectedRows,
@@ -862,6 +920,14 @@ class AllOrdersList extends PureComponent {
           <Details
             detailsVisible={detailsVisible}
             handleCancelDetails={this.handleCancelDetails}
+          />
+        ):""}
+
+        {/* 导出 */}
+        {exportVisible?(
+          <Export
+            exportVisible={exportVisible}
+            handleCancelExport={this.handleCancelExport}
           />
         ):""}
 
