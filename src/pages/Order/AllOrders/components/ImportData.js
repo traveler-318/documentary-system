@@ -91,7 +91,6 @@ class Equipment extends PureComponent {
                 // this.setState({loading:false });
                 if(res.code === 200){
                     message.success(res.msg);
-                    // this.props.handleCancelEquipment("getlist");
                 }
             })
         }
@@ -115,7 +114,7 @@ class Equipment extends PureComponent {
     const {
       form: { getFieldDecorator },
       noDepositVisible,
-      handleCancelEquipment,
+      handleCancelNoDeposit,
     } = this.props;
 
     const {

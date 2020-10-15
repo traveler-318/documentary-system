@@ -820,6 +820,7 @@ class AllOrdersList extends PureComponent {
       selectedRows,
       detailsVisible,
       selectedRowKeys,
+      noDepositVisible
     } = this.state;
 
     console.log(selectedRowKeys,"selectedRowKeys")
