@@ -132,10 +132,7 @@ export async function productTreelist(params) {
 
 // 检查是否设置同步账号
 export async function synCheck(params = {}) {
-  return request('/api/order/mall/syn_check', {
-    method: 'get',
-    body: params,
-  });
+  return request(`/api/order/mall/syn_check`);
 }
 
 // 同步账号进行发送短信

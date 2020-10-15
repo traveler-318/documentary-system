@@ -644,6 +644,7 @@ class AllOrdersList extends PureComponent {
   importData = () => {
     // 检查是否设置同步账号
     console.log("导入数据")
+   
     synCheck().then(res=>{
       console.log(res,"调用接口")
       if(res.code === 200){
