@@ -257,20 +257,20 @@ class AllOrdersList extends PureComponent {
   // 获取业务员数据
   getSalesmanList = (value = "all_all") => {
     getSalesmanLists(value).then(res=>{
-      // if(res.code === 200){
-        let _data = ['text','cs'] //res.data
+      if(res.code === 200){
+        let _data = res.data
         _data.unshift("全部");
         this.setState({
           salesmanList:_data
         })
-      // }
+      }
     })
   }
 
   // 选择分组
   changeGroup = (value) => {
     console.log(value,"value")
-    // this.getSalesmanList(value)
+    this.getSalesmanList(value)
   }
 
   // ============ 查询 ===============
