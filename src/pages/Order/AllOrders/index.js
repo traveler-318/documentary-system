@@ -263,6 +263,8 @@ class AllOrdersList extends PureComponent {
         this.setState({
           salesmanList:_data
         })
+        const { form } = this.props;
+        form.setFieldsValue({salesman:"全部"});
       }
     })
   }
