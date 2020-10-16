@@ -519,17 +519,57 @@ export default [
             routes: [
               { path: '/order/myOrder', redirect: '/order/myOrder/list' },
               { path: '/order/myOrder/list', component: './Order/MyOrder/index' },
-              // { path: '/sale/afterSale/add', component: './Sales/AfterSale/add' },
             ],
           },
-          {
-            path: '/order/mySubordinates',
-            routes: [
-              { path: '/order/mySubordinates', redirect: '/order/mySubordinates/list' },
-              { path: '/order/mySubordinates/list', component: './Order/MySubordinates/index' },
-              // { path: '/sale/afterSale/add', component: './Sales/AfterSale/add' },
-            ],
-          },
+          // {
+          //   path: '/order/ToBeReviewed',
+          //   routes: [
+          //     { path: '/order/ToBeReviewed', redirect: '/order/ToBeReviewed/list' },
+          //     { path: '/order/ToBeReviewed/list', component: './Order/ToBeReviewed/index' },
+          //   ],
+          // },
+          // {
+          //   path: '/order/Reviewed',
+          //   routes: [
+          //     { path: '/order/Reviewed', redirect: '/order/Reviewed/list' },
+          //     { path: '/order/Reviewed/list', component: './Order/Reviewed/index' },
+          //   ],
+          // },
+          // {
+          //   path: '/order/Delivered',
+          //   routes: [
+          //     { path: '/order/Delivered', redirect: '/order/Delivered/list' },
+          //     { path: '/order/Delivered/list', component: './Order/Delivered/index' },
+          //   ],
+          // },
+          // {
+          //   path: '/order/OnTheWay',
+          //   routes: [
+          //     { path: '/order/OnTheWay', redirect: '/order/OnTheWay/list' },
+          //     { path: '/order/OnTheWay/list', component: './Order/OnTheWay/index' },
+          //   ],
+          // },
+          // {
+          //   path: '/order/SignedIn',
+          //   routes: [
+          //     { path: '/order/SignedIn', redirect: '/order/SignedIn/list' },
+          //     { path: '/order/SignedIn/list', component: './Order/SignedIn/index' },
+          //   ],
+          // },
+          // {
+          //   path: '/order/FollowUp',
+          //   routes: [
+          //     { path: '/order/FollowUp', redirect: '/order/FollowUp/list' },
+          //     { path: '/order/FollowUp/list', component: './Order/FollowUp/index' },
+          //   ],
+          // },
+          // {
+          //   path: '/order/Activated',
+          //   routes: [
+          //     { path: '/order/Activated', redirect: '/order/Activated/list' },
+          //     { path: '/order/Activated/list', component: './Order/Activated/index' },
+          //   ],
+          // },
         ],
       },
       {
