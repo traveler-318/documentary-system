@@ -193,7 +193,7 @@ class AllOrdersList extends PureComponent {
                   <div>
                     <a onClick={()=>this.handleEdit(row)}>详情</a>
                     <Divider type="vertical" />
-                    <a onClick={()=>this.handleDelect(row)}>删除</a>
+                    {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
 
                       {/* <a>跟进</a>
                       <Divider type="vertical" />
@@ -291,6 +291,12 @@ class AllOrdersList extends PureComponent {
     }
     if(payload.salesman && payload.salesman === "全部"){
       payload.salesman = null;
+    }
+    if(payload.groupId && payload.groupId === "全部"){
+      payload.groupId = null;
+    }
+    if(payload.logisticsStatus && payload.logisticsStatus === "全部"){
+      payload.logisticsStatus = null;
     }
     // if(payload.confirmTag && payload.confirmTag === "全部"){
     //   payload.confirmTag = null;
@@ -617,9 +623,15 @@ class AllOrdersList extends PureComponent {
   exportFile = () => {
     const {params}=this.state;
     const { dispatch } = this.props;
+    const { dateRange } = params;
+    let param = {
+      ...params,
+      start_time:dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
+      end_time:dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null
+    };
     dispatch({
       type: `globalParameters/setDetailData`,
-      payload: params,
+      payload: param,
     });
     this.setState({
       exportVisible:true
@@ -690,14 +702,14 @@ class AllOrdersList extends PureComponent {
         <Icon type="highlight" />
         批量编辑
       </Menu.Item> */}
-      {/* <SubMenu key="sub1" title="批量物流下单">
+       <SubMenu key="sub1" title="批量物流下单">
         <Menu.Item key="6" onClick={this.repeat}>
           重复打印
         </Menu.Item>
         <Menu.Item key="7" onClick={this.first}>
           首次打印
         </Menu.Item>
-      </SubMenu> */}
+      </SubMenu>
     </Menu>
   );
 

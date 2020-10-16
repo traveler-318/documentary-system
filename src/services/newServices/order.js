@@ -174,3 +174,10 @@ export async function getSalesmanLists(id) {
   });
 }
 
+// 导出
+export async function exportOrder(params) {
+  return request('/api/order/order/exportOrder', {
+    method: 'POST',
+    body: params,
+  });
+}

@@ -6,6 +6,7 @@ import { getCurrentUser, removeAll } from '@/utils/authority';
 import { getTopUrl, validateNull } from '@/utils/utils';
 import { tenantMode } from '@/defaultSettings';
 import { getUserInfo, registerGuest } from '@/services/user';
+import { setCookie } from '@/utils/support';
 
 const FormItem = Form.Item;
 
@@ -34,6 +35,7 @@ class ThirdRegister extends PureComponent {
     } else {
       // 获取用户信息,也可用于校验当前用户token是否有效
       getUserInfo().then(resp => {
+        setCookie("phone",resp.data.phone);
         window.console.log(resp);
       });
     }

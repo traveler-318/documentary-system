@@ -6,7 +6,7 @@ import router from 'umi/router';
 
 import { tenantMode } from '../../../../defaultSettings';
 import { getCookie } from '../../../../utils/support';
-import { getList,getVCode } from '../../../../services/newServices/order'
+import { getList,getVCode,exportOrder } from '../../../../services/newServices/order'
 import { exportData } from '../data.js';
 import { ORDERSOURCE } from '../data';
 import styles from '../index.less';
@@ -46,15 +46,21 @@ class Export extends PureComponent {
       },
       checked:false,
       start_time:'',
-      end_time:''
+      end_time:'',
+      retransmission:true,
+      timer:0,
+      smsType:true,
+      phone:'',
+      verificationCode:''
     };
   }
 
   componentWillMount() {
     const { globalParameters } = this.props;
+    console.log(globalParameters.detailData)
     // 获取详情数据
     this.setState({
-      params:globalParameters.setDetailData
+      params:globalParameters.detailData
     })
   }
 
@@ -78,8 +84,11 @@ class Export extends PureComponent {
     getList(param).then(res=>{
       console.log(res)
       if(res.data.records.length > 0){
+        const phone=getCookie("phone");
         this.setState({
-          exportFileVisible:true
+          exportFileVisible:true,
+          retransmission: false,
+          phone:phone,
         })
       }else {
         message.error('当前条件下暂无可导出的数据,请修改查询条件');
@@ -110,25 +119,79 @@ class Export extends PureComponent {
     this.setState({
       downloadExcelParam
     })
-    //// 验证当前条件下是否有数据
+    // 验证当前条件下是否有数据
     this.getDataList()
 
   };
 
-  //获取验证码
+  // 获取验证码
   getVerificationCode = () =>{
     const tenantId=getCookie("tenantId");
     const userName=getCookie("userName");
     console.log(tenantId)
     console.log(userName)
     getVCode(userName,tenantId,2).then(res=>{
-      console.log(res)
+    //   console.log(res)
+      if(res.code === 200){
+        this.setState({
+          smsType:false,
+          retransmission: true,
+          timer:60
+        })
+        this.setTimer();
+      }else {
+        message.error(res.msg);
+      }
+
     })
+  }
+
+  setTimer(){
+    setTimeout(()=>{
+      const {timer,retransmission}= this.state
+      if(timer === 0){
+        this.setState({
+          retransmission: false,
+        })
+      }else{
+        this.setState({
+          timer: this.state.timer - 1,
+        })
+        this.setTimer();
+      }
+    },1000)
   }
 
   handleCancelExportFile = () =>{
     this.setState({
       exportFileVisible:false
+    })
+  }
+
+  // 导出
+  exportFilePopup =() =>{
+    // 验证是否获取短信验证码
+    const {smsType,downloadExcelParam,params,verificationCode}=this.state;
+    if(smsType){
+      message.error('导出数据需要短信验证，请先获取短信验证码！');
+      return false;
+    }
+    let param={
+      ...params,
+      ...downloadExcelParam,
+      code:verificationCode
+    }
+    console.log(verificationCode)
+    console.log(param)
+    exportOrder(param).then(res=>{
+      console.log(res)
+    })
+  }
+
+  codeChange =(e) =>{
+    console.log(e.target.value)
+    this.setState({
+      verificationCode:e.target.value
     })
   }
 
@@ -163,7 +226,7 @@ class Export extends PureComponent {
 
   changeTimeRange = (item) => {
     console.log(item.code)
-    const {exportDataList}=this.state
+    const {exportDataList,params}=this.state
     console.log(moment().startOf('month').format('YYYY-MM-DD') +" 00:00:00")
     console.log(moment().endOf('month').format('YYYY-MM-DD')+" 23:59:59")
     this.setState({
@@ -199,7 +262,8 @@ class Export extends PureComponent {
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 5){
-
+      downloadExcelParam.start_time = params.start_time;
+      downloadExcelParam.end_time = params.end_time;
     }
   };
 
@@ -225,20 +289,13 @@ class Export extends PureComponent {
       exportDataList,
       exportFileVisible,
       checked,
+      timer,
+      phone,
+      retransmission,
       isIndeterminate,
+      verificationCode,
       downloadExcelParam,
     } = this.state;
-
-    console.log(downloadExcelParam)
-
-    const formItemLayout = {
-      labelCol: {
-        span: 8,
-      },
-      wrapperCol: {
-        span: 16,
-      },
-    };
 
     return (
       <>
@@ -257,7 +314,7 @@ class Export extends PureComponent {
           ]}
         >
           <div style={{padding:"0 30px"}}>
-            <Row gutter={24}>
+            <Row gutter={24} style={{marginBottom:20}}>
               <Col span={4}>导出范围：</Col>
               <Col span={20}>
                 {rangeList.map((item,index)=>{
@@ -270,7 +327,7 @@ class Export extends PureComponent {
                 })}
                 {
                   seleteTimeRange === 5 ?
-                    (<RangePicker
+                    (<RangePicker style={{marginTop:20}}
                       showTime={{
                         hideDisabledOptions: true,
                         defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
@@ -318,21 +375,27 @@ class Export extends PureComponent {
             <Button key="back" onClick={this.handleCancelExportFile}>
               取消
             </Button>,
-            <Button type="primary" onClick={()=>this.dataExport()}>
+            <Button type="primary" onClick={()=>this.exportFilePopup()}>
               导出
             </Button>,
           ]}
         >
           <Input style={{marginBottom:20}}
-            value="15086913197"
+            value={phone}
             disabled
             prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)'}} />}
           />
-          <Input style={{width:'188px',marginRight:20}}
+          <Input style={{width:'170px',marginRight:10}}
             placeholder='验证码'
+            onChange={(e)=>this.codeChange(e)}
             prefix={<Icon type="safety-certificate" style={{ color: 'rgba(0,0,0,.25)' }} />}
           />
-          <Button onClick={()=>this.getVerificationCode()}>获取验证码</Button>
+          <Button style={{float:'right'}} disabled={retransmission} onClick={()=>this.getVerificationCode()}>获取验证码
+            {
+              timer !== 0 ?
+                (<span>({timer}s)</span>)
+                :""
+            }</Button>
         </Modal>
       </>
     );
