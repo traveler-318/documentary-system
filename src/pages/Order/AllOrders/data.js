@@ -25,10 +25,10 @@ export const ORDERSTATUS = [
 
 export const ORDERTYPPE = [
     {name:"全部",key:null},
-    {name:"免押",key:1},
+    {name:"免费",key:1},
     {name:"到付",key:2},
     {name:"收费",key:3},
-    {name:"免费",key:4},
+    {name:"免押",key:4},
     {name:"其他",key:5},
 ]
 
@@ -41,9 +41,9 @@ export const GENDER = [
 // 订单类型
 export const ORDERTYPE = [
     {name:"免费",key:1},
-    {name:"免押",key:2},
-    {name:"到付",key:3},
-    {name:"收费",key:4},
+    {name:"到付",key:2},
+    {name:"收费",key:3},
+    {name:"免押",key:4},
     {name:"其他",key:5},
 ]
 // 订单来源
@@ -213,18 +213,29 @@ export function getLogisticsQuery() {
 // 导出
 export function exportData() {
   return [
-    {value:"姓名",code:"userName",checked:false},
-    {value:"手机号",code:"userPhone"},
-    {value:"收货地址",code:"userAddress"},
-    {value:"产品分类",code:"productType"},
-    {value:"产品型号",code:"productName"},
-    {value:"SN码",code:"productCoding"},
-    {value:"订单状态",code:"confirmTag"},
-    {value:"订单类型",code:"orderType"},
-    {value:"订单来源",code:"orderSource"},
+    {value:"姓名",code:"user_name"},
+    {value:"手机号",code:"user_phone"},
+    {value:"收货地址",code:"user_address"},
+    {value:"产品分类",code:"product_type"},
+    {value:"产品型号",code:"product_name"},
+    {value:"SN码",code:"product_coding"},
+    {value:"订单状态",code:"confirm_tag"},
+    {value:"订单类型",code:"order_type"},
+    {value:"订单来源",code:"order_source"},
     {value:"销售",code:"salesman"},
-    {value:"快递公司",code:"logisticsCompany"},
-    {value:"快递单号",code:"logisticsNumber"},
-    {value:"下单时间",code:"createTime"},
+    {value:"快递公司",code:"logistics_company"},
+    {value:"快递单号",code:"logistics_number"},
+    {value:"下单时间",code:"create_time"},
   ]
+}
+
+export function currentTime() {
+  var myDate = new Date();
+  var year = myDate.getFullYear();
+  var month = myDate.getMonth()+1;
+  var day = myDate.getDate();
+  var hour = myDate.getHours();
+  var minute = myDate.getMinutes();
+  var second = myDate.getSeconds();
+  return year+'_'+month+'_'+day+'_ '+hour+':'+minute+':'+second;
 }

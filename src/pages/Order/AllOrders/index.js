@@ -235,7 +235,7 @@ class AllOrdersList extends PureComponent {
   componentWillMount() {
     // this.getDataList();
     // this.getSalesmanList();
-    
+
     // 获取分组数据
     getSalesmangroup({
       size:100,
@@ -299,8 +299,8 @@ class AllOrdersList extends PureComponent {
     if (dateRange) {
       payload = {
         ...params,
-        start_time: dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
-        end_time: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null,
+        startTime: dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
+        endTime: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null,
       };
       payload.dateRange = null;
     }
@@ -381,8 +381,8 @@ class AllOrdersList extends PureComponent {
           {getFieldDecorator('groupId', {
                 initialValue: "全部",
               })(
-              <Select 
-                placeholder={"请选择分组"} 
+              <Select
+                placeholder={"请选择分组"}
                 style={{ width: 120 }}
                 onChange={this.changeGroup}
               >
@@ -572,13 +572,13 @@ class AllOrdersList extends PureComponent {
       confirmTagVisible:true,
       currentList:row
     })
-  } 
+  }
 
   handleCancelConfirmTag = () => {
     this.setState({
       confirmTagVisible:false
     })
-  } 
+  }
 
   onChangeRadio = (e) => {
     console.log('radio checked', e.target.value);
@@ -695,8 +695,8 @@ class AllOrdersList extends PureComponent {
     const { dateRange } = params;
     let param = {
       ...params,
-      start_time:dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
-      end_time:dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null
+      startTime:dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
+      endTime:dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null
     };
     dispatch({
       type: `globalParameters/setDetailData`,
@@ -750,7 +750,7 @@ class AllOrdersList extends PureComponent {
             onClick={this.bulkDelivery}
           >发货</Button>
         </>):""}
-        
+
         {/* 已发货什么都没有 */}
         {/* 在途中什么都没有 */}
 
@@ -800,10 +800,10 @@ class AllOrdersList extends PureComponent {
             </Button>
           </Dropdown>
         </>):""}
-        
+
         {/* <Button icon="upload">导出</Button> */}
         {/* <Button icon="loading-3-quarters" onClick={this.handleShowTransfer}>转移客户</Button> */}
-        
+
       </>)
   };
   moreMenu = () => (
@@ -989,7 +989,7 @@ class AllOrdersList extends PureComponent {
   getORDERTYPE = (key) => {
     let text = ""
     if(key === 1){
-      text = "免押"
+      text = "免费"
     }
     if(key === 2){
       text = "到付"

@@ -15,7 +15,7 @@ import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
 import { createData, getRegion, productTreelist } from '../../../services/newServices/order'
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
-import { 
+import {
   LOGISTICSCOMPANY,
   paymentCompany,
   productType,
@@ -122,7 +122,7 @@ class OrdersAdd extends PureComponent {
   }
 
   onChange = (value, selectedOptions) => {
-    
+
     let text = ""
     for(let i=0; i<selectedOptions.length; i++){
       text += selectedOptions[i].label
@@ -209,6 +209,12 @@ class OrdersAdd extends PureComponent {
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="备用手机号">
                   {getFieldDecorator('backPhone', {
+                    rules: [
+                      {
+                        len: 11,
+                        message: '请输入正确的手机号格式',
+                      },
+                    ],
                   })(<Input placeholder="请输入备用手机号" />)}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="微信号">
@@ -290,7 +296,7 @@ class OrdersAdd extends PureComponent {
                       //   },
                       // ],
                     })(
-                      <Cascader 
+                      <Cascader
                         options={productList}
                         fieldNames={{ label: 'value'}}
                         onChange={(value, selectedOptions)=>{
@@ -330,9 +336,9 @@ class OrdersAdd extends PureComponent {
                 </FormItem>
               </Col>
             </Row>
-            
+
           </Card>
-          
+
         </Form>
       </Panel>
     );

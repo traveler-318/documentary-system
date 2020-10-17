@@ -7,9 +7,13 @@ import router from 'umi/router';
 import { tenantMode } from '../../../../defaultSettings';
 import { getCookie } from '../../../../utils/support';
 import { getList,getVCode,exportOrder } from '../../../../services/newServices/order'
-import { exportData } from '../data.js';
+import { exportData,currentTime } from '../data.js';
+import { getToken } from '../../../../utils/authority';
+import { Base64 } from 'js-base64';
+import { clientId, clientSecret } from '../../../../defaultSettings';
 import { ORDERSOURCE } from '../data';
 import styles from '../index.less';
+import axios from 'axios'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -41,12 +45,12 @@ class Export extends PureComponent {
       isIndeterminate:true,
       checkedList:[],
       downloadExcelParam:{
-        start_time:moment().format('YYYY-MM-DD')+" 00:00:00",
-        end_time: moment().format('YYYY-MM-DD')+" 23:59:59"
+        startTime:moment().format('YYYY-MM-DD')+" 00:00:00",
+        endTime: moment().format('YYYY-MM-DD')+" 23:59:59"
       },
       checked:false,
-      start_time:'',
-      end_time:'',
+      startTime:'',
+      endTime:'',
       retransmission:true,
       timer:0,
       smsType:true,
@@ -101,8 +105,14 @@ class Export extends PureComponent {
   dataExport = () => {
     const {downloadExcelParam,checkedList,exportDataList}=this.state;
     console.log(downloadExcelParam)
-    const oneMonth =31*24*3600*1000
-    if((new Date(downloadExcelParam.end_time).getTime()-new Date(downloadExcelParam.start_time).getTime()) > oneMonth){
+    const oneMonth =31*24*3600*1000;
+    if(this.verification(downloadExcelParam.startTime)){
+      message.error('请选择导出时间范围');
+      return false;
+    }else if(this.verification(downloadExcelParam.endTime)){
+      message.error('请选择导出时间范围');
+      return false;
+    }else if((new Date(downloadExcelParam.endTime).getTime()-new Date(downloadExcelParam.startTime).getTime()) > oneMonth){
       message.error('导出时间范围不可超过31天');
       return false;
     }else if(this.verification(checkedList)){
@@ -165,32 +175,67 @@ class Export extends PureComponent {
   handleCancelExportFile = () =>{
     this.setState({
       exportFileVisible:false,
-      timer:0
+      timer:0,
+      verificationCode:''
     })
   }
 
   // 导出
-  exportFilePopup =() =>{
+  exportFilePopup =(cellBack) =>{
     // 验证是否获取短信验证码
     const {smsType,downloadExcelParam,params,verificationCode}=this.state;
     if(smsType){
       message.error('导出数据需要短信验证，请先获取短信验证码！');
       return false;
     }
+
     let param={
       ...params,
       ...downloadExcelParam,
       code:verificationCode
     }
-    console.log(verificationCode)
     console.log(param)
-    exportOrder(param).then(res=>{
+    axios({
+      method: "post",
+      url:`/api/order/order/exportOrder`,
+      data:param,
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Authorization": `Basic ${Base64.encode(`${clientId}:${clientSecret}`)}`,
+        "Blade-Auth": getToken(),
+        "token": getToken(),
+      },
+      // 设置responseType对象格式为blob
+      responseType: "blob"
+    }).then(res => {
       console.log(res)
+      let data = res.data;
+      let fileReader = new FileReader();
+      fileReader.readAsText(data, 'utf-8');
+      fileReader.onload = function() {
+        try {
+          let jsonData = JSON.parse(this.result);  // 说明是普通对象数据，后台转换失败
+          message.error(jsonData.data);
+        }catch(err){
+          cellBack(res)
+        }
+      };
     })
   }
 
+  // 下载方法
+  downLoadBlobFile = (res) =>{
+    var elink = document.createElement('a');
+    elink.download = currentTime()+'.xlsx';
+    elink.style.display = 'none';
+    var blob = new Blob([res.data]);
+    elink.href = URL.createObjectURL(blob);
+    document.body.appendChild(elink);
+    elink.click();
+    document.body.removeChild(elink);
+  }
+
   codeChange =(e) =>{
-    console.log(e.target.value)
     this.setState({
       verificationCode:e.target.value
     })
@@ -229,50 +274,48 @@ class Export extends PureComponent {
     console.log(item.code)
     const {exportDataList,params}=this.state;
     console.log(params)
-    console.log(moment().startOf('month').format('YYYY-MM-DD') +" 00:00:00")
-    console.log(moment().endOf('month').format('YYYY-MM-DD')+" 23:59:59")
     this.setState({
       seleteTimeRange:item.code
     })
     const downloadExcelParam={};
     // 本日
     if(item.code === 1){
-      downloadExcelParam.start_time = moment().format('YYYY-MM-DD')+" 00:00:00";
-      downloadExcelParam.end_time = moment().format('YYYY-MM-DD')+" 23:59:59";
+      downloadExcelParam.startTime = moment().format('YYYY-MM-DD')+" 00:00:00";
+      downloadExcelParam.endTime = moment().format('YYYY-MM-DD')+" 23:59:59";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 2){
       // 昨日
-      downloadExcelParam.start_time = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 00:00:00";
-      downloadExcelParam.end_time = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 23:59:59";
+      downloadExcelParam.startTime = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 00:00:00";
+      downloadExcelParam.endTime = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 23:59:59";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 3){
       // 本周
-      downloadExcelParam.start_time = moment().startOf('week').format('YYYY-MM-DD') +" 00:00:00";
-      downloadExcelParam.end_time = moment().endOf('week').format('YYYY-MM-DD')+" 23:59:59";
+      downloadExcelParam.startTime = moment().startOf('week').format('YYYY-MM-DD') +" 00:00:00";
+      downloadExcelParam.endTime = moment().endOf('week').format('YYYY-MM-DD')+" 23:59:59";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 4){
       // 本月
-      downloadExcelParam.start_time = moment().startOf('month').format('YYYY-MM-DD') +" 00:00:00";
-      downloadExcelParam.end_time = moment().endOf('month').format('YYYY-MM-DD') +" 00:00:00";
+      downloadExcelParam.startTime = moment().startOf('month').format('YYYY-MM-DD') +" 00:00:00";
+      downloadExcelParam.endTime = moment().endOf('month').format('YYYY-MM-DD') +" 00:00:00";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 5){
-      downloadExcelParam.start_time = params.start_time;
-      downloadExcelParam.end_time = params.end_time;
+      downloadExcelParam.startTime = params.startTime;
+      downloadExcelParam.endTime = params.endTime;
     }
   };
 
   onOk = (value) => {
     const downloadExcelParam={};
-    downloadExcelParam.start_time = moment(value[0]).format('YYYY-MM-DD HH:mm');
-    downloadExcelParam.end_time = moment(value[1]).format('YYYY-MM-DD HH:mm');
+    downloadExcelParam.startTime = moment(value[0]).format('YYYY-MM-DD HH:mm');
+    downloadExcelParam.endTime = moment(value[1]).format('YYYY-MM-DD HH:mm');
     this.setState({
       downloadExcelParam:downloadExcelParam
     })
@@ -377,7 +420,7 @@ class Export extends PureComponent {
             <Button key="back" onClick={this.handleCancelExportFile}>
               取消
             </Button>,
-            <Button type="primary" onClick={()=>this.exportFilePopup()}>
+            <Button type="primary" onClick={()=>this.exportFilePopup(this.downLoadBlobFile)}>
               导出
             </Button>,
           ]}
