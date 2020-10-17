@@ -294,7 +294,7 @@ class AllOrdersList extends PureComponent {
     const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
-      confirmTag:tabKey
+      confirmTag:tabKey === 'null' ? null : tabKey
     };
     if (dateRange) {
       payload = {
@@ -629,7 +629,7 @@ class AllOrdersList extends PureComponent {
       title: '提醒',
       // content: "确定审核此订单吗？",
       okText: '确定',
-      cancelType: 'primary',
+      cancelType: 'danger',
       cancelText: '拒绝',
       content:<div>确定审核此订单吗？<Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button></div>,
       onOk() {
@@ -646,7 +646,7 @@ class AllOrdersList extends PureComponent {
     let type = false, _data = [];
     const setAudit = this.setAudit;
     selectedRows.map(item=>{
-      if(item.confirmTag === 0){
+      if(item.confirmTag === 0 || item.confirmTag === '0'){
         _data.push(item.id)
       }else{
         type = true;
@@ -747,6 +747,7 @@ class AllOrdersList extends PureComponent {
         {/* 已审核 */}
           <Button
             icon="appstore"
+            type="primary"
             onClick={this.bulkDelivery}
           >发货</Button>
         </>):""}
@@ -758,12 +759,14 @@ class AllOrdersList extends PureComponent {
        {tabKey === '4'?(<>
         <Button
           icon="bell"
+          type="primary"
           onClick={this.batchReminders}
         >提醒</Button></>):""}
         {/* 跟进中 */}
         {tabKey === '5'?(<>
         <Button
           icon="bell"
+          type="primary"
           onClick={this.batchReminders}
         >提醒</Button></>):""}
         {/* 已激活什么都没有 */}
@@ -774,9 +777,11 @@ class AllOrdersList extends PureComponent {
         {/* 除了全部，其他状态都有导出按钮 */}
           {tabKey != 'null'?(<Button
               icon="upload"
+              type={(tabKey === "0" || tabKey === "1" || tabKey === "4" || tabKey === "5") ? "" : "primary"}
               onClick={this.exportFile}
             >导出</Button>):""
           }
+
         {/* 全部 */}
         {tabKey === 'null'?(<>
           <Button type="primary" icon="plus" onClick={()=>{
@@ -973,34 +978,34 @@ class AllOrdersList extends PureComponent {
   // 订单状态
   getORDERSTATUS = (key) => {
     let text = ""
-    if(key === 0){ text = "待审核" }
-    if(key === 1){ text = "已审核" }
-    if(key === 2){ text = "已发货" }
-    if(key === 3){ text = "在途中" }
-    if(key === 4){ text = "已签收" }
-    if(key === 5){ text = "跟进中" }
-    if(key === 6){ text = "已激活" }
-    if(key === 7){ text = "已退回" }
-    if(key === 8){ text = "已取消" }
-    if(key === 9){ text = "已过期" }
+    if(key === 0 || key === '0'){ text = "待审核" }
+    if(key === 1 || key === '1'){ text = "已审核" }
+    if(key === 2 || key === '2'){ text = "已发货" }
+    if(key === 3 || key === '3'){ text = "在途中" }
+    if(key === 4 || key === '4'){ text = "已签收" }
+    if(key === 5 || key === '5'){ text = "跟进中" }
+    if(key === 6 || key === '6'){ text = "已激活" }
+    if(key === 7 || key === '7'){ text = "已退回" }
+    if(key === 8 || key === '8'){ text = "已取消" }
+    if(key === 9 || key === '9'){ text = "已过期" }
     return text;
   }
   // 订单类型
   getORDERTYPE = (key) => {
     let text = ""
-    if(key === 1){
+    if(key === 1 || key === '1'){
       text = "免费"
     }
-    if(key === 2){
+    if(key === 2 || key === '2'){
       text = "到付"
     }
-    if(key === 3){
+    if(key === 3 || key === '3'){
       text = "收费"
     }
-    if(key === 4){
+    if(key === 4 || key === '4'){
       text = "免押"
     }
-    if(key === 5){
+    if(key === 5 || key === '5'){
       text = "其他"
     }
     return text;
@@ -1008,13 +1013,13 @@ class AllOrdersList extends PureComponent {
   // 订单来源
   getORDERSOURCE = (key) => {
     let text = ""
-    if(key === 1){ text = "新增" }
-    if(key === 2){ text = "导入" }
-    if(key === 3){ text = "客户" }
-    if(key === 4){ text = "销售" }
-    if(key === 5){ text = "电销" }
-    if(key === 6){ text = "网销" }
-    if(key === 7){ text = "地推" }
+    if(key === 1 || key === '1'){ text = "新增" }
+    if(key === 2 || key === '2'){ text = "导入" }
+    if(key === 3 || key === '3'){ text = "客户" }
+    if(key === 4 || key === '4'){ text = "销售" }
+    if(key === 5 || key === '5'){ text = "电销" }
+    if(key === 6 || key === '6'){ text = "网销" }
+    if(key === 7 || key === '7'){ text = "地推" }
     return text;
   }
 
