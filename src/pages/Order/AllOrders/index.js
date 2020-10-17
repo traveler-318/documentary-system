@@ -978,34 +978,34 @@ class AllOrdersList extends PureComponent {
   // 订单状态
   getORDERSTATUS = (key) => {
     let text = ""
-    if(key === 0){ text = "待审核" }
-    if(key === 1){ text = "已审核" }
-    if(key === 2){ text = "已发货" }
-    if(key === 3){ text = "在途中" }
-    if(key === 4){ text = "已签收" }
-    if(key === 5){ text = "跟进中" }
-    if(key === 6){ text = "已激活" }
-    if(key === 7){ text = "已退回" }
-    if(key === 8){ text = "已取消" }
-    if(key === 9){ text = "已过期" }
+    if(key === 0 || key === '0'){ text = "待审核" }
+    if(key === 1 || key === '1'){ text = "已审核" }
+    if(key === 2 || key === '2'){ text = "已发货" }
+    if(key === 3 || key === '3'){ text = "在途中" }
+    if(key === 4 || key === '4'){ text = "已签收" }
+    if(key === 5 || key === '5'){ text = "跟进中" }
+    if(key === 6 || key === '6'){ text = "已激活" }
+    if(key === 7 || key === '7'){ text = "已退回" }
+    if(key === 8 || key === '8'){ text = "已取消" }
+    if(key === 9 || key === '9'){ text = "已过期" }
     return text;
   }
   // 订单类型
   getORDERTYPE = (key) => {
     let text = ""
-    if(key === 1){
+    if(key === 1 || key === '1'){
       text = "免押"
     }
-    if(key === 2){
+    if(key === 2 || key === '2'){
       text = "到付"
     }
-    if(key === 3){
+    if(key === 3 || key === '3'){
       text = "收费"
     }
-    if(key === 4){
+    if(key === 4 || key === '4'){
       text = "免押"
     }
-    if(key === 5){
+    if(key === 5 || key === '5'){
       text = "其他"
     }
     return text;
@@ -1013,13 +1013,13 @@ class AllOrdersList extends PureComponent {
   // 订单来源
   getORDERSOURCE = (key) => {
     let text = ""
-    if(key === 1){ text = "新增" }
-    if(key === 2){ text = "导入" }
-    if(key === 3){ text = "客户" }
-    if(key === 4){ text = "销售" }
-    if(key === 5){ text = "电销" }
-    if(key === 6){ text = "网销" }
-    if(key === 7){ text = "地推" }
+    if(key === 1 || key === '1'){ text = "新增" }
+    if(key === 2 || key === '2'){ text = "导入" }
+    if(key === 3 || key === '3'){ text = "客户" }
+    if(key === 4 || key === '4'){ text = "销售" }
+    if(key === 5 || key === '5'){ text = "电销" }
+    if(key === 6 || key === '6'){ text = "网销" }
+    if(key === 7 || key === '7'){ text = "地推" }
     return text;
   }
 
