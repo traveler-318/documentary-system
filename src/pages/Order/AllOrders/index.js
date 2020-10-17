@@ -629,7 +629,7 @@ class AllOrdersList extends PureComponent {
       title: '提醒',
       // content: "确定审核此订单吗？",
       okText: '确定',
-      cancelType: 'primary',
+      cancelType: 'danger',
       cancelText: '拒绝',
       content:<div>确定审核此订单吗？<Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button></div>,
       onOk() {
@@ -747,6 +747,7 @@ class AllOrdersList extends PureComponent {
         {/* 已审核 */}
           <Button
             icon="appstore"
+            type="primary"
             onClick={this.bulkDelivery}
           >发货</Button>
         </>):""}
@@ -758,12 +759,14 @@ class AllOrdersList extends PureComponent {
        {tabKey === '4'?(<>
         <Button
           icon="bell"
+          type="primary"
           onClick={this.batchReminders}
         >提醒</Button></>):""}
         {/* 跟进中 */}
         {tabKey === '5'?(<>
         <Button
           icon="bell"
+          type="primary"
           onClick={this.batchReminders}
         >提醒</Button></>):""}
         {/* 已激活什么都没有 */}
@@ -774,9 +777,11 @@ class AllOrdersList extends PureComponent {
         {/* 除了全部，其他状态都有导出按钮 */}
           {tabKey != 'null'?(<Button
               icon="upload"
+              type={(tabKey === "0" || tabKey === "1" || tabKey === "4" || tabKey === "5") ? "" : "primary"}
               onClick={this.exportFile}
             >导出</Button>):""
           }
+
         {/* 全部 */}
         {tabKey === 'null'?(<>
           <Button type="primary" icon="plus" onClick={()=>{
