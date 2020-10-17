@@ -294,7 +294,7 @@ class AllOrdersList extends PureComponent {
     const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
-      confirmTag:tabKey
+      confirmTag:tabKey === 'null' ? null : tabKey
     };
     if (dateRange) {
       payload = {
