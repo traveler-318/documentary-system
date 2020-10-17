@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs } from 'antd';
+import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs, Radio } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import { Resizable } from 'react-resizable';
@@ -20,7 +20,8 @@ import {
   toExamine,
   synCheck,
   syndata,
-  getSalesmanLists
+  getSalesmanLists,
+  updateData
 } from '../../../services/newServices/order';
 // getList as getSalesmanLists,
 import { getSalesmangroup } from '../../../services/newServices/sales';
@@ -36,6 +37,8 @@ const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
+
+let modal;
 
 const ResizeableTitle = props => {
   const { onResize, width, ...restProps } = props;
@@ -75,7 +78,7 @@ class AllOrdersList extends PureComponent {
         size:10,
         current:1
       },
-      tabKey:null,
+      tabKey:'0',
       selectedRows:[],
       // 物流弹窗
       logisticsVisible:false,
@@ -127,10 +130,17 @@ class AllOrdersList extends PureComponent {
           title: '订单状态',
           dataIndex: 'confirmTag',
           width: 100,
-          render: (key)=>{
-            return (
-              <div>{this.getORDERSTATUS(key)} </div>
-            )
+          render: (key,row)=>{
+            // 待审核、已激活、已取消、已退回-不可切换状态
+            if(key === 0 || key === 6 || key === 7 || key === 8){
+              return (
+                <div>{this.getORDERSTATUS(key)} </div>
+              )
+            }else{
+              return (
+                <div style={{cursor: 'pointer'}} onClick={()=>{this.changeConfirmTag(row)}}>{this.getORDERSTATUS(key)} </div>
+              )
+            }
           }
         },
         {
@@ -214,7 +224,10 @@ class AllOrdersList extends PureComponent {
               )
           },
         },
-      ]
+      ],
+      confirmTagVisible:false,
+      currentList:{},
+      radioChecked:null
     };
   }
 
@@ -553,6 +566,49 @@ class AllOrdersList extends PureComponent {
     }
   }
 
+  //手动切换状态
+  changeConfirmTag = (row) => {
+    this.setState({
+      confirmTagVisible:true,
+      currentList:row
+    })
+  } 
+
+  handleCancelConfirmTag = () => {
+    this.setState({
+      confirmTagVisible:false
+    })
+  } 
+
+  onChangeRadio = (e) => {
+    console.log('radio checked', e.target.value);
+    this.setState({
+      radioChecked: e.target.value
+    })
+  }
+
+  handleSubmitConfirmTag = (e) => {
+    const { radioChecked, currentList } = this.state;
+    console.log(radioChecked)
+    if(!radioChecked){
+      return message.error("请选择需要更改的状态");
+    }
+    updateData({
+      id:currentList.id,
+      confirmTag:radioChecked
+    }).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg);
+        this.setState({
+          confirmTagVisible:false
+        });
+        this.getDataList();
+      }else{
+        message.error(res.msg)
+      }
+    })
+  }
+
   // =========关闭物流弹窗========
   handleCancelLogisticsConfig = () => {
     this.setState({
@@ -564,54 +620,65 @@ class AllOrdersList extends PureComponent {
   batchAudit = () => {
     const {selectedRows} = this.state;
 
-    const setAudit = this.setAudit;
+    const toExamines = this.toExamines;
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
 
-    let modal = Modal.confirm({
+    modal = Modal.confirm({
       title: '提醒',
-      content: "确定审核此订单吗？",
+      // content: "确定审核此订单吗？",
       okText: '确定',
-      okType: 'info',
-      cancelText: '取消',
+      cancelType: 'primary',
+      cancelText: '拒绝',
+      content:<div>确定审核此订单吗？<Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button></div>,
       onOk() {
-        let type = false, _data = []
-        selectedRows.map(item=>{
-          if(item.confirmTag === 0){
-            _data.push(item.id)
-          }else{
-            type = true;
-          }
-        })
-        console.log(_data,"_data")
-        if(!_data || _data.length === 0){
-          modal.destroy();
-          return message.error("您选择的数据中未包含未审核的数据");
-        }
-        if(type){
-          Modal.confirm({
-            title: '提醒',
-            content: "您选择的数据中包含已审核的数据，我们将不会对这些数据操作",
-            okText: '确定',
-            okType: 'info',
-            cancelText: '取消',
-            onOk() {
-              setAudit(_data)
-            },
-            onCancel() {},
-          });
-        }else{
-          setAudit(_data)
-        }
+        toExamines(1);
       },
-      onCancel() {},
+      onCancel() {
+        toExamines(8);
+      },
     });
   }
 
-  setAudit = (_data) => {
+  toExamines = (confirmTag) => {
+    const {selectedRows} = this.state;
+    let type = false, _data = [];
+    const setAudit = this.setAudit;
+    selectedRows.map(item=>{
+      if(item.confirmTag === 0){
+        _data.push(item.id)
+      }else{
+        type = true;
+      }
+    })
+    if(!_data || _data.length === 0){
+      modal.destroy();
+      return message.error("您选择的数据中未包含未审核的数据");
+    }
+    if(type){
+      Modal.confirm({
+        title: '提醒',
+        content: "您选择的数据中包含已审核的数据，我们将不会对这些数据操作",
+        okText: '确定',
+        okType: 'info',
+        cancelText: '取消',
+        onOk() {
+          setAudit(_data,confirmTag)
+        },
+        onCancel() {
+          setAudit(_data,confirmTag)
+        },
+      });
+    }else{
+      setAudit(_data,confirmTag)
+    }
+  }
+
+
+  setAudit = (_data,confirmTag) => {
     toExamine({
-      confirmTag:1,
+      confirmTag,
       orderIds:_data
     }).then(res=>{
       if(res.code === 200){
@@ -660,38 +727,87 @@ class AllOrdersList extends PureComponent {
   // 测试
 
   // 左侧操作按钮
-  renderLeftButton = () => (
-    <>
-      <Button type="primary" icon="plus" onClick={()=>{
-        router.push(`/order/AllOrders/add`);
-      }}>添加</Button>
-      <Button
-        icon="menu-unfold"
-        onClick={this.batchAudit}
-      >审核</Button>
-      <Button
-        icon="appstore"
-        onClick={this.bulkDelivery}
-      >发货</Button>
-      <Button
-        icon="bell"
-        onClick={this.batchReminders}
-      >提醒</Button>
-      {/* <Button icon="upload">导出</Button> */}
-      {/* <Button icon="loading-3-quarters" onClick={this.handleShowTransfer}>转移客户</Button> */}
-      <Dropdown overlay={this.moreMenu()}>
-        <Button>
-          更多 <Icon type="down" />
-        </Button>
-      </Dropdown>
-    </>
-  );
+  renderLeftButton = (tabKey) => {
+    console.log(tabKey,"tabKey")
+    return (<>
+      {/* 待审核 */}
+        {tabKey === '0'?(<>
+        <Button type="primary" icon="plus" onClick={()=>{
+          router.push(`/order/AllOrders/add`);
+        }}>添加</Button>
+        <Button
+          icon="menu-unfold"
+          onClick={this.batchAudit}
+        >审核</Button>
+        <Button
+            icon="download"
+            onClick={this.importData}
+          >免押同步</Button>
+        </>):tabKey === '1'?(<>
+        {/* 已审核 */}
+          <Button
+            icon="appstore"
+            onClick={this.bulkDelivery}
+          >发货</Button>
+        </>):""}
+        
+        {/* 已发货什么都没有 */}
+        {/* 在途中什么都没有 */}
+
+       {/* 已签收 */}
+       {tabKey === '4'?(<>
+        <Button
+          icon="bell"
+          onClick={this.batchReminders}
+        >提醒</Button></>):""}
+        {/* 跟进中 */}
+        {tabKey === '5'?(<>
+        <Button
+          icon="bell"
+          onClick={this.batchReminders}
+        >提醒</Button></>):""}
+        {/* 已激活什么都没有 */}
+        {/* 已退回什么都没有 */}
+        {/* 已取消什么都没有 */}
+        {/* 已过期什么都没有 */}
+
+        {/* 除了全部，其他状态都有导出按钮 */}
+          {tabKey != 'null'?(<Button
+              icon="upload"
+              onClick={this.exportFile}
+            >导出</Button>):""
+          }
+        {/* 全部 */}
+        {tabKey === 'null'?(<>
+          <Button type="primary" icon="plus" onClick={()=>{
+            router.push(`/order/AllOrders/add`);
+          }}>添加</Button>
+          <Button
+            icon="menu-unfold"
+            onClick={this.batchAudit}
+          >审核</Button>
+          <Button
+            icon="appstore"
+            onClick={this.bulkDelivery}
+          >发货</Button>
+          <Button
+            icon="bell"
+            onClick={this.batchReminders}
+          >提醒</Button>
+          <Dropdown overlay={this.moreMenu()}>
+            <Button>
+              更多 <Icon type="down" />
+            </Button>
+          </Dropdown>
+        </>):""}
+        
+        {/* <Button icon="upload">导出</Button> */}
+        {/* <Button icon="loading-3-quarters" onClick={this.handleShowTransfer}>转移客户</Button> */}
+        
+      </>)
+  };
   moreMenu = () => (
     <Menu onClick={this.handleMenuClick}>
-      <Menu.Item key="download" onClick={this.importData}>
-        <Icon type="download" />
-        免押同步
-      </Menu.Item>
       <Menu.Item key="3" onClick={this.exportFile}>
         <Icon type="upload" />
         导出
@@ -1059,7 +1175,9 @@ class AllOrdersList extends PureComponent {
       selectedRows,
       detailsVisible,
       selectedRowKeys,
-      noDepositVisible
+      noDepositVisible,
+      confirmTagVisible,
+      currentList,
     } = this.state;
 
     console.log(selectedRowKeys,"selectedRowKeys")
@@ -1111,7 +1229,7 @@ class AllOrdersList extends PureComponent {
           data={data}
           columns={columns}
           scroll={{ x: 1000 }}
-          renderLeftButton={this.renderLeftButton}
+          renderLeftButton={()=>this.renderLeftButton(tabKey)}
           // renderRightButton={this.renderRightButton}
           counterElection={true}
           onChangeCheckbox={this.onChangeCheckbox}
@@ -1168,7 +1286,46 @@ class AllOrdersList extends PureComponent {
             handleCancelNoDeposit={this.handleCancelNoDeposit}
           />
         ):""}
-
+        <Modal
+          title="修改状态"
+          visible={confirmTagVisible}
+          width={560}
+          onCancel={this.handleCancelConfirmTag}
+          footer={[
+            <Button key="back" onClick={this.handleCancelConfirmTag}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" onClick={()=>this.handleSubmitConfirmTag()}>
+              确定
+            </Button>,
+          ]}
+        >
+          {/* 1、 已审核、已发货、在途中、已签收 跟进中 可以手动切换成已激活、已取消、已退回，
+          2、已激活、已取消、已退回这三种状态下不能手动切换状态
+          3、已过期  可以手动更改成已激活、已退回 */}
+          {/* {"name":"待审核",key:0},
+              {"name":"已审核",key:1},
+              {"name":"已发货",key:2},
+              {"name":"在途中",key:3},
+              {"name":"已签收",key:4},
+              {"name":"跟进中",key:5},
+              {"name":"已激活",key:6},
+              {"name":"已退回",key:7},
+              {"name":"已取消",key:8},
+              {"name":"已过期",key:9}, */}
+              {currentList.confirmTag === 9 ? (
+                <Radio.Group onChange={this.onChangeRadio}>
+                  <Radio value={6}>已激活</Radio>
+                  <Radio value={7}>已退回</Radio>
+                </Radio.Group>
+              ) : (
+                <Radio.Group onChange={this.onChangeRadio}>
+                  <Radio value={6}>已激活</Radio>
+                  <Radio value={7}>已退回</Radio>
+                  <Radio value={8}>已取消</Radio>
+                </Radio.Group>
+              )}
+        </Modal>
       </Panel>
     );
   }

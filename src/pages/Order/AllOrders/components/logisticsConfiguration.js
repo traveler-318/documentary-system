@@ -334,7 +334,7 @@ class LogisticsConfiguration extends PureComponent {
           this.getDefaultData((res)=>{
             console.log(res,"获取物流配置成功");
             const { listID } = this.state;
-            res.senderItem.printAddr = res.senderItem.administrative_areas +""+ res.senderItem.printAddr;
+            res.senderItem.printAddr = res.senderItem.administrativeAreas +""+ res.senderItem.printAddr;
             // senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem
             let param = {
               recMans: [],
