@@ -287,6 +287,10 @@ class AllOrdersList extends PureComponent {
     console.log(value,"value")
     if(value){
       this.getSalesmanList(value)
+    }else {
+      this.setState({
+        salesmanList:[]
+      })
     }
   }
 
