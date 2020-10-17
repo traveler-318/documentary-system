@@ -285,7 +285,9 @@ class AllOrdersList extends PureComponent {
   // 选择分组
   changeGroup = (value) => {
     console.log(value,"value")
-    this.getSalesmanList(value)
+    if(value){
+      this.getSalesmanList(value)
+    }
   }
 
   // ============ 查询 ===============
