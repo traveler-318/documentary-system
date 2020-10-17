@@ -100,7 +100,7 @@ class Export extends PureComponent {
   // 下一步
   dataExport = () => {
     const {downloadExcelParam,checkedList,exportDataList}=this.state;
-    console.log(checkedList)
+    console.log(downloadExcelParam)
     const oneMonth =31*24*3600*1000
     if((new Date(downloadExcelParam.end_time).getTime()-new Date(downloadExcelParam.start_time).getTime()) > oneMonth){
       message.error('导出时间范围不可超过31天');
@@ -164,7 +164,8 @@ class Export extends PureComponent {
 
   handleCancelExportFile = () =>{
     this.setState({
-      exportFileVisible:false
+      exportFileVisible:false,
+      timer:0
     })
   }
 
@@ -226,7 +227,8 @@ class Export extends PureComponent {
 
   changeTimeRange = (item) => {
     console.log(item.code)
-    const {exportDataList,params}=this.state
+    const {exportDataList,params}=this.state;
+    console.log(params)
     console.log(moment().startOf('month').format('YYYY-MM-DD') +" 00:00:00")
     console.log(moment().endOf('month').format('YYYY-MM-DD')+" 23:59:59")
     this.setState({
