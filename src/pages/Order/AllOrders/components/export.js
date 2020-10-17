@@ -45,8 +45,7 @@ class Export extends PureComponent {
       isIndeterminate:true,
       checkedList:[],
       downloadExcelParam:{
-        startTime:moment().format('YYYY-MM-DD')+" 00:00:00",
-        endTime: moment().format('YYYY-MM-DD')+" 23:59:59"
+
       },
       checked:false,
       startTime:'',
@@ -60,11 +59,12 @@ class Export extends PureComponent {
   }
 
   componentWillMount() {
-    const { globalParameters } = this.props;
+    const { globalParameters,exportVisible } = this.props;
     console.log(globalParameters.detailData)
     // 获取详情数据
     this.setState({
-      params:globalParameters.detailData
+      params:globalParameters.detailData,
+      exportVisible:exportVisible
     })
   }
 
@@ -103,9 +103,12 @@ class Export extends PureComponent {
 
   // 下一步
   dataExport = () => {
-    const {downloadExcelParam,checkedList,exportDataList}=this.state;
-    console.log(downloadExcelParam)
+    const {downloadExcelParam,checkedList,exportDataList,seleteTimeRange}=this.state;
     const oneMonth =31*24*3600*1000;
+    if(seleteTimeRange === 1 ){
+      downloadExcelParam.startTime=moment().format('YYYY-MM-DD')+" 00:00:00";
+      downloadExcelParam.endTime=moment().format('YYYY-MM-DD')+" 23:59:59";
+    }
     if(this.verification(downloadExcelParam.startTime)){
       message.error('请选择导出时间范围');
       return false;
@@ -138,8 +141,6 @@ class Export extends PureComponent {
   getVerificationCode = () =>{
     const tenantId=getCookie("tenantId");
     const userName=getCookie("userName");
-    console.log(tenantId)
-    console.log(userName)
     getVCode(userName,tenantId,2).then(res=>{
     //   console.log(res)
       if(res.code === 200){
@@ -173,10 +174,14 @@ class Export extends PureComponent {
   }
 
   handleCancelExportFile = () =>{
+    const {downloadExcelParam}=this.state;
+    downloadExcelParam.startTime='';
+    downloadExcelParam.endTime='';
     this.setState({
       exportFileVisible:false,
       timer:0,
-      verificationCode:''
+      verificationCode:'',
+      downloadExcelParam
     })
   }
 
@@ -233,6 +238,12 @@ class Export extends PureComponent {
     document.body.appendChild(elink);
     elink.click();
     document.body.removeChild(elink);
+    this.setState({
+      exportFileVisible:false,
+      exportVisible:false,
+      timer:0,
+      verificationCode:''
+    })
   }
 
   codeChange =(e) =>{
@@ -324,7 +335,6 @@ class Export extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      exportVisible,
       handleCancelExport,
     } = this.props;
 
@@ -333,7 +343,7 @@ class Export extends PureComponent {
       seleteTimeRange,
       exportDataList,
       exportFileVisible,
-      checked,
+      exportVisible,
       timer,
       phone,
       retransmission,
