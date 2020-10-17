@@ -559,10 +559,7 @@ class AllOrdersList extends PureComponent {
         param.push(selectedRows[i].id)
       }
 
-      const {params} = {
-        orderIds:param
-      };
-      logisticsRepeatPrint(params).then(res=>{
+      logisticsRepeatPrint(param).then(res=>{
         if(res.code === 200){
           message.success(res.msg);
         }

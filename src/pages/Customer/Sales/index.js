@@ -215,6 +215,8 @@ class AuthorityList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: res,
     });
+    const {handleAggregateCodeVisible}=this.state
+    console.log(handleAggregateCodeVisible)
     this.setState({
       handleAggregateCodeVisible:true
     })
@@ -470,19 +472,17 @@ class AuthorityList extends PureComponent {
           />
         ):""}
         {/* 聚合码弹框 */}
-        {handleAggregateCodeVisible?(
-          <AggregateCode
-            handleAggregateCodeVisible={handleAggregateCodeVisible}
-            handleCancelAggregateCode={this.handleCancelAggregateCode}
-          />
-        ):""}
+        <AggregateCode
+          handleAggregateCodeVisible={handleAggregateCodeVisible}
+          handleCancelAggregateCode={this.handleCancelAggregateCode}
+        />
         {/* 二维码 */}
         {bindingQRCodeVisible?(
           <BindingQRCode
             bindingQRCodeVisible={bindingQRCodeVisible}
             bindingQRCode={bindingQRCode}
             countDownTimer={countDownTimer}
-            handleCancelBindingQRCode={this.handleCancelBindingQRCode}
+            handleCancelBindingQRCode={this.handleCancelAggregateCode}
           />
         ):""}
       </Panel>

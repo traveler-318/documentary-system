@@ -33,14 +33,11 @@ class Logistics extends PureComponent {
     this.state = {
       codeUrl:'',
       data:{},
+      value:''
     };
   }
 
   componentWillMount() {
-    const { handleAggregateCodeVisible } = this.props;
-    this.setState({
-      handleAggregateCodeVisible:handleAggregateCodeVisible
-    })
     this.getUrl()
   }
 
@@ -93,8 +90,8 @@ class Logistics extends PureComponent {
         const url = codeUrl+globalParameters.detailData.userAccount+"_"+values.payAmount;
 
         console.log(url)
+        this.props.handleCancelAggregateCode()
         this.setState({
-          handleAggregateCodeVisible:false,
           groupAddVisible:true,
           qrUrl:url,
         })
@@ -113,6 +110,7 @@ class Logistics extends PureComponent {
     const {
       form: { getFieldDecorator },
       handleCancelAggregateCode,
+      handleAggregateCodeVisible
     } = this.props;
 
     const formItemLayout = {
@@ -124,9 +122,8 @@ class Logistics extends PureComponent {
       },
     };
 
-    const {groupAddVisible,qrUrl,handleAggregateCodeVisible} = this.state;
+    const {groupAddVisible,qrUrl,value} = this.state;
 
-    console.log(handleAggregateCodeVisible)
 
     // confirmTag
     return (
@@ -153,6 +150,7 @@ class Logistics extends PureComponent {
                   message: '请输入支付金额',
                 },
               ],
+              initialValue: value,
             })(<Input placeholder="请输入支付金额" />)}
           </FormItem>
         </Modal>
