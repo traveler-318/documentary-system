@@ -646,7 +646,7 @@ class AllOrdersList extends PureComponent {
     let type = false, _data = [];
     const setAudit = this.setAudit;
     selectedRows.map(item=>{
-      if(item.confirmTag === 0){
+      if(item.confirmTag === 0 || item.confirmTag === '0'){
         _data.push(item.id)
       }else{
         type = true;
