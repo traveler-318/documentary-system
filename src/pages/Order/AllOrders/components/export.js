@@ -61,6 +61,15 @@ class Export extends PureComponent {
   componentWillMount() {
     const { globalParameters,exportVisible } = this.props;
     console.log(globalParameters.detailData)
+    if(globalParameters.detailData.startTime){
+      this.setState({
+        seleteTimeRange:5,
+        downloadExcelParam:{
+          startTime:moment(globalParameters.detailData.startTime).format('YYYY-MM-DD')+" 00:00:00",
+          endTime:moment(globalParameters.detailData.endTime).format('YYYY-MM-DD')+" 23:59:59"
+        }
+      })
+    }
     // 获取详情数据
     this.setState({
       params:globalParameters.detailData,
@@ -180,12 +189,14 @@ class Export extends PureComponent {
   }
 
   handleCancelExportFile = () =>{
-    const {downloadExcelParam}=this.state;
-    downloadExcelParam.startTime='';
-    downloadExcelParam.endTime='';
+    const {downloadExcelParam,seleteTimeRange}=this.state;
+    //downloadExcelParam.startTime='';
+    //downloadExcelParam.endTime='';
     this.setState({
       exportFileVisible:false,
       timer:0,
+      verificationCode:'',
+      seleteTimeRange:seleteTimeRange,
       verificationCode:'',
       downloadExcelParam
     })
@@ -328,6 +339,16 @@ class Export extends PureComponent {
     }else if(item.code === 5){
       downloadExcelParam.startTime = params.startTime;
       downloadExcelParam.endTime = params.endTime;
+      if(!params.startTime){
+        params.startTime=""
+      }
+      if(!params.endTime){
+        params.endTime=""
+      }
+      this.setState({
+        downloadExcelParam:downloadExcelParam,
+        ...params
+      })
     }
   };
 
@@ -357,11 +378,11 @@ class Export extends PureComponent {
       retransmission,
       isIndeterminate,
       verificationCode,
-      downloadExcelParam,
+      params,
       checkedList
     } = this.state;
 
-    console.log(checkedList)
+    console.log(params)
 
     return (
       <>
@@ -384,7 +405,7 @@ class Export extends PureComponent {
               <Col span={4}>导出范围：</Col>
               <Col span={20}>
                 {rangeList.map((item,index)=>{
-                  return (<span onClick={()=>this.changeTimeRange(item)} className={(index === 0 && seleteTimeRange === item.code) ? `${styles.range_item} ${styles.range_left_btn} ${styles.range_selete}` :
+                  return (<span key={index} onClick={()=>this.changeTimeRange(item)} className={(index === 0 && seleteTimeRange === item.code) ? `${styles.range_item} ${styles.range_left_btn} ${styles.range_selete}` :
                     ((index+1) === rangeList.length && seleteTimeRange === item.code) ? `${styles.range_item} ${styles.range_right_btn} ${styles.range_selete}` :
                       (seleteTimeRange === item.code) ? `${styles.range_item} ${styles.range_selete}` :
                         index === 0 ? `${styles.range_item} ${styles.range_left_btn}` :
@@ -396,8 +417,11 @@ class Export extends PureComponent {
                     (<RangePicker style={{marginTop:20}}
                       showTime={{
                         hideDisabledOptions: true,
-                        defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('11:59:59', 'HH:mm:ss')],
                       }}
+                      defaultValue={
+                        params.startTime ?
+                      [moment(params.startTime, 'YYYY-MM-DD HH:mm:ss'), moment(params.endTime, 'YYYY-MM-DD HH:mm:ss')]
+                      :""}
                       format="YYYY-MM-DD HH:mm:ss"
                       onOk={this.onOk}
                     />)
@@ -453,6 +477,7 @@ class Export extends PureComponent {
           />
           <Input style={{width:'160px',marginRight:10}}
             placeholder='验证码'
+            value={verificationCode}
             onChange={(e)=>this.codeChange(e)}
             prefix={<Icon type="safety-certificate" style={{ color: 'rgba(0,0,0,.25)' }} />}
           />

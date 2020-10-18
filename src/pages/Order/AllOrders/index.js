@@ -696,11 +696,10 @@ class AllOrdersList extends PureComponent {
   exportFile = () => {
     const {params}=this.state;
     const { dispatch } = this.props;
-    const { dateRange } = params;
     let param = {
       ...params,
-      startTime:dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
-      endTime:dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null
+      startTime:params.startTime,
+      endTime:params.endTime
     };
     dispatch({
       type: `globalParameters/setDetailData`,
