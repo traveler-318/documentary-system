@@ -549,7 +549,7 @@ class LogisticsConfiguration extends PureComponent {
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="类型">
                   {getFieldDecorator('orderType', {
-                    initialValue: detail.orderType,
+                    initialValue: parseInt(detail.orderType),
                     rules: [
                       {
                         required: true,
