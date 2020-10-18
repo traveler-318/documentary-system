@@ -100,19 +100,30 @@ class LogisticsConfiguration extends PureComponent {
     this.getTreeList();
   }
 
-  getDetailsData = (id) => {
+  getDetailsData = (id,type) => {
     getDetails({id}).then(res=>{
       let _data = res.data
+
       if(sessionStorage.logisticsConfigurationValues){
         let _value = JSON.parse(sessionStorage.logisticsConfigurationValues);
-        _data.productName = _value.productType[2];
-        _data.productType = `${_value.productType[0]}/${_value.productType[1]}`;
 
-        _data.logisticsCompany = _value.logisticsCompany;
+        if(!_data.productType && type === "switch"){
+          _data.productName = _value.productType[2];
+          _data.productType = `${_value.productType[0]}/${_value.productType[1]}`;
+        }
+
+        if(!_data.logisticsCompany){
+          _data.logisticsCompany = _value.logisticsCompany;
+        }
+        
+        if(!_data.smsConfirmation){
+          _data.smsConfirmation = _value.smsConfirmation;
+        }
+
+        if(!_data.shipmentRemind){
+          _data.shipmentRemind = _value.shipmentRemind;
+        }
         // _data.productCoding = _data.productCoding || "";
-
-        _data.smsConfirmation = _value.smsConfirmation;
-        _data.shipmentRemind = _value.shipmentRemind;
       }
       console.log(_data,"_data_data_data")
       this.setState({
@@ -133,9 +144,9 @@ class LogisticsConfiguration extends PureComponent {
       },()=>{
         
       })
-      this.getDetailsData(listID[currentIndex - 1].id);
+      this.getDetailsData(listID[currentIndex - 1].id,"switch");
     }else{
-      this.getDetailsData(listID[currentIndex + 1].id);
+      this.getDetailsData(listID[currentIndex + 1].id,"switch");
       this.setState({
         currentIndex:currentIndex + 1
       },()=>{
