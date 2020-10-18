@@ -125,10 +125,10 @@ class Export extends PureComponent {
     let fileds = "";
     for(let i=0; i<exportDataList.length; i++){
       if(exportDataList[i].checked){
-        fileds+= i === 0 ? exportDataList[i].code : ","+exportDataList[i].code
+        fileds+= i === 0 ? exportDataList[i].code+"," : exportDataList[i].code+","
       }
     }
-    downloadExcelParam.fileds = fileds;
+    downloadExcelParam.fileds = fileds.substring(0,fileds.length - 1);
     this.setState({
       downloadExcelParam
     })
@@ -136,6 +136,13 @@ class Export extends PureComponent {
     this.getDataList()
 
   };
+
+  handleCancel = () =>{
+    this.setState({
+      seleteTimeRange:1
+    })
+    this.props.handleCancelExport()
+  }
 
   // 获取验证码
   getVerificationCode = () =>{
@@ -153,7 +160,6 @@ class Export extends PureComponent {
       }else {
         message.error(res.msg);
       }
-
     })
   }
 
@@ -362,9 +368,9 @@ class Export extends PureComponent {
           title="数据导出"
           visible={exportVisible}
           width={760}
-          onCancel={handleCancelExport}
+          onCancel={()=>this.handleCancel()}
           footer={[
-            <Button key="back" onClick={handleCancelExport}>
+            <Button key="back" onClick={()=>this.handleCancel()}>
               取消
             </Button>,
             <Button type="primary" onClick={()=>this.dataExport()}>
