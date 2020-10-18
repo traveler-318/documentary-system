@@ -251,6 +251,7 @@ class Export extends PureComponent {
       verificationCode:''
     })
     this.props.handleCancelExport()
+
   }
 
   codeChange =(e) =>{
