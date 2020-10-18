@@ -76,7 +76,8 @@ class LogisticsConfiguration extends PureComponent {
       goodsItem:{},
       additionalItem:{},
       currentIndex:0,
-      listID:[]
+      listID:[],
+      handlePrintingClick:false
     };
   }
 
@@ -326,51 +327,54 @@ class LogisticsConfiguration extends PureComponent {
     const { form } = this.props;
     const { detail } = this.state;
     form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log("先保存数据")
-        // 先保存数据
-        this.saveData(values,()=>{
-          // 获取物流配置
-          this.getDefaultData((res)=>{
-            console.log(res,"获取物流配置成功");
-            const { listID } = this.state;
-            res.senderItem.printAddr = res.senderItem.administrativeAreas +""+ res.senderItem.printAddr;
-            // senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem
-            let param = {
-              recMans: [],
-              ...res.goodsItem,
-              ...res.printTemplateItem,
-              ...res.additionalItem,
-              sendMan:{
-                ...res.senderItem,
-              },
-              subscribe:values.shipmentRemind, //物流订阅
-              shipmentRemind:values.smsConfirmation, //发货提醒
-              ...res.authorizationItem
-            };
-            for(let i=0; i<listID.length; i++){
-              param.recMans.push(
-                {
-                  "mobile": listID[i].userPhone,
-                  "name": listID[i].userName,
-                  "printAddr": listID[i].userAddress,
-                  "out_order_no": listID[i].outOrderNo,
-                  "id":listID[i].id,
-                  'salesman':listID[i].salesman,
-                }
-              )
-            }
-            logisticsPrintRequest(param).then(response=>{
-              if(response.code === 200){
-                this.saveSuccess(response.msg);
-              }else{
-                message.error(response.msg);
+        if (!err) {
+          console.log("先保存数据")
+          // 先保存数据
+          this.saveData(values,()=>{
+            // 获取物流配置
+            this.getDefaultData((res)=>{
+              console.log(res,"获取物流配置成功");
+              const { listID } = this.state;
+              res.senderItem.printAddr = res.senderItem.administrativeAreas +""+ res.senderItem.printAddr;
+              // senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem
+              let param = {
+                recMans: [],
+                ...res.goodsItem,
+                ...res.printTemplateItem,
+                ...res.additionalItem,
+                sendMan:{
+                  ...res.senderItem,
+                },
+                subscribe:values.shipmentRemind, //物流订阅
+                shipmentRemind:values.smsConfirmation, //发货提醒
+                ...res.authorizationItem
+              };
+              for(let i=0; i<listID.length; i++){
+                param.recMans.push(
+                  {
+                    "mobile": listID[i].userPhone,
+                    "name": listID[i].userName,
+                    "printAddr": listID[i].userAddress,
+                    "out_order_no": listID[i].outOrderNo,
+                    "id":listID[i].id,
+                    'salesman':listID[i].salesman,
+                  }
+                )
               }
-            })
-          });
-        })
-      }
-    });
+              logisticsPrintRequest(param).then(response=>{
+                if(response.code === 200){
+                  this.saveSuccess(response.msg);
+                  this.setState({
+                    handlePrintingClick:true
+                  })
+                }else{
+                  message.error(response.msg);
+                }
+              })
+            });
+          })
+        }
+      });
   }
 
   handleChange = value => {
@@ -438,6 +442,7 @@ class LogisticsConfiguration extends PureComponent {
       productList,
       currentIndex,
       listID,
+      handlePrintingClick,
     } = this.state;
 
     console.log(listID,"listID")
@@ -468,7 +473,7 @@ class LogisticsConfiguration extends PureComponent {
           <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
             保存
           </Button>
-          <Button style={{marginRight:10}} type="primary" onClick={this.handlePrinting} loading={loading}>
+          <Button style={{marginRight:10}} disabled={handlePrintingClick} type="primary" onClick={this.handlePrinting} loading={loading}>
             保存并打印
           </Button>
           <Button icon="reload" onClick={this.handleSubmit} loading={loading}>
