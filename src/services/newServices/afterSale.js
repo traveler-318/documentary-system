@@ -25,7 +25,7 @@ export async function createData(params) {
       body: params,
     });
   }
-  
+
   export async function updateData(params) {
     return request('/api/order/order/update', {
       method: 'POST',
