@@ -131,6 +131,8 @@ class Logistics extends PureComponent {
     if(value != "" && value != null){
       if(!reg.test(value)){
         callback('请输入正确的金额格式');
+      }else if(value > 500){
+        callback('金额不可大于500元');
       }else{
         return callback();
       }
