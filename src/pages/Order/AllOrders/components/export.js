@@ -444,7 +444,7 @@ class Export extends PureComponent {
             disabled
             prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)'}} />}
           />
-          <Input style={{width:'170px',marginRight:10}}
+          <Input style={{width:'160px',marginRight:10}}
             placeholder='验证码'
             onChange={(e)=>this.codeChange(e)}
             prefix={<Icon type="safety-certificate" style={{ color: 'rgba(0,0,0,.25)' }} />}
