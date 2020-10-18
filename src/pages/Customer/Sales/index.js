@@ -20,7 +20,7 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-
+import moment from 'moment';
 import { getList,getSalesmangroup,updateStatus,getSendTest,getUnWeChatBind,getWeChatBinding } from '../../../services/newServices/sales';
 import Grouping from './components/Mgrouping'
 import Recharge from './components/recharge'
@@ -382,6 +382,17 @@ class AuthorityList extends PureComponent {
         title: '创建时间',
         dataIndex: 'createTime',
         width: 200,
+        render: (res) => {
+          return(
+            <div>
+              {
+                res === '' ?
+                  (res)
+                  :(moment(res).format('YYYY-MM-DD HH:mm:ss'))
+              }
+            </div>
+          )
+        },
       },
       {
         title: '默认开关',
