@@ -278,11 +278,12 @@ class AuthorityList extends PureComponent {
 
 
   // =========关闭二维码弹窗========
-
   handleCancelBindingQRCode = () => {
     this.setState({
-      bindingQRCodeVisible:false
+      bindingQRCodeVisible:false,
+      countDownTimer:30
     })
+    this.getDataList();
   }
 
 
@@ -483,7 +484,7 @@ class AuthorityList extends PureComponent {
             bindingQRCodeVisible={bindingQRCodeVisible}
             bindingQRCode={bindingQRCode}
             countDownTimer={countDownTimer}
-            handleCancelBindingQRCode={this.handleCancelAggregateCode}
+            handleCancelBindingQRCode={this.handleCancelBindingQRCode}
           />
         ):""}
       </Panel>
