@@ -70,6 +70,7 @@ class AuthorityList extends PureComponent {
       loading:true
     })
     getList(params).then(res=>{
+      console.log(res)
       this.setState({
         loading:false
       })
@@ -374,7 +375,7 @@ class AuthorityList extends PureComponent {
       },
       {
         title: '售后',
-        dataIndex: 'salesman',
+        dataIndex: 'name',
         width: 120,
       },
       {
