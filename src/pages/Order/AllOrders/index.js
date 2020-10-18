@@ -131,8 +131,9 @@ class AllOrdersList extends PureComponent {
           dataIndex: 'confirmTag',
           width: 100,
           render: (key,row)=>{
+            console.log(key)
             // 待审核、已激活、已取消、已退回-不可切换状态
-            if(key === 0 || key === 6 || key === 7 || key === 8){
+            if(key == 0 || key == 6 || key == 7 || key == 8){
               return (
                 <div>{this.getORDERSTATUS(key)} </div>
               )
@@ -1023,6 +1024,7 @@ class AllOrdersList extends PureComponent {
     if(key === 5 || key === '5'){ text = "电销" }
     if(key === 6 || key === '6'){ text = "网销" }
     if(key === 7 || key === '7'){ text = "地推" }
+    if(key === 7 || key === '8'){ text = "免押宝" }
     return text;
   }
 

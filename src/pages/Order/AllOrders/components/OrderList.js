@@ -55,6 +55,7 @@ class OrderList extends PureComponent {
     orderDetail(params).then(res=>{
       console.log(res)
       const data = res.data.records;
+      console.log(data)
       let list=[]
       for(let i=0; i<data.length; i++){
         if(data[i].id != detail.id){

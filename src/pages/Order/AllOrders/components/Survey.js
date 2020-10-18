@@ -339,7 +339,7 @@ class Survey extends PureComponent {
             position:"fixed",
             bottom:0,
             left:offsetLeftDistance-24,
-            right:"24px"
+            right:"44px"
           }}
         >
           <TextArea

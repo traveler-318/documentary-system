@@ -55,6 +55,7 @@ export const ORDERSOURCE = [
     {name:"电销",key:5},
     {name:"网销",key:6},
     {name:"地推",key:7},
+    {name:"免押宝",key:8},
 ]
 
 // 订单来源

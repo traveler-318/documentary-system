@@ -230,6 +230,7 @@ class AuthorityList extends PureComponent {
   }
 
   handleBinding = (row,type) => {
+    const refresh = this.getDataList;
     if(type ==="0"){
       Modal.confirm({
         title: '提醒',
@@ -239,8 +240,8 @@ class AuthorityList extends PureComponent {
         cancelText: '取消',
         onOk() {
           getUnWeChatBind(row.userAccount,row.openid).then(res=>{
+            refresh();
             message.success(res.msg);
-            this.getDataList();
           })
         },
         onCancel() {},

@@ -70,10 +70,12 @@ class OrdersEdit extends PureComponent {
     })
   }
   getList = (detail) =>{
+    console.log(detail)
     const params={
       userAddress:detail.userAddress,
       userPhone:detail.userPhone,
       userName:detail.userName,
+      id:detail.id,
       size:100,
       current:1
     }
@@ -351,7 +353,7 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                   <Button  icon="plus">产品</Button>
                   <Button  icon="plus">地址</Button> */}
                 </div>
-                <div className={styles.tabContent}>
+                <div className={styles.tabContent} style={{marginRight:20}}>
                   <Tabs defaultActiveKey="1" onChange={this.callback}>
                     <TabPane tab="概况" key="1">
                       <Survey

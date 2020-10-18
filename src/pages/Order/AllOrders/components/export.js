@@ -244,6 +244,7 @@ class Export extends PureComponent {
       timer:0,
       verificationCode:''
     })
+    this.props.handleCancelExport()
   }
 
   codeChange =(e) =>{
@@ -350,7 +351,10 @@ class Export extends PureComponent {
       isIndeterminate,
       verificationCode,
       downloadExcelParam,
+      checkedList
     } = this.state;
+
+    console.log(checkedList)
 
     return (
       <>
