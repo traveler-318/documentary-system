@@ -214,6 +214,15 @@ class Export extends PureComponent {
       message.error('导出数据需要短信验证，请先获取短信验证码！');
       return false;
     }
+    if(verificationCode.length < 6){
+      message.error('验证码不能小于6位数');
+      return false;
+    }
+    if(verificationCode.length > 6){
+      message.error('验证码不能大于6位数');
+      return false;
+    }
+
 
     let param={
       ...params,

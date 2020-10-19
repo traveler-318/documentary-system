@@ -66,15 +66,13 @@ class LogisticsDetails extends PureComponent {
       };
     console.log(params)
     logisticsQuery(params).then(res=>{
-      if(res.code === 401){
-        message.success(res.msg);
-      }
-      if(res.code === 200){
+      if(res.code == 200){
         const list=JSON.parse(res.data);
          this.setState({
            data:list.result.list
          })
-
+      }else{
+        message.error(res.msg);
       }
    })
   }

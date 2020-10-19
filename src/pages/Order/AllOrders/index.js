@@ -640,6 +640,9 @@ class AllOrdersList extends PureComponent {
       okText: '确定',
       cancelType: 'danger',
       cancelText: '拒绝',
+      cancelButtonProps: {
+        type:"danger"
+    },
       content:<div>确定审核此订单吗？<Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button></div>,
       onOk() {
         toExamines(1);
