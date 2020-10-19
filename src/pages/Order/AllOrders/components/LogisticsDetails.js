@@ -12,6 +12,7 @@ import {
   Radio,
   Timeline,
   Table,
+  Empty
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -59,17 +60,42 @@ class LogisticsDetails extends PureComponent {
       }
     }
      const params={
-       logisticsNumber:details.logisticsNumber,
+      //  logisticsNumber:details.logisticsNumber,
        userPhone:details.userPhone,
-       outOrderNo:details.outOrderNo,
+      //  outOrderNo:details.outOrderNo,
        logisticsType:type
-      };
+    };
+
+    if(details.logisticsStatus){
+      params.outOrderNo = details.outOrderNo;
+      // params.logistics_number = "";
+    }else{
+      params.logisticsNumber = details.logisticsNumber;
+      params.outOrderNo = "";
+    }
     console.log(params)
     logisticsQuery(params).then(res=>{
       if(res.code == 200){
-        const list=JSON.parse(res.data);
+        let _dataList = []
+        if(JSON.parse(res.data).result != ""){
+          if(params.outOrderNo === ""){
+            // _dataList = JSON.parse(res.data).result.list
+            if(JSON.stringify(JSON.parse(res.data).result) != "{}"){
+              _dataList = JSON.parse(res.data).result.list
+            }
+          }else{
+            console.log(JSON.parse(res.data).result,"123321")
+            if(JSON.stringify(JSON.parse(res.data).result) != "{}"){
+              _dataList = JSON.parse(JSON.parse(res.data).result.list)
+            }
+          }
+        }else{
+          message.error(JSON.parse(res.data).msg);
+        }
+        console.log(_dataList,"_dataList")
+        
          this.setState({
-           data:list.result.list
+           data:_dataList
          })
       }else{
         message.error(res.msg);
@@ -85,7 +111,7 @@ class LogisticsDetails extends PureComponent {
       } = this.props;
 
     const {data} = this.state;
-
+      console.log(data,"datadatadata")
     // confirmTag
     return (
       <div>
@@ -99,16 +125,20 @@ class LogisticsDetails extends PureComponent {
           ]}
         >
           <div>
-            <Timeline>
+            {data.length <= 0 ? (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            ) : (
+              <Timeline>
               {data.map((item)=>{
                 return (
                   <Timeline.Item>
                     <p>{item.time}</p>
-                    <p>{item.status}</p>
+                    <p>{item.content}</p>
                   </Timeline.Item>
                 )
               })}
-            </Timeline>
+              </Timeline>
+            )}
           </div>
         </Modal>
       </div>
