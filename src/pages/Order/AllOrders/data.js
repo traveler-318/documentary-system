@@ -219,7 +219,7 @@ export function exportData() {
     {value:"收货地址",code:"user_address"},
     {value:"产品分类",code:"product_type"},
     {value:"产品型号",code:"product_name"},
-    {value:"SN码",code:"product_coding"},
+    {value:"SN",code:"product_coding"},
     {value:"订单状态",code:"confirm_tag"},
     {value:"订单类型",code:"order_type"},
     {value:"订单来源",code:"order_source"},

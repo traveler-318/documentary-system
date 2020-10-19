@@ -124,7 +124,7 @@ class AllOrdersList extends PureComponent {
           width: 160,
         },
         {
-          title: 'SN码',
+          title: 'SN',
           dataIndex: 'productCoding',
           width: 200,
           ellipsis: true,
@@ -376,8 +376,8 @@ class AllOrdersList extends PureComponent {
         <Form.Item label="手机号">
           {getFieldDecorator('userPhone')(<Input placeholder="请输入手机号" />)}
         </Form.Item>
-        <Form.Item label="SN码">
-              {getFieldDecorator('productCoding')(<Input placeholder="请输入SN码" />)}
+        <Form.Item label="SN">
+              {getFieldDecorator('productCoding')(<Input placeholder="请输入SN" />)}
             </Form.Item>
         <Form.Item label="订单类型">
           {getFieldDecorator('orderType', {

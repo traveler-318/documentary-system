@@ -570,18 +570,18 @@ class LogisticsConfiguration extends PureComponent {
                   </Select>
                   )}
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="SN码">
+                <FormItem {...formAllItemLayout} label="SN">
                   {getFieldDecorator('productCoding', {
                     initialValue: detail.productCoding,
                     rules: [
                       {
                         required: true,
-                        message: '请输入SN码',
+                        message: '请输入SN',
                       },
                     ],
                   })(
                     <Input 
-                      placeholder="请输入SN码"
+                      placeholder="请输入SN"
                       onPressEnter={this.handleSubmit}
                     />
                    )}
