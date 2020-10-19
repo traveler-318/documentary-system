@@ -206,7 +206,7 @@ class AllOrdersList extends PureComponent {
                     <a onClick={()=>this.handleEdit(row)}>详情</a>
                     <Divider type="vertical" />
                     {
-                      row.logisticsCompany && !row.logisticsStatus ? (<a onClick={()=>this.logisticsSubscribe(row)}>订阅</a>):''
+                      row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<a onClick={()=>this.logisticsSubscribe(row)}>订阅</a>):''
                     }
 
                     {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
@@ -975,8 +975,10 @@ class AllOrdersList extends PureComponent {
     </>
   );
 
+  // 物流订阅
   logisticsSubscribe =(row) =>{
     console.log(row)
+    const list=this.getDataList;
     Modal.confirm({
       title: '提示',
       content: '请确认订单号、物流名称无误后再进行物流订阅操作！此操作属于扣费行为不可逆转！',
@@ -1007,6 +1009,7 @@ class AllOrdersList extends PureComponent {
           console.log(res)
           if(res.code === 200){
             message.success(res.msg);
+            list()
           }else{
             message.error(res.msg);
           }
