@@ -570,7 +570,7 @@ class LogisticsConfiguration extends PureComponent {
                   })(
                   <Select placeholder={"请选择类型"}>
                     {ORDERTYPE.map(item=>{
-                      return (<Option value={item.key}>{item.name}</Option>)
+                      return (<Option value={item.key}>{item.name === "到付" ? "代收" : item.name}</Option>)
                     })}
                   </Select>
                   )}
@@ -663,11 +663,11 @@ class LogisticsConfiguration extends PureComponent {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="备注信息">
+                {/* <FormItem {...formAllItemLayout} label="备注信息">
                   {getFieldDecorator('orderNote')(
                     <TextArea rows={4} />
                   )}
-                </FormItem>
+                </FormItem> */}
               </Col>
             </Row>
             
