@@ -361,6 +361,14 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
+                <FormItem {...formItemLayout} label={'本地打印开关'}>
+                  {getFieldDecorator('localPrintStatus')(
+                    <Radio.Group>
+                      <Radio key={1} value={1}>是</Radio>
+                      <Radio key={0} value={0}>否</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
               </Col>
           </Row>
           </Card>
