@@ -4,7 +4,7 @@
 
 .header {
   position: relative;
-  height: @layout-header-height;
+  height: 50px;
   padding: 0;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
@@ -12,10 +12,10 @@
 
 .logo {
   display: inline-block;
-  height: @layout-header-height;
+  height: 50px;
   padding: 0 0 0 24px;
   font-size: 20px;
-  line-height: @layout-header-height;
+  line-height: 50px;
   vertical-align: top;
   cursor: pointer;
   img {
@@ -34,8 +34,8 @@
 }
 
 .trigger {
-  height: @layout-header-height;
-  padding: ~'calc((@{layout-header-height} - 20px) / 2)' 24px;
+  height: 50px;
+  padding: ~'calc((50px - 20px) / 2)' 24px;
   font-size: 20px;
   cursor: pointer;
   transition: all 0.3s, padding 0s;
@@ -45,8 +45,8 @@
 }
 
 .triggerSmall {
-  height: @layout-header-height;
-  padding: ~'calc((@{layout-header-height} - 16px) / 2)' 16px;
+  height: 50px;
+  padding: ~'calc((50px - 16px) / 2)' 16px;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s, padding 0s;
@@ -84,7 +84,7 @@
   }
   .account {
     .avatar {
-      margin: ~'calc((@{layout-header-height} - 24px) / 2)' 0;
+      margin: ~'calc((50px - 24px) / 2)' 0;
       margin-right: 8px;
       color: @primary-color;
       vertical-align: top;
@@ -94,7 +94,7 @@
 }
 
 .dark {
-  height: @layout-header-height;
+  height: 50px;
   .action {
     color: rgba(255, 255, 255, 0.85);
     > i {

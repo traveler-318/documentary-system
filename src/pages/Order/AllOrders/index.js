@@ -80,7 +80,7 @@ class AllOrdersList extends PureComponent {
         size:10,
         current:1
       },
-      tabKey:'0',
+      tabKey:sessionStorage.orderTabKey ? sessionStorage.orderTabKey : '0',
       selectedRows:[],
       // 物流弹窗
       logisticsVisible:false,
@@ -1091,6 +1091,7 @@ class AllOrdersList extends PureComponent {
 
   statusChange = (key) => {
     console.log(key,"keykeykey")
+    sessionStorage.orderTabKey = key
     this.setState({
       tabKey:key
     },()=>{

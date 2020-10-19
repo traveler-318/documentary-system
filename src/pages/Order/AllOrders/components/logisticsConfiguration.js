@@ -529,11 +529,6 @@ class LogisticsConfiguration extends PureComponent {
                     <span>{detail.userAddress}</span>
                   </FormItem>
                 </Col>
-                <Col span={12}>
-                  <FormItem {...formAllItemLayout} label="备注">
-                    <span>{detail.orderNote}</span>
-                  </FormItem>
-                </Col>
               </div>
               <Col span={12}>
                 <FormDetailsTitle

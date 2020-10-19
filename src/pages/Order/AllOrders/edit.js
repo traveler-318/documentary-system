@@ -278,7 +278,7 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                       <Cascader
                         // defaultValue={[detail.province, detail.city, detail.area]}
                         options={CITY}
-                        disabled={detail.confirmTag === 0 ? edit : true}
+                        disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1') ? edit : true}
                         onChange={this.onChange}
                       />
                     )}
@@ -291,7 +291,7 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                         },
                       ],
                       initialValue: detail.userAddress,
-                    })(<Input title={detail.userAddress} disabled={detail.confirmTag === 0 ? edit : true} placeholder="请输入收货地址" />)}
+                    })(<Input title={detail.userAddress} disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1') ? edit : true} placeholder="请输入收货地址" />)}
                   </FormItem>
 {/*                  <FormItem {...formAllItemLayout} label="客戶状态">
                     {getFieldDecorator('userAddress', {
@@ -334,16 +334,11 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                       initialValue: detail.wechatId,
                     })(<Input disabled={detail.wechatId ? true : edit} placeholder="" />)}
                   </FormItem>
-                  {/* <FormItem {...formAllItemLayout} label="电子邮箱">
-                    {getFieldDecorator('userAddress', {
-                      rules: [
-                        {
-                          message: '',
-                        },
-                      ],
-                      initialValue: detail.userAddress,
-                    })(<Input disabled={edit} placeholder="请输入电子邮箱" />)}
-                  </FormItem> */}
+                  <FormItem {...formAllItemLayout} label="备注">
+                    {getFieldDecorator('orderNote', {
+                      initialValue: detail.orderNote,
+                    })(<Input disabled={edit} placeholder="请输入备注信息" />)}
+                  </FormItem>
                   </Form>
                 </div>
               </Col>
