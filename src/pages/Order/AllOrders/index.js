@@ -1272,7 +1272,7 @@ class AllOrdersList extends PureComponent {
     return (
       <Panel>
         {/* <TabPanes/> */}
-        <Tabs type="card" onChange={this.statusChange}>
+        <Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange}>
           {ORDERSTATUS.map(item=>{
             return (
               // <div
