@@ -68,6 +68,7 @@ const ResizeableTitle = props => {
 class AllOrdersList extends PureComponent {
 
   constructor(props) {
+    console.log(sessionStorage.orderTabKey,(sessionStorage.orderTabKey && sessionStorage.orderTabKey != 'null'))
     super(props);
     this.state = {
       // 反选数据
@@ -1096,11 +1097,14 @@ class AllOrdersList extends PureComponent {
 
 
   statusChange = (key) => {
-    console.log(key,"keykeykey")
-    sessionStorage.orderTabKey = key
+    sessionStorage.orderTabKey = key;
+    let _params = {...this.state.params}
+    _params.current = 1
     this.setState({
-      tabKey:key
+      tabKey:key,
+      params:_params
     },()=>{
+      console.log(this.state.params,"keykeykey")
       this.handleSearch(this.state.params)
     })
   }
@@ -1267,11 +1271,10 @@ class AllOrdersList extends PureComponent {
     );
 
 
-
     return (
       <Panel>
         {/* <TabPanes/> */}
-        <Tabs type="card" onChange={this.statusChange}>
+        <Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange}>
           {ORDERSTATUS.map(item=>{
             return (
               // <div
