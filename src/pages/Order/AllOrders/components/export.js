@@ -6,7 +6,7 @@ import router from 'umi/router';
 
 import { tenantMode } from '../../../../defaultSettings';
 import { getCookie } from '../../../../utils/support';
-import { getList,getVCode,exportOrder } from '../../../../services/newServices/order'
+import { getList,getVCode,exportOrder,getPhone } from '../../../../services/newServices/order'
 import { exportData,currentTime } from '../data.js';
 import { getToken } from '../../../../utils/authority';
 import { Base64 } from 'js-base64';
@@ -97,11 +97,9 @@ class Export extends PureComponent {
     getList(param).then(res=>{
       console.log(res)
       if(res.data.records.length > 0){
-        const phone=getCookie("phone");
         this.setState({
           exportFileVisible:true,
-          retransmission: false,
-          phone:phone,
+          retransmission: false
         })
       }else {
         message.error('当前条件下暂无可导出的数据,请修改查询条件');
@@ -143,6 +141,12 @@ class Export extends PureComponent {
     })
     // 验证当前条件下是否有数据
     this.getDataList()
+
+    getPhone().then(res=>{
+      this.setState({
+        phone:res.data
+      })
+    })
 
   };
 

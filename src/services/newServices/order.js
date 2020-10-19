@@ -182,3 +182,7 @@ export async function exportOrder(params) {
     responseType: "blob"
   });
 }
+// 导出电话展示
+export async function getPhone() {
+  return request('/api/order/order/getPhone');
+}
