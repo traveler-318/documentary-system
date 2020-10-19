@@ -174,15 +174,17 @@ export async function getSalesmanLists(id) {
   });
 }
 
-// 导出
-export async function exportOrder(params) {
-  return request('/api/order/order/exportOrder', {
+// 物流订阅
+export async function subscription(params) {
+  return request('/api/order/order/logisticsSubscription', {
     method: 'POST',
     body: params,
-    responseType: "blob"
   });
 }
+
 // 导出电话展示
 export async function getPhone() {
   return request('/api/order/order/getPhone');
 }
+
+

@@ -64,6 +64,7 @@ class Logistics extends PureComponent {
       }
     });
   }
+
   // 发货提醒 和 确定
   handleSubmit = (e,sms_confirmation) => {
     e.preventDefault();

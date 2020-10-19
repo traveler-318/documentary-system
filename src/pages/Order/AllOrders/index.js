@@ -21,6 +21,7 @@ import {
   synCheck,
   syndata,
   getSalesmanLists,
+  subscription,
   updateData
 } from '../../../services/newServices/order';
 // getList as getSalesmanLists,
@@ -32,6 +33,7 @@ import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 import ImportData from './components/ImportData'
+import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -131,7 +133,6 @@ class AllOrdersList extends PureComponent {
           dataIndex: 'confirmTag',
           width: 100,
           render: (key,row)=>{
-            console.log(key)
             // 待审核、已激活、已取消、已退回-不可切换状态
             if(key == 0 || key == 6 || key == 7 || key == 8){
               return (
@@ -204,6 +205,10 @@ class AllOrdersList extends PureComponent {
                   <div>
                     <a onClick={()=>this.handleEdit(row)}>详情</a>
                     <Divider type="vertical" />
+                    {
+                      row.logisticsCompany && !row.logisticsStatus ? (<a onClick={()=>this.logisticsSubscribe(row)}>订阅</a>):''
+                    }
+
                     {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
 
                       {/* <a>跟进</a>
@@ -967,6 +972,47 @@ class AllOrdersList extends PureComponent {
     </>
   );
 
+  logisticsSubscribe =(row) =>{
+    console.log(row)
+    Modal.confirm({
+      title: '提示',
+      content: '请确认订单号、物流名称无误后再进行物流订阅操作！此操作属于扣费行为不可逆转！',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        let type=''
+        for(let key in LOGISTICSCOMPANY){
+          if(LOGISTICSCOMPANY[key] === row.logisticsCompany){
+            type = key
+          }
+        }
+        const params={
+          deptId:row.deptId,
+          id:row.id,
+          logisticsCompany:row.logisticsCompany,
+          logisticsNumber:row.logisticsNumber,
+          logisticsType: type,
+          outOrderNo: row.outOrderNo,
+          productCoding: row.productCoding,
+          productName: row.productName,
+          shipmentRemind: true,
+          tenantId: row.tenantId,
+          userPhone: row.userPhone
+        }
+        subscription(params).then(res=>{
+          console.log(res)
+          if(res.code === 200){
+            message.success(res.msg);
+          }else{
+            message.error(res.msg);
+          }
+        })
+      },
+      onCancel() {},
+    });
+  }
+
   getText = (key, type) => {
     let text = ""
     type.map(item=>{
@@ -1092,6 +1138,7 @@ class AllOrdersList extends PureComponent {
     //   logisticsVisible:true
     // })
   }
+
   // 关闭物流弹窗
   handleCancelLogistics = (type) => {
     // getlist代表点击保存成功关闭弹窗后需要刷新列表
