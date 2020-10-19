@@ -50,7 +50,7 @@ export const ORDERTYPE = [
 export const ORDERSOURCE = [
     {name:"新增",key:1},
     {name:"导入",key:2},
-    {name:"客户",key:3},
+    {name:"H5扫码",key:3},
     {name:"销售",key:4},
     {name:"电销",key:5},
     {name:"网销",key:6},

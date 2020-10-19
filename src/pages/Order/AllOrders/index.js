@@ -80,7 +80,7 @@ class AllOrdersList extends PureComponent {
         size:10,
         current:1
       },
-      tabKey:sessionStorage.orderTabKey ? sessionStorage.orderTabKey : '0',
+      tabKey:(sessionStorage.orderTabKey && sessionStorage.orderTabKey != 'null') ? sessionStorage.orderTabKey : '0',
       selectedRows:[],
       // 物流弹窗
       logisticsVisible:false,
@@ -1064,7 +1064,7 @@ class AllOrdersList extends PureComponent {
     let text = ""
     if(key === 1 || key === '1'){ text = "新增" }
     if(key === 2 || key === '2'){ text = "导入" }
-    if(key === 3 || key === '3'){ text = "客户" }
+    if(key === 3 || key === '3'){ text = "H5扫码" }
     if(key === 4 || key === '4'){ text = "销售" }
     if(key === 5 || key === '5'){ text = "电销" }
     if(key === 6 || key === '6'){ text = "网销" }
