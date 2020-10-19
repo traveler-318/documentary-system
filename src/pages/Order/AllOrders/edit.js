@@ -315,7 +315,7 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                   </FormItem>*/}
                   <FormItem {...formAllItemLayout} label="订单来源">
                     {getFieldDecorator('orderSource', {
-                      initialValue: this.getText(detail.orderSource,ORDERSOURCE),
+                      initialValue: this.getText(parseInt(detail.orderSource),ORDERSOURCE),
                     })(<Input disabled placeholder="" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="订单归属" className={styles.salesman}>
