@@ -35,7 +35,6 @@ class ThirdRegister extends PureComponent {
     } else {
       // 获取用户信息,也可用于校验当前用户token是否有效
       getUserInfo().then(resp => {
-        setCookie("phone",resp.data.phone);
         window.console.log(resp);
       });
     }
