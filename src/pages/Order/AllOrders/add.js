@@ -309,8 +309,8 @@ class OrdersAdd extends PureComponent {
                 {/* <FormItem {...formAllItemLayout} label="产品型号">
                   {getFieldDecorator('productName')(<Input placeholder="请输入产品型号" />)}
                 </FormItem> */}
-                <FormItem {...formAllItemLayout} label="SN码">
-                  {getFieldDecorator('productCoding')(<Input placeholder="请输入SN码" />)}
+                <FormItem {...formAllItemLayout} label="SN">
+                  {getFieldDecorator('productCoding')(<Input placeholder="请输入SN" />)}
                 </FormItem>
 
                 <FormTitle
