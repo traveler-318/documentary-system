@@ -337,7 +337,7 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                   <FormItem {...formAllItemLayout} label="备注">
                     {getFieldDecorator('orderNote', {
                       initialValue: detail.orderNote,
-                    })(<Input disabled={edit} placeholder="请输入备注信息" />)}
+                    })(<TextArea rows={4} disabled={edit} placeholder="请输入备注信息" />)}
                   </FormItem>
                   </Form>
                 </div>
