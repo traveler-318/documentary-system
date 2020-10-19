@@ -68,6 +68,7 @@ const ResizeableTitle = props => {
 class AllOrdersList extends PureComponent {
 
   constructor(props) {
+    console.log(sessionStorage.orderTabKey,(sessionStorage.orderTabKey && sessionStorage.orderTabKey != 'null'))
     super(props);
     this.state = {
       // 反选数据
