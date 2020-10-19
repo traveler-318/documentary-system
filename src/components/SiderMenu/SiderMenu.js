@@ -75,7 +75,7 @@ export default class SiderMenu extends PureComponent {
             onCollapse(collapse);
           }
         }}
-        width={200}
+        width={180}
         theme={theme}
         className={siderClassName}
       >
