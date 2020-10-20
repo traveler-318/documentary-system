@@ -13,7 +13,7 @@ import { title } from '../defaultSettings';
 import { getTopUrl, getQueryString, validateNull } from '../utils/utils';
 
 import loginchahua from '../assets/loginchahua.png'
-import loginLogo from '../assets/loginLogo.png'
+import loginLogos from '../assets/loginLogo.png'
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -126,7 +126,7 @@ class UserLayout extends Component {
           <Content> */}
             <Spin spinning={loading}>
               <div>
-                <img src={loginLogo} style={{position:"absolute",left:"50px",top:"50px"}}/>
+                <img src={loginLogos} style={{position:"absolute",left:"50px",top:"50px"}}/>
                 <img src={loginchahua} style={{height:"100vh",float:"left",padding:"100px 50px 50px 50px"}}/>
               </div>
               <div className={styles.container} style={backgroundStyle}>
