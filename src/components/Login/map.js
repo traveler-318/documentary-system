@@ -72,7 +72,7 @@ export default {
     rules: [
       {
         required: true,
-        message: 'Please enter Captcha!',
+        message: '请输入图形验证码!',
       },
     ],
   },

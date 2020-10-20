@@ -153,7 +153,7 @@ class WrapFormItem extends Component {
                 )(
                   <Input
                     {...customprops}
-                    placeholder={`${formatMessage({ id: 'validation.captcha.required' })}`}
+                    placeholder={`请输入图形验证码`}
                   />
                 )}
               </Col>
