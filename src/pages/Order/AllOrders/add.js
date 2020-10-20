@@ -41,7 +41,8 @@ class OrdersAdd extends PureComponent {
       loading:false,
       cityparam:{},
       productList:[],
-      selectedOptions:[]
+      selectedOptions:[],
+      payamount:null
     };
   }
 
@@ -90,7 +91,7 @@ class OrdersAdd extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { cityparam, selectedOptions } = this.state;
+    const { cityparam, selectedOptions, payamount } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values.deptId = getCookie("dept_id");
@@ -98,7 +99,8 @@ class OrdersAdd extends PureComponent {
         if(values.productType && values.productType != ""){
           console.log(values.productType[2])
           console.log(values.productType[2].split("-"))
-          values.payAmount = values.productType[2].split("-")[1];
+          // values.payAmount = values.productType[2].split("-")[1];
+          values.payAmount = payamount;
           values.productName = values.productType[2];
           values.productType = `${values.productType[0]}/${values.productType[1]}`;
         }
@@ -289,18 +291,15 @@ class OrdersAdd extends PureComponent {
                 <FormItem {...formAllItemLayout} label="产品分类">
                   {getFieldDecorator('productType', {
                       initialValue: null,
-                      // rules: [
-                      //   {
-                      //     required: true,
-                      //     message: '请选择产品分类',
-                      //   },
-                      // ],
                     })(
                       <Cascader
                         options={productList}
                         fieldNames={{ label: 'value'}}
                         onChange={(value, selectedOptions)=>{
-                          console.log("123")
+                          console.log(value, selectedOptions,"123")
+                          this.setState({
+                            payamount:selectedOptions[2].payamount
+                          })
                         }}
                       ></Cascader>
                   )}
