@@ -216,7 +216,7 @@ class Survey extends PureComponent {
       list:followRecords
     })
 
-    if(detail.confirmTag === 4){
+    // if(detail.confirmTag === '4'){
       updateData(_param).then(res=>{
         if(res.code === 200){
           message.success(res.msg);
@@ -224,9 +224,9 @@ class Survey extends PureComponent {
           this.handleEmpty();
         }
       })
-    }else {
-      message.warning("当物流签收后才能进入跟进状态");
-    }
+    // }else {
+    //   message.warning("当物流签收后才能进入跟进状态");
+    // }
 
   }
 
