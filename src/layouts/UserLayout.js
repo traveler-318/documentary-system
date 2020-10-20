@@ -106,12 +106,13 @@ class UserLayout extends Component {
 
     const backgroundStyle = {
       backgroundImage: `url(${backgroundUrl})`,
+      flex:1
     };
 
     return (
       <DocumentTitle title={getPageTitle(pathname, breadcrumbNameMap)}>
-        <Layout>
-          <Sider
+        {/* <Layout> */}
+          {/* <Sider
             style={{
               overflow: 'auto',
               height: '100vh',
@@ -121,8 +122,9 @@ class UserLayout extends Component {
           >
             <img src={loginchahua}/>
           </Sider>
-          <Content>
+          <Content> */}
             <Spin spinning={loading}>
+              <img src={loginchahua} style={{height:"100vh",float:"left"}}/>
               <div className={styles.container} style={backgroundStyle}>
                 <div className={styles.lang}>
                   <SelectLang />
@@ -144,8 +146,8 @@ class UserLayout extends Component {
                 <GlobalFooter links={links} copyright={copyright} />
               </div>
             </Spin>
-          </Content>
-        </Layout>
+          {/* </Content> */}
+        {/* </Layout> */}
         
       </DocumentTitle>
     );
