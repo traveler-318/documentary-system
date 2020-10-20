@@ -40,11 +40,19 @@
     padding: 75px 0 24px 0;
   }
 }
-
+.headerIOS{
+  display: none;
+}
 .top {
   text-align: center;
   @media screen and (max-width: @screen-sm) {
     padding-left: 5%;
+    .headerPC{
+      display: none;
+    }
+    .headerIOS{
+      display: block;
+    }
   }
 }
 

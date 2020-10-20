@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { formatMessage } from 'umi/locale';
 import { connect } from 'dva';
 import Link from 'umi/link';
+import classnames from 'classnames'
 import { Icon, Spin, Layout } from 'antd';
 import DocumentTitle from 'react-document-title';
 import GlobalFooter from '../components/GlobalFooter';
@@ -150,15 +151,15 @@ class UserLayout extends Component {
                 </div>
                 <div className={styles.content}>
                   <div className={styles.top} style={{width:"440px",margin:"0 auto",textAlign:"left"}}>
-                    <div className={styles.header} style={{fontSize:"28px",fontWeight:"bold",color:"#000"}}>
+                    <div className={classnames(styles.header,styles.headerPC)} style={{fontSize:"28px",fontWeight:"bold",color:"#000"}}>
                       跟单宝助力支付代理商激活更简单
                     </div>
-                    {/* <div className={styles.header}>
+                    <div className={classnames(styles.header,styles.headerIOS)}>
                       <Link to="/">
                         <img alt="logo" className={styles.logo} src={loginLogo} />
                         <span className={styles.title}>{title}</span>
                       </Link>
-                    </div> */}
+                    </div>
                     <div className={styles.desc}>
                       行业首个支付代理商POS跟单解决方案
                     </div>
