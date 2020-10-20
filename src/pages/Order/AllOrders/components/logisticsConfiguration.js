@@ -397,9 +397,9 @@ class LogisticsConfiguration extends PureComponent {
         content: msg,
         okText: '确定',
         async onOk() {
-          // _this.setState({
-          //   handlePrintingClick:true
-          // })
+          _this.setState({
+            handlePrintingClick:true
+          })
         },
         onCancel() {},
       });
