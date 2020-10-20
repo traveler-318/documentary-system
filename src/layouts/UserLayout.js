@@ -126,7 +126,10 @@ class UserLayout extends Component {
           </Sider>
           <Content> */}
             <Spin spinning={loading}>
-              <div style={{
+
+              <div
+              className={style.leftContainer}
+              style={{
                 background: "#F2F7F5",
                 height: "100vh",
                 float: "left",
@@ -140,6 +143,7 @@ class UserLayout extends Component {
                   marginTop:"180px"
                 }}/>
               </div>
+
               <div className={styles.container} style={backgroundStyle}>
                 <div className={styles.lang}>
                   <SelectLang />
