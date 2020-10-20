@@ -126,8 +126,8 @@ class UserLayout extends Component {
           <Content> */}
             <Spin spinning={loading}>
               <div>
-                <img src={loginLogos} style={{position:"absolute",left:"50px",top:"50px"}}/>
-                <img src={loginchahua} style={{height:"100vh",float:"left",padding:"100px 50px 50px 50px"}}/>
+                <img src={loginLogos} style={{position:"absolute",left:"50px",top:"50px",width:"140px"}}/>
+                <img src={loginchahua} style={{height:"100vh",float:"left",padding:"165px 50px 50px"}}/>
               </div>
               <div className={styles.container} style={backgroundStyle}>
                 <div className={styles.lang}>
