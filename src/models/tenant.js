@@ -13,7 +13,7 @@ export default {
     detail: {},
     info: {
       tenantId: '000000',
-      backgroundUrl: 'https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg',
+      // backgroundUrl: 'https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg',
     },
   },
   effects: {

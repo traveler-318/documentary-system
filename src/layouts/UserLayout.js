@@ -106,7 +106,8 @@ class UserLayout extends Component {
     const { backgroundUrl } = info;
 
     const backgroundStyle = {
-      backgroundImage: `url(${backgroundUrl})`,
+      // backgroundImage: `url(${backgroundUrl})`,
+      background:"#ffffff",
       flex:1
     };
 
