@@ -117,12 +117,12 @@ class BaseView extends Component {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 7 },
+        sm: { span: 6 },
       },
       wrapperCol: {
         xs: { span: 24 },
         sm: { span: 12 },
-        md: { span: 10 },
+        md: { span: 12 },
       },
     };
 
@@ -345,11 +345,12 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formItemLayout} label={'短信二维码开关'}>
+                <FormItem {...formItemLayout} label={'短信开关'}>
                   {getFieldDecorator('smsStatus')(
                     <Radio.Group>
-                      <Radio key={1} value={1}>启用</Radio>
-                      <Radio key={0} value={0}>禁用</Radio>
+                      <Radio key={0} value={0}>关闭</Radio>
+                      <Radio key={1} value={1}>短信</Radio>
+                      <Radio key={2} value={2}>短信+语音</Radio>
                     </Radio.Group>
                   )}
                 </FormItem>
