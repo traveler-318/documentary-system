@@ -207,6 +207,9 @@ class LoginPage extends Component {
               </Row>
             </Card>
           </Tab> */}
+          <Submit loading={submitting}>
+            <FormattedMessage id="app.login.login" />
+          </Submit>
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               <FormattedMessage id="app.login.remember-me" />
@@ -215,9 +218,6 @@ class LoginPage extends Component {
               <FormattedMessage id="app.login.forgot-password" />
             </a>
           </div>
-          <Submit loading={submitting}>
-            <FormattedMessage id="app.login.login" />
-          </Submit>
         </Login>
       </div>
     );
