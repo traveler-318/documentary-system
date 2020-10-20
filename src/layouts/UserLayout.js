@@ -13,6 +13,7 @@ import { title } from '../defaultSettings';
 import { getTopUrl, getQueryString, validateNull } from '../utils/utils';
 
 import loginchahua from '../assets/loginchahua.png'
+import loginLogos from '../assets/loginLogo.png'
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -106,12 +107,13 @@ class UserLayout extends Component {
 
     const backgroundStyle = {
       backgroundImage: `url(${backgroundUrl})`,
+      flex:1
     };
 
     return (
       <DocumentTitle title={getPageTitle(pathname, breadcrumbNameMap)}>
-        <Layout>
-          <Sider
+        {/* <Layout> */}
+          {/* <Sider
             style={{
               overflow: 'auto',
               height: '100vh',
@@ -121,8 +123,12 @@ class UserLayout extends Component {
           >
             <img src={loginchahua}/>
           </Sider>
-          <Content>
+          <Content> */}
             <Spin spinning={loading}>
+              <div>
+                <img src={loginLogos} style={{position:"absolute",left:"50px",top:"50px"}}/>
+                <img src={loginchahua} style={{height:"100vh",float:"left",padding:"100px 50px 50px 50px"}}/>
+              </div>
               <div className={styles.container} style={backgroundStyle}>
                 <div className={styles.lang}>
                   <SelectLang />
@@ -144,8 +150,8 @@ class UserLayout extends Component {
                 <GlobalFooter links={links} copyright={copyright} />
               </div>
             </Spin>
-          </Content>
-        </Layout>
+          {/* </Content> */}
+        {/* </Layout> */}
         
       </DocumentTitle>
     );
