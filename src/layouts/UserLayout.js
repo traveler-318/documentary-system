@@ -128,7 +128,7 @@ class UserLayout extends Component {
             <Spin spinning={loading}>
 
               <div
-              className={style.leftContainer}
+              className={styles.leftContainer}
               style={{
                 background: "#F2F7F5",
                 height: "100vh",
