@@ -375,9 +375,9 @@ class LogisticsConfiguration extends PureComponent {
               logisticsPrintRequest(param).then(response=>{
                 if(response.code === 200){
                   this.saveSuccess(response.msg);
-                  this.setState({
-                    handlePrintingClick:true
-                  })
+                  // this.setState({
+                  //   handlePrintingClick:true
+                  // })
                 }else{
                   message.error(response.msg);
                 }
