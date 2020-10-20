@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { formatMessage } from 'umi/locale';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import { Icon, Spin } from 'antd';
+import { Icon, Spin, Layout } from 'antd';
 import DocumentTitle from 'react-document-title';
 import GlobalFooter from '../components/GlobalFooter';
 import SelectLang from '../components/SelectLang';
@@ -11,6 +11,10 @@ import loginLogo from '../assets/loginLogo.svg';
 import getPageTitle from '../utils/getPageTitle';
 import { title } from '../defaultSettings';
 import { getTopUrl, getQueryString, validateNull } from '../utils/utils';
+
+import loginchahua from '../assets/loginchahua.png'
+
+const { Header, Footer, Sider, Content } = Layout;
 
 const links = [
   // {
@@ -106,28 +110,43 @@ class UserLayout extends Component {
 
     return (
       <DocumentTitle title={getPageTitle(pathname, breadcrumbNameMap)}>
-        <Spin spinning={loading}>
-          <div className={styles.container} style={backgroundStyle}>
-            <div className={styles.lang}>
-              <SelectLang />
-            </div>
-            <div className={styles.content}>
-              <div className={styles.top}>
-                <div className={styles.header}>
-                  <Link to="/">
-                    <img alt="logo" className={styles.logo} src={loginLogo} />
-                    <span className={styles.title}>{title}</span>
-                  </Link>
+        <Layout>
+          <Sider
+            style={{
+              overflow: 'auto',
+              height: '100vh',
+              position: 'fixed',
+              left: 0,
+            }}
+          >
+            <img src={loginchahua}/>
+          </Sider>
+          <Content>
+            <Spin spinning={loading}>
+              <div className={styles.container} style={backgroundStyle}>
+                <div className={styles.lang}>
+                  <SelectLang />
                 </div>
-                <div className={styles.desc}>
-                  行业首个支付代理商POS跟单解决方案
+                <div className={styles.content}>
+                  <div className={styles.top}>
+                    <div className={styles.header}>
+                      <Link to="/">
+                        <img alt="logo" className={styles.logo} src={loginLogo} />
+                        <span className={styles.title}>{title}</span>
+                      </Link>
+                    </div>
+                    <div className={styles.desc}>
+                      行业首个支付代理商POS跟单解决方案
+                    </div>
+                  </div>
+                  {children}
                 </div>
+                <GlobalFooter links={links} copyright={copyright} />
               </div>
-              {children}
-            </div>
-            <GlobalFooter links={links} copyright={copyright} />
-          </div>
-        </Spin>
+            </Spin>
+          </Content>
+        </Layout>
+        
       </DocumentTitle>
     );
   }
