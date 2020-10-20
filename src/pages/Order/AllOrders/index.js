@@ -893,6 +893,7 @@ class AllOrdersList extends PureComponent {
             outOrderNo:item.outOrderNo,
             payAmount:Number(item.payAmount),
             userPhone:item.userPhone,
+            userName:item.userName,
           }
         })
         updateReminds(_data).then(res=>{

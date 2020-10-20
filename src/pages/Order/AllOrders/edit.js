@@ -111,6 +111,7 @@ class OrdersEdit extends PureComponent {
           outOrderNo:detail.outOrderNo,
           payAmount:Number(detail.payAmount),
           userPhone:detail.userPhone,
+          userName:detail.userName,
         }).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
@@ -239,8 +240,8 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                 <div className={styles.editList} style={{ padding: '20px' }}>
                   <FormDetailsTitle title="订单信息" style={{ margin:'0'}} />
                   <Form span={24}>
-                    
-                  
+
+
                   <FormItem {...formAllItemLayout} label="客户姓名">
                     {getFieldDecorator('userName', {
                       rules: [
