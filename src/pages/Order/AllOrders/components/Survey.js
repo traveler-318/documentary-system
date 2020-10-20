@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, message, Input, Card, Row, Col, Button, Icon, Modal , Select, DatePicker, Tabs, Cascader, Radio,Timeline,} from 'antd';
+import { Form, message, Input, Card, Row, Col,Empty, Button, Icon, Modal , Select, DatePicker, Tabs, Cascader, Radio,Timeline,} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -64,7 +64,7 @@ class Survey extends PureComponent {
   }
 
   componentWillMount() {
-    
+
   }
   componentDidMount() {
     let offsetLeftDistance = document.documentElement.clientWidth - this.myRef.current.clientWidth
@@ -309,6 +309,9 @@ class Survey extends PureComponent {
             <span><label>SN：</label>{detail.productCoding}</span></p>
         </div>
         <div className={styles.timelineContent}>
+          {followRecords.length <= 0 ? (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          ) : (
           <Timeline>
             {followRecords.map((item,index)=>{
               return (
@@ -333,6 +336,7 @@ class Survey extends PureComponent {
               )
             })}
           </Timeline>
+          )}
         </div>
         <div className={styles.tabText}
           style={{
