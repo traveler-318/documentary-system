@@ -15,6 +15,7 @@ import {
   Empty
 } from 'antd';
 import { connect } from 'dva';
+import styles from '../edit.less';
 import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
@@ -124,7 +125,7 @@ class LogisticsDetails extends PureComponent {
 
           ]}
         >
-          <div>
+          <div className={styles.logisticsTime}>
             {data.length <= 0 ? (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             ) : (

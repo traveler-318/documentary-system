@@ -375,9 +375,6 @@ class LogisticsConfiguration extends PureComponent {
               logisticsPrintRequest(param).then(response=>{
                 if(response.code === 200){
                   this.saveSuccess(response.msg);
-                  // this.setState({
-                  //   handlePrintingClick:true
-                  // })
                 }else{
                   message.error(response.msg);
                 }
@@ -393,13 +390,16 @@ class LogisticsConfiguration extends PureComponent {
 
   saveSuccess = (msg) => {
     const {currentIndex, listID} = this.state;
+    const _this=this;
     if(currentIndex === listID.length-1){
       Modal.success({
         title: '操作成功',
         content: msg,
         okText: '确定',
         async onOk() {
-          
+          // _this.setState({
+          //   handlePrintingClick:true
+          // })
         },
         onCancel() {},
       });
