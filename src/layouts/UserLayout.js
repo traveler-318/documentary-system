@@ -125,22 +125,35 @@ class UserLayout extends Component {
           </Sider>
           <Content> */}
             <Spin spinning={loading}>
-              <div>
+              <div style={{
+                background: "#F2F7F5",
+                height: "100vh",
+                float: "left",
+                width: "40%"
+              }}>
                 <img src={loginLogos} style={{position:"absolute",left:"50px",top:"50px",width:"140px"}}/>
-                <img src={loginchahua} style={{height:"100vh",float:"left",padding:"165px 50px 50px"}}/>
+                <img src={loginchahua} style={{
+                  height:"100vh",
+                  float:"left",
+                  padding:"0 40px",
+                  marginTop:"180px"
+                }}/>
               </div>
               <div className={styles.container} style={backgroundStyle}>
                 <div className={styles.lang}>
                   <SelectLang />
                 </div>
                 <div className={styles.content}>
-                  <div className={styles.top}>
-                    <div className={styles.header}>
+                  <div className={styles.top} style={{width:"440px",margin:"0 auto"}}>
+                    <div className={styles.header} style={{fontSize:"28px",fontWeight:"bold",color:"#000"}}>
+                      跟单宝助力支付代理商激活更简单
+                    </div>
+                    {/* <div className={styles.header}>
                       <Link to="/">
                         <img alt="logo" className={styles.logo} src={loginLogo} />
                         <span className={styles.title}>{title}</span>
                       </Link>
-                    </div>
+                    </div> */}
                     <div className={styles.desc}>
                       行业首个支付代理商POS跟单解决方案
                     </div>
