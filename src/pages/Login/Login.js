@@ -215,7 +215,7 @@ class LoginPage extends Component {
               <FormattedMessage id="app.login.remember-me" />
             </Checkbox>
             <a style={{ float: 'right' }} href="">
-              <FormattedMessage id="app.login.forgot-password" />
+              <FormattedMessage id="app.login.scan-code-login" />
             </a>
           </div>
         </Login>
