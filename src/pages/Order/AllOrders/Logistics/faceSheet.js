@@ -45,7 +45,7 @@ class FaceSheet extends PureComponent {
       faceSheetId: rows.id,
     });
     if(rows.online === '0'){
-      message.success('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
+      message.error('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
       return false;
     }
     const { dispatch } = this.props;
