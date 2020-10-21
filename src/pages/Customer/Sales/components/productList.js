@@ -103,18 +103,24 @@ class ProductList extends PureComponent {
   // ======确认==========
 
     handleSubmit = e => {
-        const {id_payaccount} = this.state
+        const {id_payaccount, dataSource} = this.state
         if(id_payaccount === ""){
             message.error("请选择产品");
             return false;
         }
-
+        let price = "";
+        for(let i=0; i<dataSource.length; i++){
+            if(dataSource[i].id === id_payaccount){
+                price = item.price
+            }
+        }
+        
         const serverAddress = getCookie("serverAddress");
         const { globalParameters } = this.props;
         const { codeUrl } = this.state;
         console.log(globalParameters)
         //const url = codeUrl+"&userName="+globalParameters.detailData.userName+"&deptId="+globalParameters.detailData.deptId+"&payAmount="+values.payAmount;
-        const url = codeUrl+globalParameters.detailData.userAccount+"_"+id_payaccount;
+        const url = codeUrl+globalParameters.detailData.userAccount+"_"+price+"_"+id_payaccount;
         console.log(url)
         this.props.handleCancelAggregateCode()
         this.setState({
@@ -223,7 +229,7 @@ class ProductList extends PureComponent {
         <Modal
           title="支付金额"
           visible={handleAggregateCodeVisible}
-          width={500}
+          width={450}
           onCancel={handleCancelAggregateCode}
           footer={[
             <Button key="back" onClick={handleCancelAggregateCode}>
