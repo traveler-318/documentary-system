@@ -358,7 +358,7 @@ class AllOrdersList extends PureComponent {
       payload.orderSource = null;
     }
     if(payload.salesman == "全部"){
-      payload.salesman = salesmanList.join(",")
+      payload.salesman = null
     }
 
     if(payload.groupId && !payload.salesman){
@@ -372,15 +372,7 @@ class AllOrdersList extends PureComponent {
       }
       payload.salesman = text;
     }else{
-      let text = ""
-      for(let i=0; i<salesmanList.length; i++){
-        if(salesmanList[i] != "全部"){
-          if(payload.salesman == salesmanList[i].userName){
-            text +=salesmanList[i].userAccount
-          }
-        }
-      }
-      payload.salesman = text
+      payload.salesman = payload.salesman
     }
 
 
