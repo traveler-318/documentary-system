@@ -503,7 +503,10 @@ class AllOrdersList extends PureComponent {
               <Button type="primary" htmlType="submit">
                 <FormattedMessage id="button.search.name" />
               </Button>
-              <Button style={{ marginLeft: 8 }} onClick={onReset}>
+              <Button style={{ marginLeft: 8 }} onClick={()=>{
+                this.getSalesman();
+                onReset()
+              }}>
                 <FormattedMessage id="button.reset.name" />
               </Button>
             </div>
