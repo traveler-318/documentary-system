@@ -25,6 +25,9 @@ import { getList,getSalesmangroup,updateStatus,getSendTest,getUnWeChatBind,getWe
 import Grouping from './components/Mgrouping'
 import Recharge from './components/recharge'
 import AggregateCode from './components/aggregateCode'
+
+import ProductList from './components/productList'
+
 import ModifyGroup from './components/modifyGroup'
 import BindingQRCode from './components/bindingQRCode'
 
@@ -486,7 +489,7 @@ class AuthorityList extends PureComponent {
           />
         ):""}
         {/* 聚合码弹框 */}
-        <AggregateCode
+        <ProductList
           handleAggregateCodeVisible={handleAggregateCodeVisible}
           handleCancelAggregateCode={this.handleCancelAggregateCode}
         />
