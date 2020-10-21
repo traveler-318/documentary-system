@@ -39,7 +39,9 @@ class ProductList extends PureComponent {
       codeUrl:'',
       data:{},
       value:'',
-      dataSource:[]
+      dataSource:{
+        list:[]
+      }
     };
   }
 
