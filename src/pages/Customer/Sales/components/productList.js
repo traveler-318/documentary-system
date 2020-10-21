@@ -50,6 +50,7 @@ class ProductList extends PureComponent {
   }
 
   componentWillReceiveProps = () => {
+      
     this.getProductList();
   }
 
@@ -111,7 +112,7 @@ class ProductList extends PureComponent {
         let price = "";
         for(let i=0; i<dataSource.length; i++){
             if(dataSource[i].id === id_payaccount){
-                price = item.price
+                price = dataSource[i].price
             }
         }
         
@@ -126,6 +127,7 @@ class ProductList extends PureComponent {
         this.setState({
           groupAddVisible:true,
           qrUrl:url,
+          id_payaccount:""
         })
 
     // const {  form } = this.props;
@@ -240,7 +242,7 @@ class ProductList extends PureComponent {
             </Button>
           ]}
         >
-            <Radio.Group name="radiogroup" onChange={this.radiogroupChange}>
+            <Radio.Group name="radiogroup" onChange={this.radiogroupChange} value={id_payaccount}>
                 <Table
                     columns={columns}
                     dataSource={dataSource}
