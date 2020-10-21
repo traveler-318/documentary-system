@@ -121,7 +121,7 @@ class ProductList extends PureComponent {
         const { codeUrl } = this.state;
         console.log(globalParameters)
         //const url = codeUrl+"&userName="+globalParameters.detailData.userName+"&deptId="+globalParameters.detailData.deptId+"&payAmount="+values.payAmount;
-        const url = codeUrl+globalParameters.detailData.userAccount+"_"+price+"_"+id_payaccount;
+        const url = codeUrl+globalParameters.detailData.userAccount+"_"+id_payaccount+"_"+price;
         console.log(url)
         this.props.handleCancelAggregateCode()
         this.setState({
@@ -198,7 +198,8 @@ class ProductList extends PureComponent {
         groupAddVisible,
         qrUrl,
         value,
-        dataSource
+        dataSource,
+        id_payaccount
     } = this.state;
 
     const columns = [
