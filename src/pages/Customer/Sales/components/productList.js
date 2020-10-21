@@ -39,7 +39,8 @@ class ProductList extends PureComponent {
       codeUrl:'',
       data:{},
       value:'',
-      dataSource:[]
+      dataSource:[],
+      id_payaccount:""
     };
   }
 
@@ -101,39 +102,58 @@ class ProductList extends PureComponent {
 
   // ======确认==========
 
-  handleSubmit = e => {
-    const {  form } = this.props;
-    form.validateFieldsAndScroll((err, values) => {
-      console.log(values);
-      const res = /[^\d+(\d\d\d)*.\d+$]/g;
-      var reg1=/^[1-9]\d*$/; // 验证正整数
-      if(Number(values.payAmount) < 1  || !reg1.test(values.payAmount)){
-        message.success('请输入不小于1的正整数');
-        return false
-      }
-      if(Number(values.payAmount) <= 0  || res.test(values.payAmount) ){
-        message.success('请输入不小于等于0的数字');
-        return false
-      }else{
-        if(Number(values.payAmount) > 300){
-          message.success('支付金额不能超过上限300');
-          return false
+    handleSubmit = e => {
+        const {id_payaccount} = this.state
+        if(id_payaccount === ""){
+            message.error("请选择产品");
+            return false;
         }
+
         const serverAddress = getCookie("serverAddress");
         const { globalParameters } = this.props;
         const { codeUrl } = this.state;
         console.log(globalParameters)
         //const url = codeUrl+"&userName="+globalParameters.detailData.userName+"&deptId="+globalParameters.detailData.deptId+"&payAmount="+values.payAmount;
-        const url = codeUrl+globalParameters.detailData.userAccount+"_"+values.payAmount;
-
+        const url = codeUrl+globalParameters.detailData.userAccount+"_"+id_payaccount;
         console.log(url)
         this.props.handleCancelAggregateCode()
         this.setState({
           groupAddVisible:true,
           qrUrl:url,
         })
-      }
-    });
+
+    // const {  form } = this.props;
+    // form.validateFieldsAndScroll((err, values) => {
+    //   console.log(values);
+    //   const res = /[^\d+(\d\d\d)*.\d+$]/g;
+    //   var reg1=/^[1-9]\d*$/; // 验证正整数
+    //   if(Number(values.payAmount) < 1  || !reg1.test(values.payAmount)){
+    //     message.success('请输入不小于1的正整数');
+    //     return false
+    //   }
+    //   if(Number(values.payAmount) <= 0  || res.test(values.payAmount) ){
+    //     message.success('请输入不小于等于0的数字');
+    //     return false
+    //   }else{
+    //     if(Number(values.payAmount) > 300){
+    //       message.success('支付金额不能超过上限300');
+    //       return false
+    //     }
+    //     const serverAddress = getCookie("serverAddress");
+    //     const { globalParameters } = this.props;
+    //     const { codeUrl } = this.state;
+    //     console.log(globalParameters)
+    //     //const url = codeUrl+"&userName="+globalParameters.detailData.userName+"&deptId="+globalParameters.detailData.deptId+"&payAmount="+values.payAmount;
+    //     const url = codeUrl+globalParameters.detailData.userAccount+"_"+values.payAmount;
+
+    //     console.log(url)
+    //     this.props.handleCancelAggregateCode()
+    //     this.setState({
+    //       groupAddVisible:true,
+    //       qrUrl:url,
+    //     })
+    //   }
+    // });
 
   };
 
@@ -144,7 +164,10 @@ class ProductList extends PureComponent {
   };
 
   radiogroupChange = (value) => {
-    console.log(value,"value")
+      this.setState({
+        id_payaccount:value.target.value
+      })
+    console.log(value.target.value,"value")
   }
 
   render() {
@@ -181,6 +204,7 @@ class ProductList extends PureComponent {
         {
           title: '产品名称',
           dataIndex: 'productName',
+          width:200
         },
         {
           title: '金额',
