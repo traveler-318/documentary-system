@@ -7,7 +7,7 @@ import {
   Button,
   message,
   Radio,
-  Table, Select,
+  Table, Select, Icon, Tooltip,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -15,6 +15,7 @@ import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
 import { getProductattributeAdd, getPaypanyList, getProductcategoryList } from '../../../../services/newServices/product';
 import {paymentCompany,} from '../../../Order/AllOrders/data.js';
+import styles from '../add.less';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -163,13 +164,21 @@ class Logistics extends PureComponent {
         span: 20,
       },
     };
+    const formAllItemLayout1 = {
+      labelCol: {
+        span: 5,
+      },
+      wrapperCol: {
+        span: 19,
+      },
+    };
 
     return (
       <div>
         <Modal
           title="新增"
           visible={handleAddVisible}
-          width={600}
+          width={700}
           onCancel={handleCancelAdd}
           footer={[
             <Button key="back" onClick={handleCancelAdd}>
@@ -180,101 +189,115 @@ class Logistics extends PureComponent {
             </Button>,
           ]}
         >
-          <Form style={{ marginTop: 8 }}>
-            <FormItem {...formAllItemLayout} label="支付公司">
-              {getFieldDecorator('payPanyName', {
-                initialValue: data.payPanyName,
-                rules: [
-                  {
-                    required: true,
-                    message: '请选择支付公司',
-                  },
-                ],
-              })(
-                <Select placeholder="请选择支付公司" onChange={(key,row)=>{this.onChange(key,row,"payPanyId")}}>
-                  {paypanyList.map((item)=>{
-                    return (<Option key={item.id} value={item.payName}>{item.payName}</Option>)
-                  })}
-                </Select>
-              )}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="支付类型">
-              {getFieldDecorator('productTypeId', {
-                initialValue: data.productTypeId,
-                rules: [
-                  {
-                    required: true,
-                    message: '请选择支付类型',
-                  },
-                ],
-              })(
-                <Select placeholder="请选择支付类型" onChange={(key,row)=>{this.onChange(key,row,"productTypeId")}}>
-                  {productcategoryList.map((item)=>{
-                    return (<Option key={item.id} value={item.id}>{item.productTypeName}</Option>)
-                  })}
-                </Select>
-              )}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="产品名称">
-              {getFieldDecorator('productName', {
-                initialValue: data.productName,
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入产品名称',
-                  },
-                ],
-              })(<Input placeholder="请输入产品名称" />)}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="价格">
-              {getFieldDecorator('price', {
-                initialValue: data.price,
-                rules: [
-                  {
-                    required: true,
-                    validator:this.countChange,
-                  },
-                ],
-              })(<Input placeholder="请输入价格" />)}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="结算价">
-              {getFieldDecorator('settlePrice', {
-                initialValue: data.settlePrice,
-                rules: [
-                  {
-                    required: true,
-                    validator:this.countChange,
-                  },
-                ],
-              })(<Input placeholder="请输入结算价" />)}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="排序编号">
-              {getFieldDecorator('sortNumber', {
-                initialValue: data.sortNumber,
-                rules: [
-                  {
-                    required: true,
-                    validator:this.valinsPayChange
-                  },
-                ], 
-              })(<Input placeholder="请输入排序编号" />)}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="自定义名称1">
-              {getFieldDecorator('customOne', {
-                initialValue: data.customOne,
-              })(<Input placeholder="请输入自定义名称1" />)}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="自定义名称2">
-              {getFieldDecorator('customTwo', {
-                initialValue: data.customTwo,
-              })(<Input placeholder="请输入自定义名称2" />)}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="自定义名称3">
-              {getFieldDecorator('customThree', {
-                initialValue: data.customThree,
-              })(<Input placeholder="请输入自定义名称3" />)}
-            </FormItem>
-          </Form>
+          <div className={styles.add}>
+            <Form style={{ marginTop: 8 }}>
+              <FormItem {...formAllItemLayout} label="支付公司">
+                {getFieldDecorator('payPanyName', {
+                  initialValue: data.payPanyName,
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择支付公司',
+                    },
+                  ],
+                })(
+                  <Select placeholder="请选择支付公司" onChange={(key,row)=>{this.onChange(key,row,"payPanyId")}}>
+                    {paypanyList.map((item)=>{
+                      return (<Option key={item.id} value={item.payName}>{item.payName}</Option>)
+                    })}
+                  </Select>
+                )}
+              </FormItem>
+              <FormItem {...formAllItemLayout} label="支付类型">
+                {getFieldDecorator('productTypeId', {
+                  initialValue: data.productTypeId,
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择支付类型',
+                    },
+                  ],
+                })(
+                  <Select placeholder="请选择支付类型" onChange={(key,row)=>{this.onChange(key,row,"productTypeId")}}>
+                    {productcategoryList.map((item)=>{
+                      return (<Option key={item.id} value={item.id}>{item.productTypeName}</Option>)
+                    })}
+                  </Select>
+                )}
+              </FormItem>
+              <FormItem {...formAllItemLayout} label="产品名称">
+                {getFieldDecorator('productName', {
+                  initialValue: data.productName,
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入产品名称',
+                    },
+                  ],
+                })(<Input placeholder="请输入产品名称" />)}
+              </FormItem>
+              <FormItem {...formAllItemLayout} label="页面标题">
+                {getFieldDecorator('h5Title', {
+                  initialValue: data.h5Title,
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入页面标题',
+                    },
+                  ],
+                })(<Input placeholder="请输入页面标题" />)}
+                <Tooltip title='H5页面顶部标题，用户下单扫码的时候可以看到'><Icon type='question-circle-o' /></Tooltip>
+              </FormItem>
+              <FormItem {...formAllItemLayout} label="价格">
+                {getFieldDecorator('price', {
+                  initialValue: data.price,
+                  rules: [
+                    {
+                      required: true,
+                      validator:this.countChange,
+                    },
+                  ],
+                })(<Input placeholder="请输入价格" />)}
+              </FormItem>
+              <FormItem {...formAllItemLayout} label="结算价">
+                {getFieldDecorator('settlePrice', {
+                  initialValue: data.settlePrice,
+                  rules: [
+                    {
+                      required: true,
+                      validator:this.countChange,
+                    },
+                  ],
+                })(<Input placeholder="请输入结算价" />)}
+              </FormItem>
+              <FormItem {...formAllItemLayout} label="排序编号">
+                {getFieldDecorator('sortNumber', {
+                  initialValue: data.sortNumber,
+                  rules: [
+                    {
+                      required: true,
+                      validator:this.valinsPayChange
+                    },
+                  ],
+                })(<Input placeholder="请输入排序编号" />)}
+              </FormItem>
+              <FormItem {...formAllItemLayout} label="自定义名称1">
+                {getFieldDecorator('customOne', {
+                  initialValue: data.customOne,
+                })(<Input placeholder="请输入自定义名称1" />)}
+              </FormItem>
+              <FormItem {...formAllItemLayout} label="自定义名称2">
+                {getFieldDecorator('customTwo', {
+                  initialValue: data.customTwo,
+                })(<Input placeholder="请输入自定义名称2" />)}
+              </FormItem>
+              <FormItem {...formAllItemLayout} label="自定义名称3">
+                {getFieldDecorator('customThree', {
+                  initialValue: data.customThree,
+                })(<Input placeholder="请输入自定义名称3" />)}
+              </FormItem>
+            </Form>
+          </div>
         </Modal>
       </div>
     );

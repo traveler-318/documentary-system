@@ -186,5 +186,11 @@ export async function subscription(params) {
 export async function getPhone() {
   return request('/api/order/order/getPhone');
 }
-
+// 销售
+export async function salesmanList(params) {
+  return request("/api/agent/salesman/list",{
+    method: 'POST',
+    body: params,
+  });
+}
 

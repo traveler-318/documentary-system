@@ -22,8 +22,10 @@ import {
   syndata,
   getSalesmanLists,
   subscription,
-  updateData
+  updateData,
+  salesmanList
 } from '../../../services/newServices/order';
+
 // getList as getSalesmanLists,
 import { getSalesmangroup } from '../../../services/newServices/sales';
 import styles from './index.less';
@@ -258,6 +260,22 @@ class AllOrdersList extends PureComponent {
         salesmangroup:res.data.records
       })
     })
+
+    this.getSalesman()
+  }
+
+  // 销售默认全部列表
+  getSalesman = () => {
+    salesmanList({size:100,current:1}).then(res=>{
+      const list={
+        userName:"全部",
+        userAccount:""
+      };
+      res.data.records.unshift(list);
+      this.setState({
+        salesmanList:res.data.records
+      })
+    })
   }
 
   getDataList = () => {
@@ -277,11 +295,15 @@ class AllOrdersList extends PureComponent {
   // 获取业务员数据
   getSalesmanList = (value = "all_all") => {
     getSalesmanLists(value).then(res=>{
+      console.log(res)
       if(res.code === 200){
-        let _data = res.data
-        _data.unshift("全部");
+        const list={
+          userName:"全部",
+          userAccount:""
+        };
+        res.data.unshift(list);
         this.setState({
-          salesmanList:_data
+          salesmanList:res.data
         })
         const { form } = this.props;
         form.setFieldsValue({salesman:"全部"});
@@ -294,10 +316,11 @@ class AllOrdersList extends PureComponent {
     console.log(value,"value")
     if(value){
       this.getSalesmanList(value)
-    }else {
       this.setState({
         salesmanList:[]
       })
+    }else {
+      this.getSalesman()
     }
   }
 
@@ -309,6 +332,8 @@ class AllOrdersList extends PureComponent {
       ...params,
       confirmTag:tabKey === 'null' ? null : tabKey
     };
+    console.log(params)
+    console.log(payload)
     if (dateRange) {
       payload = {
         ...params,
@@ -340,13 +365,22 @@ class AllOrdersList extends PureComponent {
       let text = ""
       for(let i=0; i<salesmanList.length; i++){
         if(salesmanList[i] != "全部"){
-          text += text === '' ? "'"+salesmanList[i]+"'" : ",'"+salesmanList[i]+"'"
+          if(payload.salesman == salesmanList[i].userName){
+            text +=salesmanList[i].userAccount
+          }
         }
       }
-      console.log(text,"text")
       payload.salesman = text;
     }else{
-      payload.salesman = payload.salesman ? "'"+payload.salesman+"'" : payload.salesman
+      let text = ""
+      for(let i=0; i<salesmanList.length; i++){
+        if(salesmanList[i] != "全部"){
+          if(payload.salesman == salesmanList[i].userName){
+            text +=salesmanList[i].userAccount
+          }
+        }
+      }
+      payload.salesman = text
     }
 
 
@@ -367,6 +401,8 @@ class AllOrdersList extends PureComponent {
     const { getFieldDecorator } = form;
 
     const { salesmanList, salesmangroup } = this.state;
+
+    console.log(salesmanList)
 
     return (
       <div className={"default_search_form"}>
@@ -410,8 +446,8 @@ class AllOrdersList extends PureComponent {
                 initialValue: "全部",
               })(
               <Select placeholder={"请选择销售"} style={{ width: 120 }}>
-                {salesmanList.map(item=>{
-                  return (<Option value={item}>{item}</Option>)
+                {salesmanList.map((item,index)=>{
+                  return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
                 })}
               </Select>
             )}

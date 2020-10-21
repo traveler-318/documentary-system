@@ -345,7 +345,7 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formItemLayout} label={'短信开关'}>
+                <FormItem {...formItemLayout} label={'提醒类型'}>
                   {getFieldDecorator('smsStatus')(
                     <Radio.Group>
                       <Radio key={0} value={0}>关闭</Radio>

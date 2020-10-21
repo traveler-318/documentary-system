@@ -26,6 +26,7 @@ import {
 } from '../../../services/newServices/product';
 import Add from './components/add'
 import Edit from './components/edit'
+import moment from 'moment';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -208,6 +209,11 @@ class ProductManagement extends PureComponent {
         },
       },
       {
+        title: '页面标题',
+        dataIndex: 'h5Title',
+        width: 200,
+      },
+      {
         title: '产品',
         dataIndex: 'productName',
         width: 200,
@@ -250,7 +256,18 @@ class ProductManagement extends PureComponent {
       {
         title: '创建时间',
         dataIndex: 'createTime',
-        width: 160,
+        width: 200,
+        render: (res) => {
+          return(
+            <div>
+              {
+                res === '' ?
+                  (res)
+                  :(moment(res).format('YYYY-MM-DD HH:mm:ss'))
+              }
+            </div>
+          )
+        },
       },
       {
         title: '操作',

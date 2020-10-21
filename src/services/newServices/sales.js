@@ -8,9 +8,6 @@ import request from '../../utils/request';
 
 // ============ 销售管理 ===============
 export async function getList(params) {
-  //return request(`/api/agent/salesman/list?${stringify(params)}`,{
-    //method: 'POST'
-  //});
   return request("/api/agent/salesman/list",{
     method: 'POST',
     body: params,
