@@ -40,7 +40,6 @@ class ProductList extends PureComponent {
       data:{},
       value:'',
       dataSource:[],
-      id_payaccount:""
     };
   }
 
@@ -56,7 +55,7 @@ class ProductList extends PureComponent {
 
   getProductList = () => {
     getProductattributeList({
-        size:10,
+        size:100,
         current:1
     }).then(res=>{
         // this.setState({
@@ -103,31 +102,18 @@ class ProductList extends PureComponent {
 
   // ======确认==========
 
-    handleSubmit = e => {
-        const {id_payaccount, dataSource} = this.state
-        if(id_payaccount === ""){
-            message.error("请选择产品");
-            return false;
-        }
-        let price = "";
-        for(let i=0; i<dataSource.length; i++){
-            if(dataSource[i].id === id_payaccount){
-                price = dataSource[i].price
-            }
-        }
-        
+    handleSubmit = (row) => {
         const serverAddress = getCookie("serverAddress");
         const { globalParameters } = this.props;
         const { codeUrl } = this.state;
         console.log(globalParameters)
         //const url = codeUrl+"&userName="+globalParameters.detailData.userName+"&deptId="+globalParameters.detailData.deptId+"&payAmount="+values.payAmount;
-        const url = codeUrl+globalParameters.detailData.userAccount+"_"+id_payaccount+"_"+price;
+        const url = codeUrl+globalParameters.detailData.userAccount+"_"+row.id+"_"+row.price;
         console.log(url)
         this.props.handleCancelAggregateCode()
         this.setState({
           groupAddVisible:true,
           qrUrl:url,
-          id_payaccount:""
         })
 
     // const {  form } = this.props;
@@ -171,13 +157,6 @@ class ProductList extends PureComponent {
     })
   };
 
-  radiogroupChange = (value) => {
-      this.setState({
-        id_payaccount:value.target.value
-      })
-    console.log(value.target.value,"value")
-  }
-
   render() {
     const {
       form: { getFieldDecorator },
@@ -199,17 +178,9 @@ class ProductList extends PureComponent {
         qrUrl,
         value,
         dataSource,
-        id_payaccount
     } = this.state;
 
     const columns = [
-        {
-          title: '',
-          dataIndex: 'id',
-          render: id => {
-            return (<Radio value={id}></Radio>)
-          },
-        },
         {
           title: '产品名称',
           dataIndex: 'productName',
@@ -222,7 +193,7 @@ class ProductList extends PureComponent {
         {
             title: '推广码',
             dataIndex: 'id',
-            render: text => <a>二维码</a>,
+            render: (text,row) => <a onClick={()=>this.handleSubmit(row)}>二维码</a>,
         },
       ];
       console.log(dataSource,"12323")
@@ -234,22 +205,14 @@ class ProductList extends PureComponent {
           visible={handleAggregateCodeVisible}
           width={450}
           onCancel={handleCancelAggregateCode}
-          footer={[
-            <Button key="back" onClick={handleCancelAggregateCode}>
-              取消
-            </Button>,
-            <Button type="primary" key="primary" onClick={()=>this.handleSubmit()}>
-              确认
-            </Button>
-          ]}
+          footer={null}
         >
-            <Radio.Group name="radiogroup" onChange={this.radiogroupChange} value={id_payaccount}>
-                <Table
-                    columns={columns}
-                    dataSource={dataSource}
-                    bordered
-                />
-            </Radio.Group>
+          <Table
+              columns={columns}
+              dataSource={dataSource}
+              bordered
+              pagination={false}
+          />
         </Modal>
         <Modal
           title="聚合码"
