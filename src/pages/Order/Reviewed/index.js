@@ -915,7 +915,7 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: row,
     });
-    router.push(`/order/allOrders/edit/${row.id}`);
+    router.push(`/order/reviewed/edit/${row.id}`);
   }
 
   renderRightButton = () => (
@@ -1090,7 +1090,7 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setListId`,
       payload: data,
     });
-    router.push('/order/allOrders/logisticsConfiguration');
+    router.push('/order/reviewed/logisticsConfiguration');
 
     // this.setState({
     //   logisticsVisible:true

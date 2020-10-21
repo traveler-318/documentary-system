@@ -222,7 +222,7 @@ class OrdersEdit extends PureComponent {
 console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
 
     return (
-      <Panel title="详情" back="/order/AllOrders">
+      <Panel title="详情" back="/order/Reviewed">
         <Form style={{ marginTop: 8 }}>
           <Card bordered={false} className={styles.editContent}>
             <Row gutter={24} style={{ margin: 0 }}>

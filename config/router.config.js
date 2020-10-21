@@ -519,6 +519,9 @@ export default [
             routes: [
               { path: '/order/myOrder', redirect: '/order/myOrder/list' },
               { path: '/order/myOrder/list', component: './Order/MyOrder/index' },
+              { path: '/order/allOrders/add', component: './Order/AllOrders/add' },
+              { path: '/order/allOrders/edit/:id', component: './Order/AllOrders/edit' },
+              { path: '/order/allOrders/logisticsConfiguration', component: './Order/AllOrders/components/logisticsConfiguration' },
             ],
           },
           {
@@ -526,6 +529,9 @@ export default [
             routes: [
               { path: '/order/ToBeReviewed', redirect: '/order/ToBeReviewed/list' },
               { path: '/order/ToBeReviewed/list', component: './Order/ToBeReviewed/index' },
+              { path: '/order/toBeReviewed/add', component: './Order/ToBeReviewed/add' },
+              { path: '/order/toBeReviewed/edit/:id', component: './Order/ToBeReviewed/edit' },
+              { path: '/order/toBeReviewed/logisticsConfiguration', component: './Order/ToBeReviewed/components/logisticsConfiguration' },
             ],
           },
           {
@@ -533,6 +539,9 @@ export default [
             routes: [
               { path: '/order/Reviewed', redirect: '/order/Reviewed/list' },
               { path: '/order/Reviewed/list', component: './Order/Reviewed/index' },
+              { path: '/order/reviewed/add', component: './Order/Reviewed/add' },
+              { path: '/order/reviewed/edit/:id', component: './Order/Reviewed/edit' },
+              { path: '/order/reviewed/logisticsConfiguration', component: './Order/Reviewed/components/logisticsConfiguration' },
             ],
           },
           {
@@ -540,6 +549,9 @@ export default [
             routes: [
               { path: '/order/Delivered', redirect: '/order/Delivered/list' },
               { path: '/order/Delivered/list', component: './Order/Delivered/index' },
+              { path: '/order/delivered/add', component: './Order/Delivered/add' },
+              { path: '/order/delivered/edit/:id', component: './Order/Delivered/edit' },
+              { path: '/order/delivered/logisticsConfiguration', component: './Order/Delivered/components/logisticsConfiguration' },
             ],
           },
           {
@@ -547,6 +559,9 @@ export default [
             routes: [
               { path: '/order/OnTheWay', redirect: '/order/OnTheWay/list' },
               { path: '/order/OnTheWay/list', component: './Order/OnTheWay/index' },
+              { path: '/order/onTheWay/add', component: './Order/OnTheWay/add' },
+              { path: '/order/onTheWay/edit/:id', component: './Order/OnTheWay/edit' },
+              { path: '/order/onTheWay/logisticsConfiguration', component: './Order/OnTheWay/components/logisticsConfiguration' },
             ],
           },
           {
@@ -554,6 +569,9 @@ export default [
             routes: [
               { path: '/order/SignedIn', redirect: '/order/SignedIn/list' },
               { path: '/order/SignedIn/list', component: './Order/SignedIn/index' },
+              { path: '/order/signedIn/add', component: './Order/SignedIn/add' },
+              { path: '/order/signedIn/edit/:id', component: './Order/SignedIn/edit' },
+              { path: '/order/signedIn/logisticsConfiguration', component: './Order/SignedIn/components/logisticsConfiguration' },
             ],
           },
           {
@@ -561,6 +579,9 @@ export default [
             routes: [
               { path: '/order/FollowUp', redirect: '/order/FollowUp/list' },
               { path: '/order/FollowUp/list', component: './Order/FollowUp/index' },
+              { path: '/order/followUp/add', component: './Order/FollowUp/add' },
+              { path: '/order/followUp/edit/:id', component: './Order/FollowUp/edit' },
+              { path: '/order/followUp/logisticsConfiguration', component: './Order/FollowUp/components/logisticsConfiguration' },
             ],
           },
           {
@@ -568,6 +589,9 @@ export default [
             routes: [
               { path: '/order/Activated', redirect: '/order/Activated/list' },
               { path: '/order/Activated/list', component: './Order/Activated/index' },
+              { path: '/order/activated/add', component: './Order/Activated/add' },
+              { path: '/order/activated/edit/:id', component: './Order/Activated/edit' },
+              { path: '/order/activated/logisticsConfiguration', component: './Order/Activated/components/logisticsConfiguration' },
             ],
           },
         ],
