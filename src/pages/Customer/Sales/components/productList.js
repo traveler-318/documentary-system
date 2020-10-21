@@ -39,9 +39,7 @@ class ProductList extends PureComponent {
       codeUrl:'',
       data:{},
       value:'',
-      dataSource:{
-        list:[]
-      }
+      dataSource:[]
     };
   }
 
@@ -64,7 +62,7 @@ class ProductList extends PureComponent {
         // })
         console.log(res.data.records,"12323")
         this.setState({
-            dataSource:setListData(res)
+            dataSource:res.data.records
         },()=>{
             console.log(this.state.dataSource,"12323")
         })
@@ -215,7 +213,7 @@ class ProductList extends PureComponent {
             <Radio.Group name="radiogroup" onChange={this.radiogroupChange}>
                 <Table
                     columns={columns}
-                    dataSource={dataSource.list}
+                    dataSource={dataSource}
                     bordered
                 />
             </Radio.Group>
