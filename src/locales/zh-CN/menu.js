@@ -1,6 +1,13 @@
 export default {
   'menu.order': '订单管理',
   'menu.order.allOrders': '全部订单',
+  'menu.order.toBeReviewed': '待审核',
+  'menu.order.reviewed': '已审核',
+  'menu.order.delivered': '已发货',
+  'menu.order.onTheWay': '在途中',
+  'menu.order.signedIn': '已签收',
+  'menu.order.followUp': '跟进中',
+  'menu.order.activated': '已激活',
   'menu.order.myOrder': '我的订单',
   'menu.order.mySubordinates': '我的下属',
 

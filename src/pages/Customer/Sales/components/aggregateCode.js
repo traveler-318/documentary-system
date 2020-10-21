@@ -71,11 +71,11 @@ class Logistics extends PureComponent {
       const res = /[^\d+(\d\d\d)*.\d+$]/g;
       var reg1=/^[1-9]\d*$/; // 验证正整数
       if(Number(values.payAmount) < 1  || !reg1.test(values.payAmount)){
-        message.success('请输入不小于1的正整数');
+        message.error('请输入不小于1的正整数');
         return false
       }
       if(Number(values.payAmount) <= 0  || res.test(values.payAmount) ){
-        message.success('请输入不小于等于0的数字');
+        message.error('请输入不小于等于0的数字');
         return false
       }else{
         if(Number(values.payAmount) > 300){
