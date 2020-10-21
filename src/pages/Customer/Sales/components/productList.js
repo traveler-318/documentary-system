@@ -50,6 +50,10 @@ class ProductList extends PureComponent {
     this.getProductList();
   }
 
+  componentWillReceiveProps = () => {
+    this.getProductList();
+  }
+
   getProductList = () => {
     getProductattributeList({
         size:10,
@@ -60,7 +64,7 @@ class ProductList extends PureComponent {
         // })
         console.log(res.data.records,"12323")
         this.setState({
-            dataSource:setListData(res.data.records)
+            dataSource:setListData(res)
         },()=>{
             console.log(this.state.dataSource,"12323")
         })
