@@ -243,6 +243,8 @@ class AllOrdersList extends PureComponent {
     // this.getDataList();
     // this.getSalesmanList();
 
+    console.log("1111111")
+
     // 获取分组数据
     getSalesmangroup({
       size:100,
