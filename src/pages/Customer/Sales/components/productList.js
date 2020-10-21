@@ -58,8 +58,11 @@ class ProductList extends PureComponent {
         // this.setState({
         //   loading:false
         // })
+        console.log(res.data.records,"12323")
         this.setState({
             dataSource:setListData(res.data.records)
+        },()=>{
+            console.log(this.state.dataSource,"12323")
         })
 
         // {
@@ -187,7 +190,7 @@ class ProductList extends PureComponent {
             render: text => <a>二维码</a>,
         },
       ];
-
+      console.log(dataSource,"12323")
     // confirmTag
     return (
       <div>
