@@ -87,11 +87,15 @@ class Logistics extends PureComponent {
         };
         console.log(params)
         getSalesmangroupSubmit(params).then(res=>{
-          message.success('提交成功');
-          this.setState({
-            groupAddVisible:false,
-          })
-          this.getDataList()
+          if(res.code === 200){
+            message.success('提交成功');
+            this.setState({
+              groupAddVisible:false,
+            })
+            this.getDataList()
+          }else {
+            message.error(res.msg);
+          }
         })
       }
     });

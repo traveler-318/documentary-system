@@ -76,8 +76,12 @@ class SenderAdd extends PureComponent {
           ...values,
         };
         getAddList(params).then(res=>{
-          message.success('提交成功');
-          router.push('/customer/sales');
+          if(res.code === 200){
+            message.success('提交成功');
+            router.push('/customer/sales');
+          }else {
+            message.error(res.msg);
+          }
         })
       }
     });

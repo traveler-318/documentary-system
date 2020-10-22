@@ -45,6 +45,8 @@ class FaceSheetAdd extends PureComponent {
           if(res.code === 200){
             message.success(res.msg);
             router.push('/logistics/faceSheet');
+          }else {
+            message.error(res.msg);
           }
         })
       }

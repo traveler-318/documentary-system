@@ -20,7 +20,7 @@ import {
   productTreelist,
   logisticsPrintRequest
 } from '../../../../services/newServices/order'
-import { 
+import {
   LOGISTICSCOMPANY,
   paymentCompany,
   productType,
@@ -31,7 +31,7 @@ import {
   ORDERSOURCE
 } from '../data.js';
 
-import { 
+import {
   getList,
   // 打印模板
   getSurfacesingleList,
@@ -91,7 +91,7 @@ class LogisticsConfiguration extends PureComponent {
       listID:globalParameters.listParam
     })
 
-    
+
     // 获取详情数据
     this.getDetailsData(globalParameters.listParam[0].id);
 
@@ -115,7 +115,7 @@ class LogisticsConfiguration extends PureComponent {
         if(!_data.logisticsCompany){
           _data.logisticsCompany = _value.logisticsCompany;
         }
-        
+
         if(!_data.smsConfirmation){
           _data.smsConfirmation = _value.smsConfirmation;
         }
@@ -140,9 +140,9 @@ class LogisticsConfiguration extends PureComponent {
     let { currentIndex, listID } = this.state
     if(type === 0){
       this.setState({
-        currentIndex:currentIndex - 1 
+        currentIndex:currentIndex - 1
       },()=>{
-        
+
       })
       this.getDetailsData(listID[currentIndex - 1].id,"switch");
     }else{
@@ -150,7 +150,7 @@ class LogisticsConfiguration extends PureComponent {
       this.setState({
         currentIndex:currentIndex + 1
       },()=>{
-        
+
       })
     }
   }
@@ -229,7 +229,7 @@ class LogisticsConfiguration extends PureComponent {
             }
           }
         }
-        
+
       });
       console.log(senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem)
       if(JSON.stringify(authorizationItem) === "{}"){
@@ -250,7 +250,7 @@ class LogisticsConfiguration extends PureComponent {
       }
 
       if(authorizationItem.online === '0'){
-        message.success('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
+        message.error('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
         return false;
       }
 
@@ -321,7 +321,7 @@ class LogisticsConfiguration extends PureComponent {
         message.error(res.msg);
       }
     })
-  }; 
+  };
 
   handleSubmit = e => {
     e.preventDefault();
@@ -416,10 +416,10 @@ class LogisticsConfiguration extends PureComponent {
         onCancel() {},
       });
     }
-    
+
   }
 
-  
+
 
   disabledDate = (current) => {
     // Can not select days before today and today
@@ -490,17 +490,17 @@ class LogisticsConfiguration extends PureComponent {
           <Button icon="reload" onClick={this.handleSubmit} loading={loading}>
             重置
           </Button>
-          <Button 
-            icon="right" 
-            onClick={ currentIndex === listID.length-1 ? "" : ()=>this.handleSwitch(1)} 
+          <Button
+            icon="right"
+            onClick={ currentIndex === listID.length-1 ? "" : ()=>this.handleSwitch(1)}
             style={{float:"right"}}
-            disabled={ currentIndex === listID.length-1 ? true : false }  
+            disabled={ currentIndex === listID.length-1 ? true : false }
           >
           </Button>
-          <Button 
-            icon="left" 
-            onClick={ currentIndex != 0 ? ()=>this.handleSwitch(0) : ""} 
-            disabled={ currentIndex != 0 ? false : true } 
+          <Button
+            icon="left"
+            onClick={ currentIndex != 0 ? ()=>this.handleSwitch(0) : ""}
+            disabled={ currentIndex != 0 ? false : true }
             style={{float:"right",marginRight:5}}
           >
           </Button>
@@ -544,7 +544,7 @@ class LogisticsConfiguration extends PureComponent {
                       },
                     ],
                   })(
-                    <Cascader 
+                    <Cascader
                       options={productList}
                       fieldNames={{ label: 'value'}}
                       onChange={(value, selectedOptions)=>{
@@ -580,7 +580,7 @@ class LogisticsConfiguration extends PureComponent {
                       },
                     ],
                   })(
-                    <Input 
+                    <Input
                       placeholder="请输入SN"
                       onPressEnter={this.handleSubmit}
                     />
@@ -665,9 +665,9 @@ class LogisticsConfiguration extends PureComponent {
                 </FormItem> */}
               </Col>
             </Row>
-            
+
           </Card>
-          
+
         </Form>
       </Panel>
     );
