@@ -194,3 +194,12 @@ export async function salesmanList(params) {
   });
 }
 
+// tab显示
+export async function menuTab(params) {
+  return request("/api//menu_tab/detail",{
+    method: 'POST',
+    body: params,
+  });
+}
+
+

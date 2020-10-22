@@ -594,6 +594,36 @@ export default [
               { path: '/order/activated/logisticsConfiguration', component: './Order/Activated/components/logisticsConfiguration' },
             ],
           },
+          {
+            path: '/order/SalesmanOrder',  //业务员订单
+            routes: [
+              { path: '/order/SalesmanOrder', redirect: '/order/SalesmanOrder/list' },
+              { path: '/order/SalesmanOrder/list', component: './Order/SalesmanOrder/index' },
+              { path: '/order/salesmanOrder/add', component: './Order/SalesmanOrder/add' },
+              { path: '/order/salesmanOrder/edit/:id', component: './Order/SalesmanOrder/edit' },
+              { path: '/order/salesmanOrder/logisticsConfiguration', component: './Order/SalesmanOrder/components/logisticsConfiguration' },
+            ],
+          },
+          {
+            path: '/order/WarehouseOrder',  //仓库订单
+            routes: [
+              { path: '/order/WarehouseOrder', redirect: '/order/WarehouseOrder/list' },
+              { path: '/order/WarehouseOrder/list', component: './Order/WarehouseOrder/index' },
+              { path: '/order/warehouseOrder/add', component: './Order/WarehouseOrder/add' },
+              { path: '/order/warehouseOrder/edit/:id', component: './Order/WarehouseOrder/edit' },
+              { path: '/order/warehouseOrder/logisticsConfiguration', component: './Order/WarehouseOrder/components/logisticsConfiguration' },
+            ],
+          },
+          {
+            path: '/order/AfterSaleOrder',  //售后订单
+            routes: [
+              { path: '/order/AfterSaleOrder', redirect: '/order/AfterSaleOrder/list' },
+              { path: '/order/AfterSaleOrder/list', component: './Order/AfterSaleOrder/index' },
+              { path: '/order/afterSaleOrder/add', component: './Order/AfterSaleOrder/add' },
+              { path: '/order/afterSaleOrder/edit/:id', component: './Order/AfterSaleOrder/edit' },
+              { path: '/order/afterSaleOrder/logisticsConfiguration', component: './Order/AfterSaleOrder/components/logisticsConfiguration' },
+            ],
+          },
         ],
       },
       {
