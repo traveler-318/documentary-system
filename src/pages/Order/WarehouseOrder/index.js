@@ -1027,7 +1027,7 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: row,
     });
-    router.push(`/order/allOrders/edit/${row.id}`);
+    router.push(`/order/warehouseOrder/edit/${row.id}`);
   }
 
   renderRightButton = () => (
