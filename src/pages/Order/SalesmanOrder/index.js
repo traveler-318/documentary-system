@@ -4,7 +4,7 @@ import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, M
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import { Resizable } from 'react-resizable';
-
+import { getCookie } from '../../../utils/support';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../actions/order';
@@ -324,7 +324,6 @@ class AllOrdersList extends PureComponent {
   // 获取业务员数据
   getSalesmanList = (value = "all_all") => {
     getSalesmanLists(value).then(res=>{
-      console.log(res)
       if(res.code === 200){
         const list={
           userName:"全部",
@@ -361,8 +360,6 @@ class AllOrdersList extends PureComponent {
       ...params,
       confirmTag:tabKey === 'null' ? null : tabKey
     };
-    console.log(params)
-    console.log(payload)
     if (dateRange) {
       payload = {
         ...params,
@@ -370,9 +367,6 @@ class AllOrdersList extends PureComponent {
         endTime: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null,
       };
       payload.dateRange = null;
-    }
-    if(payload.salesman && payload.salesman === "全部"){
-      payload.salesman = null;
     }
     if(payload.groupId && payload.groupId === "全部"){
       payload.groupId = null;
@@ -386,24 +380,7 @@ class AllOrdersList extends PureComponent {
     if(payload.orderSource && payload.orderSource === "全部"){
       payload.orderSource = null;
     }
-    if(payload.salesman == "全部"){
-      payload.salesman = null
-    }
-
-    if(payload.groupId && !payload.salesman){
-      let text = ""
-      for(let i=0; i<salesmanList.length; i++){
-        if(salesmanList[i] != "全部"){
-          if(payload.salesman == salesmanList[i].userName){
-            text +=salesmanList[i].userAccount
-          }
-        }
-      }
-      payload.salesman = text;
-    }else{
-      payload.salesman = payload.salesman
-    }
-
+    payload.salesman=getCookie("userName");
 
     delete payload.dateRange
     // console.log(payload,"params")
@@ -422,8 +399,6 @@ class AllOrdersList extends PureComponent {
     const { getFieldDecorator } = form;
 
     const { salesmanList, salesmangroup } = this.state;
-
-    console.log(salesmanList)
 
     return (
       <div className={"default_search_form"}>
@@ -447,7 +422,7 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="分组">
+        {/*<Form.Item label="分组">
           {getFieldDecorator('groupId', {
                 initialValue: "全部",
               })(
@@ -472,7 +447,7 @@ class AllOrdersList extends PureComponent {
                 })}
               </Select>
             )}
-        </Form.Item>
+        </Form.Item>*/}
         <Form.Item label="订单来源">
           {getFieldDecorator('orderSource', {
             initialValue: "全部",
@@ -1309,8 +1284,6 @@ class AllOrdersList extends PureComponent {
     } = this.state;
 
     console.log(selectedRowKeys,"selectedRowKeys")
-    console.log(tabCode)
-    console.log(ORDERSTATUS)
 
     const columns = this.state.columns.map((col, index) => ({
       ...col,
