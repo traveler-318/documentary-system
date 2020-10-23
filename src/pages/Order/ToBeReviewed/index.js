@@ -766,7 +766,7 @@ class AllOrdersList extends PureComponent {
   renderLeftButton = () => {
     return (<>
       <Button type="primary" icon="plus" onClick={()=>{
-        router.push(`/order/AllOrders/add`);
+        router.push(`/order/ToBeReviewed/add`);
       }}>添加</Button>
       <Button
         icon="menu-unfold"

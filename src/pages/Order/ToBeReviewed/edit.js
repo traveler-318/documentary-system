@@ -148,7 +148,7 @@ class OrdersEdit extends PureComponent {
           this.setState({
             edit:true
           })
-          // router.push('/order/allOrders');
+          // router.push('/order/toBeReviewed');
         })
       }
     });

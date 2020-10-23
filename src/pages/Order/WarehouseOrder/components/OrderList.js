@@ -72,7 +72,7 @@ class OrderList extends PureComponent {
 
   // 详情
   handleDetsils = (row) => {
-    router.push(`/order/allOrders/edit/${row.id}`);
+    router.push(`/order/warehouseOrder/edit/${row.id}`);
   }
 
   getText = (key, type) => {

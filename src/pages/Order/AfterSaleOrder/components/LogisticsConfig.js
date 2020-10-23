@@ -180,7 +180,7 @@ class LogisticsConfig extends PureComponent {
     }
     logisticsPrintRequest(params).then(res=>{
       message.success(res.msg);
-      router.push('/order/allOrders');
+      router.push('/order/afterSaleOrder');
     })
   };
 

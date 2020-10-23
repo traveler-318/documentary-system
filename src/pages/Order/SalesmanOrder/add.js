@@ -42,7 +42,8 @@ class OrdersAdd extends PureComponent {
       cityparam:{},
       productList:[],
       selectedOptions:[],
-      payamount:null
+      payamount:null,
+      userName:''
     };
   }
 
@@ -51,6 +52,10 @@ class OrdersAdd extends PureComponent {
     this.getSalesmanList();
     // this.assemblingData();
     this.getTreeList();
+    this.setState({
+      userName:getCookie("userName")
+    })
+
   }
 
   getTreeList = () => {
@@ -150,7 +155,8 @@ class OrdersAdd extends PureComponent {
     const {
       salesmanList,
       loading,
-      productList
+      productList,
+      userName,
     } = this.state;
 
     const formItemLayout = {
@@ -320,14 +326,8 @@ class OrdersAdd extends PureComponent {
 
                 <FormItem {...formAllItemLayout} label="归属销售">
                   {getFieldDecorator('salesman', {
-                      initialValue: null,
-                    })(
-                    <Select placeholder={"请选择归属销售"}>
-                    {salesmanList.map(item=>{
-                      return (<Option value={item.userName}>{item.userName}</Option>)
-                    })}
-                  </Select>
-                  )}
+                      initialValue: userName,
+                    })(<Input disabled placeholder="" />)}
                 </FormItem>
 
                 <FormItem {...formAllItemLayout} label="备注信息">

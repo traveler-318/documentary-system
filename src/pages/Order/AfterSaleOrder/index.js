@@ -805,7 +805,7 @@ class AllOrdersList extends PureComponent {
       {/* 待审核 */}
         {tabKey === '0'?(<>
         <Button type="primary" icon="plus" onClick={()=>{
-          router.push(`/order/AllOrders/add`);
+          router.push(`/order/AfterSaleOrder/add`);
         }}>添加</Button>
         <Button
           icon="menu-unfold"
@@ -857,7 +857,7 @@ class AllOrdersList extends PureComponent {
         {/* 全部 */}
         {tabKey === 'null'?(<>
           <Button type="primary" icon="plus" onClick={()=>{
-            router.push(`/order/AllOrders/add`);
+            router.push(`/order/AfterSaleOrder/add`);
           }}>添加</Button>
           <Button
             icon="menu-unfold"
@@ -1203,7 +1203,7 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setListId`,
       payload: data,
     });
-    router.push('/order/allOrders/logisticsConfiguration');
+    router.push('/order/AfterSaleOrder/logisticsConfiguration');
 
     // this.setState({
     //   logisticsVisible:true
