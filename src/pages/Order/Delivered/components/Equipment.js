@@ -66,6 +66,8 @@ class Equipment extends PureComponent {
           if(res.code === 200){
             message.success(res.msg);
             this.props.handleCancelEquipment("getlist");
+          }else {
+            message.error(res.msg);
           }
         })
       }

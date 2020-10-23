@@ -109,6 +109,8 @@ class OrdersAdd extends PureComponent {
           if(res.code === 200){
             message.success(res.msg);
             router.push('/order/salesmanOrder');
+          }else {
+            message.error(res.msg);
           }
         })
       }

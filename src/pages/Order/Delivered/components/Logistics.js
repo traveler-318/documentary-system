@@ -59,6 +59,8 @@ class Logistics extends PureComponent {
           if(res.code === 200){
             message.success(res.msg);
             handleCancelLogistics("getlist");
+          }else {
+            message.error(res.msg);
           }
         })
       }
@@ -87,6 +89,8 @@ class Logistics extends PureComponent {
           if(res.code === 200){
             message.success(res.msg);
             handleCancelLogistics("getlist");
+          }else {
+            message.error(res.msg);
           }
         })
       }

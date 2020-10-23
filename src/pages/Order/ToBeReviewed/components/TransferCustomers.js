@@ -73,6 +73,8 @@ class TransferCustomers extends PureComponent {
           if(res.code === 200){
             message.success(res.msg);
             this.props.handleCancelTransfer("getlist");
+          }else {
+            message.error(res.msg);
           }
         })
       }

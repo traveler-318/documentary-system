@@ -157,6 +157,8 @@ class Survey extends PureComponent {
       if(res.code === 200){
         message.success(res.msg);
         this.props.getEditDetails()
+      }else {
+        message.error(res.msg);
       }
     })
   }
@@ -222,6 +224,8 @@ class Survey extends PureComponent {
           message.success(res.msg);
           this.props.getEditDetails();
           this.handleEmpty();
+        }else {
+          message.error(res.msg);
         }
       })
     // }else {

@@ -49,6 +49,8 @@ class GoodsEdit extends PureComponent {
           if(res.code === 200){
             message.success(res.msg);
             router.push('/logistics/additional');
+          }else {
+            message.error(res.msg);
           }
         })
       }
