@@ -16,6 +16,7 @@ import { getCookie } from '../../../../utils/support';
 import { getProductattributeAdd, getPaypanyList, getProductcategoryList } from '../../../../services/newServices/product';
 import {paymentCompany,} from '../../../Order/AllOrders/data.js';
 import styles from '../add.less';
+import H5Background from './h5Background'
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -36,7 +37,8 @@ class Logistics extends PureComponent {
         current:1
       },
       paypanyList:[],
-      productcategoryList:[]
+      productcategoryList:[],
+      handleImgVisible:false
     };
   }
 
@@ -53,7 +55,7 @@ class Logistics extends PureComponent {
       })
     })
 
-    
+
   }
 
   getProductcategoryLists = (key) => {
@@ -117,13 +119,13 @@ class Logistics extends PureComponent {
       this.getProductcategoryLists(row.key);
       const {  form } = this.props;
       form.setFieldsValue({ productTypeId : "" } )
-      
+
     }else{
       this.setState({
         productTypeName:row.props.children
       })
     }
-    
+
     console.log(key,row)
   }
 
@@ -142,6 +144,27 @@ class Logistics extends PureComponent {
     }
   };
 
+  // 图片弹框
+  handleImg = () => {
+    this.setState({
+      handleImgVisible:true
+    })
+  }
+
+  handleCancelImg = () => {
+    this.setState({
+      handleImgVisible:false
+    })
+  }
+
+  handleClick = (row) => {
+    console.log(row)
+    this.setState({
+      Img:row.link
+    })
+  }
+
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -153,8 +176,12 @@ class Logistics extends PureComponent {
       data,
       loading,
       paypanyList,
-      productcategoryList
+      handleImgVisible,
+      productcategoryList,
+      Img
     } = this.state;
+
+    console.log(data)
 
     const formAllItemLayout = {
       labelCol: {
@@ -248,6 +275,11 @@ class Logistics extends PureComponent {
                 })(<Input placeholder="请输入页面标题" />)}
                 <Tooltip title='H5页面顶部标题，用户下单扫码的时候可以看到'><Icon type='question-circle-o' /></Tooltip>
               </FormItem>
+              <FormItem {...formAllItemLayout} label="详情图">
+                {getFieldDecorator('originalName', {
+                  initialValue: Img,
+                })(<Input placeholder="请详情图" onClick={()=>{this.handleImg()}}/>)}
+              </FormItem>
               <FormItem {...formAllItemLayout} label="价格">
                 {getFieldDecorator('price', {
                   initialValue: data.price,
@@ -299,6 +331,15 @@ class Logistics extends PureComponent {
             </Form>
           </div>
         </Modal>
+
+        {/* 选择图片 */}
+        {handleImgVisible?(
+          <H5Background
+            handleImgVisible={handleImgVisible}
+            handleCancelImg={this.handleCancelImg}
+            handleClick={this.handleClick}
+          />
+        ):""}
       </div>
     );
   }

@@ -88,3 +88,7 @@ export async function getProductattributeRemove(params) {
     body: func.toFormData(params),
   });
 }
+
+export async function getImg(page,size) {
+  return request(`/api/blade-resource/attach/list?current=`+page+`&size=`+size);
+}

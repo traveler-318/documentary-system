@@ -33,13 +33,7 @@ class Logistics extends PureComponent {
       // 添加分组弹窗
       groupAddVisible:false,
       data:[
-        {
-          key:1,
-          name:"测试2组"
-        },{
-          key:2,
-          name:"测试3组"
-        }
+
       ],
       RechargeAmountList:[5,10,20,50,100],
       RechargeAmount:5,
