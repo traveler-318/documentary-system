@@ -214,6 +214,11 @@ class ProductManagement extends PureComponent {
         width: 200,
       },
       {
+        title: '页面背景',
+        dataIndex: 'h5Background',
+        width: 300,
+      },
+      {
         title: '产品',
         dataIndex: 'productName',
         width: 200,
