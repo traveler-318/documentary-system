@@ -829,11 +829,12 @@ class AllOrdersList extends PureComponent {
 
        {/* 已签收 */}
        {tabKey === '4'?(<>
-        <Button
+        {/*<Button
           icon="bell"
           type="primary"
           onClick={this.batchReminders}
-        >提醒</Button></>):""}
+        >提醒</Button>*/}
+       </>):""}
         {/* 跟进中 */}
         {tabKey === '5'?(<>
         <Button

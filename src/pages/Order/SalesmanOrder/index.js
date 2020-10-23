@@ -100,6 +100,7 @@ class AllOrdersList extends PureComponent {
       // 免押宝导入弹窗
       noDepositVisible:false,
       salesmangroup:[],
+      menuType:"1",
       columns:[
         {
           title: '姓名',
@@ -788,17 +789,18 @@ class AllOrdersList extends PureComponent {
           icon="menu-unfold"
           onClick={this.batchAudit}
         >审核</Button>
-        <Button
-            icon="download"
-            onClick={this.importData}
-          >免押同步</Button>
-        </>):tabKey === '1'?(<>
+        {/*<Button*/}
+            {/*icon="download"*/}
+            {/*onClick={this.importData}*/}
+          {/*>免押同步</Button>*/}
+        </>
+        ):tabKey === '1'?(<>
         {/* 已审核 */}
-          <Button
+          {/*<Button
             icon="appstore"
             type="primary"
             onClick={this.bulkDelivery}
-          >发货</Button>
+          >发货</Button>*/}
         </>):""}
 
         {/* 已发货什么都没有 */}
@@ -840,10 +842,10 @@ class AllOrdersList extends PureComponent {
             icon="menu-unfold"
             onClick={this.batchAudit}
           >审核</Button>
-          <Button
+          {/*<Button
             icon="appstore"
             onClick={this.bulkDelivery}
-          >发货</Button>
+          >发货</Button>*/}
           <Button
             icon="bell"
             onClick={this.batchReminders}
@@ -866,22 +868,22 @@ class AllOrdersList extends PureComponent {
         <Icon type="upload" />
         导出
       </Menu.Item>
-      <Menu.Item key="4"  onClick={this.handleShowTransfer}>
+      {/*<Menu.Item key="4"  onClick={this.handleShowTransfer}>
         <Icon type="loading-3-quarters" />
         转移客户
-      </Menu.Item>
+      </Menu.Item>*/}
       {/* <Menu.Item key="5">
         <Icon type="highlight" />
         批量编辑
       </Menu.Item> */}
-       <SubMenu key="sub1" title="批量物流下单">
+       {/*<SubMenu key="sub1" title="批量物流下单">
         <Menu.Item key="6" onClick={this.repeat}>
           重复打印
         </Menu.Item>
         <Menu.Item key="7" onClick={this.first}>
           首次打印
         </Menu.Item>
-      </SubMenu>
+      </SubMenu>*/}
     </Menu>
   );
 
