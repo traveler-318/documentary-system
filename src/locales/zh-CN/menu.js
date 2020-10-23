@@ -1,7 +1,7 @@
 export default {
   'menu.order': '订单管理',
   'menu.order.allOrders': '全部订单',
-  'menu.order.salesmanOrder': '业务员订单',
+  'menu.order.salesmanOrder': '销售订单',
   'menu.order.warehouseOrder': '仓库订单',
   'menu.order.afterSaleOrder': '售后订单',
   'menu.order.mySubordinates': '我的下属',
