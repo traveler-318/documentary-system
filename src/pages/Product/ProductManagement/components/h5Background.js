@@ -31,6 +31,11 @@ class Background extends PureComponent {
     this.state = {
       data:[],
       senderId:'',
+      params:{
+        pageSize:10,
+        current:1
+      },
+      pagination: {},
       handleImgDetailsVisible:false,
       visible:false,
     };
@@ -42,15 +47,32 @@ class Background extends PureComponent {
   }
 
   getImg = () =>{
-    getImg(1,100).then(res=>{
+    const {params}=this.state
+    getImg(params.current,params.pageSize).then(res=>{
       console.log(res)
       this.setState({
         data:{
           list:res.data.records
+        },
+        pagination:{
+          current: res.data.current,
+          pageSize: res.data.size,
+          total: res.data.total
         }
       })
     })
   }
+
+  // ============ 查询 ===============
+  handleSearch = params => {
+    console.log(params)
+    this.setState({
+      params
+    },()=>{
+      this.getImg();
+    })
+  };
+
 
 
   // ======确认==========
@@ -111,6 +133,8 @@ class Background extends PureComponent {
       message.error(`${info.file.response.msg}`);
     }
   };
+
+
     
 
   render() {
@@ -127,6 +151,7 @@ class Background extends PureComponent {
       ImgDetails,
       visible,
       senderId,
+      pagination,
       } = this.state;
 
     console.log(data)
@@ -200,7 +225,7 @@ class Background extends PureComponent {
             </Button>,
           ]}
         >
-          <Table rowKey={(record, index) => `${index}`} dataSource={data.list} columns={columns} />
+          <Table rowKey={(record, index) => `${index}`} dataSource={data.list} pagination={pagination} columns={columns} onChange={this.handleSearch} />
         </Modal>
         {/* 查看图片 */}
         {handleImgDetailsVisible?(
