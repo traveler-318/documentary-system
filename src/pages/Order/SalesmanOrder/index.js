@@ -184,7 +184,7 @@ class AllOrdersList extends PureComponent {
         {
           title: '快递单号',
           dataIndex: 'logisticsNumber',
-          width: 130,
+          width: 150,
         },
         {
           title: '物流状态',

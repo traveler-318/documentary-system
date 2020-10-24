@@ -17,6 +17,7 @@ import {
   message,
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
+import { Resizable } from 'react-resizable';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
@@ -28,9 +29,32 @@ import Add from './components/add'
 import Edit from './components/edit'
 import moment from 'moment';
 import Img from './components/Img'
+import styles from './index.less';
+
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
+
+const ResizeableTitle = props => {
+  const { onResize, width, ...restProps } = props;
+
+  if (!width) {
+    return <th {...restProps} />;
+  }
+
+  return (
+    <Resizable
+      width={width}
+      height={0}
+      onResize={onResize}
+      draggableOpts={{ enableUserSelectHack: false }}
+    >
+      <th {...restProps} />
+    </Resizable>
+  );
+};
+
+
 
 @connect(({ globalParameters }) => ({
   globalParameters,
@@ -44,6 +68,111 @@ class ProductManagement extends PureComponent {
       loading:false,
       selectDataArrL:[],
       selectedRowKeys:[],
+      columns: [
+        {
+          title: '编号',
+          dataIndex: '',
+          width: 100,
+          render: (res,rows,index) => {
+            return(
+              index+1
+            )
+          },
+        },
+        {
+          title: '页面标题',
+          dataIndex: 'h5Title',
+          width: 200,
+        },
+        {
+          title: '页面背景',
+          dataIndex: 'h5Background',
+          width: 100,
+          render: (res,row) => {
+            return(
+              <div>
+                {
+                  res === '' ?
+                    (res)
+                    :(<a onClick={()=>this.handleImg(row)}>查看</a>)
+                }
+              </div>
+            )
+          },
+        },
+        {
+          title: '产品',
+          dataIndex: 'productName',
+          width: 200,
+        },
+        {
+          title: '类型',
+          dataIndex: 'productTypeName',
+          width: 200,
+        },
+        {
+          title: '支付公司',
+          dataIndex: 'payPanyName',
+          width: 300,
+        },
+        {
+          title: '价格',
+          dataIndex: 'price',
+          width: 150,
+        },
+        {
+          title: '结算价',
+          dataIndex: 'settlePrice',
+          width: 150,
+        },
+        {
+          title: '自定义1',
+          dataIndex: 'customOne',
+          width: 150,
+        },
+        {
+          title: '自定义2',
+          dataIndex: 'customTwo',
+          width: 150,
+        },
+        {
+          title: '自定义3',
+          dataIndex: 'customThree',
+          width: 150,
+        },
+        {
+          title: '创建时间',
+          dataIndex: 'createTime',
+          width: 200,
+          render: (res) => {
+            return(
+              <div>
+                {
+                  res === '' ?
+                    (res)
+                    :(moment(res).format('YYYY-MM-DD HH:mm:ss'))
+                }
+              </div>
+            )
+          },
+        },
+        {
+          title: '操作',
+          key: 'operation',
+          fixed: 'right',
+          width: 150,
+          render: (res,row) => {
+            return(
+              <div>
+                <Divider type="vertical" />
+                <a onClick={()=>this.handleEdit(row)}>修改</a>
+                <Divider type="vertical" />
+                <a onClick={()=>this.handleClick(row)}>删除</a>
+              </div>
+            )
+          },
+        },
+      ],
       params:{
         size:10,
         current:1
@@ -199,6 +328,23 @@ class ProductManagement extends PureComponent {
     })
   }
 
+  handleResize = index => (e, { size }) => {
+    this.setState(({ columns }) => {
+      const nextColumns = [...columns];
+      nextColumns[index] = {
+        ...nextColumns[index],
+        width: size.width,
+      };
+      return { columns: nextColumns };
+    });
+  };
+
+  components = {
+    header: {
+      cell: ResizeableTitle,
+    },
+  };
+
 
   render() {
     const {
@@ -217,111 +363,16 @@ class ProductManagement extends PureComponent {
       handleCancelEdit
     } = this.state;
 
-    const columns = [
-      {
-        title: '编号',
-        dataIndex: '',
-        width: 100,
-        render: (res,rows,index) => {
-          return(
-            index+1
-          )
-        },
-      },
-      {
-        title: '页面标题',
-        dataIndex: 'h5Title',
-        width: 200,
-      },
-      {
-        title: '页面背景',
-        dataIndex: 'h5Background',
-        width: 100,
-        render: (res,row) => {
-          return(
-            <div>
-              {
-                res === '' ?
-                  (res)
-                  :(<a onClick={()=>this.handleImg(row)}>查看</a>)
-              }
-            </div>
-          )
-        },
-      },
-      {
-        title: '产品',
-        dataIndex: 'productName',
-        width: 200,
-      },
-      {
-        title: '类型',
-        dataIndex: 'productTypeName',
-        width: 200,
-      },
-      {
-        title: '支付公司',
-        dataIndex: 'payPanyName',
-        width: 300,
-      },
-      {
-        title: '价格',
-        dataIndex: 'price',
-        width: 150,
-      },
-      {
-        title: '结算价',
-        dataIndex: 'settlePrice',
-        width: 150,
-      },
-      {
-        title: '自定义1',
-        dataIndex: 'customOne',
-        width: 150,
-      },
-      {
-        title: '自定义2',
-        dataIndex: 'customTwo',
-        width: 150,
-      },
-      {
-        title: '自定义3',
-        dataIndex: 'customThree',
-        width: 150,
-      },
-      {
-        title: '创建时间',
-        dataIndex: 'createTime',
-        width: 200,
-        render: (res) => {
-          return(
-            <div>
-              {
-                res === '' ?
-                  (res)
-                  :(moment(res).format('YYYY-MM-DD HH:mm:ss'))
-              }
-            </div>
-          )
-        },
-      },
-      {
-        title: '操作',
-        key: 'operation',
-        fixed: 'right',
-        width: 300,
-        render: (res,row) => {
-          return(
-            <div>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleEdit(row)}>修改</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleClick(row)}>删除</a>
-            </div>
-          )
-        },
-      },
-    ];
+    console.log(this.components)
+
+    const columns = this.state.columns.map((col, index) => ({
+      ...col,
+      onHeaderCell: column => ({
+        width: column.width,
+        onResize: this.handleResize(index),
+      }),
+    }));
+
     return (
       <Panel>
         <Grid
@@ -336,6 +387,9 @@ class ProductManagement extends PureComponent {
           renderLeftButton={this.renderLeftButton}
           renderRightButton={this.renderRightButton}
           selectedKey={selectedRowKeys}
+          tblProps={
+            {components:this.components}
+          }
         />
         {/* 新增 */}
         {handleAddVisible?(
