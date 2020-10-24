@@ -76,11 +76,15 @@ class Background extends PureComponent {
 
 
   // ======确认==========
-
   handleSubmit = () => {
     const {  list } = this.state;
-    this.props.handleClick(list)
-    this.props.handleCancelImg(list)
+    if(list){
+      this.props.handleClick(list)
+      this.props.handleCancelImg(list)
+    }else {
+      message.error("请选择图片");
+    }
+
   };
 
   onChange = (row) => {
@@ -120,7 +124,7 @@ class Background extends PureComponent {
     });
     this.getImg()
   }
-    
+
   onUpload = info => {
     const { status } = info.file;
     if (status !== 'uploading') {
@@ -135,7 +139,7 @@ class Background extends PureComponent {
   };
 
 
-    
+
 
   render() {
     const {

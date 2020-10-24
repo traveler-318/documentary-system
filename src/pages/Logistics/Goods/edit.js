@@ -137,7 +137,7 @@ class GoodsEdit extends PureComponent {
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="物品总总量：">
+                <FormItem {...formItemLayout} label="物品总重量：">
                   {getFieldDecorator('weight', {
                     rules: [
                       {

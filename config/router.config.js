@@ -512,6 +512,7 @@ export default [
               { path: '/order/allOrders/add', component: './Order/AllOrders/add' },
               { path: '/order/allOrders/edit/:id', component: './Order/AllOrders/edit' },
               { path: '/order/allOrders/logisticsConfiguration', component: './Order/AllOrders/components/logisticsConfiguration' },
+              { path: '/order/allOrders/img', component: './Order/AllOrders/img' },
             ],
           },
           {

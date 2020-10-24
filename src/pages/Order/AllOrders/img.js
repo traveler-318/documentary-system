@@ -12,8 +12,6 @@ import {
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
-import { getCookie } from '../../../../utils/support';
-import { getImg} from '../../../../services/newServices/product';
 
 
 const { Option } = Select;
@@ -36,23 +34,35 @@ class Background extends PureComponent {
 
   componentWillMount() {
 
-    const {ImgDetails}=this.props
+    this.setState({
+      imgBase64:sessionStorage.getItem('imgBase64')
+    })
+
+    //this.printHTML()
+
   }
 
+  printHTML(){
+    var beforePrint = function(){
+    }
+    var afterPrint = function(){
+      window.close()
+    }
+    if (window.matchMedia) {
+      var mediaQueryList = window.matchMedia('print');
+      mediaQueryList.addListener(function(mql) {
+        if (mql.matches) {
+          // beforePrint();
+        } else {
+          // afterPrint();
+        }
+      });
+    }
+    window.onbeforeprint = beforePrint;
+    window.onafterprint = afterPrint;
 
-  // ======确认==========
+    window.print();    //Firefox可以调用   IE没有效果
 
-  handleSubmit = () => {
-    const {  list } = this.state;
-    this.props.handleClick(list)
-    this.props.handleCancelImg(list)
-  };
-
-  onChange = (row) => {
-    console.log(row)
-    this.setState({
-      list:row
-    })
   }
 
 
@@ -64,21 +74,11 @@ class Background extends PureComponent {
       ImgDetails
       } = this.props;
 
+
+
+
     return (
       <div>
-        <Modal
-          title="预览图片"
-          visible={handleImgDetailsVisible}
-          width={550}
-          onCancel={handleCancelImgDetails}
-          footer={[
-            <Button key="back" onClick={handleCancelImgDetails}>
-              取消
-            </Button>
-          ]}
-        >
-         <img src={ImgDetails} style={{ width: '100%' }}/>
-        </Modal>
 
       </div>
     );
