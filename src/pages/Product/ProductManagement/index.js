@@ -27,6 +27,7 @@ import {
 import Add from './components/add'
 import Edit from './components/edit'
 import moment from 'moment';
+import Img from './components/Img'
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -50,7 +51,8 @@ class ProductManagement extends PureComponent {
       groupingList:[],
       handleAddVisible:false,
       details:{},
-      handleEditVisible:false
+      handleEditVisible:false,
+      handleImgDetailsVisible:false
     };
   }
 
@@ -182,6 +184,22 @@ class ProductManagement extends PureComponent {
     )
   };
 
+  // 图片弹框
+  handleImg = (row) => {
+    console.log(row)
+    this.setState({
+      handleImgDetailsVisible:true,
+      ImgDetails:row.h5Background
+    })
+  }
+
+  handleCancelImgDetails = () => {
+    this.setState({
+      handleImgDetailsVisible:false
+    })
+  }
+
+
   render() {
     const {
       form,
@@ -193,7 +211,9 @@ class ProductManagement extends PureComponent {
       data,
       loading,
       handleEditVisible,
+      handleImgDetailsVisible,
       details,
+      ImgDetails,
       handleCancelEdit
     } = this.state;
 
@@ -216,7 +236,18 @@ class ProductManagement extends PureComponent {
       {
         title: '页面背景',
         dataIndex: 'h5Background',
-        width: 300,
+        width: 100,
+        render: (res,row) => {
+          return(
+            <div>
+              {
+                res === '' ?
+                  (res)
+                  :(<a onClick={()=>this.handleImg(row)}>查看</a>)
+              }
+            </div>
+          )
+        },
       },
       {
         title: '产品',
@@ -319,6 +350,14 @@ class ProductManagement extends PureComponent {
             handleEditVisible={handleEditVisible}
             details={details}
             handleCancelEdit={this.handleCancelEdit}
+          />
+        ):""}
+        {/* 查看图片 */}
+        {handleImgDetailsVisible?(
+          <Img
+            handleImgDetailsVisible={handleImgDetailsVisible}
+            ImgDetails={ImgDetails}
+            handleCancelImgDetails={this.handleCancelImgDetails}
           />
         ):""}
       </Panel>

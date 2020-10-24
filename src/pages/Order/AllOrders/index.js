@@ -927,13 +927,14 @@ class AllOrdersList extends PureComponent {
             userName:item.userName,
           }
         })
-        updateReminds(_data).then(res=>{
-          if(res.code === 200){
-            message.success(res.msg);
-          }else{
-            message.error(res.msg);
-          }
-        })
+        console.log(_data)
+        // updateReminds(_data).then(res=>{
+        //   if(res.code === 200){
+        //     message.success(res.msg);
+        //   }else{
+        //     message.error(res.msg);
+        //   }
+        // })
       },
       onCancel() {},
     });

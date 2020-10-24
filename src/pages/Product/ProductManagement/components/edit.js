@@ -41,6 +41,7 @@ class Logistics extends PureComponent {
       payPanyId:"",
       productTypeName:"",
       handleImgVisible:false,
+      Imglist:[]
     };
   }
 
@@ -95,6 +96,7 @@ class Logistics extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const {  form, details } = this.props;
+    const {Imglist}=this.state;
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
       if (!err) {
@@ -107,6 +109,7 @@ class Logistics extends PureComponent {
           id:details.id,
           price:values.price ? Number(values.price) : null,
           settlePrice:values.settlePrice ? Number(values.settlePrice) : null,
+          originalName:Imglist.originalName
         };
         console.log(params)
         getProductattributeUpdate(params).then(res=>{
@@ -165,7 +168,10 @@ class Logistics extends PureComponent {
 
   handleClick = (row) => {
     console.log(row)
-    this.props.details.originalName=row.link
+    this.props.details.h5Background=row.link;
+    this.setState({
+      Imglist:row
+    })
   }
 
   render() {
@@ -271,9 +277,9 @@ class Logistics extends PureComponent {
                 <Tooltip title='H5页面顶部标题，用户下单扫码的时候可以看到'><Icon type='question-circle-o' /></Tooltip>
               </FormItem>
               <FormItem {...formAllItemLayout} label="详情图">
-                {getFieldDecorator('originalName', {
-                  initialValue: details.originalName,
-                })(<Input placeholder="请详情图" onClick={()=>{this.handleImg()}}/>)}
+                {getFieldDecorator('h5Background', {
+                  initialValue: details.h5Background,
+                })(<Input placeholder="请选择详情图" onClick={()=>{this.handleImg()}}/>)}
               </FormItem>
               <FormItem {...formAllItemLayout} label="价格">
                 {getFieldDecorator('price', {

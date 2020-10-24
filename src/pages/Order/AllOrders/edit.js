@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, Icon , Select, message, Tabs, Cascader, Radio,Timeline,} from 'antd';
+import { Form, Input, Card, Row,Modal, Col, Button, Icon , Select, message, Tabs, Cascader, Radio,Timeline,} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -97,6 +97,7 @@ class OrdersEdit extends PureComponent {
 
   // 提醒
   handleReminds = () => {
+    const { detail } = this.state;
     Modal.confirm({
       title: '提醒',
       content: "确定提示此订单吗？",
@@ -104,15 +105,14 @@ class OrdersEdit extends PureComponent {
       okType: 'info',
       cancelText: '取消',
       onOk() {
-        const { detail } = this.state;
-        updateReminds({
+        updateReminds([{
           deptId:detail.deptId,
           id:detail.id,
           outOrderNo:detail.outOrderNo,
           payAmount:Number(detail.payAmount),
           userPhone:detail.userPhone,
           userName:detail.userName,
-        }).then(res=>{
+        }]).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
           }
