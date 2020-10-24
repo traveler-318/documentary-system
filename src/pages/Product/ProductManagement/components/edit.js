@@ -279,7 +279,8 @@ class Logistics extends PureComponent {
               <FormItem {...formAllItemLayout} label="详情图">
                 {getFieldDecorator('h5Background', {
                   initialValue: details.h5Background,
-                })(<Input placeholder="请选择详情图" onClick={()=>{this.handleImg()}}/>)}
+                })(<Input disabled style={{width:"340px",marginRight:"10px"}} placeholder="详情图"/>)}
+                <Button type="primary"  onClick={()=>{this.handleImg()}}>选择图片</Button>
               </FormItem>
               <FormItem {...formAllItemLayout} label="价格">
                 {getFieldDecorator('price', {

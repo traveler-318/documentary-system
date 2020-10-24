@@ -7,7 +7,7 @@ import {
   Button,
   message,
   Radio,
-  Table, Select, Icon, Tooltip,
+  Table, Select, Icon, Tooltip,Upload
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -15,9 +15,11 @@ import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
 import { getImg} from '../../../../services/newServices/product';
 import Img from './Img'
+import { getToken } from '@/utils/authority';
 
 const { Option } = Select;
 const FormItem = Form.Item;
+const { Dragger } = Upload;
 @connect(({ globalParameters}) => ({
   globalParameters,
 }))
@@ -29,13 +31,17 @@ class Background extends PureComponent {
     this.state = {
       data:[],
       senderId:'',
-      handleImgDetailsVisible:false
+      handleImgDetailsVisible:false,
+      visible:false,
     };
   }
 
 
   componentWillMount() {
+    this.getImg()
+  }
 
+  getImg = () =>{
     getImg(1,100).then(res=>{
       console.log(res)
       this.setState({
@@ -58,7 +64,8 @@ class Background extends PureComponent {
   onChange = (row) => {
     console.log(row)
     this.setState({
-      list:row
+      list:row,
+      senderId: row.id,
     })
   }
 
@@ -78,6 +85,34 @@ class Background extends PureComponent {
   }
 
 
+  //图片上传弹框
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  cancelModal = () =>{
+    this.setState({
+      visible: false,
+    });
+    this.getImg()
+  }
+    
+  onUpload = info => {
+    const { status } = info.file;
+    if (status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (status === 'done') {
+      message.success(`${info.file.name} 附件上传成功!`);
+      this.cancelModal();
+    } else if (status === 'error') {
+      message.error(`${info.file.response.msg}`);
+    }
+  };
+    
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -89,10 +124,24 @@ class Background extends PureComponent {
       data,
       loading,
       handleImgDetailsVisible,
-      ImgDetails
+      ImgDetails,
+      visible,
+      senderId,
       } = this.state;
 
     console.log(data)
+
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 5 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 12 },
+        md: { span: 16 },
+      },
+    };
 
     const columns=[
       {
@@ -101,7 +150,7 @@ class Background extends PureComponent {
         width: 50,
         render: (res,rows) => {
           return(
-            <Radio onChange={() =>this.onChange(rows)}></Radio>
+            <Radio checked={res===senderId?true:false} onChange={() =>this.onChange(rows)}></Radio>
           )
         },
       },
@@ -124,6 +173,14 @@ class Background extends PureComponent {
       },
     ]
 
+    const uploadProps = {
+      name: 'file',
+      headers: {
+        'Blade-Auth': getToken(),
+      },
+      action: '/api/blade-resource/oss/endpoint/put-file-attach',
+    };
+
     return (
       <div>
         <Modal
@@ -135,6 +192,9 @@ class Background extends PureComponent {
             <Button key="back" onClick={handleCancelImg}>
               取消
             </Button>,
+            <Button type="danger" onClick={this.showModal}>
+            上传
+          </Button>,
             <Button type="primary" loading={loading} onClick={()=>this.handleSubmit()}>
               确定
             </Button>,
@@ -150,6 +210,27 @@ class Background extends PureComponent {
             handleCancelImgDetails={this.handleCancelImgDetails}
           />
         ):""}
+
+      <Modal
+          title="附件上传"
+          width={500}
+          visible={visible}
+          onOk={this.cancelModal}
+          onCancel={this.cancelModal}
+          okText="确认"
+          cancelText="取消"
+        >
+          <Form style={{ marginTop: 8 }} hideRequiredMark>
+            <FormItem {...formItemLayout} label="附件上传">
+              <Dragger {...uploadProps} onChange={this.onUpload}>
+                <p className="ant-upload-drag-icon">
+                  <Icon type="inbox" />
+                </p>
+                <p className="ant-upload-text">将文件拖到此处，或点击上传</p>
+              </Dragger>
+            </FormItem>
+          </Form>
+        </Modal>
       </div>
     );
   }

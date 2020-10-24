@@ -98,11 +98,12 @@ class OrdersEdit extends PureComponent {
   // 提醒
   handleReminds = () => {
     const { detail } = this.state;
+    console.log(detail)
     Modal.confirm({
       title: '提醒',
       content: "确定提示此订单吗？",
       okText: '确定',
-      okType: 'info',
+      okType: 'primary',
       cancelText: '取消',
       onOk() {
         updateReminds([{

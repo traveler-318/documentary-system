@@ -392,17 +392,10 @@ class LogisticsConfiguration extends PureComponent {
     const {currentIndex, listID} = this.state;
     const _this=this;
     if(currentIndex === listID.length-1){
-      Modal.success({
-        title: '操作成功',
-        content: msg,
-        okText: '确定',
-        async onOk() {
-          _this.setState({
-            handlePrintingClick:true
-          })
-        },
-        onCancel() {},
-      });
+      Modal.success('操作成功');
+      this.setState({
+        handlePrintingClick:true
+      })
     }else{
       const next = this.handleSwitch
       Modal.confirm({
