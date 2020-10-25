@@ -66,7 +66,7 @@ class OrdersEdit extends PureComponent {
     getDetails(params).then(res=>{
       this.setState({
         detail:res.data,
-        selectedOptions:res.data.province+res.data.city+res.data.area
+        // selectedOptions:res.data.province+res.data.city+res.data.area
       })
       this.getList(res.data)
     })

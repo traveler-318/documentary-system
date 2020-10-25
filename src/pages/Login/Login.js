@@ -5,6 +5,7 @@ import { Checkbox, Alert, Icon, Row, Col, Card } from 'antd';
 import Login from '../../components/Login';
 import styles from './Login.less';
 import { tenantMode, captchaMode, authUrl } from '../../defaultSettings';
+import {getQueryString,getTopUrl} from '../../utils/utils'
 
 const { Tab, TenantId, UserName, Password, Captcha, Submit } = Login;
 
@@ -19,7 +20,11 @@ class LoginPage extends Component {
     autoLogin: true,
   };
 
-  componentWillMount() {}
+  componentWillMount() {
+    // setTimeout(()=>{
+    //   console.log(getQueryString("tenantId"),getTopUrl(),"getQueryString()")
+    // },3000)
+  }
 
   onTabChange = type => {
     this.setState({ type });
@@ -108,7 +113,7 @@ class LoginPage extends Component {
               this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
             {tenantVisible ? (
               <TenantId
-                defaultValue={``} //${tenantId}
+                defaultValue={getQueryString("tenantId")} //${tenantId}
                 name="tenantId"
                 placeholder={`${formatMessage({ id: 'app.login.tenantId' })}`}
                 rules={[

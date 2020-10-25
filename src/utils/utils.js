@@ -271,8 +271,20 @@ export function getTopUrl() {
  */
 export function getQueryString(name) {
   // eslint-disable-next-line no-shadow
-  const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
-  const r = window.location.search.substr(1).match(reg);
-  if (r != null) return unescape(decodeURI(r[2]));
-  return null;
+  // const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
+  // const r = window.location.href.substr(1).match(reg);
+  // if (r != null) return unescape(decodeURI(r[2]));
+  // return null;
+
+  let url = window.location.href.split("?")[1];
+    console.log(url,"url")
+    if(url){
+        var vars = url.split("&");
+        for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == name){return pair[1];}
+        }
+        return null;
+    }
+    return null;
 }
