@@ -8,10 +8,14 @@ import Panel from '../../../../components/Panel';
 import FormDetailsTitle from '../../../../components/FormDetailsTitle';
 import styles from '../../../../layouts/Sword.less';
 import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../../actions/user';
+import { getUserInfo } from '../../../../services/user';
 import func from '../../../../utils/Func';
 import { tenantMode } from '../../../../defaultSettings';
 import { CITY } from '../../../../utils/city';
 import { getCookie } from '../../../../utils/support';
+
+
+
 import {
   updateData,
   getRegion,
@@ -20,7 +24,7 @@ import {
   productTreelist,
   logisticsPrintRequest
 } from '../../../../services/newServices/order'
-import { 
+import {
   LOGISTICSCOMPANY,
   paymentCompany,
   productType,
@@ -31,7 +35,7 @@ import {
   ORDERSOURCE
 } from '../data.js';
 
-import { 
+import {
   getList,
   // 打印模板
   getSurfacesingleList,
@@ -77,7 +81,8 @@ class LogisticsConfiguration extends PureComponent {
       additionalItem:{},
       currentIndex:0,
       listID:[],
-      handlePrintingClick:false
+      handlePrintingClick:false,
+      localPrintStatus:''
     };
   }
 
@@ -90,14 +95,22 @@ class LogisticsConfiguration extends PureComponent {
     this.setState({
       listID:globalParameters.listParam
     })
-
-    
     // 获取详情数据
     this.getDetailsData(globalParameters.listParam[0].id);
 
     // 拼装对应产品
     // this.assemblingData();
     this.getTreeList();
+
+    getUserInfo().then(resp => {
+      if (resp.success) {
+        const userInfo = resp.data;
+        this.setState({
+          localPrintStatus: userInfo.localPrintStatus
+        });
+      }
+    });
+
   }
 
   getDetailsData = (id,type) => {
@@ -115,7 +128,7 @@ class LogisticsConfiguration extends PureComponent {
         if(!_data.logisticsCompany){
           _data.logisticsCompany = _value.logisticsCompany;
         }
-        
+
         if(!_data.smsConfirmation){
           _data.smsConfirmation = _value.smsConfirmation;
         }
@@ -140,9 +153,9 @@ class LogisticsConfiguration extends PureComponent {
     let { currentIndex, listID } = this.state
     if(type === 0){
       this.setState({
-        currentIndex:currentIndex - 1 
+        currentIndex:currentIndex - 1
       },()=>{
-        
+
       })
       this.getDetailsData(listID[currentIndex - 1].id,"switch");
     }else{
@@ -150,7 +163,7 @@ class LogisticsConfiguration extends PureComponent {
       this.setState({
         currentIndex:currentIndex + 1
       },()=>{
-        
+
       })
     }
   }
@@ -229,7 +242,7 @@ class LogisticsConfiguration extends PureComponent {
             }
           }
         }
-        
+
       });
       console.log(senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem)
       if(JSON.stringify(authorizationItem) === "{}"){
@@ -321,7 +334,7 @@ class LogisticsConfiguration extends PureComponent {
         message.error(res.msg);
       }
     })
-  }; 
+  };
 
   handleSubmit = e => {
     e.preventDefault();
@@ -336,8 +349,9 @@ class LogisticsConfiguration extends PureComponent {
   // 保存并打印
   handlePrinting = (e) => {
     const { form } = this.props;
-    const { detail } = this.state;
-    form.validateFieldsAndScroll((err, values) => {
+    const { detail,localPrintStatus, currentIndex } = this.state;
+    if(!detail.taskId){
+       form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           console.log("先保存数据")
           // 先保存数据
@@ -360,29 +374,50 @@ class LogisticsConfiguration extends PureComponent {
                 shipmentRemind:values.smsConfirmation, //发货提醒
                 ...res.authorizationItem
               };
-              for(let i=0; i<listID.length; i++){
+              // for(let i=0; i<listID.length; i++){
                 param.recMans.push(
                   {
-                    "mobile": listID[i].userPhone,
-                    "name": listID[i].userName,
-                    "printAddr": listID[i].userAddress,
-                    "out_order_no": listID[i].outOrderNo,
-                    "id":listID[i].id,
-                    'salesman':listID[i].salesman,
+                    "mobile": listID[currentIndex].userPhone,
+                    "name": listID[currentIndex].userName,
+                    "printAddr": listID[currentIndex].userAddress,
+                    "out_order_no": listID[currentIndex].outOrderNo,
+                    "id":listID[currentIndex].id,
+                    'salesman':listID[currentIndex].salesman,
                   }
                 )
+              // }
+              if(localPrintStatus === 1){
+                param.localPrintStatus=1;
+                const { dispatch } = this.props;
+                console.log(param)
+                logisticsPrintRequest(param).then(response=>{
+                  if(response.code === 200){
+                    sessionStorage.setItem('imgBase64', response.data)
+                    window.open(`#/order/allOrders/img`);
+                    // 刷新详情数据
+                    this.getDetailsData(listID[currentIndex].id);
+                  }else{
+                    message.error(response.msg);
+                  }
+                })
+              }else {
+                param.localPrintStatus=0;
+                console.log(param)
+                logisticsPrintRequest(param).then(response=>{
+                  if(response.code === 200){
+                    this.saveSuccess(response.msg);
+                  }else{
+                    message.error(response.msg);
+                  }
+                })
               }
-              logisticsPrintRequest(param).then(response=>{
-                if(response.code === 200){
-                  this.saveSuccess(response.msg);
-                }else{
-                  message.error(response.msg);
-                }
-              })
             });
           })
         }
       });
+    }else{
+      message.error("你已经打印过了")
+    }
   }
 
   handleChange = value => {
@@ -409,10 +444,10 @@ class LogisticsConfiguration extends PureComponent {
         onCancel() {},
       });
     }
-    
+
   }
 
-  
+
 
   disabledDate = (current) => {
     // Can not select days before today and today
@@ -483,17 +518,17 @@ class LogisticsConfiguration extends PureComponent {
           <Button icon="reload" onClick={this.handleSubmit} loading={loading}>
             重置
           </Button>
-          <Button 
-            icon="right" 
-            onClick={ currentIndex === listID.length-1 ? "" : ()=>this.handleSwitch(1)} 
+          <Button
+            icon="right"
+            onClick={ currentIndex === listID.length-1 ? "" : ()=>this.handleSwitch(1)}
             style={{float:"right"}}
-            disabled={ currentIndex === listID.length-1 ? true : false }  
+            disabled={ currentIndex === listID.length-1 ? true : false }
           >
           </Button>
-          <Button 
-            icon="left" 
-            onClick={ currentIndex != 0 ? ()=>this.handleSwitch(0) : ""} 
-            disabled={ currentIndex != 0 ? false : true } 
+          <Button
+            icon="left"
+            onClick={ currentIndex != 0 ? ()=>this.handleSwitch(0) : ""}
+            disabled={ currentIndex != 0 ? false : true }
             style={{float:"right",marginRight:5}}
           >
           </Button>
@@ -537,7 +572,7 @@ class LogisticsConfiguration extends PureComponent {
                       },
                     ],
                   })(
-                    <Cascader 
+                    <Cascader
                       options={productList}
                       fieldNames={{ label: 'value'}}
                       onChange={(value, selectedOptions)=>{
@@ -573,7 +608,7 @@ class LogisticsConfiguration extends PureComponent {
                       },
                     ],
                   })(
-                    <Input 
+                    <Input
                       placeholder="请输入SN"
                       onPressEnter={this.handleSubmit}
                     />
@@ -658,9 +693,9 @@ class LogisticsConfiguration extends PureComponent {
                 </FormItem> */}
               </Col>
             </Row>
-            
+
           </Card>
-          
+
         </Form>
       </Panel>
     );

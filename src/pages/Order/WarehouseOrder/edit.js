@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, Icon , Select, message, Tabs, Cascader, Radio,Timeline,} from 'antd';
+import { Form, Input, Card, Row,Modal, Col, Button, Icon , Select, message, Tabs, Cascader, Radio,Timeline,} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -98,21 +98,22 @@ class OrdersEdit extends PureComponent {
   // 提醒
   handleReminds = () => {
     const { detail } = this.state;
+    console.log(detail)
     Modal.confirm({
       title: '提醒',
       content: "确定提示此订单吗？",
       okText: '确定',
-      okType: 'info',
+      okType: 'primary',
       cancelText: '取消',
       onOk() {
-        updateReminds({
+        updateReminds([{
           deptId:detail.deptId,
           id:detail.id,
           outOrderNo:detail.outOrderNo,
           payAmount:Number(detail.payAmount),
           userPhone:detail.userPhone,
           userName:detail.userName,
-        }).then(res=>{
+        }]).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
           }
@@ -125,7 +126,7 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail } = this.state;
+    const { detail,selectedOptions } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       //ORDERSTATUS.map(item => {
       //  if(item.name === values.confirmTag){
@@ -137,7 +138,8 @@ class OrdersEdit extends PureComponent {
           values.orderSource = item.key
         }
       })
-      values.id = detail.id
+      values.id = detail.id;
+      values.userAddress=`${selectedOptions}${values.userAddress}`
       if (!err) {
         const params = {
           ...values
@@ -163,12 +165,17 @@ class OrdersEdit extends PureComponent {
   }
 
   onChange = (value, selectedOptions) => {
+    let text = ""
+    for(let i=0; i<selectedOptions.length; i++){
+      text += selectedOptions[i].label
+    }
     this.setState({
       cityparam:{
         province:value[0],
         city:value[1],
         area:value[2],
-      }
+      },
+      selectedOptions:text
     })
   };
 
