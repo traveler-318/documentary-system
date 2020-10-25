@@ -349,7 +349,7 @@ class LogisticsConfiguration extends PureComponent {
   // 保存并打印
   handlePrinting = (e) => {
     const { form } = this.props;
-    const { detail,localPrintStatus } = this.state;
+    const { detail,localPrintStatus , currentIndex} = this.state;
     if(!detail.taskId){
        form.validateFieldsAndScroll((err, values) => {
         if (!err) {
@@ -374,26 +374,31 @@ class LogisticsConfiguration extends PureComponent {
                 shipmentRemind:values.smsConfirmation, //发货提醒
                 ...res.authorizationItem
               };
-              for(let i=0; i<listID.length; i++){
+              // for(let i=0; i<listID.length; i++){
                 param.recMans.push(
                   {
-                    "mobile": listID[i].userPhone,
-                    "name": listID[i].userName,
-                    "printAddr": listID[i].userAddress,
-                    "out_order_no": listID[i].outOrderNo,
-                    "id":listID[i].id,
-                    'salesman':listID[i].salesman,
+                    "mobile": listID[currentIndex].userPhone,
+                    "name": listID[currentIndex].userName,
+                    "printAddr": listID[currentIndex].userAddress,
+                    "out_order_no": listID[currentIndex].outOrderNo,
+                    "id":listID[currentIndex].id,
+                    'salesman':listID[currentIndex].salesman,
                   }
                 )
-              }
+              // }
               if(localPrintStatus === 1){
                 param.localPrintStatus=1;
                 const { dispatch } = this.props;
                 console.log(param)
                 logisticsPrintRequest(param).then(response=>{
-                 sessionStorage.setItem('imgBase64', response.data)
-                 window.open(`#/order/allOrders/img`)
-
+                  if(response.code === 200){
+                    sessionStorage.setItem('imgBase64', response.data)
+                    window.open(`#/order/allOrders/img`);
+                    // 刷新详情数据
+                    this.getDetailsData(listID[currentIndex].id);
+                  }else{
+                    message.error(response.msg);
+                  }
                 })
               }else {
                 param.localPrintStatus=0;

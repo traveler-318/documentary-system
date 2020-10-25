@@ -71,7 +71,6 @@ const ResizeableTitle = props => {
 class AllOrdersList extends PureComponent {
 
   constructor(props) {
-    console.log(sessionStorage.orderTabKey,(sessionStorage.orderTabKey && sessionStorage.orderTabKey != 'null'))
     super(props);
     this.state = {
       // 反选数据
@@ -85,7 +84,7 @@ class AllOrdersList extends PureComponent {
         current:1
       },
       tabCode:[],
-      tabKey:(sessionStorage.orderTabKey && sessionStorage.orderTabKey != 'null') ? sessionStorage.orderTabKey : '0',
+      tabKey:sessionStorage.orderTabKey ? sessionStorage.orderTabKey : '0',
       selectedRows:[],
       // 物流弹窗
       logisticsVisible:false,

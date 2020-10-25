@@ -319,6 +319,12 @@ class OrdersAdd extends PureComponent {
                 <FormItem {...formAllItemLayout} label="归属销售">
                   {getFieldDecorator('salesman', {
                       initialValue: null,
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择归属销售',
+                        },
+                      ],
                     })(
                     <Select placeholder={"请选择归属销售"}>
                     {salesmanList.map(item=>{
