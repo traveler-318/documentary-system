@@ -259,7 +259,8 @@ class ProductList extends PureComponent {
             />
           </div>
         </Modal>
-        <Modal
+        {previewVisible?(
+          <Modal
           title="预览"
           visible={previewVisible}
           width={423}
@@ -280,6 +281,8 @@ class ProductList extends PureComponent {
             />
           </div>
         </Modal>
+        ):""}
+        
       </div>
     );
   }
