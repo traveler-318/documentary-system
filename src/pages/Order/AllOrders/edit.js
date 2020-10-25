@@ -126,7 +126,7 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail } = this.state;
+    const { detail,selectedOptions } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       //ORDERSTATUS.map(item => {
       //  if(item.name === values.confirmTag){
@@ -138,7 +138,8 @@ class OrdersEdit extends PureComponent {
           values.orderSource = item.key
         }
       })
-      values.id = detail.id
+      values.id = detail.id;
+      values.userAddress=`${selectedOptions}${values.userAddress}`
       if (!err) {
         const params = {
           ...values
@@ -164,12 +165,17 @@ class OrdersEdit extends PureComponent {
   }
 
   onChange = (value, selectedOptions) => {
+    let text = ""
+    for(let i=0; i<selectedOptions.length; i++){
+      text += selectedOptions[i].label
+    }
     this.setState({
       cityparam:{
         province:value[0],
         city:value[1],
         area:value[2],
-      }
+      },
+      selectedOptions:text
     })
   };
 
