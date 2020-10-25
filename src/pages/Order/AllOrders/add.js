@@ -322,7 +322,7 @@ class OrdersAdd extends PureComponent {
                     })(
                     <Select placeholder={"请选择归属销售"}>
                     {salesmanList.map(item=>{
-                      return (<Option value={item.userName}>{item.userName}</Option>)
+                      return (<Option value={item.userAccount}>{item.userName}</Option>)
                     })}
                   </Select>
                   )}
