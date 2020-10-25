@@ -33,13 +33,16 @@ class Background extends PureComponent {
 
 
   componentWillMount() {
-
+    const baseImg='data:image/jpg;base64,'+ JSON.parse(sessionStorage.getItem('imgBase64'))[0] +''
     this.setState({
-      imgBase64:sessionStorage.getItem('imgBase64')
+      imgBase64:sessionStorage.getItem('imgBase64'),
+      baseImg:baseImg
     })
 
-    //this.printHTML()
+  }
 
+  componentDidMount(){
+    this.printHTML()
   }
 
   printHTML(){
@@ -74,12 +77,12 @@ class Background extends PureComponent {
       ImgDetails
       } = this.props;
 
-
+    const {baseImg}=this.state
 
 
     return (
       <div>
-
+        <img src={baseImg}/>
       </div>
     );
   }
