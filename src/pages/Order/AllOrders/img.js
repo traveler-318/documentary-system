@@ -33,35 +33,27 @@ class Background extends PureComponent {
 
 
   componentWillMount() {
+    const baseImg='data:image/png;base64,'+ JSON.parse(sessionStorage.getItem('imgBase64'))[0] +''
 
     this.setState({
-      imgBase64:sessionStorage.getItem('imgBase64')
+      imgBase64:sessionStorage.getItem('imgBase64'),
+      baseImg:baseImg
     })
-
-    //this.printHTML()
-
   }
-
   printHTML(){
-    var beforePrint = function(){
+     var beforePrint = function(){
+
     }
-    var afterPrint = function(){
-      window.close()
-    }
-    if (window.matchMedia) {
-      var mediaQueryList = window.matchMedia('print');
-      mediaQueryList.addListener(function(mql) {
-        if (mql.matches) {
-          // beforePrint();
-        } else {
-          // afterPrint();
-        }
-      });
-    }
+     var afterPrint = function(){
+        window.close()
+     }
+
+
+    window.document.body.innerHTML = window.document.getElementById('billDetails').innerHTML;  
+
     window.onbeforeprint = beforePrint;
     window.onafterprint = afterPrint;
-
-    window.print();    //Firefox可以调用   IE没有效果
+    window.print(); 
 
   }
 
@@ -75,11 +67,12 @@ class Background extends PureComponent {
       } = this.props;
 
 
+      const {baseImg}=this.state
 
 
     return (
-      <div>
-
+      <div id={"billDetails"}>
+        <img id={"img"} src={baseImg} onLoad={()=>this.printHTML()}/>
       </div>
     );
   }
