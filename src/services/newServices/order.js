@@ -22,7 +22,7 @@ export async function createData(params) {
 }
 
 export async function updateData(params) {
-  return request('/api/order/order/update', {
+  return request('/api/order/order/orderFollowing', {
     method: 'POST',
     body: params,
   });
