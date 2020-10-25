@@ -108,7 +108,7 @@ class LoginPage extends Component {
               this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
             {tenantVisible ? (
               <TenantId
-                defaultValue={`188612`} //${tenantId}
+                defaultValue={``} //${tenantId}
                 name="tenantId"
                 placeholder={`${formatMessage({ id: 'app.login.tenantId' })}`}
                 rules={[
@@ -120,7 +120,7 @@ class LoginPage extends Component {
               />
             ) : null}
             <UserName
-              defaultValue="admin"
+              defaultValue=""
               name="username"
               placeholder={`${formatMessage({ id: 'app.login.userName' })}`}
               rules={[
@@ -131,7 +131,7 @@ class LoginPage extends Component {
               ]}
             />
             <Password
-              defaultValue="admin"
+              defaultValue=""
               name="password"
               placeholder={`${formatMessage({ id: 'app.login.password' })}`}
               rules={[
@@ -145,7 +145,7 @@ class LoginPage extends Component {
                 this.loginForm.validateFields(this.handleSubmit);
               }}
             />
-            {captchaMode ? <Captcha name="code" mode="image" defaultValue={num} /> : null}
+            {captchaMode ? <Captcha name="code" mode="image" /> : null}
           {/* </Tab> */}
           {/* <Tab key="social" tab={formatMessage({ id: 'app.login.tab-login-social' })}>
             <Card className={styles.card} bordered={false}>

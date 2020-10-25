@@ -95,6 +95,7 @@ class OrdersAdd extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values.deptId = getCookie("dept_id");
+        values.tenantId = getCookie("tenantId");
         values = {...values,...cityparam};
         if(values.productType && values.productType != ""){
           console.log(values.productType[2])

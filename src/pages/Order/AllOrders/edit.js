@@ -41,6 +41,7 @@ class OrdersEdit extends PureComponent {
         ownership:"3"
       },
       ids:'',
+      selectedOptions:""
     };
   }
 
@@ -65,6 +66,7 @@ class OrdersEdit extends PureComponent {
     getDetails(params).then(res=>{
       this.setState({
         detail:res.data,
+        selectedOptions:res.data.province+res.data.city+res.data.area
       })
       this.getList(res.data)
     })

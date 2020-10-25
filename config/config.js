@@ -78,7 +78,7 @@ export default {
   },
   proxy: {
     '/api': {
-      target: 'http://api.gendanbao.com.cn:9010',
+      target: 'http://120.26.63.67:9010',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

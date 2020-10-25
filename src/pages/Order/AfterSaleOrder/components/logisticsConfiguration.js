@@ -610,7 +610,7 @@ class LogisticsConfiguration extends PureComponent {
                   })(
                     <Input
                       placeholder="请输入SN"
-                      onPressEnter={this.handleSubmit}
+                      onPressEnter={this.handlePrinting}
                     />
                    )}
                 </FormItem>
