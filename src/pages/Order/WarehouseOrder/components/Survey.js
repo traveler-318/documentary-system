@@ -196,8 +196,6 @@ class Survey extends PureComponent {
   handleSubmit = () => {
     const { detail , describe, reminderTime } = this.state;
     let { followRecords } = this.state;
-
-    console.log(moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'))
     let param = {
       userName:detail.userName,
       describe,
@@ -211,24 +209,34 @@ class Survey extends PureComponent {
     let _param = {
       id:detail.id,
       deptId:detail.deptId,
+      confirmTag:detail.confirmTag,
+      outOrderNo:detail.outOrderNo,
+      salesman:detail.salesman,
+      userName:detail.userName,
+      userPhone:detail.userPhone,
+      reminderTime:reminderTime === ""? null:moment(reminderTime,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
     }
     _param.followRecords = JSON.stringify({
       list:followRecords
     })
+    console.log(_param)
 
     // if(detail.confirmTag === '4'){
-      updateData(_param).then(res=>{
-        if(res.code === 200){
-          message.success(res.msg);
-          this.props.getEditDetails();
-          this.handleEmpty();
-        }
-      })
+    orderFollowing(_param).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg);
+        this.props.getEditDetails();
+        this.handleEmpty();
+      }else{
+        message.error(res.msg);
+      }
+    })
     // }else {
     //   message.warning("当物流签收后才能进入跟进状态");
     // }
 
   }
+
 
   handleReminderTime = () => {
     this.setState({

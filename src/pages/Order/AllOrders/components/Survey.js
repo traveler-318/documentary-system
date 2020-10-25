@@ -212,6 +212,8 @@ class Survey extends PureComponent {
       confirmTag:detail.confirmTag,
       outOrderNo:detail.outOrderNo,
       salesman:detail.salesman,
+      userName:detail.userName,
+      userPhone:detail.userPhone,
       reminderTime:reminderTime === ""? null:moment(reminderTime,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
     }
     _param.followRecords = JSON.stringify({

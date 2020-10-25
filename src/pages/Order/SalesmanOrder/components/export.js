@@ -244,17 +244,21 @@ class Export extends PureComponent {
       responseType: "blob"
     }).then(res => {
       console.log(res)
-      let data = res.data;
-      let fileReader = new FileReader();
-      fileReader.readAsText(data, 'utf-8');
-      fileReader.onload = function() {
-        try {
-          let jsonData = JSON.parse(this.result);  // 说明是普通对象数据，后台转换失败
-          message.error(jsonData.data);
-        }catch(err){
-          cellBack(res)
-        }
-      };
+      if(res.code === 200){
+        let data = res.data;
+        let fileReader = new FileReader();
+        fileReader.readAsText(data, 'utf-8');
+        fileReader.onload = function() {
+          try {
+            let jsonData = JSON.parse(this.result);  // 说明是普通对象数据，后台转换失败
+            message.error(jsonData.data);
+          }catch(err){
+            cellBack(res)
+          }
+        };
+      }else {
+        message.error(res.msg);
+      }
     })
   }
 
