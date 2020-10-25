@@ -350,7 +350,8 @@ class LogisticsConfiguration extends PureComponent {
   handlePrinting = (e) => {
     const { form } = this.props;
     const { detail,localPrintStatus } = this.state;
-    form.validateFieldsAndScroll((err, values) => {
+    if(!detail.taskId){
+       form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           console.log("先保存数据")
           // 先保存数据
@@ -385,15 +386,14 @@ class LogisticsConfiguration extends PureComponent {
                   }
                 )
               }
-              console.log(localPrintStatus)
               if(localPrintStatus === 1){
                 param.localPrintStatus=1;
                 const { dispatch } = this.props;
-                //sessionStorage.setItem('imgBase64', data.data.imgBase64)
-                //window.open(`#/order/allOrders/img`)
-
+                console.log(param)
                 logisticsPrintRequest(param).then(response=>{
-                  console.log(response)
+                 sessionStorage.setItem('imgBase64', response.data)
+                 window.open(`#/order/allOrders/img`)
+
                 })
               }else {
                 param.localPrintStatus=0;
@@ -410,6 +410,9 @@ class LogisticsConfiguration extends PureComponent {
           })
         }
       });
+    }else{
+      message.error("你已经打印过了")
+    }
   }
 
   handleChange = value => {

@@ -7,7 +7,8 @@ import {
   Tag, 
   message,
   Table,
-  Radio
+  Radio,
+  Divider
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -40,6 +41,7 @@ class ProductList extends PureComponent {
       data:{},
       value:'',
       dataSource:[],
+      previewVisible:false
     };
   }
 
@@ -151,6 +153,27 @@ class ProductList extends PureComponent {
 
   };
 
+  handlePreview = (row) => {
+    const serverAddress = getCookie("serverAddress");
+    const { globalParameters } = this.props;
+    const { codeUrl } = this.state;
+    console.log(globalParameters)
+    //const url = codeUrl+"&userName="+globalParameters.detailData.userName+"&deptId="+globalParameters.detailData.deptId+"&payAmount="+values.payAmount;
+    const url = codeUrl+globalParameters.detailData.userAccount+"_"+row.id+"_"+row.price;
+    console.log(url)
+    this.props.handleCancelAggregateCode()
+    this.setState({
+      previewVisible:true,
+      qrUrl:url,
+    })
+  }
+
+  handleCancelPreview = () => {
+    this.setState({
+      previewVisible:false
+    })
+  }
+
   changeRechargeAmount = (e) => {
     this.setState({
       RechargeAmount:e,
@@ -178,6 +201,7 @@ class ProductList extends PureComponent {
         qrUrl,
         value,
         dataSource,
+        previewVisible
     } = this.state;
 
     const columns = [
@@ -193,7 +217,13 @@ class ProductList extends PureComponent {
         {
             title: '推广码',
             dataIndex: 'id',
-            render: (text,row) => <a onClick={()=>this.handleSubmit(row)}>二维码</a>,
+            render: (text,row) => {
+              return(<>
+                <a onClick={()=>this.handleSubmit(row)}>二维码</a>
+                <Divider type="vertical" />
+                <a onClick={()=>this.handlePreview(row)}>预览</a>
+              </>)
+            },
         },
       ];
       console.log(dataSource,"12323")
@@ -219,15 +249,34 @@ class ProductList extends PureComponent {
           visible={groupAddVisible}
           width={300}
           onCancel={this.handleCancelGroupAdd}
-          footer={[
-
-          ]}
+          footer={null}
         >
           <div>
             <QRCode
               value={qrUrl}
               size={250}
               fgColor="#000000"
+            />
+          </div>
+        </Modal>
+        <Modal
+          title="预览"
+          visible={previewVisible}
+          width={423}
+          onCancel={this.handleCancelPreview}
+          footer={null}
+        >
+          <div>
+            <iframe
+              src={qrUrl}
+              width={375}
+              height={500}
+              frameBorder="no"
+              border="0"
+              marginWidth="0"
+              marginHeight="0"
+              scrolling="no"
+              allowTransparency="yes"
             />
           </div>
         </Modal>

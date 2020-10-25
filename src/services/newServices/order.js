@@ -28,6 +28,14 @@ export async function updateData(params) {
   });
 }
 
+export async function orderFollowing(params) {
+  return request('/api/order/order/orderFollowing', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+
 export async function deleteData(params) {
   return request('/api/order/order/remove', {
     method: 'POST',
