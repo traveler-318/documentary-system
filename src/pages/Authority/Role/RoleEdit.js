@@ -64,28 +64,35 @@ class RoleEdit extends PureComponent {
       match: {
         params: { id },
       },
-      role: {
-        detail,
-      },
     } = this.props;
 
-    const {roleAlias} = this.state;
-    let type = false;
-    for(let i=0; i<roleAlias.length; i++){
-      if(roleAlias[i].code === detail.roleAlias){
-        type = true
+    setTimeout(()=>{
+      const {
+        role: {
+          detail,
+        },
+      } = this.props;
+      const {roleAlias} = this.state;
+      let type = false;
+      for(let i=0; i<roleAlias.length; i++){
+        if(roleAlias[i].code === detail.roleAlias){
+          type = true
+        }
       }
-    }
 
-    if(!type){
-      this.setState({
-        roleAlias:[...roleAlias,{
-          "name":detail.roleAlias,
-          "code":detail.roleAlias,
-        }]
-      })
-      
-    }
+      if(!type){
+        this.setState({
+          roleAlias:[...roleAlias,{
+            "name":detail.roleAlias,
+            "code":detail.roleAlias,
+          }]
+        },()=>{
+          console.log("roleAlias",this.state.roleAlias)
+        })
+      }
+    },500)
+
+    
     dispatch(ROLE_DETAIL(id));
     dispatch(ROLE_INIT());
   }

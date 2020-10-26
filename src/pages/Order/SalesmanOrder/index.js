@@ -16,6 +16,7 @@ import {
   deleteData,
   updateRemind,
   logisticsRepeatPrint,
+  localPrinting,
   updateReminds,
   toExamine,
   synCheck,
@@ -575,6 +576,12 @@ class AllOrdersList extends PureComponent {
       return  message.info('请至少选择一条数据');
     }
 
+    if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
+      if(selectedRows.length > 1){
+       return  message.info('您已开启本地打印，一次最多打印一条数据');
+      }
+    }
+
     // 当前时间戳
     const timestamp = (new Date()).getTime();
     const timeInterval = 24 * 60 * 60 * 1000 * 2;
@@ -615,12 +622,26 @@ class AllOrdersList extends PureComponent {
         param.push(selectedRows[i].id)
       }
 
+      if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
+        // 本地打印
+        localPrinting({
+          id:selectedRows[0].id,
+          logisticsPrintType:selectedRows[0].logisticsPrintType
+        }).then(res=>{
+          if(res.code === 200){
+            sessionStorage.setItem('imgBase64', res.data)
+            window.open(`#/order/allOrders/img`);
+          }else{
+            message.error(res.msg);
+          }
+        })
+    }else{
       logisticsRepeatPrint(param).then(res=>{
         if(res.code === 200){
           message.success(res.msg);
         }
       })
-
+    }
 
     }
   }

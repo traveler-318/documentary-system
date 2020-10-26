@@ -142,7 +142,8 @@ class SenderAdd extends PureComponent {
                    
                   title='1、复制本登录账号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 2、粘贴到到，系统管理—新增用户—登录账号里面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-3、角色配置成销售角色注意：本登录账号必须要与用户管理里面的登录账号信息一致，否则会导致销售无法登录到自己后台'><Icon
+3、角色配置成销售角色注意：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+本登录账号必须要与用户管理里面的登录账号信息一致，否则会导致销售无法登录到自己后台'><Icon
 style={{
   position: 'absolute',
   right: '-24px',
