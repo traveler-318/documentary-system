@@ -611,7 +611,9 @@ class AllOrdersList extends PureComponent {
 
       if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
           // 本地打印
-          localPrinting(param).then(res=>{
+          localPrinting({
+            id:selectedRows[0].id
+          }).then(res=>{
             if(res.code === 200){
               sessionStorage.setItem('imgBase64', res.data)
               window.open(`#/order/allOrders/img`);
