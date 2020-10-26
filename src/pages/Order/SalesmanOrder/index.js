@@ -529,6 +529,10 @@ class AllOrdersList extends PureComponent {
     const {selectedRows} = this.state;
     const { dispatch } = this.props;
     const  tips=[];
+    if(selectedRows.length <= 0){
+      return  message.info('请至少选择一条数据');
+    }
+
     if(selectedRows.length > 20){
       message.info('最多批量操作20条数据');
     }else{
@@ -565,7 +569,12 @@ class AllOrdersList extends PureComponent {
   repeat = () =>{
     const {selectedRows} = this.state;
     const { dispatch } = this.props;
-    const  tips=[]
+    const  tips=[];
+
+    if(selectedRows.length <= 0){
+      return  message.info('请至少选择一条数据');
+    }
+
     // 当前时间戳
     const timestamp = (new Date()).getTime();
     const timeInterval = 24 * 60 * 60 * 1000 * 2;
