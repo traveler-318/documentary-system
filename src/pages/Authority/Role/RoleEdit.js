@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect, message } from 'antd';
+import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect, message, Select } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
@@ -7,6 +7,7 @@ import { ROLE_DETAIL, ROLE_INIT, ROLE_SUBMIT } from '../../../actions/role';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const { Option } = Select;
 
 @connect(({ role, loading }) => ({
   role,
@@ -14,6 +15,30 @@ const { TextArea } = Input;
 }))
 @Form.create()
 class RoleEdit extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      roleAlias:[
+        // {
+        //   'name':"分公司管理员",
+        //   'code':"branchadmin"
+        // },
+        {
+          'name':"销售角色",
+          'code':"salesrole"
+        },
+        {
+          'name':"仓库角色",
+          'code':"warehouseroles"
+        },
+        {
+          'name':"售后角色",
+          'code':"afterteam"
+        },
+      ]
+    };
+  }
+
   componentWillMount() {
     const {
       dispatch,
@@ -64,6 +89,8 @@ class RoleEdit extends PureComponent {
       },
       submitting,
     } = this.props;
+
+    const {roleAlias}=this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -117,7 +144,11 @@ class RoleEdit extends PureComponent {
                       },
                     ],
                     initialValue: detail.roleAlias,
-                  })(<Input placeholder="请输入角色别名" />)}
+                  })(<Select placeholder="请选择角色别名">
+                    {roleAlias.map((item,index)=>{
+                      return (<Option key={index} value={item.code}>{item.name}</Option>)
+                    })}
+                  </Select>)}
                 </FormItem>
               </Col>
             </Row>
