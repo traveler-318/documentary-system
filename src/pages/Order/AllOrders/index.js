@@ -15,7 +15,6 @@ import {
   getList,
   deleteData,
   updateRemind,
-  localPrinting,
   logisticsRepeatPrint,
   updateReminds,
   toExamine,
@@ -36,6 +35,7 @@ import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 import ImportData from './components/ImportData'
+import Excel from './components/excel'
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
@@ -209,17 +209,17 @@ class AllOrdersList extends PureComponent {
           fixed: 'right',
           width: 110,
           render: (text,row) => {
-            return(
-              <div>
-                <a onClick={()=>this.handleEdit(row)}>详情</a>
-                <Divider type="vertical" />
-                {
-                  row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<a onClick={()=>this.logisticsSubscribe(row)}>订阅</a>):''
-                }
+              return(
+                  <div>
+                    <a onClick={()=>this.handleEdit(row)}>详情</a>
+                    <Divider type="vertical" />
+                    {
+                      row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<a onClick={()=>this.logisticsSubscribe(row)}>订阅</a>):''
+                    }
 
-                {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
+                    {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
 
-                {/* <a>跟进</a>
+                      {/* <a>跟进</a>
                       <Divider type="vertical" />
                       <a onClick={()=>this.handleEdit(row)}>编辑</a>
                       <Divider type="vertical" />
@@ -228,14 +228,14 @@ class AllOrdersList extends PureComponent {
                       <a>归档</a>
                       <Divider type="vertical" /> */}
 
-                {/* <Divider type="vertical" /> */}
-                {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
-                {/* <Divider type="vertical" />
+                      {/* <Divider type="vertical" /> */}
+                      {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
+                      {/* <Divider type="vertical" />
                       <a >短信</a> */}
-                {/* <Divider type="vertical" /> */}
-                {/* <a onClick={()=>this.handleReminds([row])}>提醒</a> */}
-              </div>
-            )
+                      {/* <Divider type="vertical" /> */}
+                      {/* <a onClick={()=>this.handleReminds([row])}>提醒</a> */}
+                  </div>
+              )
           },
         },
       ],
@@ -410,12 +410,12 @@ class AllOrdersList extends PureComponent {
           {getFieldDecorator('userPhone')(<Input placeholder="请输入手机号" />)}
         </Form.Item>
         <Form.Item label="SN">
-          {getFieldDecorator('productCoding')(<Input placeholder="请输入SN" />)}
-        </Form.Item>
+              {getFieldDecorator('productCoding')(<Input placeholder="请输入SN" />)}
+            </Form.Item>
         <Form.Item label="订单类型">
           {getFieldDecorator('orderType', {
-            initialValue: null,
-          })(
+              initialValue: null,
+            })(
             <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
               {ORDERTYPPE.map(item=>{
                 return (<Option value={item.key}>{item.name}</Option>)
@@ -425,29 +425,29 @@ class AllOrdersList extends PureComponent {
         </Form.Item>
         <Form.Item label="分组">
           {getFieldDecorator('groupId', {
-            initialValue: "全部",
-          })(
-            <Select
-              placeholder={"请选择分组"}
-              style={{ width: 120 }}
-              onChange={this.changeGroup}
-            >
-              {salesmangroup.map(item=>{
-                return (<Option value={item.id}>{item.groupName}</Option>)
-              })}
-            </Select>
-          )}
+                initialValue: "全部",
+              })(
+              <Select
+                placeholder={"请选择分组"}
+                style={{ width: 120 }}
+                onChange={this.changeGroup}
+              >
+                {salesmangroup.map(item=>{
+                  return (<Option value={item.id}>{item.groupName}</Option>)
+                })}
+              </Select>
+            )}
         </Form.Item>
         <Form.Item label="销售">
           {getFieldDecorator('salesman', {
-            initialValue: "全部",
-          })(
-            <Select placeholder={"请选择销售"} style={{ width: 120 }}>
-              {salesmanList.map((item,index)=>{
-                return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
-              })}
-            </Select>
-          )}
+                initialValue: "全部",
+              })(
+              <Select placeholder={"请选择销售"} style={{ width: 120 }}>
+                {salesmanList.map((item,index)=>{
+                  return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
+                })}
+              </Select>
+            )}
         </Form.Item>
         <Form.Item label="订单来源">
           {getFieldDecorator('orderSource', {
@@ -483,8 +483,8 @@ class AllOrdersList extends PureComponent {
           )}
         </Form.Item> */}
 
-        <div>
-          {/* <Form.Item label="时间类型">
+          <div>
+            {/* <Form.Item label="时间类型">
               {getFieldDecorator('timeType', {
                 initialValue: 1,
               })(
@@ -495,27 +495,27 @@ class AllOrdersList extends PureComponent {
                 </Select>
               )}
             </Form.Item> */}
-          <Form.Item label="下单时间">
-            {getFieldDecorator('dateRange', {
-              initialValue: null,
-            })(
-              <RangePicker showTime size={"default"} />
-            )}
-          </Form.Item>
+            <Form.Item label="下单时间">
+              {getFieldDecorator('dateRange', {
+                initialValue: null,
+              })(
+                <RangePicker showTime size={"default"} />
+              )}
+            </Form.Item>
 
 
-          <div style={{ float: 'right' }}>
-            <Button type="primary" htmlType="submit">
-              <FormattedMessage id="button.search.name" />
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={()=>{
-              this.getSalesman();
-              onReset()
-            }}>
-              <FormattedMessage id="button.reset.name" />
-            </Button>
+            <div style={{ float: 'right' }}>
+              <Button type="primary" htmlType="submit">
+                <FormattedMessage id="button.search.name" />
+              </Button>
+              <Button style={{ marginLeft: 8 }} onClick={()=>{
+                this.getSalesman();
+                onReset()
+              }}>
+                <FormattedMessage id="button.reset.name" />
+              </Button>
+            </div>
           </div>
-        </div>
       </div>
     );
   };
@@ -565,19 +565,12 @@ class AllOrdersList extends PureComponent {
     // 当前时间戳
     const timestamp = (new Date()).getTime();
     const timeInterval = 24 * 60 * 60 * 1000 * 2;
-
-    if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
-      if(selectedRows.length > 1){
-        return  message.info('您已开启本地打印，一次最多打印一条数据');
-      }
-    }
-
     if(selectedRows.length > 20){
       message.info('最多批量操作20条数据');
     }else{
       for(let i=0; i<selectedRows.length; i++){
         const time = timestamp - (new Date(selectedRows[i].taskCreateTime)).getTime();
-        if(!selectedRows[i].taskId || selectedRows[i].logisticsPrintType === "0"){
+        if(!selectedRows[i].taskId){
           tips.push(selectedRows[i].userName)
           Modal.confirm({
             title: '提示',
@@ -609,21 +602,13 @@ class AllOrdersList extends PureComponent {
         param.push(selectedRows[i].id)
       }
 
-      if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
-        // 本地打印
-        localPrinting(param).then(res=>{
-          if(res.code === 200){
-            sessionStorage.setItem('imgBase64', res.data)
-            window.open(`#/order/allOrders/img`);
-          }
-        })
-      }else{
-        logisticsRepeatPrint(param).then(res=>{
-          if(res.code === 200){
-            message.success(res.msg);
-          }
-        })
-      }
+      logisticsRepeatPrint(param).then(res=>{
+        if(res.code === 200){
+          message.success(res.msg);
+        }
+      })
+
+
     }
   }
 
@@ -694,7 +679,7 @@ class AllOrdersList extends PureComponent {
       cancelText: '拒绝',
       cancelButtonProps: {
         type:"danger"
-      },
+    },
       content:<div>确定审核此订单吗？<Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button></div>,
       onOk() {
         toExamines(1);
@@ -794,7 +779,7 @@ class AllOrdersList extends PureComponent {
     console.log(tabKey,"tabKey")
     return (<>
       {/* 待审核 */}
-      {tabKey === '0'?(<>
+        {tabKey === '0'?(<>
         <Button type="primary" icon="plus" onClick={()=>{
           router.push(`/order/AllOrders/add`);
         }}>添加</Button>
@@ -803,76 +788,81 @@ class AllOrdersList extends PureComponent {
           onClick={this.batchAudit}
         >审核</Button>
         <Button
-          icon="download"
-          onClick={this.importData}
-        >免押同步</Button>
-      </>):tabKey === '1'?(<>
+            icon="download"
+            onClick={this.importData}
+          >免押同步</Button>
+        </>):tabKey === '1'?(<>
         {/* 已审核 */}
-        <Button
-          icon="appstore"
-          type="primary"
-          onClick={this.bulkDelivery}
-        >发货</Button>
-      </>):""}
+          <Button
+            icon="appstore"
+            type="primary"
+            onClick={this.bulkDelivery}
+          >发货</Button>
+        </>):""}
 
-      {/* 已发货什么都没有 */}
-      {/* 在途中什么都没有 */}
+        {/* 已发货什么都没有 */}
+        {/* 在途中什么都没有 */}
 
-      {/* 已签收 */}
-      {tabKey === '4'?(<>
-        <Button
-          icon="bell"
-          type="primary"
-          onClick={this.batchReminders}
-        >提醒</Button></>):""}
-      {/* 跟进中 */}
-      {tabKey === '5'?(<>
+       {/* 已签收 */}
+       {tabKey === '4'?(<>
         <Button
           icon="bell"
           type="primary"
           onClick={this.batchReminders}
         >提醒</Button></>):""}
-      {/* 已激活什么都没有 */}
-      {/* 已退回什么都没有 */}
-      {/* 已取消什么都没有 */}
-      {/* 已过期什么都没有 */}
-
-      {/* 除了全部，其他状态都有导出按钮 */}
-      {tabKey != 'null'?(<Button
-        icon="upload"
-        type={(tabKey === "0" || tabKey === "1" || tabKey === "4" || tabKey === "5") ? "" : "primary"}
-        onClick={this.exportFile}
-      >导出</Button>):""
-      }
-
-      {/* 全部 */}
-      {tabKey === 'null'?(<>
-        <Button type="primary" icon="plus" onClick={()=>{
-          router.push(`/order/AllOrders/add`);
-        }}>添加</Button>
-        <Button
-          icon="menu-unfold"
-          onClick={this.batchAudit}
-        >审核</Button>
-        <Button
-          icon="appstore"
-          onClick={this.bulkDelivery}
-        >发货</Button>
+        {/* 跟进中 */}
+        {tabKey === '5'?(<>
         <Button
           icon="bell"
+          type="primary"
           onClick={this.batchReminders}
-        >提醒</Button>
-        <Dropdown overlay={this.moreMenu()}>
-          <Button>
-            更多 <Icon type="down" />
-          </Button>
-        </Dropdown>
-      </>):""}
+        >提醒</Button></>):""}
+        {/* 已激活什么都没有 */}
+        {/* 已退回什么都没有 */}
+        {/* 已取消什么都没有 */}
+        {/* 已过期什么都没有 */}
 
-      {/* <Button icon="upload">导出</Button> */}
-      {/* <Button icon="loading-3-quarters" onClick={this.handleShowTransfer}>转移客户</Button> */}
+        {/* 除了全部，其他状态都有导出按钮 */}
+          {tabKey != 'null'?(<Button
+              icon="upload"
+              type={(tabKey === "0" || tabKey === "1" || tabKey === "4" || tabKey === "5") ? "" : "primary"}
+              onClick={this.exportFile}
+            >导出</Button>):""
+          }
 
-    </>)
+        {/* 全部 */}
+        {tabKey === 'null'?(<>
+          <Button type="primary" icon="plus" onClick={()=>{
+            router.push(`/order/AllOrders/add`);
+          }}>添加</Button>
+          <Button
+            icon="menu-unfold"
+            onClick={this.batchAudit}
+          >审核</Button>
+          <Button
+            icon="appstore"
+            onClick={this.bulkDelivery}
+          >发货</Button>
+          <Button
+            icon="bell"
+            onClick={this.batchReminders}
+          >提醒</Button>
+          <Dropdown overlay={this.moreMenu()}>
+            <Button>
+              更多 <Icon type="down" />
+            </Button>
+          </Dropdown>
+          <Dropdown overlay={this.ImporMenu()}>
+            <Button>
+              导入<Icon type="down" />
+            </Button>
+          </Dropdown>
+        </>):""}
+
+        {/* <Button icon="upload">导出</Button> */}
+        {/* <Button icon="loading-3-quarters" onClick={this.handleShowTransfer}>转移客户</Button> */}
+
+      </>)
   };
   moreMenu = () => (
     <Menu onClick={this.handleMenuClick}>
@@ -888,7 +878,7 @@ class AllOrdersList extends PureComponent {
         <Icon type="highlight" />
         批量编辑
       </Menu.Item> */}
-      <SubMenu key="sub1" title="批量物流下单">
+       <SubMenu key="sub1" title="批量物流下单">
         <Menu.Item key="6" onClick={this.repeat}>
           重复打印
         </Menu.Item>
@@ -896,6 +886,15 @@ class AllOrdersList extends PureComponent {
           首次打印
         </Menu.Item>
       </SubMenu>
+    </Menu>
+  );
+
+  ImporMenu = () => (
+    <Menu onClick={this.handleMenuClick}>
+      <Menu.Item key="1" onClick={this.handleExcelImport}>
+        <Icon type="upload" />
+        SN激活导入
+      </Menu.Item>
     </Menu>
   );
 
@@ -1133,18 +1132,18 @@ class AllOrdersList extends PureComponent {
     return text;
   }
 
-  // 获取物流状态
-  getLogisticsStatusValue = (value) => {
+   // 获取物流状态
+   getLogisticsStatusValue = (value) => {
     let text =
-      value === '-1' ? "单号错误" :
-        value === '0' ? "暂无轨迹":
-          value === '1' ? "快递收件":
-            value === '2' ? "在途中":
-              value === '3' ? "已签收":
-                value === '4' ? "问题件":
-                  value === '5' ? "疑难件":
-                    value === '6' ? "退件签收":
-                      value === '7' ? "快递揽件":"";
+    value === '-1' ? "单号错误" :
+    value === '0' ? "暂无轨迹":
+    value === '1' ? "快递收件":
+    value === '2' ? "在途中":
+    value === '3' ? "已签收":
+    value === '4' ? "问题件":
+    value === '5' ? "疑难件":
+    value === '6' ? "退件签收":
+    value === '7' ? "快递揽件":"";
     return text;
   }
 
@@ -1271,6 +1270,23 @@ class AllOrdersList extends PureComponent {
     });
   };
 
+
+  // SN激活导入弹窗
+  handleExcelImport = () =>{
+    console.log("!!!!!")
+    this.setState({
+      excelVisible: false,
+    });
+  }
+
+
+  handleExcelCancel = () =>{
+    this.setState({
+      excelVisible: false,
+    });
+  }
+
+
   components = {
     header: {
       cell: ResizeableTitle,
@@ -1298,6 +1314,7 @@ class AllOrdersList extends PureComponent {
       noDepositVisible,
       confirmTagVisible,
       currentList,
+      excelVisible
     } = this.state;
 
     console.log(selectedRowKeys,"selectedRowKeys")
@@ -1405,6 +1422,13 @@ class AllOrdersList extends PureComponent {
             handleCancelNoDeposit={this.handleCancelNoDeposit}
           />
         ):""}
+        {/* SN激活导入弹窗 */}
+        {excelVisible?(
+          <Excel
+            excelVisible={excelVisible}
+            handleExcelCancel={this.handleExcelCancel}
+          />
+        ):""}
         <Modal
           title="修改状态"
           visible={confirmTagVisible}
@@ -1432,18 +1456,18 @@ class AllOrdersList extends PureComponent {
               {"name":"已退回",key:7},
               {"name":"已取消",key:8},
               {"name":"已过期",key:9}, */}
-          {currentList.confirmTag === 9 ? (
-            <Radio.Group onChange={this.onChangeRadio}>
-              <Radio value={6}>已激活</Radio>
-              <Radio value={7}>已退回</Radio>
-            </Radio.Group>
-          ) : (
-            <Radio.Group onChange={this.onChangeRadio}>
-              <Radio value={6}>已激活</Radio>
-              <Radio value={7}>已退回</Radio>
-              <Radio value={8}>已取消</Radio>
-            </Radio.Group>
-          )}
+              {currentList.confirmTag === 9 ? (
+                <Radio.Group onChange={this.onChangeRadio}>
+                  <Radio value={6}>已激活</Radio>
+                  <Radio value={7}>已退回</Radio>
+                </Radio.Group>
+              ) : (
+                <Radio.Group onChange={this.onChangeRadio}>
+                  <Radio value={6}>已激活</Radio>
+                  <Radio value={7}>已退回</Radio>
+                  <Radio value={8}>已取消</Radio>
+                </Radio.Group>
+              )}
         </Modal>
       </Panel>
     );
