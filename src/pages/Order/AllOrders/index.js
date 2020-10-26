@@ -35,6 +35,7 @@ import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 import ImportData from './components/ImportData'
+import Excel from './components/excel'
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
@@ -851,6 +852,11 @@ class AllOrdersList extends PureComponent {
               更多 <Icon type="down" />
             </Button>
           </Dropdown>
+          <Dropdown overlay={this.ImporMenu()}>
+            <Button>
+              导入<Icon type="down" />
+            </Button>
+          </Dropdown>
         </>):""}
 
         {/* <Button icon="upload">导出</Button> */}
@@ -880,6 +886,15 @@ class AllOrdersList extends PureComponent {
           首次打印
         </Menu.Item>
       </SubMenu>
+    </Menu>
+  );
+
+  ImporMenu = () => (
+    <Menu onClick={this.handleMenuClick}>
+      <Menu.Item key="1" onClick={this.handleExcelImport}>
+        <Icon type="upload" />
+        SN激活导入
+      </Menu.Item>
     </Menu>
   );
 
@@ -1255,6 +1270,22 @@ class AllOrdersList extends PureComponent {
     });
   };
 
+  // SN激活导入弹窗
+  handleExcelImport = () =>{
+    console.log("!!!!!")
+    this.setState({
+      excelVisible: false,
+    });
+  }
+
+
+  handleExcelCancel = () =>{
+    this.setState({
+      excelVisible: false,
+    });
+  }
+
+
   components = {
     header: {
       cell: ResizeableTitle,
@@ -1282,6 +1313,7 @@ class AllOrdersList extends PureComponent {
       noDepositVisible,
       confirmTagVisible,
       currentList,
+      excelVisible
     } = this.state;
 
     console.log(selectedRowKeys,"selectedRowKeys")
@@ -1387,6 +1419,13 @@ class AllOrdersList extends PureComponent {
           <ImportData
             noDepositVisible={noDepositVisible}
             handleCancelNoDeposit={this.handleCancelNoDeposit}
+          />
+        ):""}
+        {/* SN激活导入弹窗 */}
+        {excelVisible?(
+          <Excel
+            excelVisible={excelVisible}
+            handleExcelCancel={this.handleExcelCancel}
           />
         ):""}
         <Modal
