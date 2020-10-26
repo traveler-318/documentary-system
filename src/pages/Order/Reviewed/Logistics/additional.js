@@ -26,6 +26,7 @@ class Additional extends PureComponent {
       additionalId:''
     };
   }
+
   // ============ 初始化数据 ===============
 
   componentWillMount() {

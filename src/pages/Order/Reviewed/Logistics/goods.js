@@ -26,6 +26,7 @@ class Goods extends PureComponent {
       goodsId:''
     };
   }
+
   // ============ 初始化数据 ===============
 
   componentWillMount() {

@@ -28,6 +28,7 @@ class AuthorityList extends PureComponent {
       authorizationId:''
     };
   }
+
   // ============ 初始化数据 ===============
 
   componentWillMount() {

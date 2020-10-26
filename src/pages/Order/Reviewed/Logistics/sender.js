@@ -26,6 +26,7 @@ class Sender extends PureComponent {
       senderId:''
     };
   }
+
   // ============ 初始化数据 ===============
 
   componentWillMount() {
