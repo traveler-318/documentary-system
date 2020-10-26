@@ -323,6 +323,11 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                       initialValue: this.getText(detail.confirmTag,ORDERSTATUS),
                     })(<Input disabled={edit} placeholder="" />)}
                   </FormItem>*/}
+                  <FormItem {...formAllItemLayout} label="订单金额">
+                    {getFieldDecorator('payAmount', {
+                      initialValue: detail.payAmount,
+                    })(<Input disabled placeholder="" />)}
+                  </FormItem>
                   <FormItem {...formAllItemLayout} label="订单来源">
                     {getFieldDecorator('orderSource', {
                       initialValue: this.getText(parseInt(detail.orderSource),ORDERSOURCE),

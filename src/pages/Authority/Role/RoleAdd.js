@@ -1,13 +1,15 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect } from 'antd';
+import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect, Select } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
 import func from '../../../utils/Func';
 import { ROLE_INIT, ROLE_SUBMIT, ROLE_DETAIL, ROLE_CLEAR_DETAIL } from '../../../actions/role';
+import { PAYMENTMETHOD } from '../../Logistics/Additional/data';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const { Option } = Select;
 
 @connect(({ role, loading }) => ({
   role,
@@ -15,6 +17,31 @@ const { TextArea } = Input;
 }))
 @Form.create()
 class RoleAdd extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      roleAlias:[
+        // {
+        //   'name':"分公司管理员",
+        //   'code':"branchadmin"
+        // },
+        {
+          'name':"销售角色",
+          'code':"salesrole"
+        },
+        {
+          'name':"仓库角色",
+          'code':"warehouseroles"
+        },
+        {
+          'name':"售后角色",
+          'code':"afterteam"
+        },
+      ]
+    };
+  }
+
+
   componentWillMount() {
     const {
       dispatch,
@@ -34,8 +61,9 @@ class RoleAdd extends PureComponent {
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
+      console.log(values)
       if (!err) {
-        dispatch(ROLE_SUBMIT(values));
+        // dispatch(ROLE_SUBMIT(values));
       }
     });
   };
@@ -49,6 +77,8 @@ class RoleAdd extends PureComponent {
       },
       submitting,
     } = this.props;
+
+    const {roleAlias}=this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -97,10 +127,14 @@ class RoleAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '请输入角色别名',
+                        message: '请选择角色别名',
                       },
                     ],
-                  })(<Input placeholder="请输入角色别名" />)}
+                  })(<Select placeholder="请选择角色别名">
+                    {roleAlias.map((item,index)=>{
+                      return (<Option key={index} value={item.code}>{item.name}</Option>)
+                    })}
+                  </Select>)}
                 </FormItem>
               </Col>
             </Row>

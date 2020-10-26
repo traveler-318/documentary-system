@@ -134,6 +134,11 @@ class AllOrdersList extends PureComponent {
           ellipsis: true,
         },
         {
+          title: '订单金额',
+          dataIndex: 'payAmount',
+          width: 150,
+        },
+        {
           title: '订单状态',
           dataIndex: 'confirmTag',
           width: 100,
