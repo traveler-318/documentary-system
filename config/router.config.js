@@ -535,16 +535,16 @@ export default [
               { path: '/order/toBeReviewed/logisticsConfiguration', component: './Order/ToBeReviewed/components/logisticsConfiguration' },
             ],
           },
-          // {
-          //   path: '/order/Reviewed',    //已审核
-          //   routes: [
-          //     { path: '/order/Reviewed', redirect: '/order/Reviewed/list' },
-          //     { path: '/order/Reviewed/list', component: './Order/Reviewed/index' },
-          //     { path: '/order/reviewed/add', component: './Order/Reviewed/add' },
-          //     { path: '/order/reviewed/edit/:id', component: './Order/Reviewed/edit' },
-          //     { path: '/order/reviewed/logisticsConfiguration', component: './Order/Reviewed/components/logisticsConfiguration' },
-          //   ],
-          // },
+          {
+            path: '/order/Reviewed',    //已审核
+            routes: [
+              { path: '/order/Reviewed', redirect: '/order/Reviewed/list' },
+              { path: '/order/Reviewed/list', component: './Order/Reviewed/index' },
+              { path: '/order/reviewed/add', component: './Order/Reviewed/add' },
+              { path: '/order/reviewed/edit/:id', component: './Order/Reviewed/edit' },
+              { path: '/order/reviewed/logisticsConfiguration', component: './Order/Reviewed/components/logisticsConfiguration' },
+            ],
+          },
           {
             path: '/order/Delivered',   //已发货
             routes: [
