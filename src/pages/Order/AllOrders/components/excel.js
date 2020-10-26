@@ -1,24 +1,15 @@
 import React, { PureComponent } from 'react';
-import { Modal, Checkbox, Form, Input, Icon, Row, Col, Button, DatePicker, message, Switch } from 'antd';
+import { Modal, Checkbox, Form, Input, Icon, Row, Col, Button, DatePicker, message, Switch, Upload } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 
-import { tenantMode } from '../../../../defaultSettings';
-import { getCookie } from '../../../../utils/support';
 import { getList,getVCode,exportOrder,getPhone } from '../../../../services/newServices/order'
-import { exportData,currentTime } from '../data.js';
 import { getAccessToken, getToken } from '../../../../utils/authority';
-import { Base64 } from 'js-base64';
-import { clientId, clientSecret } from '../../../../defaultSettings';
-import { ORDERSOURCE } from '../data';
-import styles from '../index.less';
-import axios from 'axios'
+
 
 const FormItem = Form.Item;
-const { TextArea } = Input;
-const { RangePicker } = DatePicker;
-const CheckboxGroup = Checkbox.Group;
+const { Dragger } = Upload;
 
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -29,6 +20,7 @@ class Export extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      isCovered: 0,
     };
   }
 
@@ -52,6 +44,12 @@ class Export extends PureComponent {
 
   handleTemplate = () => {
     window.open(`/api/blade-user/export-template?Blade-Auth=${getAccessToken()}`);
+  };
+
+  onSwitchChange = checked => {
+    this.setState({
+      isCovered: checked ? 1 : 0,
+    });
   };
 
 
@@ -97,8 +95,8 @@ class Export extends PureComponent {
             <Button key="back" onClick={handleExcelCancel}>
               取消
             </Button>,
-            <Button type="primary" onClick={()=>this.dataExport()}>
-              下一步
+            <Button type="primary" onClick={handleExcelCancel}>
+              确认
             </Button>,
           ]}
         >

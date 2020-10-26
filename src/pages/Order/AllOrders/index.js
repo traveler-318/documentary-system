@@ -98,6 +98,8 @@ class AllOrdersList extends PureComponent {
       detailsVisible:false,
       // 免押宝导入弹窗
       noDepositVisible:false,
+      // SN激活导入弹窗
+      excelVisible:false,
       salesmangroup:[],
       columns:[
         {
@@ -1293,7 +1295,7 @@ class AllOrdersList extends PureComponent {
   handleExcelImport = () =>{
     console.log("!!!!!")
     this.setState({
-      excelVisible: false,
+      excelVisible: true,
     });
   }
 
