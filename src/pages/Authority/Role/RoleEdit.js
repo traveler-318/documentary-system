@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect, message, Select } from 'antd';
+import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect, message, Select, Icon } from 'antd';
 import { connect } from 'dva';
+import $ from 'jquery'
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
 import { ROLE_DETAIL, ROLE_INIT, ROLE_SUBMIT } from '../../../actions/role';
@@ -35,17 +36,56 @@ class RoleEdit extends PureComponent {
           'name':"售后角色",
           'code':"afterteam"
         },
-      ]
+      ],
+      roleAliasValue:"",
+      openType:false
     };
   }
 
   componentWillMount() {
+    $("#root").click((e)=>{
+      let _con = $(".selectDropdown")
+      if(!_con.is(e.target) && _con.has(e.target).length === 0){ // Mark 1
+        this.setState({
+          openType:false
+        })
+      }
+  }); 
+
+    // root.onclick = (e)=>{
+
+    //   var _con = $(".selectDropdown");
+     
+      
+    // }
+
     const {
       dispatch,
       match: {
         params: { id },
       },
+      role: {
+        detail,
+      },
     } = this.props;
+
+    const {roleAlias} = this.state;
+    let type = false;
+    for(let i=0; i<roleAlias.length; i++){
+      if(roleAlias[i].code === detail.roleAlias){
+        type = true
+      }
+    }
+
+    if(!type){
+      this.setState({
+        roleAlias:[...roleAlias,{
+          "name":detail.roleAlias,
+          "code":detail.roleAlias,
+        }]
+      })
+      
+    }
     dispatch(ROLE_DETAIL(id));
     dispatch(ROLE_INIT());
   }
@@ -80,6 +120,31 @@ class RoleEdit extends PureComponent {
     console.log(title);
   };
 
+  handleChange = (value) => {
+    setTimeout(()=>{
+      console.log(this.state.openType,"handleChange关闭")
+      this.setState({
+        openType:false
+      })
+    },200)
+  }
+
+  addItem = (e) => {
+    e.stopPropagation()
+    const { roleAlias, roleAliasValue } = this.state;
+    var re = new RegExp("^[a-zA-Z]+$"); 
+    if (!re.test(roleAliasValue)) {
+      return message.error("请输入英文");
+    }
+    this.setState({
+      roleAlias: [...roleAlias, {
+        "name":roleAliasValue,
+        "code":roleAliasValue,
+      }],
+      roleAliasValue:""
+    });
+  };
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -90,7 +155,9 @@ class RoleEdit extends PureComponent {
       submitting,
     } = this.props;
 
-    const {roleAlias}=this.state;
+    const {roleAlias,roleAliasValue,openType}=this.state;
+
+    console.log(openType,"openType")
 
     const formItemLayout = {
       labelCol: {
@@ -135,20 +202,75 @@ class RoleEdit extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="角色别名">
+                <FormItem {...formItemLayout} label="角色别名"
+                className={"selectDropdown"}
+                onClick={(e)=>{
+                  console.log(this.state.openType,"展开")
+                  e.stopPropagation();
+                  this.setState({
+                    openType:!this.state.openType
+                  })
+                }}
+                >
                   {getFieldDecorator('roleAlias', {
+                    initialValue: detail.roleAlias,
                     rules: [
                       {
                         required: true,
                         message: '请输入角色别名',
                       },
                     ],
-                    initialValue: detail.roleAlias,
-                  })(<Select placeholder="请选择角色别名">
+                  })(
+                  // <div
+                  //   className={"selectDropdown"}
+                  //   onClick={(e)=>{
+                  //     console.log(this.state.openType,"展开")
+                  //     e.stopPropagation();
+                  //     this.setState({
+                  //       openType:!this.state.openType
+                  //     })
+                  //   }}
+                  //   >
+                  <Select 
+                    maxTagCount={1} 
+                    placeholder="请选择角色别名"
+                    open={openType}
+                    onChange={()=>{
+                      this.handleChange()
+                    }}
+                    dropdownRender={menu => (
+                    <div>
+                      {menu}
+                      <div
+                        style={{ padding: '4px 8px', cursor: 'pointer' }}
+                      >
+                        <Input
+                          ref={n => (this.Input = n)}
+                          placeholder="请输入角色名称"
+                          onClick={(e)=>{
+                            e.stopPropagation()
+                            this.Input.focus();
+                          }}
+                          value={roleAliasValue}
+                          onChange={(e)=>{
+                              this.setState({
+                                roleAliasValue:e.target.value
+                              })
+                          }}
+                          />
+                        <div  onClick={this.addItem} style={{marginBottom:5,marginTop:5}}>
+                          <Icon type="plus" />添加角色别名
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                   >
                     {roleAlias.map((item,index)=>{
                       return (<Option key={index} value={item.code}>{item.name}</Option>)
                     })}
-                  </Select>)}
+                  </Select>
+                    // </div>
+                    )}
                 </FormItem>
               </Col>
             </Row>

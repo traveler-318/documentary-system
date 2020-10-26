@@ -1,9 +1,11 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect, Select } from 'antd';
+import { Form, Input, Card, Row, Col, Button, InputNumber, TreeSelect, Select, Icon, message } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
 import func from '../../../utils/Func';
+import $ from 'jquery'
+// import $ from 'jquery'
 import { ROLE_INIT, ROLE_SUBMIT, ROLE_DETAIL, ROLE_CLEAR_DETAIL } from '../../../actions/role';
 import { PAYMENTMETHOD } from '../../Logistics/Additional/data';
 
@@ -37,12 +39,23 @@ class RoleAdd extends PureComponent {
           'name':"售后角色",
           'code':"afterteam"
         },
-      ]
+      ],
+      roleAliasValue:"",
+      openType:false
     };
   }
 
 
   componentWillMount() {
+    $("#root").click((e)=>{
+      let _con = $(".selectDropdown")
+      if(!_con.is(e.target) && _con.has(e.target).length === 0){ // Mark 1
+        this.setState({
+          openType:false
+        })
+      }
+  }); 
+
     const {
       dispatch,
       match: {
@@ -63,8 +76,35 @@ class RoleAdd extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       console.log(values)
       if (!err) {
-        // dispatch(ROLE_SUBMIT(values));
+        dispatch(ROLE_SUBMIT(values));
       }
+    });
+  };
+
+  handleChange = (value) => {
+    const { dispatch, form } = this.props;
+    console.log(value,"value")
+    form.setFieldsValue({ roleAlias:value})
+    setTimeout(()=>{
+      this.setState({
+        openType:false
+      })
+    },200)
+  }
+
+  addItem = (e) => {
+    e.stopPropagation()
+    const { roleAlias, roleAliasValue } = this.state;
+    var re = new RegExp("^[a-zA-Z]+$"); 
+    if (!re.test(roleAliasValue)) {
+      return message.error("请输入英文");
+    }
+    this.setState({
+      roleAlias: [...roleAlias, {
+        "name":roleAliasValue,
+        "code":roleAliasValue,
+      }],
+      roleAliasValue:""
     });
   };
 
@@ -78,7 +118,7 @@ class RoleAdd extends PureComponent {
       submitting,
     } = this.props;
 
-    const {roleAlias}=this.state;
+    const {roleAlias,roleAliasValue,openType}=this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -122,7 +162,9 @@ class RoleAdd extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="角色别名">
+                <FormItem {...formItemLayout} label="角色别名"
+                  
+                >
                   {getFieldDecorator('roleAlias', {
                     rules: [
                       {
@@ -130,11 +172,57 @@ class RoleAdd extends PureComponent {
                         message: '请选择角色别名',
                       },
                     ],
-                  })(<Select placeholder="请选择角色别名">
+                  })(
+                    <div
+                    className={"selectDropdown"}
+                    onClick={(e)=>{
+                      e.stopPropagation();
+                      this.setState({
+                        openType:!this.state.openType
+                      })
+                    }}
+                    >
+                  <Select 
+                    maxTagCount={1} 
+                    placeholder="请选择角色别名"
+                    open={openType}
+                    // defaultValue={}
+                    onChange={(value)=>{
+                      this.handleChange(value)
+                    }}
+                    dropdownRender={menu => (
+                    <div>
+                      {menu}
+                      <div
+                        style={{ padding: '4px 8px', cursor: 'pointer' }}
+                      >
+                        <Input
+                          ref={n => (this.Input = n)}
+                          placeholder="请输入角色名称"
+                          onClick={(e)=>{
+                            e.stopPropagation()
+                            this.Input.focus();
+                          }}
+                          value={roleAliasValue}
+                          onChange={(e)=>{
+                              this.setState({
+                                roleAliasValue:e.target.value
+                              })
+                          }}
+                          />
+                        <div  onClick={this.addItem} style={{marginBottom:5,marginTop:5}}>
+                          <Icon type="plus" />添加角色别名
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                   >
                     {roleAlias.map((item,index)=>{
                       return (<Option key={index} value={item.code}>{item.name}</Option>)
                     })}
-                  </Select>)}
+                  </Select>
+                    </div>
+                  )}
                 </FormItem>
               </Col>
             </Row>

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, Radio, Cascader, Select, DatePicker, message } from 'antd';
+import { Form, Input, Card, Row, Col, Button, Radio, Cascader, Select, DatePicker, message, Tooltip, Icon } from 'antd';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
@@ -128,7 +128,7 @@ class SenderAdd extends PureComponent {
         <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
-            <Col span={10}>
+            <Col span={10} style={{position:'relative'}}>
                 <FormItem {...formItemLayout} label="登录账号：">
                   {getFieldDecorator('userAccount', {
                     rules: [
@@ -138,6 +138,18 @@ class SenderAdd extends PureComponent {
                       },
                     ],
                   })(<Input placeholder="请输入登录账号" />)}
+                  <Tooltip 
+                   
+                  title='1、复制本登录账号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2、粘贴到到，系统管理—新增用户—登录账号里面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+3、角色配置成销售角色注意：本登录账号必须要与用户管理里面的登录账号信息一致，否则会导致销售无法登录到自己后台'><Icon
+style={{
+  position: 'absolute',
+  right: '-24px',
+  top: '2px',
+  zIndex:1000
+}}
+type='question-circle-o' /></Tooltip>
                 </FormItem>
               </Col>
               <Col span={10}>
