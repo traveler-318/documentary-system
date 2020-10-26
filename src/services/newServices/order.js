@@ -97,6 +97,13 @@ export async function logisticsRepeatPrint(params) {
     body: params,
   });
 }
+// 本地打印
+export async function localPrinting(params) {
+  return request('/api/order/order/getOriginalDataJson', {
+    method: 'POST',
+    body: params,
+  });
+}
 
 // 提醒
 export async function updateReminds(params) {

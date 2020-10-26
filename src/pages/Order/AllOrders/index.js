@@ -15,6 +15,7 @@ import {
   getList,
   deleteData,
   updateRemind,
+  localPrinting,
   logisticsRepeatPrint,
   updateReminds,
   toExamine,
@@ -565,12 +566,19 @@ class AllOrdersList extends PureComponent {
     // 当前时间戳
     const timestamp = (new Date()).getTime();
     const timeInterval = 24 * 60 * 60 * 1000 * 2;
+
+    if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
+      if(selectedRows.length > 1){
+       return  message.info('您已开启本地打印，一次最多打印一条数据');
+      }
+    }
+
     if(selectedRows.length > 20){
       message.info('最多批量操作20条数据');
     }else{
       for(let i=0; i<selectedRows.length; i++){
         const time = timestamp - (new Date(selectedRows[i].taskCreateTime)).getTime();
-        if(!selectedRows[i].taskId){
+        if(!selectedRows[i].taskId || selectedRows[i].logisticsPrintType === "0"){
           tips.push(selectedRows[i].userName)
           Modal.confirm({
             title: '提示',
@@ -602,13 +610,23 @@ class AllOrdersList extends PureComponent {
         param.push(selectedRows[i].id)
       }
 
-      logisticsRepeatPrint(param).then(res=>{
-        if(res.code === 200){
-          message.success(res.msg);
-        }
-      })
-
-
+      if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
+          // 本地打印
+          localPrinting({
+            id:selectedRows[0].id
+          }).then(res=>{
+            if(res.code === 200){
+              sessionStorage.setItem('imgBase64', res.data)
+              window.open(`#/order/allOrders/img`);
+            }
+          })
+      }else{
+        logisticsRepeatPrint(param).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+          }
+        })
+      }
     }
   }
 

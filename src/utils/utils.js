@@ -271,11 +271,17 @@ export function getTopUrl() {
  */
 export function getQueryString(name) {
   // eslint-disable-next-line no-shadow
-  // const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
-  // const r = window.location.href.substr(1).match(reg);
-  // if (r != null) return unescape(decodeURI(r[2]));
-  // return null;
+  const reg = new RegExp(`(^|&)${name}=([^&]*)(&|$)`, 'i');
+  const r = window.location.href.substr(1).match(reg);
+  if (r != null) return unescape(decodeURI(r[2]));
+  return null;
+}
 
+/**
+ * 获取url参数
+ * @param name 参数名
+ */
+export function getQueryString1(name) {
   let url = window.location.href.split("?")[1];
     console.log(url,"url")
     if(url){
