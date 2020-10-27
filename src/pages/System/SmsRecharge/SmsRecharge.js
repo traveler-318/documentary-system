@@ -15,9 +15,8 @@ const { TabPane } = Tabs;
   loading: loading.models.post,
 }))
 @Form.create()
+
 class SmsRecharge extends PureComponent {
-
-
   constructor(props) {
     super(props);
     this.state = {
@@ -66,20 +65,26 @@ class SmsRecharge extends PureComponent {
   onKeyDown = (e) => {
     console.log(e)
     console.log(e.target.value)
-    const price=e.target.value;
+    const {price}=this.state;
     if(e.keyCode === 13) {
-      getUnWeChatBind().then(res=>{
-        console.log(res)
-        if(res.code === 200){
-          const url=res.data+"&money="+price;
-          this.setState({
-            bindingQRCode:url,
-            bindingQRCodeVisible:true,
-          })
-        }else {
-          message.error(res.msg)
-        }
-      })
+      if(e.target.value % 100 == 0){
+        
+        getUnWeChatBind().then(res=>{
+          console.log(res)
+          if(res.code === 200){
+            const url=res.data+"&money="+price;
+            this.setState({
+              bindingQRCode:url,
+              bindingQRCodeVisible:true,
+            })
+          }else {
+            message.error(res.msg)
+          }
+        })
+      }else{
+        message.error("仅支持100的整数倍,请输入正确的数量")
+      }
+      
     }
 
   };

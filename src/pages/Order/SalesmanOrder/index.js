@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs, Radio } from 'antd';
+import { Button, Col, Tag, Badge, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs, Radio } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import { Resizable } from 'react-resizable';
@@ -85,7 +85,7 @@ class AllOrdersList extends PureComponent {
         current:1
       },
       tabCode:[],
-      tabKey:sessionStorage.orderTabKey ? sessionStorage.orderTabKey : '0',
+      tabKey:sessionStorage.salesmanOrderTabKey ? sessionStorage.salesmanOrderTabKey : '0',
       selectedRows:[],
       // 物流弹窗
       logisticsVisible:false,
@@ -101,6 +101,7 @@ class AllOrdersList extends PureComponent {
       noDepositVisible:false,
       salesmangroup:[],
       menuType:"1",
+      countSice:0,
       columns:[
         {
           title: '姓名',
@@ -147,11 +148,19 @@ class AllOrdersList extends PureComponent {
             // 待审核、已激活、已取消、已退回-不可切换状态
             if(key == 0 || key == 6 || key == 7 || key == 8){
               return (
-                <div>{this.getORDERSTATUS(key)} </div>
+                <div>
+                  <Tag color={this.getORDERSCOLOR(key)}>
+                    {this.getORDERSTATUS(key)}
+                  </Tag>
+                </div>
               )
             }else{
               return (
-                <div style={{cursor: 'pointer'}} onClick={()=>{this.changeConfirmTag(row)}}>{this.getORDERSTATUS(key)} </div>
+                <div style={{cursor: 'pointer'}} onClick={()=>{this.changeConfirmTag(row)}}>
+                  <Tag color={this.getORDERSCOLOR(key)}>
+                    {this.getORDERSTATUS(key)}
+                  </Tag>
+                </div>
               )
             }
           }
@@ -320,6 +329,7 @@ class AllOrdersList extends PureComponent {
     })
     getList(params).then(res=>{
       this.setState({
+        countSice:res.data.total,
         data:setListData(res.data),
         loading:false,
         selectedRowKeys:[]
@@ -1120,6 +1130,22 @@ class AllOrdersList extends PureComponent {
     if(key === 9 || key === '9'){ text = "已过期" }
     return text;
   }
+  // 订单状态颜色
+  getORDERSCOLOR = (key) => {
+    let text = ""
+    if(key === 0 || key === '0'){ text = "#E6A23C" }
+    if(key === 1 || key === '1'){ text = "#409EFF" }
+    if(key === 2 || key === '2'){ text = "#409EFF" }
+    if(key === 3 || key === '3'){ text = "#409EFF" }
+    if(key === 4 || key === '4'){ text = "#F56C6C" }
+    if(key === 5 || key === '5'){ text = "#F56C6C" }
+    if(key === 6 || key === '6'){ text = "#67C23A" }
+    if(key === 7 || key === '7'){ text = "#909399" }
+    if(key === 8 || key === '8'){ text = "#909399" }
+    if(key === 9 || key === '9'){ text = "#909399" }
+    return text;
+  }
+
   // 订单类型
   getORDERTYPE = (key) => {
     let text = ""
@@ -1170,7 +1196,7 @@ class AllOrdersList extends PureComponent {
   }
 
   statusChange = (key) => {
-    sessionStorage.orderTabKey = key;
+    sessionStorage.salesmanOrderTabKey = key;
     let _params = {...this.state.params}
     _params.current = 1
     this.setState({
@@ -1319,6 +1345,8 @@ class AllOrdersList extends PureComponent {
       confirmTagVisible,
       currentList,
       tabCode,
+      countSice,
+      params
     } = this.state;
 
     console.log(selectedRowKeys,"selectedRowKeys")
@@ -1347,14 +1375,37 @@ class AllOrdersList extends PureComponent {
 
     return (
       <Panel>
-        {/* <TabPanes/> */}
-        <Tabs type="card" onChange={this.statusChange}>
-          {tabCode.map(item=>{
-            return (
-              <TabPane tab={item.name} key={item.key}></TabPane>
-            )
-          })}
-        </Tabs>
+        <div className={styles.ordersTabs}>
+          <Tabs type="card" activeKey={tabKey} onChange={this.statusChange} style={{height:59}}>
+            {tabCode.map(item=>{
+              console.log(item.key,params.confirmTag,"123456")
+              return (
+                <TabPane tab={
+                  <span>
+                    {((
+                      item.key === params.confirmTag || 
+                      JSON.stringify(item.key) === params.confirmTag
+                      ) && (
+                        item.key === 0 ||
+                        item.key === 1 ||
+                        item.key === 2 ||
+                        item.key === 3 ||
+                        item.key === 4 ||
+                        item.key === 5 ||
+                        item.key === null
+                      )) ? (
+                    <Badge count={countSice} overflowCount={999}>
+                        <a href="#" className="head-example" />
+                      </Badge>) : ""
+                    }
+                    {item.name}
+                  </span>
+                } key={item.key}>
+                </TabPane>
+              )
+            })}
+          </Tabs>
+        </div>
         <Grid
           code={code}
           form={form}

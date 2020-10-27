@@ -3,10 +3,11 @@ import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import Link from 'umi/link';
 import router from 'umi/router';
-import { Form, Input, Button, Select, Row, Col, Popover, Progress } from 'antd';
+import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
 import styles from './Register.less';
-import { getCaptchaImage } from '.././../services/user';
-import { setCaptchaKey } from '../../utils/authority';
+import { getCaptchaImage, registerSendcode } from '.././../services/user';
+
+import { setCaptchaKey, getCaptchaKey } from '../../utils/authority';
 
 // import Login from '../../components/Login';
 // const { Captcha } = Login;
@@ -111,16 +112,32 @@ class Register extends Component {
     }
 
       if(type){
-        console.log(values,"values")
-        let count = 59;
-        this.setState({ count });
-        this.interval = setInterval(() => {
-          count -= 1;
-          this.setState({ count });
-          if (count === 0) {
-            clearInterval(this.interval);
+        console.log(userPhone,"values")
+        let param = {
+          'key':getCaptchaKey(),
+          'code':code,
+          'userPhone':userPhone,
+        }
+
+        registerSendcode(param).then(res=>{
+          if(res.code === 200){
+
+          }else{
+            message.error(res.msg);
+            this.props.form.setFieldsValue({code:""});
+            this.refreshCaptcha();
           }
-        }, 1000);
+        })
+
+        // let count = 59;
+        // this.setState({ count });
+        // this.interval = setInterval(() => {
+        //   count -= 1;
+        //   this.setState({ count });
+        //   if (count === 0) {
+        //     clearInterval(this.interval);
+        //   }
+        // }, 1000);
       }else{
         this.props.form.setFields({...errorsList});
       }

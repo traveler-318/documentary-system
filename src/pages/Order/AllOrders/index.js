@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs, Radio } from 'antd';
+import { Button, Col, Form, Input, Badge, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs, Radio, Tag } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import { Resizable } from 'react-resizable';
@@ -37,6 +37,7 @@ import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 import ImportData from './components/ImportData'
 import Excel from './components/excel'
+import Text from './components/text'
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
@@ -100,7 +101,13 @@ class AllOrdersList extends PureComponent {
       noDepositVisible:false,
       // SN激活导入弹窗
       excelVisible:false,
+      // 文本导入弹窗
+      textVisible:false,
+      // 首次打印提示弹框
+      LogisticsAlertVisible:false,
+      tips:[],
       salesmangroup:[],
+      countSice:0,
       columns:[
         {
           title: '姓名',
@@ -142,16 +149,24 @@ class AllOrdersList extends PureComponent {
         {
           title: '订单状态',
           dataIndex: 'confirmTag',
-          width: 100,
+          width: 90,
           render: (key,row)=>{
             // 待审核、已激活、已取消、已退回-不可切换状态
             if(key == 0 || key == 6 || key == 7 || key == 8){
               return (
-                <div>{this.getORDERSTATUS(key)} </div>
+                <div>
+                  <Tag color={this.getORDERSCOLOR(key)}>
+                    {this.getORDERSTATUS(key)}
+                  </Tag>
+                </div>
               )
             }else{
               return (
-                <div style={{cursor: 'pointer'}} onClick={()=>{this.changeConfirmTag(row)}}>{this.getORDERSTATUS(key)} </div>
+                <div style={{cursor: 'pointer'}} onClick={()=>{this.changeConfirmTag(row)}}>
+                  <Tag color={this.getORDERSCOLOR(key)}>
+                    {this.getORDERSTATUS(key)}
+                  </Tag>
+                </div>
               )
             }
           }
@@ -293,6 +308,7 @@ class AllOrdersList extends PureComponent {
     })
     getList(params).then(res=>{
       this.setState({
+        countSice:res.data.total,
         data:setListData(res.data),
         loading:false,
         selectedRowKeys:[]
@@ -523,6 +539,14 @@ class AllOrdersList extends PureComponent {
     );
   };
 
+
+  // ====== 首次打印提示弹框 ======
+  handleLogisticsAlert =() =>{
+    this.setState({
+      LogisticsAlertVisible:false
+    })
+  }
+
   // =========首次打印===========
   first = () => {
     const {selectedRows} = this.state;
@@ -537,20 +561,18 @@ class AllOrdersList extends PureComponent {
       message.info('最多批量操作20条数据');
     }else{
       for(let i=0; i<selectedRows.length; i++){
+        const item={}
         if(selectedRows[i].taskId){
-          tips.push(selectedRows[i].userName);
-          Modal.confirm({
-            title: '提示',
-            content: "客户"+selectedRows[i].userName+"订单已打印过!只能进行重复打印!",
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk() {},
-            onCancel() {},
-          });
+          item.name="客户"+selectedRows[i].userName+"订单已打印过!只能进行重复打印!"
+          tips.push(item);
         }
       }
       if(tips.length > 0 ){
+        this.setState({
+          tips:tips,
+          LogisticsFirst:0,
+          LogisticsAlertVisible:true
+        })
         return false;
       }
       dispatch({
@@ -569,7 +591,8 @@ class AllOrdersList extends PureComponent {
   repeat = () =>{
     const {selectedRows} = this.state;
     const { dispatch } = this.props;
-    const  tips=[]
+    const  tips=[];
+    const  tips1=[]
     // 当前时间戳
     const timestamp = (new Date()).getTime();
     const timeInterval = 24 * 60 * 60 * 1000 * 2;
@@ -590,30 +613,22 @@ class AllOrdersList extends PureComponent {
       for(let i=0; i<selectedRows.length; i++){
         const time = timestamp - (new Date(selectedRows[i].taskCreateTime)).getTime();
         if(!selectedRows[i].taskId || selectedRows[i].logisticsPrintType === "0"){
-          tips.push(selectedRows[i].userName)
-          Modal.confirm({
-            title: '提示',
-            content: selectedRows[i].userName+"客户没有首次打印记录,不能进行重复打印!",
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk() {},
-            onCancel() {},
-          });
+          const item1={};
+          item1.name=selectedRows[i].userName+"客户没有首次打印记录,不能进行重复打印!";
+          tips.push(item1)
         }else if( time > timeInterval){
-          tips.push(selectedRows[i].userName)
-          Modal.confirm({
-            title: '提示',
-            content: selectedRows[i].userName+"客户的订单 距离首次时间超过2天 禁止打印！",
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk() {},
-            onCancel() {},
-          });
+          const item2={};
+          item2.name=selectedRows[i].userName+"客户的订单 距离首次时间超过2天 禁止打印！";
+          tips.push(item2)
         }
       }
       if(tips.length > 0 ){
+        console.log(tips)
+        this.setState({
+          tips:tips,
+          LogisticsFirst:1,
+          LogisticsAlertVisible:true
+        })
         return false;
       }
       let param = [];
@@ -927,6 +942,10 @@ class AllOrdersList extends PureComponent {
         <Icon type="upload" />
         SN激活导入
       </Menu.Item>
+      <Menu.Item key="2" onClick={this.handleTextImport}>
+        <Icon type="upload" />
+        文本导入
+      </Menu.Item>
     </Menu>
   );
 
@@ -1130,6 +1149,21 @@ class AllOrdersList extends PureComponent {
     if(key === 9 || key === '9'){ text = "已过期" }
     return text;
   }
+  // 订单状态颜色
+  getORDERSCOLOR = (key) => {
+    let text = ""
+    if(key === 0 || key === '0'){ text = "#E6A23C" }
+    if(key === 1 || key === '1'){ text = "#409EFF" }
+    if(key === 2 || key === '2'){ text = "#409EFF" }
+    if(key === 3 || key === '3'){ text = "#409EFF" }
+    if(key === 4 || key === '4'){ text = "#F56C6C" }
+    if(key === 5 || key === '5'){ text = "#F56C6C" }
+    if(key === 6 || key === '6'){ text = "#67C23A" }
+    if(key === 7 || key === '7'){ text = "#909399" }
+    if(key === 8 || key === '8'){ text = "#909399" }
+    if(key === 9 || key === '9'){ text = "#909399" }
+    return text;
+  }
   // 订单类型
   getORDERTYPE = (key) => {
     let text = ""
@@ -1305,19 +1339,27 @@ class AllOrdersList extends PureComponent {
 
   // SN激活导入弹窗
   handleExcelImport = () =>{
-    console.log("!!!!!")
     this.setState({
       excelVisible: true,
     });
   }
-
-
   handleExcelCancel = () =>{
     this.setState({
       excelVisible: false,
     });
   }
-
+  
+  // 文本导入弹窗
+  handleTextImport = () =>{
+    this.setState({
+      textVisible: true,
+    });
+  }
+  handleTextCancel = () =>{
+    this.setState({
+      textVisible: false,
+    });
+  }
 
   components = {
     header: {
@@ -1345,11 +1387,18 @@ class AllOrdersList extends PureComponent {
       selectedRowKeys,
       noDepositVisible,
       confirmTagVisible,
+      textVisible,
       currentList,
-      excelVisible
+      excelVisible,
+      LogisticsFirst,
+      LogisticsAlertVisible,
+      tips,
+      countSice,
+      params
     } = this.state;
 
     console.log(selectedRowKeys,"selectedRowKeys")
+    console.log(tips)
 
     const columns = this.state.columns.map((col, index) => ({
       ...col,
@@ -1375,18 +1424,37 @@ class AllOrdersList extends PureComponent {
 
     return (
       <Panel>
-        {/* <TabPanes/> */}
-        <Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange}>
-          {ORDERSTATUS.map(item=>{
-            return (
-              // <div
-              //   onClick={()=>this.statusChange(item.key)}
-              //   className={item.key === tabKey ? styles.status_item_select : styles.status_item}
-              // >{item.name}</div>
-              <TabPane tab={item.name} key={item.key}></TabPane>
-            )
-          })}
-        </Tabs>
+        <div className={styles.ordersTabs}>
+          <Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange} style={{height:59}}>
+            {ORDERSTATUS.map(item=>{
+              console.log(item.key,params.confirmTag,"123456")
+              return (
+                <TabPane tab={
+                  <span>
+                    {((
+                      item.key === params.confirmTag || 
+                      JSON.stringify(item.key) === params.confirmTag
+                      ) && (
+                        item.key === 0 ||
+                        item.key === 1 ||
+                        item.key === 2 ||
+                        item.key === 3 ||
+                        item.key === 4 ||
+                        item.key === 5 ||
+                        item.key === null
+                      )) ? (
+                    <Badge count={countSice} overflowCount={999}>
+                        <a href="#" className="head-example" />
+                      </Badge>) : ""
+                    }
+                    {item.name}
+                  </span>
+                } key={item.key}>
+                </TabPane>
+              )
+            })}
+          </Tabs>
+        </div>
         <Grid
           code={code}
           form={form}
@@ -1461,6 +1529,39 @@ class AllOrdersList extends PureComponent {
             handleExcelCancel={this.handleExcelCancel}
           />
         ):""}
+
+        {/* 文本导入弹窗 */}
+        {textVisible?(
+          <Text
+            textVisible={textVisible}
+            handleTextCancel={this.handleTextCancel}
+          />
+        ):""}
+
+
+        <Modal
+          title="提示"
+          visible={LogisticsAlertVisible}
+          width={560}
+          onCancel={this.handleLogisticsAlert}
+          footer={[
+            <Button key="back" onClick={this.handleLogisticsAlert}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" onClick={()=>this.handleLogisticsAlert()}>
+              确定
+            </Button>,
+          ]}
+        >
+          <div>
+            {tips.map(item=>{
+              return(
+              <p>{item.name}</p>
+              )
+            })}
+          </div>
+        </Modal>
+
         <Modal
           title="修改状态"
           visible={confirmTagVisible}

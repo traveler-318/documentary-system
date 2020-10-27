@@ -122,3 +122,20 @@ export async function getCaptchaImage() {
 export async function clearCache() {
   return request('/api/blade-auth/oauth/clear-cache');
 }
+
+
+// 注册 - 发送短信
+export async function registerSendcode(params) {
+  return request('/api/customer/contactcustomer/sendcode', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 注册
+export async function registerUser(params) {
+  return request('/api/customer/contactcustomer/save', {
+    method: 'POST',
+    body: params,
+  });
+}
