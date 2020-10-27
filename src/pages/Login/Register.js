@@ -6,6 +6,9 @@ import router from 'umi/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress } from 'antd';
 import styles from './Register.less';
 
+import Login from '../../components/Login';
+const { Captcha } = Login;
+
 const FormItem = Form.Item;
 const { Option } = Select;
 const InputGroup = Input.Group;
@@ -179,9 +182,7 @@ class Register extends Component {
     const { count, prefix, help, visible } = this.state;
     return (
       <div className={styles.main}>
-        <h3>
-          <FormattedMessage id="app.register.register" />
-        </h3>
+        
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
             {getFieldDecorator('mail', {
@@ -280,6 +281,9 @@ class Register extends Component {
               )}
             </InputGroup>
           </FormItem>
+          
+          <Captcha name="code" mode="image" />
+
           <FormItem>
             <Row gutter={8}>
               <Col span={16}>
@@ -321,9 +325,9 @@ class Register extends Component {
             >
               <FormattedMessage id="app.register.register" />
             </Button>
-            <Link className={styles.login} to="/User/Login">
+            {/* <Link className={styles.login} to="/User/Login">
               <FormattedMessage id="app.register.sign-in" />
-            </Link>
+            </Link> */}
           </FormItem>
         </Form>
       </div>
