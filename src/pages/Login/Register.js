@@ -112,13 +112,14 @@ class Register extends Component {
     form.validateFields({ force: true }, (err, values) => {
       if (!err) {
         const { prefix } = this.state;
-        dispatch({
-          type: 'register/submit',
-          payload: {
-            ...values,
-            prefix,
-          },
-        });
+        console.log(values,"values")
+        // dispatch({
+        //   type: 'register/submit',
+        //   payload: {
+        //     ...values,
+        //     prefix,
+        //   },
+        // });
       }
     });
   };
@@ -289,7 +290,14 @@ class Register extends Component {
           <FormItem>
             <Row gutter={8}>
               <Col span={16}>
-                {getFieldDecorator("code")(
+                {getFieldDecorator("code", {
+                  rules: [
+                    {
+                      required: true,
+                      message: "请输入图形验证码",
+                    },
+                  ],
+                })(
                   <Input
                     // {...customprops}
                     size="large"
