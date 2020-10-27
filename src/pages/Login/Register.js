@@ -75,11 +75,11 @@ class Register extends Component {
         },
       });
     }
-    this.refreshCaptcha();
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
+    this.refreshCaptcha();
   }
 
   onGetCaptcha = () => {
@@ -292,6 +292,7 @@ class Register extends Component {
                 {getFieldDecorator("code")(
                   <Input
                     // {...customprops}
+                    size="large"
                     placeholder={`请输入图形验证码`}
                   />
                 )}
