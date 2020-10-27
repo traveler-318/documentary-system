@@ -6,7 +6,7 @@ import router from 'umi/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress } from 'antd';
 import styles from './Register.less';
 import { getCaptchaImage } from '.././../services/user';
-import { setCaptchaKey } from '../../../utils/authority';
+import { setCaptchaKey } from '../../utils/authority';
 
 // import Login from '../../components/Login';
 // const { Captcha } = Login;
@@ -38,6 +38,15 @@ const passwordProgressMap = {
   pass: 'normal',
   poor: 'exception',
 };
+let SOURCE = [
+  {key:"1",name:"网站"},
+  {key:"2",name:"广告"},
+  {key:"3",name:"微信"},
+  {key:"4",name:"电话"},
+  {key:"5",name:"渠道代理"},
+  {key:"6",name:"转介绍"},
+  {key:"7",name:"其他"},
+]
 
 @connect(({ register, loading }) => ({
   register,
@@ -227,6 +236,24 @@ class Register extends Component {
               />
             )}
           </FormItem>
+
+          <FormItem>
+            {getFieldDecorator('sourceType', {
+              rules: [
+                {
+                  required: true,
+                  message: "请选择来源",
+                },
+              ],
+            })(
+              <Select size="large" placeholder={"请选择来源"}>
+                {SOURCE.map(item=>{
+                  return (<Option value={item.key}>{item.name}</Option>)
+                })}
+              </Select>
+            )}
+          </FormItem>
+
           <FormItem>
             <InputGroup compact>
               <Select
