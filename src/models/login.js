@@ -15,7 +15,7 @@ import {
 } from '../utils/authority';
 import { getPageQuery, formatRoutes, formatButtons, getTopUrl } from '../utils/utils';
 import { reloadAuthorized } from '../utils/Authorized';
-import { setCookie } from '../utils/support';
+import { setCookie, getCookie } from '../utils/support';
 
 
 export default {
@@ -120,7 +120,7 @@ export default {
       reloadAuthorized();
       yield put(
         routerRedux.replace({
-          pathname: '/user/login',
+          pathname: '/user/login?id='+(getCookie("tenantId") || ""),
           // search: stringify({
           //   redirect: window.location.href,
           // }),
