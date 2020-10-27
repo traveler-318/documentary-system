@@ -62,6 +62,7 @@ class Register extends Component {
     prefix: '86',
     // 默认白色背景
     image: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+    checkNick:false
   };
 
   componentDidUpdate() {
@@ -77,21 +78,34 @@ class Register extends Component {
     }
   }
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
+  componentWillMount() {
     this.refreshCaptcha();
   }
 
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   onGetCaptcha = () => {
-    let count = 59;
-    this.setState({ count });
-    this.interval = setInterval(() => {
-      count -= 1;
-      this.setState({ count });
-      if (count === 0) {
-        clearInterval(this.interval);
+    const { form, dispatch } = this.props;
+    // const userPhone = form.getFieldValue('userPhone');
+    // const code = form.getFieldValue('code');
+    form.validateFields({ force: true }, (err, values) => {
+      if (!err) {
+        console.log(values,"values")
+        let count = 59;
+        this.setState({ count });
+        this.interval = setInterval(() => {
+          count -= 1;
+          this.setState({ count });
+          if (count === 0) {
+            clearInterval(this.interval);
+          }
+        }, 1000);
       }
-    }, 1000);
+    });
+
+    
   };
 
   getPasswordStatus = () => {
@@ -109,19 +123,23 @@ class Register extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { form, dispatch } = this.props;
-    form.validateFields({ force: true }, (err, values) => {
-      if (!err) {
-        const { prefix } = this.state;
-        console.log(values,"values")
-        // dispatch({
-        //   type: 'register/submit',
-        //   payload: {
-        //     ...values,
-        //     prefix,
-        //   },
-        // });
-      }
-    });
+    this.setState({
+      checkNick: e.target.checked,
+    },()=>{
+      form.validateFields({ force: true }, (err, values) => {
+        if (!err) {
+          const { prefix } = this.state;
+          console.log(values,"values")
+          // dispatch({
+          //   type: 'register/submit',
+          //   payload: {
+          //     ...values,
+          //     prefix,
+          //   },
+          // });
+        }
+      });
+    })
   };
 
   handleConfirmBlur = e => {
@@ -322,12 +340,12 @@ class Register extends Component {
                 {getFieldDecorator('captcha', {
                   rules: [
                     {
-                      required: true,
+                      required: this.state.checkNick,
                       message: "请输入短信验证码",
                     },
                     {
                       pattern: /^\d{6}$/,
-                      message: "请输入6位手机号",
+                      message: "请输入6位短信验证码",
                     },
                   ],
                 })(
