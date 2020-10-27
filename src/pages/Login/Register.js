@@ -126,6 +126,7 @@ class Register extends Component {
     this.setState({
       checkNick: e.target.checked,
     },()=>{
+      this.props.form.validateFields(['captcha'], { force: true });
       form.validateFields({ force: true }, (err, values) => {
         if (!err) {
           const { prefix } = this.state;
