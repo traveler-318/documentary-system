@@ -62,7 +62,6 @@ class Register extends Component {
     prefix: '86',
     // 默认白色背景
     image: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-    checkNick:false
   };
 
   componentDidUpdate() {
@@ -88,10 +87,30 @@ class Register extends Component {
 
   onGetCaptcha = () => {
     const { form, dispatch } = this.props;
-    // const userPhone = form.getFieldValue('userPhone');
-    // const code = form.getFieldValue('code');
-    form.validateFields({ force: true }, (err, values) => {
-      if (!err) {
+    const userPhone = form.getFieldValue('userPhone');
+    const code = form.getFieldValue('code');
+    const res = /^\d{11}$/;
+
+    let type = true;
+    let errorsList = {};
+    if(userPhone === "" || userPhone === null || userPhone === undefined || !res.test(userPhone)){
+      errorsList.userPhone = {
+        value: userPhone,
+        errors: [new Error('请输入11位手机号')],
+      }
+      type = false;
+    }
+
+    if(code === "" || code === null || code === undefined){
+      form.setFields({["code"]: {value: code, errors: [new Error('请输入图形验证码')] }})
+      errorsList.code = {
+        value: code,
+        errors: [new Error('请输入图形验证码')],
+      }
+      type = false;
+    }
+
+      if(type){
         console.log(values,"values")
         let count = 59;
         this.setState({ count });
@@ -102,9 +121,9 @@ class Register extends Component {
             clearInterval(this.interval);
           }
         }, 1000);
+      }else{
+        this.props.form.setFields({...errorsList});
       }
-    });
-
     
   };
 
@@ -123,24 +142,19 @@ class Register extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { form, dispatch } = this.props;
-    this.setState({
-      checkNick: e.target.checked,
-    },()=>{
-      this.props.form.validateFields(['captcha'], { force: true });
-      form.validateFields({ force: true }, (err, values) => {
-        if (!err) {
-          const { prefix } = this.state;
-          console.log(values,"values")
-          // dispatch({
-          //   type: 'register/submit',
-          //   payload: {
-          //     ...values,
-          //     prefix,
-          //   },
-          // });
-        }
-      });
-    })
+    form.validateFields({ force: true }, (err, values) => {
+      if (!err) {
+        const { prefix } = this.state;
+        console.log(values,"values")
+        // dispatch({
+        //   type: 'register/submit',
+        //   payload: {
+        //     ...values,
+        //     prefix,
+        //   },
+        // });
+      }
+    });
   };
 
   handleConfirmBlur = e => {
@@ -275,7 +289,7 @@ class Register extends Component {
           </FormItem>
 
           <FormItem>
-            <InputGroup compact>
+            {/* <InputGroup compact>
               <Select
                 size="large"
                 value={prefix}
@@ -284,7 +298,7 @@ class Register extends Component {
               >
                 <Option value="86">+86</Option>
                 <Option value="87">+87</Option>
-              </Select>
+              </Select> */}
               {getFieldDecorator('userPhone', {
                 rules: [
                   {
@@ -299,11 +313,11 @@ class Register extends Component {
               })(
                 <Input
                   size="large"
-                  style={{ width: '80%' }}
+                  // style={{ width: '80%' }}
                   placeholder={"请输入您的手机号"}
                 />
               )}
-            </InputGroup>
+            {/* </InputGroup> */}
           </FormItem>
           {/* <Captcha name="code" mode="image" /> */}
           <FormItem>
@@ -341,7 +355,7 @@ class Register extends Component {
                 {getFieldDecorator('captcha', {
                   rules: [
                     {
-                      required: this.state.checkNick,
+                      required: true,
                       message: "请输入短信验证码",
                     },
                     {
