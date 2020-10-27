@@ -119,12 +119,13 @@ export default {
       });
       reloadAuthorized();
       yield put(
-        routerRedux.replace({
-          pathname: '/user/login?id='+(getCookie("tenantId") || ""),
-          // search: stringify({
-          //   redirect: window.location.href,
-          // }),
-        })
+        router.push('/user/login?id='+(getCookie("tenantId") || ""))
+        // routerRedux.replace({
+        //   pathname: '/user/login?id='+(getCookie("tenantId") || ""),
+        //   // search: stringify({
+        //   //   redirect: window.location.href,
+        //   // }),
+        // })
       );
     },
   },
