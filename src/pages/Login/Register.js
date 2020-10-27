@@ -5,9 +5,11 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress } from 'antd';
 import styles from './Register.less';
+import { getCaptchaImage } from '.././../services/user';
+import { setCaptchaKey } from '../../../utils/authority';
 
-import Login from '../../components/Login';
-const { Captcha } = Login;
+// import Login from '../../components/Login';
+// const { Captcha } = Login;
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -49,6 +51,8 @@ class Register extends Component {
     visible: false,
     help: '',
     prefix: '86',
+    // 默认白色背景
+    image: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
   };
 
   componentDidUpdate() {
@@ -62,6 +66,7 @@ class Register extends Component {
         },
       });
     }
+    this.refreshCaptcha();
   }
 
   componentWillUnmount() {
@@ -159,6 +164,16 @@ class Register extends Component {
     });
   };
 
+  refreshCaptcha = () => {
+    // 获取验证码
+    getCaptchaImage().then(resp => {
+      if (resp.key) {
+        this.setState({ image: resp.image });
+        setCaptchaKey(resp.key);
+      }
+    });
+  };
+
   renderPasswordProgress = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
@@ -179,74 +194,36 @@ class Register extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible } = this.state;
+    const { count, prefix, help, visible, image } = this.state;
     return (
       <div className={styles.main}>
         
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
-            {getFieldDecorator('mail', {
+            {getFieldDecorator('userName', {
               rules: [
                 {
                   required: true,
-                  message: formatMessage({ id: 'validation.email.required' }),
-                },
-                {
-                  type: 'email',
-                  message: formatMessage({ id: 'validation.email.wrong-format' }),
+                  message: "请输入您的姓名",
                 },
               ],
             })(
-              <Input size="large" placeholder={formatMessage({ id: 'form.email.placeholder' })} />
+              <Input size="large" placeholder={"请输入您的姓名"} />
             )}
           </FormItem>
-          <FormItem help={help}>
-            <Popover
-              getPopupContainer={node => node.parentNode}
-              content={
-                <div style={{ padding: '4px 0' }}>
-                  {passwordStatusMap[this.getPasswordStatus()]}
-                  {this.renderPasswordProgress()}
-                  <div style={{ marginTop: 10 }}>
-                    <FormattedMessage id="validation.password.strength.msg" />
-                  </div>
-                </div>
-              }
-              overlayStyle={{ width: 240 }}
-              placement="right"
-              visible={visible}
-            >
-              {getFieldDecorator('password', {
-                rules: [
-                  {
-                    validator: this.checkPassword,
-                  },
-                ],
-              })(
-                <Input
-                  size="large"
-                  type="password"
-                  placeholder={formatMessage({ id: 'form.password.placeholder' })}
-                />
-              )}
-            </Popover>
-          </FormItem>
           <FormItem>
-            {getFieldDecorator('confirm', {
+            {getFieldDecorator('wechatId', {
               rules: [
                 {
                   required: true,
-                  message: formatMessage({ id: 'validation.confirm-password.required' }),
-                },
-                {
-                  validator: this.checkConfirm,
+                  message: "请输入您的微信账号",
                 },
               ],
             })(
               <Input
                 size="large"
-                type="password"
-                placeholder={formatMessage({ id: 'form.confirm-password.placeholder' })}
+                // type="password"
+                placeholder={"请输入您的微信账号"}
               />
             )}
           </FormItem>
@@ -261,28 +238,50 @@ class Register extends Component {
                 <Option value="86">+86</Option>
                 <Option value="87">+87</Option>
               </Select>
-              {getFieldDecorator('mobile', {
+              {getFieldDecorator('userPhone', {
                 rules: [
                   {
                     required: true,
-                    message: formatMessage({ id: 'validation.phone-number.required' }),
+                    message: "请输入您的手机号",
                   },
                   {
                     pattern: /^\d{11}$/,
-                    message: formatMessage({ id: 'validation.phone-number.wrong-format' }),
+                    message: "请输入11位手机号",
                   },
                 ],
               })(
                 <Input
                   size="large"
                   style={{ width: '80%' }}
-                  placeholder={formatMessage({ id: 'form.phone-number.placeholder' })}
+                  placeholder={"请输入您的手机号"}
                 />
               )}
             </InputGroup>
           </FormItem>
-          
-          <Captcha name="code" mode="image" />
+          {/* <Captcha name="code" mode="image" /> */}
+          <FormItem>
+            <Row gutter={8}>
+              <Col span={16}>
+                {getFieldDecorator(
+                  // name,
+                  // options
+                )(
+                  <Input
+                    // {...customprops}
+                    placeholder={`请输入图形验证码`}
+                  />
+                )}
+              </Col>
+              <Col span={8}>
+                <img
+                  alt="captcha"
+                  src={image}
+                  className={styles.getImgCaptcha}
+                  onClick={this.refreshCaptcha}
+                />
+              </Col>
+            </Row>
+          </FormItem>
 
           <FormItem>
             <Row gutter={8}>
@@ -291,13 +290,17 @@ class Register extends Component {
                   rules: [
                     {
                       required: true,
-                      message: formatMessage({ id: 'validation.verification-code.required' }),
+                      message: "请输入短信验证码",
+                    },
+                    {
+                      pattern: /^\d{6}$/,
+                      message: "请输入6位手机号",
                     },
                   ],
                 })(
                   <Input
                     size="large"
-                    placeholder={formatMessage({ id: 'form.verification-code.placeholder' })}
+                    placeholder={"请输入短信验证码"}
                   />
                 )}
               </Col>
@@ -310,7 +313,7 @@ class Register extends Component {
                 >
                   {count
                     ? `${count} s`
-                    : formatMessage({ id: 'app.register.get-verification-code' })}
+                    : `发送验证码`}
                 </Button>
               </Col>
             </Row>
