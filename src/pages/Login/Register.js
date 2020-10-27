@@ -289,10 +289,7 @@ class Register extends Component {
           <FormItem>
             <Row gutter={8}>
               <Col span={16}>
-                {getFieldDecorator(
-                  // name,
-                  // options
-                )(
+                {getFieldDecorator("code")(
                   <Input
                     // {...customprops}
                     placeholder={`请输入图形验证码`}
