@@ -146,7 +146,7 @@ class AllOrdersList extends PureComponent {
           width: 100,
           render: (key,row)=>{
             // 待审核、已激活、已取消、已退回-不可切换状态
-            if(key == 0 || key == 6 || key == 7 || key == 8){
+            if(key == '0' || key == '7' || key == '8' || key == '9'){
               return (
                 <div>
                   <Tag color={this.getORDERSCOLOR(key)}>
@@ -390,9 +390,6 @@ class AllOrdersList extends PureComponent {
     if(payload.logisticsStatus && payload.logisticsStatus === "全部"){
       payload.logisticsStatus = null;
     }
-    // if(payload.confirmTag && payload.confirmTag === "全部"){
-    //   payload.confirmTag = null;
-    // }
     if(payload.orderSource && payload.orderSource === "全部"){
       payload.orderSource = null;
     }
@@ -739,7 +736,7 @@ class AllOrdersList extends PureComponent {
     let type = false, _data = [];
     const setAudit = this.setAudit;
     selectedRows.map(item=>{
-      if(item.confirmTag === 0 || item.confirmTag === '0'){
+      if(item.confirmTag === '0'){
         _data.push(item.id)
       }else{
         type = true;
@@ -838,7 +835,7 @@ class AllOrdersList extends PureComponent {
             {/*onClick={this.importData}*/}
           {/*>免押同步</Button>*/}
         </>
-        ):tabKey === '1'?(<>
+        ):tabKey === '2'?(<>
         {/* 已审核 */}
           {/*<Button
             icon="appstore"
@@ -851,14 +848,14 @@ class AllOrdersList extends PureComponent {
         {/* 在途中什么都没有 */}
 
        {/* 已签收 */}
-       {tabKey === '4'?(<>
+       {tabKey === '5'?(<>
         <Button
           icon="bell"
           type="primary"
           onClick={this.batchReminders}
         >提醒</Button></>):""}
         {/* 跟进中 */}
-        {tabKey === '5'?(<>
+        {tabKey === '6'?(<>
         <Button
           icon="bell"
           type="primary"
@@ -872,7 +869,7 @@ class AllOrdersList extends PureComponent {
         {/* 除了全部，其他状态都有导出按钮 */}
           {tabKey != 'null'?(<Button
               icon="upload"
-              type={(tabKey === "0" || tabKey === "1" || tabKey === "4" || tabKey === "5") ? "" : "primary"}
+              type={(tabKey === "0" || tabKey === "2" || tabKey === "5" || tabKey === "6") ? "" : "primary"}
               onClick={this.exportFile}
             >导出</Button>):""
           }
@@ -1119,15 +1116,16 @@ class AllOrdersList extends PureComponent {
   getORDERSTATUS = (key) => {
     let text = ""
     if(key === 0 || key === '0'){ text = "待审核" }
-    if(key === 1 || key === '1'){ text = "已审核" }
-    if(key === 2 || key === '2'){ text = "已发货" }
-    if(key === 3 || key === '3'){ text = "在途中" }
-    if(key === 4 || key === '4'){ text = "已签收" }
-    if(key === 5 || key === '5'){ text = "跟进中" }
-    if(key === 6 || key === '6'){ text = "已激活" }
-    if(key === 7 || key === '7'){ text = "已退回" }
-    if(key === 8 || key === '8'){ text = "已取消" }
-    if(key === 9 || key === '9'){ text = "已过期" }
+    if(key === 1 || key === '1'){ text = "初审" }
+    if(key === 2 || key === '2'){ text = "终审" }
+    if(key === 3 || key === '3'){ text = "已发货" }
+    if(key === 4 || key === '4'){ text = "在途中" }
+    if(key === 5 || key === '5'){ text = "已签收" }
+    if(key === 6 || key === '6'){ text = "跟进中" }
+    if(key === 7 || key === '7'){ text = "已激活" }
+    if(key === 8 || key === '8'){ text = "已退回" }
+    if(key === 9 || key === '9'){ text = "已取消" }
+    if(key === 10 || key === '10'){ text = "已过期" }
     return text;
   }
   // 订单状态颜色
@@ -1137,12 +1135,13 @@ class AllOrdersList extends PureComponent {
     if(key === 1 || key === '1'){ text = "#409EFF" }
     if(key === 2 || key === '2'){ text = "#409EFF" }
     if(key === 3 || key === '3'){ text = "#409EFF" }
-    if(key === 4 || key === '4'){ text = "#F56C6C" }
+    if(key === 4 || key === '4'){ text = "#409EFF" }
     if(key === 5 || key === '5'){ text = "#F56C6C" }
-    if(key === 6 || key === '6'){ text = "#67C23A" }
-    if(key === 7 || key === '7'){ text = "#909399" }
+    if(key === 6 || key === '6'){ text = "#F56C6C" }
+    if(key === 7 || key === '7'){ text = "#67C23A" }
     if(key === 8 || key === '8'){ text = "#909399" }
     if(key === 9 || key === '9'){ text = "#909399" }
+    if(key === 10 || key === '10'){ text = "#909399" }
     return text;
   }
 
@@ -1386,12 +1385,13 @@ class AllOrdersList extends PureComponent {
                       item.key === params.confirmTag || 
                       JSON.stringify(item.key) === params.confirmTag
                       ) && (
-                        item.key === 0 ||
-                        item.key === 1 ||
-                        item.key === 2 ||
-                        item.key === 3 ||
-                        item.key === 4 ||
-                        item.key === 5 ||
+                        item.key === '0' ||
+                        item.key === '1' ||
+                        item.key === '2' ||
+                        item.key === '3' ||
+                        item.key === '4' ||
+                        item.key === '5' ||
+                        item.key === '6' ||
                         item.key === null
                       )) ? (
                     <Badge count={countSice} overflowCount={999}>
@@ -1491,16 +1491,18 @@ class AllOrdersList extends PureComponent {
           2、已激活、已取消、已退回这三种状态下不能手动切换状态
           3、已过期  可以手动更改成已激活、已退回 */}
           {/* {"name":"待审核",key:0},
-              {"name":"已审核",key:1},
-              {"name":"已发货",key:2},
-              {"name":"在途中",key:3},
-              {"name":"已签收",key:4},
-              {"name":"跟进中",key:5},
-              {"name":"已激活",key:6},
-              {"name":"已退回",key:7},
-              {"name":"已取消",key:8},
-              {"name":"已过期",key:9}, */}
-              {currentList.confirmTag === 9 ? (
+              {"name":"初审",key:1},
+              {"name":"已审核",key:2},
+              {"name":"已发货",key:3},
+              {"name":"在途中",key:4},
+              {"name":"已签收",key:5},
+              {"name":"跟进中",key:6},
+              {"name":"已激活",key:7},
+              {"name":"已退回",key:8},
+              {"name":"已取消",key:9},
+              {"name":"已过期",key:10},
+              {"name":"全部",key:null}, */}
+              {currentList.confirmTag === '10' ? (
                 <Radio.Group onChange={this.onChangeRadio}>
                   <Radio value={6}>已激活</Radio>
                   <Radio value={7}>已退回</Radio>
@@ -1509,7 +1511,7 @@ class AllOrdersList extends PureComponent {
                 <Radio.Group onChange={this.onChangeRadio}>
                   <Radio value={6}>已激活</Radio>
                   <Radio value={7}>已退回</Radio>
-                  <Radio value={8}>已取消</Radio>
+                  <Radio value={8}>已取消</Radio> 
                 </Radio.Group>
               )}
         </Modal>

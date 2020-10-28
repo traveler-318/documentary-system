@@ -5,7 +5,7 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
 import styles from './Register.less';
-import { getCaptchaImage, registerSendcode } from '.././../services/user';
+import { getCaptchaImageRegister, registerSendcode, registerUser } from '.././../services/user';
 
 import { setCaptchaKey, getCaptchaKey } from '../../utils/authority';
 
@@ -90,14 +90,14 @@ class Register extends Component {
     const { form, dispatch } = this.props;
     const userPhone = form.getFieldValue('userPhone');
     const code = form.getFieldValue('code');
-    const res = /^\d{11}$/;
+    const res = /^1[3456789]\d{9}$/;
 
     let type = true;
     let errorsList = {};
     if(userPhone === "" || userPhone === null || userPhone === undefined || !res.test(userPhone)){
       errorsList.userPhone = {
         value: userPhone,
-        errors: [new Error('请输入11位手机号')],
+        errors: [new Error('请输入正确的手机号格式')],
       }
       type = false;
     }
@@ -121,23 +121,22 @@ class Register extends Component {
 
         registerSendcode(param).then(res=>{
           if(res.code === 200){
-
+            let count = 59;
+            this.setState({ count });
+            this.interval = setInterval(() => {
+              count -= 1;
+              this.setState({ count });
+              if (count === 0) {
+                clearInterval(this.interval);
+              }
+            }, 1000);
           }else{
-            message.error(res.msg);
+            // message.error(res.msg);
             this.props.form.setFieldsValue({code:""});
             this.refreshCaptcha();
           }
         })
-
-        // let count = 59;
-        // this.setState({ count });
-        // this.interval = setInterval(() => {
-        //   count -= 1;
-        //   this.setState({ count });
-        //   if (count === 0) {
-        //     clearInterval(this.interval);
-        //   }
-        // }, 1000);
+        
       }else{
         this.props.form.setFields({...errorsList});
       }
@@ -162,14 +161,10 @@ class Register extends Component {
     form.validateFields({ force: true }, (err, values) => {
       if (!err) {
         const { prefix } = this.state;
-        console.log(values,"values")
-        // dispatch({
-        //   type: 'register/submit',
-        //   payload: {
-        //     ...values,
-        //     prefix,
-        //   },
-        // });
+        console.log(values,"values");
+        registerUser(values).then(res=>{
+
+        })
       }
     });
   };
@@ -226,7 +221,7 @@ class Register extends Component {
 
   refreshCaptcha = () => {
     // 获取验证码
-    getCaptchaImage().then(resp => {
+    getCaptchaImageRegister().then(resp => {
       if (resp.key) {
         this.setState({ image: resp.image });
         setCaptchaKey(resp.key);
@@ -250,6 +245,14 @@ class Register extends Component {
       </div>
     ) : null;
   };
+
+  validatePhone = (rule, value, callback) => {
+    if (!(/^1[3456789]\d{9}$/.test(value))) {
+      callback(new Error('请输入正确的手机号格式'));
+    }else{
+      callback();
+    }
+  }
 
   render() {
     const { form, submitting } = this.props;
@@ -299,7 +302,7 @@ class Register extends Component {
             })(
               <Select size="large" placeholder={"请选择来源"}>
                 {SOURCE.map(item=>{
-                  return (<Option value={item.key}>{item.name}</Option>)
+                  return (<Option value={item.name}>{item.name}</Option>)
                 })}
               </Select>
             )}
@@ -318,14 +321,7 @@ class Register extends Component {
               </Select> */}
               {getFieldDecorator('userPhone', {
                 rules: [
-                  {
-                    required: true,
-                    message: "请输入您的手机号",
-                  },
-                  {
-                    pattern: /^\d{11}$/,
-                    message: "请输入11位手机号",
-                  },
+                  { required: true, validator: this.validatePhone },
                 ],
               })(
                 <Input
@@ -369,7 +365,7 @@ class Register extends Component {
           <FormItem>
             <Row gutter={8}>
               <Col span={16}>
-                {getFieldDecorator('captcha', {
+                {getFieldDecorator('verCode', {
                   rules: [
                     {
                       required: true,
@@ -392,7 +388,7 @@ class Register extends Component {
                   size="large"
                   disabled={count}
                   className={styles.getCaptcha}
-                  onClick={this.onGetCaptcha}
+                  onClick={count === 0 ? this.onGetCaptcha : ""}
                 >
                   {count
                     ? `${count} s`

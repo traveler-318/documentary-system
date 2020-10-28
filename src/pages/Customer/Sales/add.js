@@ -101,6 +101,14 @@ class SenderAdd extends PureComponent {
     }
   }
 
+  validatePhone = (rule, value, callback) => {
+    if (!(/^1[3456789]\d{9}$/.test(value))) {
+      callback(new Error('请输入正确的手机号格式'));
+    }else{
+      callback();
+    }
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -171,14 +179,7 @@ type='question-circle-o' /></Tooltip>
                 <FormItem {...formItemLayout} label="手机号：">
                   {getFieldDecorator('userPhone', {
                     rules: [
-                      {
-                        required: true,
-                        message: '手机号不能为空',
-                      },
-                      {
-                        len: 11,
-                        message: '请输入正确的手机号',
-                      },
+                      { required: true, validator: this.validatePhone },
                     ],
                   })(<Input placeholder="请输入手机号" />)}
                 </FormItem>
