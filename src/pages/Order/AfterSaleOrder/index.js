@@ -738,30 +738,58 @@ class AllOrdersList extends PureComponent {
 
   // 批量审核
   batchAudit = () => {
-    const {selectedRows} = this.state;
+    const {selectedRows, tabKey} = this.state;
 
     const toExamines = this.toExamines;
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
 
-    modal = Modal.confirm({
-      title: '提醒',
-      // content: "确定审核此订单吗？",
-      okText: '确定',
-      cancelType: 'danger',
-      cancelText: '拒绝',
-      cancelButtonProps: {
-        type:"danger"
-    },
-      content:<div>确定审核此订单吗？<Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button></div>,
-      onOk() {
-        toExamines(1);
-      },
-      onCancel() {
-        toExamines(8);
-      },
-    });
+    if(tabKey === "0"){
+      // 待审核
+      modal = Modal.confirm({
+        title: '提醒',
+        // content: "确定审核此订单吗？",
+        okText: '初审',
+        cancelText: '终审',
+        cancelButtonProps: {
+          type:"primary"
+        },
+        content:<div>
+          确定审核此订单吗？
+          <Button key="submit" type="danger" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{toExamines('9');}} >拒绝</Button>
+          <Button key="submit" style={{ position: 'absolute',right: '250px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button>
+          </div>,
+        onOk() {
+          toExamines('1');
+        },
+        onCancel() {
+          toExamines('2');
+        },
+      });
+    }else if(tabKey === "1"){
+      // 一审
+      modal = Modal.confirm({
+        title: '提醒',
+        // content: "确定审核此订单吗？",
+        okText: '终审',
+        cancelText: '拒绝',
+        cancelButtonProps: {
+          type:"danger"
+        },
+        content:<div>
+          确定审核此订单吗？
+          <Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button>
+          </div>,
+        onOk() {
+          // toExamines('1');
+          toExamines('2');
+        },
+        onCancel() {
+          toExamines('9');
+        },
+      });
+    }
   }
 
   toExamines = (confirmTag) => {
@@ -853,26 +881,38 @@ class AllOrdersList extends PureComponent {
     console.log(tabKey,"tabKey")
     return (<>
       {/* 待审核 */}
-        {tabKey === '0'?(<>
-        <Button type="primary" icon="plus" onClick={()=>{
-          router.push(`/order/AfterSaleOrder/add`);
-        }}>添加</Button>
-        <Button
-          icon="menu-unfold"
-          onClick={this.batchAudit}
-        >审核</Button>
-        <Button
+        {tabKey === '0'?(
+        <>
+          <Button type="primary" icon="plus" onClick={()=>{
+            router.push(`/order/AfterSaleOrder/add`);
+          }}>添加</Button>
+          <Button
+            icon="menu-unfold"
+            onClick={this.batchAudit}
+          >审核</Button>
+          <Button
             icon="download"
             onClick={this.importData}
           >免押同步</Button>
-        </>):tabKey === '2'?(<>
-        {/* 已审核 */}
-          <Button
-            icon="appstore"
-            type="primary"
-            onClick={this.bulkDelivery}
-          >发货</Button>
-        </>):""}
+        </>
+        ):tabKey === '1'?(
+          <>
+            <Button
+              icon="menu-unfold"
+              type="primary"
+              onClick={this.batchAudit}
+            >审核</Button>
+            </>
+        ):tabKey === '2'?(
+          <>
+          {/* 已审核 */}
+            <Button
+              icon="appstore"
+              type="primary"
+              onClick={this.bulkDelivery}
+            >发货</Button>
+          </>
+        ):""}
 
         {/* 已发货什么都没有 */}
         {/* 在途中什么都没有 */}
@@ -899,7 +939,7 @@ class AllOrdersList extends PureComponent {
         {/* 除了全部，其他状态都有导出按钮 */}
           {tabKey != 'null'?(<Button
               icon="upload"
-              type={(tabKey === "0" || tabKey === "2" || tabKey === "4" || tabKey === "6") ? "" : "primary"}
+              type={(tabKey === "0" || tabKey === "1" || tabKey === "2" || tabKey === "4" || tabKey === "6") ? "" : "primary"}
               onClick={this.exportFile}
             >导出</Button>):""
           }
@@ -1164,8 +1204,8 @@ class AllOrdersList extends PureComponent {
   getORDERSTATUS = (key) => {
     let text = ""
     if(key === 0 || key === '0'){ text = "待审核" }
-    if(key === 1 || key === '1'){ text = "初审" }
-    if(key === 2 || key === '2'){ text = "终审" }
+    if(key === 1 || key === '1'){ text = "已初审" }
+    if(key === 2 || key === '2'){ text = "已终审" }
     if(key === 3 || key === '3'){ text = "已发货" }
     if(key === 4 || key === '4'){ text = "在途中" }
     if(key === 5 || key === '5'){ text = "已签收" }
