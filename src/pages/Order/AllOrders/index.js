@@ -694,7 +694,7 @@ class AllOrdersList extends PureComponent {
 
     let type = false, _data = [];
     selectedRows.map(item=>{
-      if(item.confirmTag === '0'){
+      if(item.confirmTag === '0' || item.confirmTag === '1'){
         _data.push(item.id)
       }else{
         type = true;
@@ -758,17 +758,7 @@ class AllOrdersList extends PureComponent {
     const {selectedRows} = this.state;
     let type = false, _data = [];
     const setAudit = this.setAudit;
-    selectedRows.map(item=>{
-      if(item.confirmTag === '0'){
-        _data.push(item.id)
-      }else{
-        type = true;
-      }
-    })
-    if(!_data || _data.length === 0){
-      modal.destroy();
-      return message.error("您选择的数据中未包含未审核的数据");
-    }
+    
     if(type){
       Modal.confirm({
         title: '提醒',
