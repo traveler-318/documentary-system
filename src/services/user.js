@@ -120,7 +120,7 @@ export async function getCaptchaImage() {
 }
 
 export async function getCaptchaImageRegister() {
-  return request('/api/order/order/captcha');
+  return request('/api/customer/contactcustomer/captcha');
 }
 
 export async function clearCache() {
