@@ -758,6 +758,14 @@ class AllOrdersList extends PureComponent {
     const {selectedRows} = this.state;
     let type = false, _data = [];
     const setAudit = this.setAudit;
+
+    selectedRows.map(item=>{
+      if(item.confirmTag === '0' || item.confirmTag === '1'){
+        _data.push(item.id)
+      }else{
+        type = true;
+      }
+    })
     
     if(type){
       Modal.confirm({
