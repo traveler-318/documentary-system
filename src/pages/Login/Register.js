@@ -326,11 +326,7 @@ class Register extends Component {
               </Select> */}
               {getFieldDecorator('userPhone', {
                 rules: [
-                  {
-                    required: true,
-                    message: "请输入您的手机号",
-                  },
-                  { validator: this.validatePhone },
+                  { required: true, validator: this.validatePhone },
                 ],
               })(
                 <Input
