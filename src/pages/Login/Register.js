@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import Link from 'umi/link';
 import router from 'umi/router';
-import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
+import { Form, Input, Button, Select, Row, Col, Popover, Progress, message, Icon } from 'antd';
 import styles from './Register.less';
 import { getCaptchaImageRegister, registerSendcode, registerUser } from '.././../services/user';
 
@@ -271,7 +271,10 @@ class Register extends Component {
                 },
               ],
             })(
-              <Input size="large" placeholder={"请输入您的姓名"} />
+              <Input 
+              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              size="large" 
+              placeholder={"请输入您的姓名"} />
             )}
           </FormItem>
           <FormItem>
@@ -285,7 +288,7 @@ class Register extends Component {
             })(
               <Input
                 size="large"
-                // type="password"
+                prefix={<Icon type="wechat" style={{ color: 'rgba(0,0,0,.25)' }} />}
                 placeholder={"请输入您的微信账号"}
               />
             )}
@@ -300,7 +303,9 @@ class Register extends Component {
                 },
               ],
             })(
-              <Select size="large" placeholder={"请选择来源"}>
+              <Select 
+              prefix={<Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              size="large" placeholder={"请选择来源"}>
                 {SOURCE.map(item=>{
                   return (<Option value={item.name}>{item.name}</Option>)
                 })}
@@ -326,6 +331,7 @@ class Register extends Component {
               })(
                 <Input
                   size="large"
+                  prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   // style={{ width: '80%' }}
                   placeholder={"请输入您的手机号"}
                 />
@@ -345,7 +351,7 @@ class Register extends Component {
                   ],
                 })(
                   <Input
-                    // {...customprops}
+                    prefix={<Icon type="picture" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     size="large"
                     placeholder={`请输入图形验证码`}
                   />
@@ -379,6 +385,7 @@ class Register extends Component {
                 })(
                   <Input
                     size="large"
+                    prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     placeholder={"请输入短信验证码"}
                   />
                 )}

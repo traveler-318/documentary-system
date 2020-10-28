@@ -82,7 +82,7 @@ class LogisticsDetails extends PureComponent {
           if(params.outOrderNo === ""){
             // _dataList = JSON.parse(res.data).result.list
             if(JSON.stringify(JSON.parse(res.data).result) != "{}"){
-              _dataList = JSON.parse(res.data).result.list
+              _dataList = JSON.parse(JSON.parse(res.data).result.list)
             }
           }else{
             console.log(JSON.parse(res.data).result,"123321")
