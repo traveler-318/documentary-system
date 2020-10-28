@@ -90,14 +90,14 @@ class Register extends Component {
     const { form, dispatch } = this.props;
     const userPhone = form.getFieldValue('userPhone');
     const code = form.getFieldValue('code');
-    const res = /^\d{11}$/;
+    const res = /^1[3456789]\d{9}$/;
 
     let type = true;
     let errorsList = {};
     if(userPhone === "" || userPhone === null || userPhone === undefined || !res.test(userPhone)){
       errorsList.userPhone = {
         value: userPhone,
-        errors: [new Error('请输入11位手机号')],
+        errors: [new Error('请输入正确的手机号格式')],
       }
       type = false;
     }
@@ -251,6 +251,14 @@ class Register extends Component {
     ) : null;
   };
 
+  validatePhone = (rule, value, callback) => {
+    if (!(/^1[3456789]\d{9}$/.test(value))) {
+      callback(new Error('请输入正确的手机号格式'));
+    }else{
+      callback();
+    }
+  }
+
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
@@ -322,10 +330,7 @@ class Register extends Component {
                     required: true,
                     message: "请输入您的手机号",
                   },
-                  {
-                    pattern: /^\d{11}$/,
-                    message: "请输入11位手机号",
-                  },
+                  { validator: validatePhone },
                 ],
               })(
                 <Input
