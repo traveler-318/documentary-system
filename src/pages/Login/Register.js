@@ -302,7 +302,7 @@ class Register extends Component {
             })(
               <Select size="large" placeholder={"请选择来源"}>
                 {SOURCE.map(item=>{
-                  return (<Option value={item.key}>{item.name}</Option>)
+                  return (<Option value={item.name}>{item.name}</Option>)
                 })}
               </Select>
             )}
@@ -365,7 +365,7 @@ class Register extends Component {
           <FormItem>
             <Row gutter={8}>
               <Col span={16}>
-                {getFieldDecorator('captcha', {
+                {getFieldDecorator('verCode', {
                   rules: [
                     {
                       required: true,
