@@ -130,15 +130,18 @@ export default function request(url, option) {
       'Content-Type': 'text/plain',
     };
   }
-
-  // token鉴权
-  const token = getToken();
-  if (token) {
-    newOptions.headers = {
-      ...newOptions.headers,
-      'Blade-Auth': token,
-    };
+  console.log(url,"newOptionsnewOptionsnewOptions")
+  if(url != "/api/customer/contactcustomer/save"){
+    // token鉴权
+    const token = getToken();
+    if (token) {
+      newOptions.headers = {
+        ...newOptions.headers,
+        'Blade-Auth': token,
+      };
+    }
   }
+  
 
   if (
     newOptions.method === 'POST' ||
