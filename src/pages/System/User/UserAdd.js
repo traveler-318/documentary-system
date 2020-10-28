@@ -119,7 +119,10 @@ class UserAdd extends PureComponent {
                 <FormItem {...formAllItemLayout} label="登录账号">
                   {getFieldDecorator('account', {
                     rules: [
-                      { required: true, validator: this.validateName },
+                      {
+                        required: true,
+                        message: '请输入登录账号',
+                      },
                     ],
                   })(<Input placeholder="请输入登录账号" />)}
                 </FormItem>
