@@ -293,7 +293,7 @@ class AllOrdersList extends PureComponent {
       let list=[]
 
       for(let j=0; j<tabCode.length; j++){
-        tabCode[j]=parseInt(tabCode[j]);
+        tabCode[j]=tabCode[j];
         if(tabCode[j] === 10){
           tabCode[j] = null
         }
