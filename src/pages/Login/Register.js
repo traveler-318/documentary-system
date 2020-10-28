@@ -63,7 +63,8 @@ class Register extends Component {
     prefix: '86',
     // 默认白色背景
     image: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-    resultSuccessTYpe:false
+    resultSuccessTYpe:false,
+    isSendCode:false,
   };
 
   componentDidUpdate() {
@@ -123,7 +124,10 @@ class Register extends Component {
         registerSendcode(param).then(res=>{
           if(res.code === 200){
             let count = 59;
-            this.setState({ count });
+            this.setState({ 
+              count,
+              isSendCode:true
+            });
             this.interval = setInterval(() => {
               count -= 1;
               this.setState({ count });
@@ -158,10 +162,14 @@ class Register extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    
     const { form, dispatch } = this.props;
     form.validateFields({ force: true }, (err, values) => {
       if (!err) {
-        const { prefix } = this.state;
+        const { prefix, isSendCode } = this.state;
+        if(!isSendCode){
+          return message.error("请先发送短信验证码");
+        }
         console.log(values,"values");
         registerUser(values).then(res=>{
           if(res.code === 200){
