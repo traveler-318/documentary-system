@@ -1411,13 +1411,13 @@ class AllOrdersList extends PureComponent {
                       item.key === params.confirmTag || 
                       JSON.stringify(item.key) === params.confirmTag
                       ) && (
-                        item.key === 0 ||
-                        item.key === 1 ||
-                        item.key === 2 ||
-                        item.key === 3 ||
-                        item.key === 4 ||
-                        item.key === 5 ||
-                        item.key === 6 ||
+                        item.key === '0' ||
+                        item.key === '1' ||
+                        item.key === '2' ||
+                        item.key === '3' ||
+                        item.key === '4' ||
+                        item.key === '5' ||
+                        item.key === '6' ||
                         item.key === null
                       )) ? (
                     <Badge count={countSice} overflowCount={999}>
