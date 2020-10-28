@@ -69,7 +69,13 @@ class UserEdit extends PureComponent {
     }
   } 
 
-  
+  validateName = (rule, value, callback) => {
+    if ((/[\W]/g.test(value))) {
+      callback(new Error('登录账号只能输入英文'));
+    }else{
+      callback();
+    }
+  }
 
   render() {
     const {
@@ -114,10 +120,7 @@ class UserEdit extends PureComponent {
                 <FormItem {...formAllItemLayout} label="登录账号">
                   {getFieldDecorator('account', {
                     rules: [
-                      {
-                        required: true,
-                        message: '请输入登录账号',
-                      },
+                      { required: true, validator: this.validateName },
                     ],
                     initialValue: detail.account,
                   })(<Input placeholder="请输入登录账号" />)}
