@@ -52,6 +52,22 @@ class UserAdd extends PureComponent {
     dispatch(USER_CHANGE_INIT({ tenantId: value }));
   };
 
+  validatePhone = (rule, value, callback) => {
+    if (!(/^1[3456789]\d{9}$/.test(value))) {
+      callback(new Error('请输入正确的手机号格式'));
+    }else{
+      callback();
+    }
+  }
+
+  validateName = (rule, value, callback) => {
+    if (!(/^([A-Z\d])*$/.test(value))) {
+      callback(new Error('登录账号只能输入英文'));
+    }else{
+      callback();
+    }
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -187,7 +203,11 @@ class UserAdd extends PureComponent {
               </Col>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="手机号码">
-                  {getFieldDecorator('phone')(<Input placeholder="请输入手机号码" />)}
+                  {getFieldDecorator('phone', {
+                    rules: [
+                      { required: true, validator: this.validatePhone },
+                    ],
+                  })(<Input placeholder="请输入手机号码" />)}
                 </FormItem>
               </Col>
               {/* <Col span={10}>
