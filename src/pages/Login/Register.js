@@ -330,7 +330,7 @@ class Register extends Component {
                     required: true,
                     message: "请输入您的手机号",
                   },
-                  { validator: validatePhone },
+                  { validator: this.validatePhone },
                 ],
               })(
                 <Input
