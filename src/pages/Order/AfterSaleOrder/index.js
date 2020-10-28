@@ -1139,8 +1139,8 @@ class AllOrdersList extends PureComponent {
   getORDERSTATUS = (key) => {
     let text = ""
     if(key === 0 || key === '0'){ text = "待审核" }
-    if(key === 1 || key === '1'){ text = "一审" }
-    if(key === 2 || key === '2'){ text = "复审" }
+    if(key === 1 || key === '1'){ text = "初审" }
+    if(key === 2 || key === '2'){ text = "终审" }
     if(key === 3 || key === '3'){ text = "已发货" }
     if(key === 4 || key === '4'){ text = "在途中" }
     if(key === 5 || key === '5'){ text = "已签收" }
@@ -1516,8 +1516,8 @@ class AllOrdersList extends PureComponent {
           2、已激活、已取消、已退回这三种状态下不能手动切换状态
           3、已过期  可以手动更改成已激活、已退回 */}
          {/* {"name":"待审核",key:0},
-              {"name":"一审",key:1},
-              {"name":"已审核",key:2},
+              {"name":"初审",key:1},
+              {"name":"终审",key:2},
               {"name":"已发货",key:3},
               {"name":"在途中",key:4},
               {"name":"已签收",key:5},

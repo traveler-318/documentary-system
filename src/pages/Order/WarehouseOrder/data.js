@@ -10,8 +10,8 @@
 // 订单状态
 export const ORDERSTATUS = [
   {"name":"待审核",key:'0'},
-  {"name":"一审",key:'1'},
-  {"name":"复审",key:'2'},//已审核
+  {"name":"审核",key:'1'},
+  {"name":"终审",key:'2'},//已审核
   {"name":"已发货",key:'3'},
   {"name":"在途中",key:'4'},
   {"name":"已签收",key:'5'},
