@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import Link from 'umi/link';
 import router from 'umi/router';
-import { Form, Input, Button, Select, Row, Col, Popover, Progress, message, Icon } from 'antd';
+import { Form, Input, Button, Select, Row, Col, Popover, Progress, message, Icon, Result } from 'antd';
 import styles from './Register.less';
 import { getCaptchaImageRegister, registerSendcode, registerUser } from '.././../services/user';
 
@@ -63,6 +63,7 @@ class Register extends Component {
     prefix: '86',
     // 默认白色背景
     image: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+    resultSuccessTYpe:false
   };
 
   componentDidUpdate() {
@@ -163,7 +164,11 @@ class Register extends Component {
         const { prefix } = this.state;
         console.log(values,"values");
         registerUser(values).then(res=>{
-
+          if(res.code === 200){
+            this.setState({
+              resultSuccessTYpe:true
+            })
+          }
         })
       }
     });
@@ -257,7 +262,7 @@ class Register extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible, image } = this.state;
+    const { count, prefix, help, visible, image, resultSuccessTYpe } = this.state;
     return (
       <div className={styles.main}>
         
@@ -294,7 +299,20 @@ class Register extends Component {
             )}
           </FormItem>
 
-          <FormItem>
+          <FormItem className={styles.sourceType} style={{border: '1px solid #d9d9d9'}}>
+            <Icon 
+            className={styles.paperClip} 
+            type="paper-clip" 
+            style={{ 
+              color: 'rgba(0,0,0,.25)',
+              position: 'absolute',
+              width: '20px',
+              left: '9px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              fontSize:"17px"
+             }}
+            />
             {getFieldDecorator('sourceType', {
               rules: [
                 {
@@ -304,8 +322,11 @@ class Register extends Component {
               ],
             })(
               <Select 
-              prefix={<Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />}
-              size="large" placeholder={"请选择来源"}>
+                style={{paddingLeft: '30px'}}
+                // prefix={<Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                size="large" 
+                placeholder={"请选择来源"}
+              >
                 {SOURCE.map(item=>{
                   return (<Option value={item.name}>{item.name}</Option>)
                 })}
@@ -419,6 +440,17 @@ class Register extends Component {
             </Link> */}
           </FormItem>
         </Form>
+        {
+          resultSuccessTYpe?(
+            <div className={styles.resultSuccess}>
+              <Result
+                  status="success"
+                  title="注册成功"
+                  subTitle="客户经理将在1个工作日内电话联系您, 请您注意接听电话"
+                />
+            </div>
+          ):""
+        }
       </div>
     );
   }
