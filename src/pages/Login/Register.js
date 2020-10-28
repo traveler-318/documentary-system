@@ -5,7 +5,7 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
 import styles from './Register.less';
-import { getCaptchaImageRegister, registerSendcode } from '.././../services/user';
+import { getCaptchaImageRegister, registerSendcode, registerUser } from '.././../services/user';
 
 import { setCaptchaKey, getCaptchaKey } from '../../utils/authority';
 
@@ -121,23 +121,22 @@ class Register extends Component {
 
         registerSendcode(param).then(res=>{
           if(res.code === 200){
-
+            let count = 59;
+            this.setState({ count });
+            this.interval = setInterval(() => {
+              count -= 1;
+              this.setState({ count });
+              if (count === 0) {
+                clearInterval(this.interval);
+              }
+            }, 1000);
           }else{
             // message.error(res.msg);
             this.props.form.setFieldsValue({code:""});
             this.refreshCaptcha();
           }
         })
-
-        // let count = 59;
-        // this.setState({ count });
-        // this.interval = setInterval(() => {
-        //   count -= 1;
-        //   this.setState({ count });
-        //   if (count === 0) {
-        //     clearInterval(this.interval);
-        //   }
-        // }, 1000);
+        
       }else{
         this.props.form.setFields({...errorsList});
       }
@@ -162,14 +161,10 @@ class Register extends Component {
     form.validateFields({ force: true }, (err, values) => {
       if (!err) {
         const { prefix } = this.state;
-        console.log(values,"values")
-        // dispatch({
-        //   type: 'register/submit',
-        //   payload: {
-        //     ...values,
-        //     prefix,
-        //   },
-        // });
+        console.log(values,"values");
+        registerUser(values).then(res=>{
+
+        })
       }
     });
   };
@@ -393,7 +388,7 @@ class Register extends Component {
                   size="large"
                   disabled={count}
                   className={styles.getCaptcha}
-                  onClick={this.onGetCaptcha}
+                  onClick={count === 0 ? this.onGetCaptcha : ""}
                 >
                   {count
                     ? `${count} s`
