@@ -828,6 +828,9 @@ class AllOrdersList extends PureComponent {
       if(res.code === 200){
         message.success(res.msg);
         this.getDataList();
+        modal.destroy();
+      }else {
+        message.error(res.msg);
       }
     })
   }

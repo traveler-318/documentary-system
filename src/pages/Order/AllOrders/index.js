@@ -692,6 +692,19 @@ class AllOrdersList extends PureComponent {
       return message.info('请至少选择一条数据');
     }
 
+    let type = false, _data = [];
+    selectedRows.map(item=>{
+      if(item.confirmTag === '0'){
+        _data.push(item.id)
+      }else{
+        type = true;
+      }
+    })
+    if(!_data || _data.length === 0){
+      // modal.destroy();
+      return message.error("您选择的数据中未包含未审核的数据");
+    }
+
     if(tabKey === "0"){
       // 待审核
       modal = Modal.confirm({
@@ -784,6 +797,9 @@ class AllOrdersList extends PureComponent {
       if(res.code === 200){
         message.success(res.msg);
         this.getDataList();
+        modal.destroy();
+      }else {
+        message.error(res.msg);
       }
     })
   }
