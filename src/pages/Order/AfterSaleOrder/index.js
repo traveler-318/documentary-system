@@ -39,6 +39,9 @@ import Details from './components/details'
 import ImportData from './components/ImportData'
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
+import Excel from '../AllOrders/components/excel';
+import Text from '../AllOrders/components/text';
+
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -99,6 +102,10 @@ class AllOrdersList extends PureComponent {
       detailsVisible:false,
       // 免押宝导入弹窗
       noDepositVisible:false,
+      // SN激活导入弹窗
+      excelVisible:false,
+      // 文本导入弹窗
+      textVisible:false,
       salesmangroup:[],
       countSice:0,
       columns:[
@@ -919,6 +926,11 @@ class AllOrdersList extends PureComponent {
               更多 <Icon type="down" />
             </Button>
           </Dropdown>
+          <Dropdown overlay={this.ImporMenu()}>
+            <Button>
+              导入<Icon type="down" />
+            </Button>
+          </Dropdown>
         </>):""}
 
         {/* <Button icon="upload">导出</Button> */}
@@ -948,6 +960,19 @@ class AllOrdersList extends PureComponent {
           首次打印
         </Menu.Item>
       </SubMenu>
+    </Menu>
+  );
+
+  ImporMenu = () => (
+    <Menu onClick={this.handleMenuClick}>
+      <Menu.Item key="1" onClick={this.handleExcelImport}>
+        <Icon type="upload" />
+        SN激活导入
+      </Menu.Item>
+      <Menu.Item key="2" onClick={this.handleTextImport}>
+        <Icon type="upload" />
+        文本导入
+      </Menu.Item>
     </Menu>
   );
 
@@ -1327,6 +1352,32 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  // SN激活导入弹窗
+  handleExcelImport = () =>{
+    this.setState({
+      excelVisible: true,
+    });
+  }
+
+  handleExcelCancel = () =>{
+    this.setState({
+      excelVisible: false,
+    });
+  }
+
+  // 文本导入弹窗
+  handleTextImport = () =>{
+    this.setState({
+      textVisible: true,
+    });
+  }
+
+  handleTextCancel = () =>{
+    this.setState({
+      textVisible: false,
+    });
+  }
+
   handleResize = index => (e, { size }) => {
     this.setState(({ columns }) => {
       const nextColumns = [...columns];
@@ -1365,6 +1416,8 @@ class AllOrdersList extends PureComponent {
       noDepositVisible,
       confirmTagVisible,
       currentList,
+      textVisible,
+      excelVisible,
       tabCode,
       countSice,
       params
@@ -1498,6 +1551,22 @@ class AllOrdersList extends PureComponent {
             handleCancelNoDeposit={this.handleCancelNoDeposit}
           />
         ):""}
+        {/* SN激活导入弹窗 */}
+        {excelVisible?(
+          <Excel
+            excelVisible={excelVisible}
+            handleExcelCancel={this.handleExcelCancel}
+          />
+        ):""}
+
+        {/* 文本导入弹窗 */}
+        {textVisible?(
+          <Text
+            textVisible={textVisible}
+            handleTextCancel={this.handleTextCancel}
+          />
+        ):""}
+
         <Modal
           title="修改状态"
           visible={confirmTagVisible}
