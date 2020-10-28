@@ -807,7 +807,7 @@ class AllOrdersList extends PureComponent {
       if(item.confirmTag === '0' || item.confirmTag === '1'){
         _data.push(item.id)
       }else{
-        type = true;
+        type = true; 
       }
     })
 
