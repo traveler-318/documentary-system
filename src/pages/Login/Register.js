@@ -5,7 +5,7 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
 import styles from './Register.less';
-import { getCaptchaImage, registerSendcode } from '.././../services/user';
+import { getCaptchaImageRegister, registerSendcode } from '.././../services/user';
 
 import { setCaptchaKey, getCaptchaKey } from '../../utils/authority';
 
@@ -123,7 +123,7 @@ class Register extends Component {
           if(res.code === 200){
 
           }else{
-            message.error(res.msg);
+            // message.error(res.msg);
             this.props.form.setFieldsValue({code:""});
             this.refreshCaptcha();
           }
@@ -226,7 +226,7 @@ class Register extends Component {
 
   refreshCaptcha = () => {
     // 获取验证码
-    getCaptchaImage().then(resp => {
+    getCaptchaImageRegister().then(resp => {
       if (resp.key) {
         this.setState({ image: resp.image });
         setCaptchaKey(resp.key);

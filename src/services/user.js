@@ -119,6 +119,10 @@ export async function getCaptchaImage() {
   return request('/api/blade-auth/oauth/captcha');
 }
 
+export async function getCaptchaImageRegister() {
+  return request('/api/order/order/captcha');
+}
+
 export async function clearCache() {
   return request('/api/blade-auth/oauth/clear-cache');
 }

@@ -195,6 +195,14 @@ class OrdersEdit extends PureComponent {
     return text
   }
 
+  validatePhone = (rule, value, callback) => {
+    if (!(/^1[3456789]\d{9}$/.test(value))) {
+      callback(new Error('请输入正确的手机号格式'));
+    }else{
+      callback();
+    }
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -262,13 +270,7 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                   <FormItem {...formAllItemLayout} label="手机号">
                     {getFieldDecorator('userPhone', {
                       rules: [
-                        {
-                          message: '请输入手机号',
-                        },
-                        {
-                          len: 11,
-                          message: '请输入正确的手机号',
-                        },
+                        { required: true, validator: this.validatePhone },
                       ],
                       initialValue: detail.userPhone,
                     })(<Input disabled={detail.userPhone ? true : edit} placeholder="" />)}
