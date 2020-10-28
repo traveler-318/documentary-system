@@ -211,7 +211,15 @@ export async function salesmanList(params) {
 
 // tab显示
 export async function menuTab(params) {
-  return request("/api//menu_tab/detail",{
+  return request("/api/menu_tab/detail",{
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 文本导入
+export async function importText(params) {
+  return request("/api/order/order/importText",{
     method: 'POST',
     body: params,
   });

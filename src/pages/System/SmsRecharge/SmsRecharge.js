@@ -33,7 +33,8 @@ class SmsRecharge extends PureComponent {
         price:'200'
       }],
       bindingQRCodeVisible:false,
-      bindingQRCode:''
+      bindingQRCode:'',
+      money:''
     }
   }
 
@@ -47,6 +48,7 @@ class SmsRecharge extends PureComponent {
         this.setState({
           bindingQRCode:url,
           bindingQRCodeVisible:true,
+          money:item.price
         })
       }else {
         message.error(res.msg)
@@ -76,6 +78,7 @@ class SmsRecharge extends PureComponent {
             this.setState({
               bindingQRCode:url,
               bindingQRCodeVisible:true,
+              money:price
             })
           }else {
             message.error(res.msg)
@@ -104,7 +107,7 @@ class SmsRecharge extends PureComponent {
   render() {
     const code = 'SmsRecharge';
 
-    const {price,list,valuePrice,bindingQRCodeVisible,bindingQRCode}=this.state;
+    const {price,list,valuePrice,bindingQRCodeVisible,bindingQRCode,money}=this.state;
 
     return (
       <Panel>
@@ -156,6 +159,7 @@ class SmsRecharge extends PureComponent {
           <BindingQRCode
             bindingQRCodeVisible={bindingQRCodeVisible}
             bindingQRCode={bindingQRCode}
+            money={money}
             handleCancelBindingQRCode={this.handleCancelBindingQRCode}
           />
         ):""}

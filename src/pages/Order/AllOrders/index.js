@@ -1343,6 +1343,7 @@ class AllOrdersList extends PureComponent {
       excelVisible: true,
     });
   }
+
   handleExcelCancel = () =>{
     this.setState({
       excelVisible: false,
@@ -1355,6 +1356,7 @@ class AllOrdersList extends PureComponent {
       textVisible: true,
     });
   }
+
   handleTextCancel = () =>{
     this.setState({
       textVisible: false,

@@ -309,7 +309,7 @@ class LogisticsConfiguration extends PureComponent {
   }
 
   saveData = (values,callBack) => {
-    console.log(values,"123")
+    console.log(callBack,"123")
     const { detail } = this.state;
     console.log(detail,"detail")
     sessionStorage.logisticsConfigurationValues = JSON.stringify(values);
@@ -427,7 +427,7 @@ class LogisticsConfiguration extends PureComponent {
     const {currentIndex, listID} = this.state;
     const _this=this;
     if(currentIndex === listID.length-1){
-      Modal.success('操作成功');
+      message.success('操作成功');
       this.setState({
         handlePrintingClick:true
       })

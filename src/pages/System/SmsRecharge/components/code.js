@@ -45,6 +45,7 @@ class Logistics extends PureComponent {
       bindingQRCodeVisible,
       bindingQRCode,
       handleCancelBindingQRCode,
+      money
     } = this.props;
     // const {countDownTimer,qrUrl} = this.state;
 
@@ -67,6 +68,7 @@ class Logistics extends PureComponent {
               size={320}
               fgColor="#000000"
             />
+            <h3 style={{textAlign: "center",paddingTop:"20px",fontSize:"22px"}}>{money}元</h3>
           </div>
         </Modal>
       </div>

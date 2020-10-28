@@ -21,6 +21,7 @@ class Export extends PureComponent {
     super(props);
     this.state = {
       isCovered: 0,
+      onReset: () => {},
     };
   }
 
@@ -35,15 +36,21 @@ class Export extends PureComponent {
     }
     if (status === 'done') {
       message.success(`${info.file.name} 数据导入成功!`);
-      this.handleExcelCancel();
       this.onClickReset();
+      this.props.handleExcelCancel();
     } else if (status === 'error') {
       message.error(`${info.file.response.msg}`);
     }
   };
 
+  onClickReset = () => {
+    const { onReset } = this.state;
+    this.setState({ deptId: 0 });
+    onReset();
+  };
+
   handleTemplate = () => {
-    window.open(`/api/blade-user/export-template?Blade-Auth=${getAccessToken()}`);
+    // window.open(`/api/blade-user/export-template?Blade-Auth=${getAccessToken()}`);
   };
 
   onSwitchChange = checked => {
@@ -68,7 +75,7 @@ class Export extends PureComponent {
       headers: {
         'Blade-Auth': getToken(),
       },
-      action: `/api/blade-user/import-user?isCovered=${isCovered}`,
+      action: `/api/order/order/importSNCode?isCovered=${isCovered}`,
     };
 
     const formItemLayout = {
