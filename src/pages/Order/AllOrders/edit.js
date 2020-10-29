@@ -219,21 +219,12 @@ class OrdersEdit extends PureComponent {
       orderListLength,
     } = this.state;
 
-    const formItemLayout = {
+    const formAllItemLayout = {
       labelCol: {
         span: 8,
       },
       wrapperCol: {
         span: 16,
-      },
-    };
-
-    const formAllItemLayout = {
-      labelCol: {
-        span: 4,
-      },
-      wrapperCol: {
-        span: 20,
       },
     };
 console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
