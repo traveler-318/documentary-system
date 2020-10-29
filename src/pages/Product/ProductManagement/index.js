@@ -363,7 +363,6 @@ class ProductManagement extends PureComponent {
       handleCancelEdit
     } = this.state;
 
-    console.log(this.components)
 
     const columns = this.state.columns.map((col, index) => ({
       ...col,
