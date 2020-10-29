@@ -317,11 +317,11 @@ class OrdersAdd extends PureComponent {
                           console.log(form.getFieldsValue,"2");
                           const region = form.getFieldsValue();
                           console.log(region,"3");
-                          if(!region.payamount || region.payamount === "" || region.payamount === null){
+                          // if(!region.payamount || region.payamount === "" || region.payamount === null){
                             form.setFieldsValue({
                               payamount:selectedOptions[2].payamount
                             })
-                          }
+                          // }
                         }}
                       ></Cascader>
                   )}
