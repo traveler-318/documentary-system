@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, List, Form, Input, Row, Tabs, Card, message } from 'antd';
+import { Button, List, Form, Input, Row, Tabs, Card, message, Tooltip, Icon } from 'antd';
 import { getUnWeChatBind } from '../../../services/newServices/recharge';
 import Panel from '../../../components/Panel';
 import styles from './index.less';
@@ -131,6 +131,7 @@ class SmsRecharge extends PureComponent {
               <List.Item>
                 <Card className={styles.item}>
                   <input placeholder='点击输入' value={valuePrice} onChange={(e)=>this.onChange(e)} onKeyDown={(e)=>this.onKeyDown(e)} />
+                  <Tooltip title="金额回车确认"><span className={styles.tooltip} style={{fontSize:'12px'}}>提示</span></Tooltip>
                   <span>0.1/条</span>
                   <p className={styles.price}>{price}元</p>
                   <p>仅支持100的整数倍</p>

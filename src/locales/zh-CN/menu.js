@@ -53,7 +53,7 @@ export default {
   'menu.system.param': '参数管理',
   'menu.system.tenant': '租户管理',
   'menu.system.client': '应用管理',
-  'menu.system.smsrecharge': '短信充值',
+  'menu.system.smsrecharge': '充值管理',
   'menu.monitor': '系统监控',
   'menu.monitor.log': '日志管理',
   'menu.monitor.log.log_usual': '通用日志',
