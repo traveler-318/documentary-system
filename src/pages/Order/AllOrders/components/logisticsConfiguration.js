@@ -82,7 +82,8 @@ class LogisticsConfiguration extends PureComponent {
       currentIndex:0,
       listID:[],
       handlePrintingClick:false,
-      localPrintStatus:''
+      localPrintStatus:'',
+      payamount:0,
     };
   }
 
@@ -141,6 +142,7 @@ class LogisticsConfiguration extends PureComponent {
       console.log(_data,"_data_data_data")
       this.setState({
         detail:{..._data},
+        payamount:_data.payAmount
       },()=>{
         const { form } = this.props;
         form.setFieldsValue({ productCoding: _data.productCoding,logisticsNumber: _data.logisticsNumber});
@@ -310,7 +312,7 @@ class LogisticsConfiguration extends PureComponent {
 
   saveData = (values,callBack) => {
     console.log(callBack,"123")
-    const { detail } = this.state;
+    const { detail, payamount } = this.state;
     console.log(detail,"detail")
     sessionStorage.logisticsConfigurationValues = JSON.stringify(values);
     values.id = detail.id;
@@ -319,7 +321,8 @@ class LogisticsConfiguration extends PureComponent {
     values.outOrderNo = detail.outOrderNo;
     values.tenantId = detail.tenantId;
     values.userPhone = detail.userPhone;
-    values.payAmount = values.productType[2].split("-")[1];
+    values.payAmount = payamount;
+    // values.payAmount = values.productType[2].split("-")[1];
     values.productName = values.productType[2];
     values.productType = `${values.productType[0]}/${values.productType[1]}`;
     // values.productName = values.productName.join("/");
@@ -576,7 +579,10 @@ class LogisticsConfiguration extends PureComponent {
                       options={productList}
                       fieldNames={{ label: 'value'}}
                       onChange={(value, selectedOptions)=>{
-                        console.log("123")
+                        console.log(value, selectedOptions,"产品分类改变")
+                        this.setState({
+                          payamount:selectedOptions[2].payamount
+                        })
                       }}
                     ></Cascader>
                   )}

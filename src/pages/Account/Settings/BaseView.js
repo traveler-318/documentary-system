@@ -12,6 +12,7 @@ import {
   Row,
   Col,
   Select,
+  Tabs
 } from 'antd';
 import Panel from '../../../components/Panel';
 import { getUserInfo, updateInfo } from '../../../services/user';
@@ -19,11 +20,19 @@ import { getToken } from '../../../utils/authority';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
-
+const { TabPane } = Tabs;
 // const GRADE = [
 //   {name:"一级",key:1},
 //   {name:"二级",key:2},
 // ]
+const topTabPane = [
+  {name:"基本配置",key:1},
+  {name:"安全配置",key:2},
+  {name:"功能配置",key:3},
+  {name:"售后配置",key:4},
+  {name:"退货配置",key:5},
+]
+
 
 @Form.create()
 class BaseView extends Component {
@@ -194,19 +203,6 @@ class BaseView extends Component {
                   ],
                 })(<Input />)}
               </FormItem>
-              {/* <FormItem
-                {...formItemLayout}
-                label={formatMessage({ id: 'app.settings.basic.realname' })}
-              >
-                {getFieldDecorator('realName', {
-                  rules: [
-                    {
-                      required: true,
-                      message: formatMessage({ id: 'app.settings.basic.realname-message' }, {}),
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem> */}
               <FormItem {...formItemLayout} label={"联系电话"}>
                 {getFieldDecorator('phone', {
                   rules: [
@@ -227,17 +223,6 @@ class BaseView extends Component {
                   ],
                 })(<Input />)}
               </FormItem>
-              {/* <FormItem {...formItemLayout} label={'所属领导'}>
-                {getFieldDecorator('leadershipName', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入所属领导',
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem> */}
-
               <FormItem {...formItemLayout} label={'提示内容'}>
                 {getFieldDecorator('promptContent', {
                   rules: [
@@ -248,11 +233,6 @@ class BaseView extends Component {
                   ],
                 })(<Input />)}
               </FormItem>
-              {/* <FormItem {...formItemLayout} label={'剩余金额'}>
-                {getFieldDecorator('remainingMoney', {
-                  rules: [{ validator: this.checkInteger }],
-                })(<Input />)}
-              </FormItem> */}
               <FormItem {...formItemLayout} label={'网关访问域名'}>
                 {getFieldDecorator('serverAddress', {
                   rules: [
@@ -263,39 +243,16 @@ class BaseView extends Component {
                   ],
                 })(<Input />)}
               </FormItem>
-              {/* <FormItem {...formItemLayout} label={'系统级别'}>
-                {getFieldDecorator('systemLevel', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请选择系统级别',
-                    },
-                  ],
-                })(
-                  <Select defaultValue={null} placeholder={"请选择系统级别"}>
-                    {GRADE.map(item=>{
-                      return (<Option value={item.id}>{item.name}</Option>)
-                    })}
-                  </Select>
-                )}
-              </FormItem> */}
-              <FormItem {...formItemLayout} label={'当前对应的签名'}>
+              <FormItem {...formItemLayout} label={'短信签名'}>
                 {getFieldDecorator('smsSignature')(
                   <Input />
                 )}
               </FormItem>
-              <FormItem {...formItemLayout} label={'当前售后电话'}>
+              <FormItem {...formItemLayout} label={'投诉电话'}>
                 {getFieldDecorator('aftersalesPhone')(
                   <Input />
                 )}
               </FormItem>
-              {/* <FormItem {...formItemLayout} label={'剩余业务员数量'}>
-                {getFieldDecorator('currentQuota', {
-                  rules: [{ validator: this.checkInteger }],
-                })(
-                  <Input />
-                )}
-              </FormItem> */}
               <FormItem {...formItemLayout} label={'有效期天数'}>
                 {getFieldDecorator('periodValidity', {
                   rules: [{ validator: this.checkInteger }],
@@ -321,7 +278,7 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formItemLayout} label={'告警开关'}>
+                <FormItem {...formItemLayout} label={'系统告警'}>
                   {getFieldDecorator('alarmStatus')(
                     <Radio.Group>
                       <Radio key={1} value={1}>启用</Radio>
@@ -337,7 +294,7 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formItemLayout} label={'物流查询开关'}>
+                <FormItem {...formItemLayout} label={'物流查询'}>
                   {getFieldDecorator('logisticsStatus')(
                     <Radio.Group>
                       <Radio key={1} value={1}>启用</Radio>
@@ -354,7 +311,7 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formItemLayout} label={'发货提醒开关'}>
+                <FormItem {...formItemLayout} label={'发货提醒'}>
                   {getFieldDecorator('shipmentRemindStatus')(
                     <Radio.Group>
                       <Radio key={1} value={1}>启用</Radio>
@@ -362,7 +319,7 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formItemLayout} label={'本地打印开关'}>
+                <FormItem {...formItemLayout} label={'本地打印'}>
                   {getFieldDecorator('localPrintStatus')(
                     <Radio.Group>
                       <Radio key={1} value={1}>是</Radio>
