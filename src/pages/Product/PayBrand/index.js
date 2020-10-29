@@ -208,7 +208,7 @@ class PayBrandList extends PureComponent {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 300,
+        width: 150,
         render: (res,row) => {
           return(
             <div>

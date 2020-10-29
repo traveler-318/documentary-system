@@ -279,12 +279,12 @@ class BaseView extends Component {
                   </Select>
                 )}
               </FormItem> */}
-              <FormItem {...formItemLayout} label={'当前对应的签名'}>
+              <FormItem {...formItemLayout} label={'短信签名'}>
                 {getFieldDecorator('smsSignature')(
                   <Input />
                 )}
               </FormItem>
-              <FormItem {...formItemLayout} label={'当前售后电话'}>
+              <FormItem {...formItemLayout} label={'投诉电话'}>
                 {getFieldDecorator('aftersalesPhone')(
                   <Input />
                 )}
@@ -321,7 +321,7 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formItemLayout} label={'告警开关'}>
+                <FormItem {...formItemLayout} label={'系统告警'}>
                   {getFieldDecorator('alarmStatus')(
                     <Radio.Group>
                       <Radio key={1} value={1}>启用</Radio>
@@ -337,7 +337,7 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formItemLayout} label={'物流查询开关'}>
+                <FormItem {...formItemLayout} label={'物流查询'}>
                   {getFieldDecorator('logisticsStatus')(
                     <Radio.Group>
                       <Radio key={1} value={1}>启用</Radio>
@@ -354,7 +354,7 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formItemLayout} label={'发货提醒开关'}>
+                <FormItem {...formItemLayout} label={'发货提醒'}>
                   {getFieldDecorator('shipmentRemindStatus')(
                     <Radio.Group>
                       <Radio key={1} value={1}>启用</Radio>
