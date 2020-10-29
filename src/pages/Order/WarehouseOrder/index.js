@@ -119,6 +119,46 @@ class AllOrdersList extends PureComponent {
           ellipsis: true,
         },
         {
+          title: '订单状态(免押宝)',
+          dataIndex: 'mianyaStatus',
+          width: 130,
+          render: (key,row)=>{
+            let type=''
+            if (key === 0) {
+              type ='未授权';
+            } else if(key === 1){
+              type ='已授权';
+            }else if(key === 2){
+              type ='解冻';
+            }else if(key === 3){
+              type ='扣款';
+            }
+            return (
+              type
+            )
+          }
+        },
+        {
+          title: '机器状态(免押宝) ',
+          dataIndex: 'machineStatus',
+          width: 130,
+          render: (key,row)=>{
+            let type=''
+            if (key === 0) {
+              type ='未激活';
+            } else if(key === 1){
+              type ='已激活';
+            }else if(key === 2){
+              type ='已退回';
+            }else if(key === 3){
+              type ='被投诉';
+            }
+            return (
+              type
+            )
+          }
+        },
+        {
           title: '产品分类',
           dataIndex: 'productType',
           width: 130,
