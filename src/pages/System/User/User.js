@@ -346,7 +346,7 @@ class User extends PureComponent {
       },
       {
         title: '用户姓名',
-        dataIndex: 'realName',
+        dataIndex: 'name',
         width:120,
       },
       {

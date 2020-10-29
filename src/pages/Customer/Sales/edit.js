@@ -113,6 +113,17 @@ class SenderAdd extends PureComponent {
     }
   }
 
+  reactNode = () => {
+    return(
+      <div>
+        <p>1、复制本登录账号</p>
+        <p>2、粘贴到到，系统管理—新增用户—登录账号里面</p>
+        <p>3、角色配置成销售角色注意：</p>
+        <p>本登录账号必须要与用户管理里面的登录账号信息一致，否则会导致销售无法登录到自己后台</p>
+      </div>
+    )
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -153,18 +164,14 @@ class SenderAdd extends PureComponent {
                       },
                     ],
                   })(<Input placeholder="请输入登录账号" />)}
-                  <Tooltip 
-                   title='1、复制本登录账号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- 2、粘贴到到，系统管理—新增用户—登录账号里面&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- 3、角色配置成销售角色注意：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- 本登录账号必须要与用户管理里面的登录账号信息一致，否则会导致销售无法登录到自己后台'><Icon
- style={{
-   position: 'absolute',
-   right: '-24px',
-   top: '2px',
-   zIndex:1000
- }}
- type='question-circle-o' /></Tooltip>
+                  <Tooltip title={this.reactNode}><Icon
+                    style={{
+                      position: 'absolute',
+                      right: '-24px',
+                      top: '2px',
+                      zIndex:1000
+                    }}
+                  type='question-circle-o' /></Tooltip>
                 </FormItem>
               </Col>
               <Col span={10}>

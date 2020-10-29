@@ -84,6 +84,15 @@ class Text extends PureComponent {
 
   };
 
+  reactNode = () => {
+    return(
+      <div>
+        <p>物流一致直接勾选,不一致则按照格式存放粘贴,金额一致就输入,不一致按照格式填写姓名,电话,地址,金额,物流名称,物流单号 如没有相关数据请留空即可（但是逗号需要保留）</p>
+        <p>示例：1、张三,18000000011,北京市丰台区西瓜路32号,100,顺丰速运,SF10010</p>
+        <p>2、李四,18000000012,北京市丰台区西瓜路33号,,,</p>
+      </div>
+    )
+  }
 
   render() {
     const {
@@ -162,9 +171,12 @@ class Text extends PureComponent {
                 {getFieldDecorator('partText')(
                   <TextArea rows={8} placeholder="示例：张三,18000000011,北京市丰台区西瓜路32号,100,顺丰速运,SF10010" onChange={(e)=>this.onChange(e)} />
                 )}
-                <Tooltip title='物流一致直接勾选,不一致则按照格式存放粘贴,金额一致就输入,不一致按照格式填写姓名,电话,地址,金额,物流名称,物流单号 如没有相关数据请留空即可（但是逗号需要保留） &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                示例：1、张三,18000000011,北京市丰台区西瓜路32号,100,顺丰速运,SF10010&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                2、李四,18000000012,北京市丰台区西瓜路33号,,,'><Icon type='question-circle-o' /></Tooltip>
+                <Tooltip 
+                  overlayStyle={{
+                    width:"380px",
+                    maxWidth:"380px"
+                  }}title={this.reactNode}
+                ><Icon type='question-circle-o' /></Tooltip>
               </FormItem>
             </Form>
           </div>

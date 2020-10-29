@@ -94,6 +94,7 @@ class OrdersAdd extends PureComponent {
     const { cityparam, selectedOptions, payamount } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        console.log(values,"提交数据")
         values.deptId = getCookie("dept_id");
         values.tenantId = getCookie("tenantId");
         values = {...values,...cityparam};
@@ -101,7 +102,7 @@ class OrdersAdd extends PureComponent {
           console.log(values.productType[2])
           console.log(values.productType[2].split("-"))
           // values.payAmount = values.productType[2].split("-")[1];
-          values.payAmount = payamount;
+          // values.payAmount = payamount;
           values.productName = values.productType[2];
           values.productType = `${values.productType[0]}/${values.productType[1]}`;
         }
@@ -148,6 +149,15 @@ class OrdersAdd extends PureComponent {
       callback();
     }
   }
+
+  valinsPayChange = (rule, value, callback) => {
+    var reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    if(!reg.test(value)){
+      callback('请输入正确的金额格式');
+    }else{
+      return callback();
+    }
+  };
 
   render() {
     const {
@@ -298,13 +308,26 @@ class OrdersAdd extends PureComponent {
                         options={productList}
                         fieldNames={{ label: 'value'}}
                         onChange={(value, selectedOptions)=>{
-                          console.log(value, selectedOptions,"123")
-                          this.setState({
-                            payamount:selectedOptions[2].payamount
-                          })
+                          console.log(value, selectedOptions,"产品分类改变")
+                          // this.setState({
+                          //   payamount:selectedOptions[2].payamount
+                          // })
+                          if(!form.getFieldsValue("payamount") || form.getFieldsValue("payamount") === "" || form.getFieldsValue("payamount") === null){
+                            form.setFieldsValue({
+                              payamount:selectedOptions[2].payamount
+                            })
+                          }
                         }}
                       ></Cascader>
                   )}
+                </FormItem>
+
+                <FormItem {...formAllItemLayout} label="产品金额">
+                  {getFieldDecorator('payamount',{
+                    rules: [
+                      { required: true, validator: this.valinsPayChange },
+                    ],
+                  })(<Input placeholder="请输入产品金额" />)}
                 </FormItem>
 
                 {/* <FormItem {...formAllItemLayout} label="产品型号">
