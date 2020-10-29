@@ -312,6 +312,7 @@ class OrdersAdd extends PureComponent {
                           // this.setState({
                           //   payamount:selectedOptions[2].payamount
                           // })
+                          const { form } = this.props;
                           if(!form.getFieldsValue("payamount") || form.getFieldsValue("payamount") === "" || form.getFieldsValue("payamount") === null){
                             form.setFieldsValue({
                               payamount:selectedOptions[2].payamount

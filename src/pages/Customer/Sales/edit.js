@@ -164,7 +164,12 @@ class SenderAdd extends PureComponent {
                       },
                     ],
                   })(<Input placeholder="请输入登录账号" />)}
-                  <Tooltip title={this.reactNode}><Icon
+                  <Tooltip title={this.reactNode}
+                    overlayStyle={{
+                      width:"300px",
+                      maxWidth:"300px"
+                    }}
+                  ><Icon
                     style={{
                       position: 'absolute',
                       right: '-24px',

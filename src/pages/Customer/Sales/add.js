@@ -111,7 +111,7 @@ class SenderAdd extends PureComponent {
 
   reactNode = () => {
     return(
-      <div>
+      <div className={"tooltip_p"}>
         <p>1、复制本登录账号</p>
         <p>2、粘贴到到，系统管理—新增用户—登录账号里面</p>
         <p>3、角色配置成销售角色注意：</p>
@@ -157,7 +157,13 @@ class SenderAdd extends PureComponent {
                       },
                     ],
                   })(<Input placeholder="请输入登录账号" />)}
-                  <Tooltip title={this.reactNode} ><Icon
+                  <Tooltip 
+                    title={this.reactNode}
+                    overlayStyle={{
+                      width:"300px",
+                      maxWidth:"300px"
+                    }}
+                  ><Icon
                     style={{
                       position: 'absolute',
                       right: '-24px',
