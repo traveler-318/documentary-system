@@ -11,7 +11,7 @@ import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../../actions/us
 import func from '../../../../utils/Func';
 import { getCookie } from '../../../../utils/support';
 import { updateData, getRegion, getDetails } from '../../../../services/newServices/order';
-import OrderList from './OrderList'
+import {ORDERSTATUS} from '../data'
 import LogisticsDetails from './LogisticsDetails'
 import ReminderTimes from './time'
 import EditTime from './editTime'
@@ -42,16 +42,7 @@ class Survey extends PureComponent {
       },
       describe:"",
       orderType:[
-        {"name":"待审核",key:0,className:""},
-        {"name":"已审核",key:1,className:""},
-        {"name":"已发货",key:2,className:""},
-        {"name":"在途中",key:3,className:""},
-        {"name":"已签收",key:4,className:""},
-        {"name":"跟进中",key:5,className:""},
-        {"name":"已激活",key:6,className:""},
-        {"name":"已退回",key:7,className:""},
-        {"name":"已取消",key:8,className:""},
-        {"name":"已过期",key:9,className:""},
+
       ],
       followRecords:[],
       reminderTime:"",
@@ -74,7 +65,6 @@ class Survey extends PureComponent {
   }
 
   UNSAFE_componentWillReceiveProps(nex){
-    const { orderType } = this.state;
 
     const { detail } = this.props;
     let list = [];
@@ -88,9 +78,9 @@ class Survey extends PureComponent {
       followRecords:list
     })
 
-    let _type = orderType.map(item=>{
+    let _type = ORDERSTATUS.map(item=>{
       let _item = {...item}
-      if(item.key <= nex.detail.confirmTag){
+      if(Number(item.key) <= Number(nex.detail.confirmTag)){
         _item.className = "clolor"
       }else{
         _item.className = ""
@@ -299,7 +289,11 @@ class Survey extends PureComponent {
           <ul>
             {orderType.map(item=>{
               return (
-                <li className={item.className ? styles.color : styles.defaultColor}>{item.name}</li>
+                <>
+                  {
+                    item.key === null ? "":(<li className={item.className ? styles.color : styles.defaultColor}>{item.name}</li>)
+                  }
+                </>
               )
             })}
           </ul>
