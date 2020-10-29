@@ -319,7 +319,7 @@ class OrdersAdd extends PureComponent {
                           console.log(region,"3");
                           // if(!region.payamount || region.payamount === "" || region.payamount === null){
                             form.setFieldsValue({
-                              payamount:selectedOptions[2].payamount
+                              payAmount:selectedOptions[2].payamount
                             })
                           // }
                         }}
@@ -328,7 +328,7 @@ class OrdersAdd extends PureComponent {
                 </FormItem>
 
                 <FormItem {...formAllItemLayout} label="产品金额">
-                  {getFieldDecorator('payamount',{
+                  {getFieldDecorator('payAmount',{
                     rules: [
                       { required: true, validator: this.valinsPayChange },
                     ],

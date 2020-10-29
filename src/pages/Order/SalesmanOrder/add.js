@@ -309,7 +309,7 @@ class OrdersAdd extends PureComponent {
                           console.log(value, selectedOptions,"123")
                           const { form } = this.props;
                           form.setFieldsValue({
-                            payamount:selectedOptions[2].payamount
+                            payAmount:selectedOptions[2].payamount
                           })
                         }}
                       ></Cascader>
@@ -317,7 +317,7 @@ class OrdersAdd extends PureComponent {
                 </FormItem>
 
                 <FormItem {...formAllItemLayout} label="产品金额">
-                  {getFieldDecorator('payamount',{
+                  {getFieldDecorator('payAmount',{
                     rules: [
                       { required: true, validator: this.valinsPayChange },
                     ],
