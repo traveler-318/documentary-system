@@ -60,9 +60,16 @@ class SmsRecharge extends PureComponent {
     console.log(e.target.value)
     this.setState({
       valuePrice:e.target.value,
-      price:Number(e.target.value)*0.1
+      price:this.accMul(Number(e.target.value),0.1)
     })
   };
+
+  accMul = (arg1,arg2) => {
+    var m=0,s1=arg1.toString(),s2=arg2.toString();
+    try{m+=s1.split(".")[1].length}catch(e){}
+    try{m+=s2.split(".")[1].length}catch(e){}
+    return Number(s1.replace(".",""))*Number(s2.replace(".",""))/Math.pow(10,m)
+  }
 
   onKeyDown = (e) => {
     console.log(e)
@@ -130,8 +137,8 @@ class SmsRecharge extends PureComponent {
               })}
               <List.Item>
                 <Card className={styles.item}>
-                  <input placeholder='点击输入' value={valuePrice} onChange={(e)=>this.onChange(e)} onKeyDown={(e)=>this.onKeyDown(e)} />
-                  <Tooltip title="金额回车确认"><span className={styles.tooltip} style={{fontSize:'12px'}}>提示</span></Tooltip>
+                  <input style={{fontSize:"14px"}} placeholder='点击输入金额回车确认' value={valuePrice} onChange={(e)=>this.onChange(e)} onKeyDown={(e)=>this.onKeyDown(e)} />
+                  {/* <Tooltip title="金额回车确认"><span className={styles.tooltip} style={{fontSize:'12px'}}>提示</span></Tooltip> */}
                   <span>0.1/条</span>
                   <p className={styles.price}>{price}元</p>
                   <p>仅支持100的整数倍</p>
