@@ -313,7 +313,11 @@ class OrdersAdd extends PureComponent {
                           //   payamount:selectedOptions[2].payamount
                           // })
                           const { form } = this.props;
-                          if(!form.getFieldsValue("payamount") || form.getFieldsValue("payamount") === "" || form.getFieldsValue("payamount") === null){
+                          console.log(form,"1")
+                          console.log(form.getFieldsValue,"2");
+                          const region = form.getFieldsValue();
+                          console.log(region,"3");
+                          if(!region.payamount || region.payamount === "" || region.payamount === null){
                             form.setFieldsValue({
                               payamount:selectedOptions[2].payamount
                             })
