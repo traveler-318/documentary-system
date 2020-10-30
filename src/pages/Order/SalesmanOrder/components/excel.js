@@ -50,7 +50,7 @@ class Export extends PureComponent {
   };
 
   handleTemplate = () => {
-    // window.open(`/api/blade-user/export-template?Blade-Auth=${getAccessToken()}`);
+    window.open(`/api/order/order/exportSNCodeTemplate?Blade-Auth=${getAccessToken()}`);
   };
 
   onSwitchChange = checked => {

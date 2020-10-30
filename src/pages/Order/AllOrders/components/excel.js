@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 
-import { getList,getVCode,exportOrder,getPhone } from '../../../../services/newServices/order'
+import { exportSNCodeTemplate } from '../../../../services/newServices/order';
 import { getAccessToken, getToken } from '../../../../utils/authority';
 
 
@@ -50,7 +50,7 @@ class Export extends PureComponent {
   };
 
   handleTemplate = () => {
-    // window.open(`/api/blade-user/export-template?Blade-Auth=${getAccessToken()}`);
+    window.open(`/api/order/order/exportSNCodeTemplate?Blade-Auth=${getAccessToken()}`);
   };
 
   onSwitchChange = checked => {

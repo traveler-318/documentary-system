@@ -6,6 +6,7 @@ import Panel from '../../../components/Panel';
 import styles from './index.less';
 import { subscription } from '../../../services/newServices/order';
 import BindingQRCode from './components/code';
+import { getUserInfo } from '../../../services/user';
 
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
@@ -34,8 +35,20 @@ class SmsRecharge extends PureComponent {
       }],
       bindingQRCodeVisible:false,
       bindingQRCode:'',
-      money:''
+      money:'',
+      remainingMoney:''
     }
+  }
+
+  componentDidMount() {
+    getUserInfo().then(resp => {
+      if (resp.code === 200) {
+        console.log(resp)
+        this.setState({ remainingMoney: resp.data.remainingMoney});
+      } else {
+        message.error(resp.msg || '获取数据失败');
+      }
+    });
   }
 
   // ============ 提交 ===============
@@ -114,14 +127,15 @@ class SmsRecharge extends PureComponent {
   render() {
     const code = 'SmsRecharge';
 
-    const {price,list,valuePrice,bindingQRCodeVisible,bindingQRCode,money}=this.state;
+    const {price,list,valuePrice,bindingQRCodeVisible,bindingQRCode,money,remainingMoney}=this.state;
 
     return (
       <Panel>
         <Tabs type="card" onChange={this.statusChange}>
           <TabPane tab='短信充值' className={styles.tab} style={{paddingTop:"20px"}}>
             <div style={{height:'120px',boxShadow: "0px 0px 10px 0px rgba(0,37,106,0.1)",padding:"20px",margin:'20px 20px',fontSize:"18px",background:"#fff",width:"80%",}}>
-              今天已发送<span style={{color:"#f50"}}>0</span>条短信，累计发送<span style={{color:"#f50"}}>0</span>条短信，剩余短信<span style={{color:"#f50"}}>0</span>条
+              短信余额：{remainingMoney}元
+              {/*今天已发送<span style={{color:"#f50"}}>0</span>条短信，累计发送<span style={{color:"#f50"}}>0</span>条短信，剩余短信<span style={{color:"#f50"}}>0</span>条*/}
             </div>
             <List grid={{ gutter: 16, column: 5 }}>
               {list.map(item=>{

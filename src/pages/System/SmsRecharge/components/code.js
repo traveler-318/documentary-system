@@ -35,6 +35,8 @@ class Logistics extends PureComponent {
     console.log(bindingQRCode)
   }
 
+
+
   handleChange = value => {
 
   };

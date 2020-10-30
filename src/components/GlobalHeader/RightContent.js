@@ -9,7 +9,28 @@ import HeaderDropdown from '../HeaderDropdown';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
 
+import { getUserInfo } from '../../services/user';
+
 export default class GlobalHeaderRight extends PureComponent {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      remainingMoney:'',
+    };
+  }
+
+  componentDidMount() {
+    getUserInfo().then(resp => {
+      if (resp.code === 200) {
+        console.log(resp)
+        this.setState({ remainingMoney: resp.data.remainingMoney});
+      } else {
+        message.error(resp.msg || '获取数据失败');
+      }
+    });
+  }
+
   getNoticeData() {
     const { notices = [] } = this.props;
     if (notices.length === 0) {
@@ -54,6 +75,8 @@ export default class GlobalHeaderRight extends PureComponent {
     return unreadMsg;
   };
 
+
+
   changeReadState = clickedItem => {
     const { id } = clickedItem;
     const { dispatch } = this.props;
@@ -62,6 +85,13 @@ export default class GlobalHeaderRight extends PureComponent {
       payload: id,
     });
   };
+
+  payAmount = () => {
+    const {remainingMoney}=this.state;
+    return(
+      <span>短信余额：{remainingMoney}元</span>
+    )
+  }
 
   render() {
     const {
@@ -72,6 +102,7 @@ export default class GlobalHeaderRight extends PureComponent {
       onNoticeClear,
       theme,
     } = this.props;
+    const {remainingMoney}=this.state;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
         <Menu.Item key="userinfo">
@@ -101,6 +132,11 @@ export default class GlobalHeaderRight extends PureComponent {
     }
     return (
       <div className={className}>
+        <Tooltip
+          title={this.payAmount}
+        >
+          <span style={{padding:"0 12px"}}><Icon type="mail" theme="twoTone" twoToneColor="#1890ff" style={{marginRight:5}} />{remainingMoney}元</span>
+        </Tooltip>
         <HeaderSearch
           className={`${styles.action} ${styles.search}`}
           placeholder={formatMessage({ id: 'component.globalHeader.search' })}
