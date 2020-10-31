@@ -4,6 +4,7 @@ export default {
   'menu.order.salesmanOrder': '销售订单',
   'menu.order.warehouseOrder': '仓库订单',
   'menu.order.afterSaleOrder': '售后订单',
+  'menu.order.smsrecord': '短信记录',
   'menu.order.mySubordinates': '我的下属',
 
   'menu.logistics': '物流配置',

@@ -631,6 +631,13 @@ export default [
               { path: '/order/afterSaleOrder/logisticsConfiguration', component: './Order/AfterSaleOrder/components/logisticsConfiguration' },
             ],
           },
+          {
+            path: '/order/smsrecord',
+            routes: [
+              { path: '/order/smsrecord', redirect: '/Order/smsrecord/list' },
+              { path: '/order/smsrecord/list', component: './Order/SMSrecord/index' },
+            ],
+          },
         ],
       },
       {
@@ -681,6 +688,7 @@ export default [
               { path: '/logistics/additional/edit', component: './Logistics/Additional/edit' },
             ],
           },
+        
         ],
       },
       {

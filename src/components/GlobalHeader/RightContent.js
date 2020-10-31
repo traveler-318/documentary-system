@@ -135,7 +135,7 @@ export default class GlobalHeaderRight extends PureComponent {
         <Tooltip
           title={this.payAmount}
         >
-          <span style={{padding:"0 12px"}}><Icon type="mail" theme="twoTone" twoToneColor="#1890ff" style={{marginRight:5}} />{remainingMoney}元</span>
+          <span style={{padding:"0 12px"}}><Icon type="mail"  style={{marginRight:5}} />{remainingMoney}元</span>
         </Tooltip>
         <HeaderSearch
           className={`${styles.action} ${styles.search}`}
