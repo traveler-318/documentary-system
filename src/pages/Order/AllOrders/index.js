@@ -106,6 +106,8 @@ class AllOrdersList extends PureComponent {
       textVisible:false,
       // 文本导入弹窗
       textVisible:false,
+      // 订单导入弹窗
+      OrderImportVisible:false,
       // 首次打印提示弹框
       LogisticsAlertVisible:false,
       tips:[],

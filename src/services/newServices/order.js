@@ -226,6 +226,19 @@ export async function importText(params) {
 }
 
 
+// 订单导入
+export async function importOrder(params) {
+  const { salesman, file, orderType } = params;
+  const formData = new FormData();
+  formData.append('salesman', salesman);
+  formData.append('orderType', orderType);
+  formData.append('file', file);
 
+  console.log(formData)
+  return request('/api/order/order/importOrder', {
+    method: 'POST',
+    body: formData,
+  });
+}
 
 

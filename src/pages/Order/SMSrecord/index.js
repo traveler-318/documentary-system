@@ -96,8 +96,8 @@ class SMSrecord extends PureComponent {
     if (startTime) {
       payload = {
         ...params,
-        startTime: startTime ? func.format(startTime[0], 'YYYY-MM-DD hh:mm:ss') : null,
-        endTime: startTime ? func.format(startTime[1], 'YYYY-MM-DD hh:mm:ss') : null,
+        startTime: startTime ? func.format(startTime[0], 'YYYY-MM-DD HH:mm:ss') : null,
+        endTime: startTime ? func.format(startTime[1], 'YYYY-MM-DD HH:mm:ss') : null,
       };
     }
     this.setState({

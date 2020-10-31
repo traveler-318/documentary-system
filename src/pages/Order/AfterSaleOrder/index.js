@@ -106,6 +106,8 @@ class AllOrdersList extends PureComponent {
       excelVisible:false,
       // 文本导入弹窗
       textVisible:false,
+      // 订单导入弹窗
+      OrderImportVisible:false,
       salesmangroup:[],
       countSice:0,
       columns:[
@@ -1067,6 +1069,10 @@ class AllOrdersList extends PureComponent {
         <Icon type="upload" />
         文本导入
       </Menu.Item>
+      <Menu.Item key="2" onClick={this.handleOrderImport}>
+        <Icon type="upload" />
+        订单导入
+      </Menu.Item>
     </Menu>
   );
 
@@ -1472,6 +1478,19 @@ class AllOrdersList extends PureComponent {
     });
   }
 
+// 订单导入弹窗
+handleOrderImport = () =>{
+  this.setState({
+    OrderImportVisible: true,
+  });
+}
+
+handleOrderImportCancel = () =>{
+  this.setState({
+    OrderImportVisible: false,
+  });
+}
+
   handleResize = index => (e, { size }) => {
     this.setState(({ columns }) => {
       const nextColumns = [...columns];
@@ -1514,7 +1533,8 @@ class AllOrdersList extends PureComponent {
       excelVisible,
       tabCode,
       countSice,
-      params
+      params,
+      OrderImportVisible
     } = this.state;
 
     console.log(selectedRowKeys,"selectedRowKeys")
@@ -1659,6 +1679,14 @@ class AllOrdersList extends PureComponent {
           <Text
             textVisible={textVisible}
             handleTextCancel={this.handleTextCancel}
+          />
+        ):""}
+
+        {/* 订单导入弹窗 */}
+        {OrderImportVisible?(
+          <OrderImport
+          OrderImportVisible={OrderImportVisible}
+          handleOrderImportCancel={this.handleOrderImportCancel}
           />
         ):""}
 
