@@ -257,7 +257,7 @@ class Export extends PureComponent {
           }
         };
       }else {
-        message.error("11111");
+        message.error("导出失败");
       }
 
     })
