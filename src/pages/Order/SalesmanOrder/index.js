@@ -1547,7 +1547,7 @@ class AllOrdersList extends PureComponent {
               )
             })}
           </Tabs>
-        </div>
+        
         <Grid
           code={code}
           form={form}
@@ -1568,6 +1568,7 @@ class AllOrdersList extends PureComponent {
           }
           // multipleChoice={true}
         />
+        </div>
         {/* 详情 */}
         {detailsVisible?(
           <Details

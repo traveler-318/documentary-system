@@ -1549,7 +1549,7 @@ class AllOrdersList extends PureComponent {
               )
             })}
           </Tabs>
-        </div>
+        
         <Grid
           code={code}
           form={form}
@@ -1577,7 +1577,7 @@ class AllOrdersList extends PureComponent {
             handleCancelDetails={this.handleCancelDetails}
           />
         ):""}
-
+</div>
         {/* 导出 */}
         {exportVisible?(
           <Export
