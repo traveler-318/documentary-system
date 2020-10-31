@@ -38,6 +38,7 @@ import Details from './components/details'
 import ImportData from './components/ImportData'
 import Excel from './components/excel'
 import Text from './components/text'
+import OrderImport from './components/orderImport';
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
@@ -101,6 +102,8 @@ class AllOrdersList extends PureComponent {
       noDepositVisible:false,
       // SN激活导入弹窗
       excelVisible:false,
+      // 文本导入弹窗
+      textVisible:false,
       // 文本导入弹窗
       textVisible:false,
       // 首次打印提示弹框
@@ -1016,6 +1019,10 @@ class AllOrdersList extends PureComponent {
         <Icon type="upload" />
         文本导入
       </Menu.Item>
+      <Menu.Item key="2" onClick={this.handleOrderImport}>
+        <Icon type="upload" />
+        订单导入
+      </Menu.Item>
     </Menu>
   );
 
@@ -1434,6 +1441,18 @@ class AllOrdersList extends PureComponent {
       textVisible: false,
     });
   }
+  // 订单导入弹窗
+  handleOrderImport = () =>{
+    this.setState({
+      OrderImportVisible: true,
+    });
+  }
+
+  handleOrderImportCancel = () =>{
+    this.setState({
+      OrderImportVisible: false,
+    });
+  }
 
   components = {
     header: {
@@ -1464,6 +1483,7 @@ class AllOrdersList extends PureComponent {
       textVisible,
       currentList,
       excelVisible,
+      OrderImportVisible,
       LogisticsFirst,
       LogisticsAlertVisible,
       tips,
@@ -1610,6 +1630,13 @@ class AllOrdersList extends PureComponent {
           <Text
             textVisible={textVisible}
             handleTextCancel={this.handleTextCancel}
+          />
+        ):""}
+        {/* 订单导入弹窗 */}
+        {OrderImportVisible?(
+          <OrderImport
+          OrderImportVisible={OrderImportVisible}
+          handleOrderImportCancel={this.handleOrderImportCancel}
           />
         ):""}
 

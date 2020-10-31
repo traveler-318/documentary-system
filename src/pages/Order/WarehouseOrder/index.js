@@ -38,8 +38,9 @@ import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 import ImportData from './components/ImportData'
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
-import Excel from '../AllOrders/components/excel';
-import Text from '../AllOrders/components/text';
+import Excel from './components/excel';
+import OrderImport from './components/orderImport';
+import Text from './components/text';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -105,6 +106,8 @@ class AllOrdersList extends PureComponent {
       excelVisible:false,
       // 文本导入弹窗
       textVisible:false,
+      // 订单导入弹窗
+      OrderImportVisible:false,
       salesmangroup:[],
       countSice: 0,
       columns:[
@@ -1066,6 +1069,10 @@ class AllOrdersList extends PureComponent {
         <Icon type="upload" />
         文本导入
       </Menu.Item>
+      <Menu.Item key="2" onClick={this.handleOrderImport}>
+        <Icon type="upload" />
+        订单导入
+      </Menu.Item>
     </Menu>
   );
 
@@ -1471,6 +1478,19 @@ class AllOrdersList extends PureComponent {
     });
   }
 
+  // 订单导入弹窗
+  handleOrderImport = () =>{
+    this.setState({
+      OrderImportVisible: true,
+    });
+  }
+
+  handleOrderImportCancel = () =>{
+    this.setState({
+      OrderImportVisible: false,
+    });
+  }
+
   handleResize = index => (e, { size }) => {
     this.setState(({ columns }) => {
       const nextColumns = [...columns];
@@ -1509,6 +1529,7 @@ class AllOrdersList extends PureComponent {
       noDepositVisible,
       confirmTagVisible,
       textVisible,
+      OrderImportVisible,
       excelVisible,
       currentList,
       tabCode,
@@ -1659,6 +1680,15 @@ class AllOrdersList extends PureComponent {
             handleTextCancel={this.handleTextCancel}
           />
         ):""}
+
+        {/* 订单导入弹窗 */}
+        {OrderImportVisible?(
+          <OrderImport
+          OrderImportVisible={OrderImportVisible}
+          handleOrderImportCancel={this.handleOrderImportCancel}
+          />
+        ):""}
+
 
         <Modal
           title="修改状态"

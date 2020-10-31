@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 
-import { exportSNCodeTemplate } from '../../../../services/newServices/order';
+import { getList,getVCode,exportOrder,getPhone } from '../../../../services/newServices/order'
 import { getAccessToken, getToken } from '../../../../utils/authority';
 
 
@@ -15,7 +15,7 @@ const { Dragger } = Upload;
   globalParameters,
 }))
 @Form.create()
-class Export extends PureComponent {
+class OrderImport extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -63,9 +63,9 @@ class Export extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      excelVisible,
+      OrderImportVisible,
       confirmLoading,
-      handleExcelCancel
+      handleOrderImportCancel
     } = this.props;
 
     const {isCovered} = this.state;
@@ -95,14 +95,14 @@ class Export extends PureComponent {
         <Modal
           title="用户数据导入"
           width={500}
-          visible={excelVisible}
+          visible={OrderImportVisible}
           confirmLoading={confirmLoading}
-          onCancel={handleExcelCancel}
+          onCancel={handleOrderImportCancel}
           footer={[
-            <Button key="back" onClick={handleExcelCancel}>
+            <Button key="back" onClick={handleOrderImportCancel}>
               取消
             </Button>,
-            <Button type="primary" onClick={handleExcelCancel}>
+            <Button type="primary" onClick={handleOrderImportCancel}>
               确认
             </Button>,
           ]}
@@ -132,4 +132,4 @@ class Export extends PureComponent {
   }
 }
 
-export default Export;
+export default OrderImport;

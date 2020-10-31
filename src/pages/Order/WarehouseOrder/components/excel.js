@@ -117,9 +117,9 @@ class Export extends PureComponent {
                 <p className="ant-upload-hint">请上传 .xls,.xlsx 格式的文件</p>
               </Dragger>
             </FormItem>
-            <FormItem {...formItemLayout} label="数据覆盖">
+            {/* <FormItem {...formItemLayout} label="数据覆盖">
               <Switch checkedChildren="是" unCheckedChildren="否" onChange={this.onSwitchChange} />
-            </FormItem>
+            </FormItem> */}
             <FormItem {...formItemLayout} label="模板下载">
               <Button type="primary" icon="download" size="small" onClick={this.handleTemplate}>
                 点击下载

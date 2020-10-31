@@ -38,8 +38,8 @@ import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 import ImportData from './components/ImportData'
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
-import Excel from '../AllOrders/components/excel';
-import Text from '../AllOrders/components/text';
+import Excel from './components/excel';
+import Text from './components/text';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
