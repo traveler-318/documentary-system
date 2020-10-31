@@ -154,18 +154,6 @@ class SMSrecord extends PureComponent {
 
     const columns = [
       {
-        title: '反馈状态码',
-        dataIndex: 'errCode',
-        width: 150,
-        ellipsis: true,
-      },
-      {
-        title: '反馈发送结果',
-        dataIndex: 'errMsg',
-        width: 150,
-        ellipsis: true,
-      },
-      {
         title: '用户手机号',
         dataIndex: 'phoneNumber',
         width: 150,
@@ -194,12 +182,6 @@ class SMSrecord extends PureComponent {
         ellipsis: true,
       },
       {
-        title: '发送图片验证码',
-        dataIndex: 'submitCode',
-        width: 100,
-        ellipsis: true,
-      },
-      {
         title: '发送状态',
         dataIndex: 'success',
         width: 100,
@@ -210,6 +192,25 @@ class SMSrecord extends PureComponent {
           )
         },
       },
+      {
+        title: '反馈发送结果',
+        dataIndex: 'errMsg',
+        width: 150,
+        ellipsis: true,
+      },
+      {
+        title: '反馈状态码',
+        dataIndex: 'errCode',
+        width: 150,
+        ellipsis: true,
+      },
+      {
+        title: '发送图片验证码',
+        dataIndex: 'submitCode',
+        width: 100,
+        ellipsis: true,
+      },
+      
       {
         title: '操作',
         key: 'operation',
