@@ -85,16 +85,14 @@ class SmsRecharge extends PureComponent {
   }
 
   onKeyDown = (e) => {
-    console.log(e)
-    console.log(e.target.value)
-    const {price}=this.state;
+    const price=e.target.value
     if(e.keyCode === 13) {
       if(e.target.value % 100 == 0){
-        
+      
         getUnWeChatBind().then(res=>{
-          console.log(res)
           if(res.code === 200){
             const url=res.data+"&money="+price;
+            console.log(url)
             this.setState({
               bindingQRCode:url,
               bindingQRCodeVisible:true,
