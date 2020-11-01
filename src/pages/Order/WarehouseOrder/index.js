@@ -1697,7 +1697,8 @@ class AllOrdersList extends PureComponent {
           handleOrderImportCancel={this.handleOrderImportCancel}
           />
         ):""}
-
+{
+            confirmTagVisible ? (
 
         <Modal
           title="修改状态"
@@ -1740,7 +1741,7 @@ class AllOrdersList extends PureComponent {
                   <Radio value={9}>已取消</Radio>
                 </Radio.Group>
               )}
-        </Modal>
+        </Modal>):""}
       </Panel>
     );
   }

@@ -1671,7 +1671,8 @@ class AllOrdersList extends PureComponent {
             })}
           </div>
         </Modal>
-
+          {
+            confirmTagVisible ? (
         <Modal
           title="修改状态"
           visible={confirmTagVisible}
@@ -1713,7 +1714,8 @@ class AllOrdersList extends PureComponent {
                   <Radio value={9}>已取消</Radio>
                 </Radio.Group>
               )}
-        </Modal>
+        </Modal>) :""
+          }
       </Panel>
     );
   }

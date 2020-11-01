@@ -1696,7 +1696,8 @@ handleOrderImportCancel = () =>{
           handleOrderImportCancel={this.handleOrderImportCancel}
           />
         ):""}
-
+        {
+          confirmTagVisible ? (
         <Modal
           title="修改状态"
           visible={confirmTagVisible}
@@ -1739,6 +1740,8 @@ handleOrderImportCancel = () =>{
                 </Radio.Group>
               )}
         </Modal>
+        ) : ""
+      }
       </Panel>
     );
   }
