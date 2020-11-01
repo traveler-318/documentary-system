@@ -16,7 +16,9 @@ import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import Survey from './components/Survey'
 import { setListData } from '../../../utils/publicMethod';
 import OrderList from './components/OrderList';
-
+import {
+  LOGISTICSCOMPANY,
+} from './data.js';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -333,7 +335,7 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                       initialValue: this.getText(parseInt(detail.orderSource),ORDERSOURCE),
                     })(<Input disabled placeholder="" />)}
                   </FormItem>
-                  <FormItem {...formAllItemLayout} label="订单归属" className={styles.salesman}>
+                  <FormItem {...formAllItemLayout} label="订单归属">
                     {getFieldDecorator('salesman', {
                       rules: [
                         {
@@ -343,6 +345,31 @@ console.log(detail.confirmTag,edit,edit && detail.confirmTag === 0)
                       initialValue: detail.salesman,
                     })(<Input disabled placeholder="" />)}
                   </FormItem>
+                  <FormItem {...formAllItemLayout} label="物流公司">
+                  {getFieldDecorator('logisticsCompany', {
+                    initialValue: detail.logisticsCompany,
+                  })(
+                  <Select 
+                  style={{height:45,float:"right"}}
+                  disabled={
+                    (!detail.logisticsStatus)
+                     ? edit : true}
+                  placeholder={"请选择物流公司"}>
+                    {Object.keys(LOGISTICSCOMPANY).map(key=>{
+                      return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
+                    })}
+                  </Select>
+                  )}
+                </FormItem>
+                <FormItem {...formAllItemLayout} label="物流单号"  className={styles.salesman}>
+                  {getFieldDecorator('logisticsNumber', {
+                    initialValue: detail.logisticsNumber,
+                  })(<Input 
+                    disabled={!detail.logisticsStatus ? edit : true}
+                  placeholder="请输入物流单号" />)}
+                </FormItem>
+
+
                   <FormDetailsTitle title="其他信息" />
                   <FormItem {...formAllItemLayout} label="微信号">
                     {getFieldDecorator('wechatId', {
