@@ -12,13 +12,18 @@ import {
   Row,
   Col,
   Select,
-  Tabs
+  Tabs,
+  Empty
 } from 'antd';
 import Panel from '../../../components/Panel';
 import { getUserInfo, updateInfo } from '../../../services/user';
 import { getToken } from '../../../utils/authority';
 
-import BasicConfiguration from './components/basicConfiguration'
+import BasicConfiguration from './components/basicConfiguration';
+import AfterSalesConfiguration from './components/afterSalesConfiguration';
+import FunctionConfiguration from './components/functionConfiguration';
+import ReturnConfiguration from './components/returnConfiguration';
+import SecurityConfiguration from './components/securityConfiguration';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -75,6 +80,13 @@ class BaseView extends Component {
     }
   }
 
+  onChangeTabsKey = (key) => {
+    console.log(key,"TabsKey")
+    this.setState({
+      TabsKey:key
+    })
+  }
+  
   render() {
     const {
       form: { getFieldDecorator },
@@ -106,7 +118,38 @@ class BaseView extends Component {
                           />
                         ) :""
                       }
-                      
+                      {
+                        TabsKey === "2" ? (
+                          <Empty 
+                            style={{margin:"40px 8px"}}
+                          />
+                        ) :""
+                      }
+                      {
+                        TabsKey === "3" ? (
+                          <FunctionConfiguration
+                          ref={form => {
+                            this.BasicView = form;
+                          }}
+                          />
+                        ) :""
+                      }
+                      {
+                        TabsKey === "4" ? (
+                          <AfterSalesConfiguration
+                          ref={form => {
+                            this.BasicView = form;
+                          }}
+                          />
+                        ) :""
+                      }
+                      {
+                        TabsKey === "5" ? (
+                          <Empty 
+                            style={{margin:"40px 8px"}}
+                          />
+                        ) :""
+                      }
                     </TabPane>
                   )
                 })
