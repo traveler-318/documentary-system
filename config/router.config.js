@@ -342,11 +342,19 @@ export default [
               { path: '/system/client/edit/:id', component: './System/Client/ClientEdit' },
               { path: '/system/client/view/:id', component: './System/Client/ClientView' },
             ],
-          },{
+          },
+          {
             path: '/system/smsrecharge',
             routes: [
               { path: '/system/smsrecharge', redirect: '/system/smsrecharge/list' },
               { path: '/system/smsrecharge/list', component: './System/SmsRecharge/SmsRecharge' },
+            ],
+          },
+          {
+            path: '/system/registrationList',
+            routes: [
+              { path: '/system/registrationList', redirect: '/system/registrationList/list' },
+              { path: '/system/registrationList/list', component: './System/registrationList/index' },
             ],
           },
         ],

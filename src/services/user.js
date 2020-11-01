@@ -143,3 +143,20 @@ export async function registerUser(params) {
     body: params,
   });
 }
+
+// 注册列表
+export async function registerList(params) {
+  return request('/api/customer/contactcustomer/list', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 注册数据修改
+export async function registerUpdate(params) {
+  return request('/api/customer/contactcustomer/update', {
+    method: 'POST',
+    body: params,
+  });
+}
+
