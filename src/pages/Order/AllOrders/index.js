@@ -760,6 +760,7 @@ class AllOrdersList extends PureComponent {
         cancelButtonProps: {
           type:"primary"
         },
+        keyboard:false,
         content:<div>
           确定审核此订单吗？
           <Button key="submit" type="danger" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{toExamines('9');}} >拒绝</Button>
@@ -819,6 +820,7 @@ class AllOrdersList extends PureComponent {
         okText: '确定',
         okType: 'info',
         cancelText: '取消',
+        keyboard:false,
         onOk() {
           setAudit(_data,confirmTag)
         },
@@ -1044,6 +1046,7 @@ class AllOrdersList extends PureComponent {
       okText: '确定',
       okType: 'danger',
       cancelText: '取消',
+      keyboard:false,
       async onOk() {
         deleteData({
           ids:row.id
@@ -1065,6 +1068,7 @@ class AllOrdersList extends PureComponent {
       okText: '确定',
       okType: 'info',
       cancelText: '取消',
+      keyboard:false,
       onOk() {
         let _data = data.map(item=>{
           return {
@@ -1120,6 +1124,7 @@ class AllOrdersList extends PureComponent {
           okText: '确定',
           okType: 'primary',
           cancelText: '取消',
+          keyboard:false,
           onOk() {
             syndata().then(res=>{
               if(res.code === 200){
@@ -1168,6 +1173,7 @@ class AllOrdersList extends PureComponent {
       okText: '确定',
       okType: 'danger',
       cancelText: '取消',
+      keyboard:false,
       async onOk() {
         let type=''
         for(let key in LOGISTICSCOMPANY){
