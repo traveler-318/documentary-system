@@ -122,9 +122,8 @@ class SMSrecord extends PureComponent {
       delete payload.sourceType
     }
     if(payload.intentionType === "全部"){
-      delete payload.sourceType
+      delete payload.intentionType
     }
-
     this.setState({
       params:payload
     },()=>{
