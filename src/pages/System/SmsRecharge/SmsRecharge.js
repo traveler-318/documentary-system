@@ -87,7 +87,7 @@ class SmsRecharge extends PureComponent {
   onKeyDown = (e) => {
     const price=e.target.value
     if(e.keyCode === 13) {
-      if(e.target.value % 100 == 0){
+      if(e.target.value % 10 == 0){
       
         getUnWeChatBind().then(res=>{
           if(res.code === 200){
@@ -103,7 +103,7 @@ class SmsRecharge extends PureComponent {
           }
         })
       }else{
-        message.error("仅支持100的整数倍,请输入正确的数量")
+        message.error("仅支持10的整数倍,请输入正确的数量")
       }
       
     }
@@ -153,7 +153,7 @@ class SmsRecharge extends PureComponent {
                   {/* <Tooltip title="金额回车确认"><span className={styles.tooltip} style={{fontSize:'12px'}}>提示</span></Tooltip> */}
                   <span>0.1/条</span>
                   <p className={styles.price}>{price}条</p>
-                  <p>仅支持100的整数倍</p>
+                  <p>仅支持10的整数倍</p>
                 </Card>
               </List.Item>
             </List>
