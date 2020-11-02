@@ -806,9 +806,13 @@ class AllOrdersList extends PureComponent {
     let type = false, _data = [];
     const setAudit = this.setAudit;
 
+    console.log(selectedRows)
     selectedRows.map(item=>{
       if(item.confirmTag === '0' || item.confirmTag === '1'){
-        _data.push(item.id)
+        const list={}
+        list.id=item.id;
+        list.outOrderNo=item.outOrderNo;
+        _data.push(list)
       }else{
         type = true;
       }
@@ -836,9 +840,13 @@ class AllOrdersList extends PureComponent {
 
 
   setAudit = (_data,confirmTag) => {
+    console.log({
+      confirmTag,
+      orderIdAndNo:_data
+    })
     toExamine({
       confirmTag,
-      orderIds:_data
+      orderIdAndNo:_data
     }).then(res=>{
       if(res.code === 200){
         message.success(res.msg);
