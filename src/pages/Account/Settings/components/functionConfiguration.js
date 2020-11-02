@@ -211,7 +211,11 @@ class BaseView extends Component {
               {/* ------------------------------------------ */}
 
               <Col span={12} style={{marginTop:151}}>
-                
+              <FormItem style={{display:"none"}}>
+                  {getFieldDecorator('id')(
+                    <Input />
+                  )}
+                </FormItem>
               </Col>
           </Row>
         </div>
