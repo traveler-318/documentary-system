@@ -61,7 +61,7 @@ class BaseView extends Component {
 
   handleSubmit = () => {
     const {TabsKey} = this.state;
-    if(TabsKey === "1"){
+    if(TabsKey === "1" || TabsKey === "3" || TabsKey === "4"){
       this.BasicView.validateFieldsAndScroll((err, values) => {
         if (!err) {
           console.log(values,"values")

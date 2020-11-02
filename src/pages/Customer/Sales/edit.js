@@ -163,7 +163,7 @@ class SenderAdd extends PureComponent {
                         validator:this.valinsUserChange
                       },
                     ],
-                  })(<Input placeholder="请输入登录账号" />)}
+                  })(<Input disabled placeholder="请输入登录账号" />)}
                   <Tooltip title={this.reactNode}
                     overlayStyle={{
                       width:"300px",

@@ -123,7 +123,7 @@ class UserEdit extends PureComponent {
                       { required: true, validator: this.validateName },
                     ],
                     initialValue: detail.account,
-                  })(<Input placeholder="请输入登录账号" />)}
+                  })(<Input disabled placeholder="请输入登录账号" />)}
                 </FormItem>
               </Col>
             </Row>

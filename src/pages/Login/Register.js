@@ -280,17 +280,17 @@ class Register extends Component {
               rules: [
                 {
                   required: true,
-                  message: "请输入您的姓名",
+                  message: "请输入您的公司全名",
                 },
               ],
             })(
               <Input 
               prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
               size="large" 
-              placeholder={"请输入您的姓名"} />
+              placeholder={"请输入您的公司全名"} />
             )}
           </FormItem>
-          <FormItem>
+          {/* <FormItem>
             {getFieldDecorator('wechatId', {
               rules: [
                 {
@@ -340,7 +340,7 @@ class Register extends Component {
                 })}
               </Select>
             )}
-          </FormItem>
+          </FormItem> */}
 
           <FormItem>
             {/* <InputGroup compact>
