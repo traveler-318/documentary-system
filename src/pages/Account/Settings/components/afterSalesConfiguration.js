@@ -159,6 +159,11 @@ class BaseView extends Component {
                   <Input />
                 )}
               </FormItem>
+              <FormItem style={{display:"none"}}>
+                  {getFieldDecorator('id')(
+                    <Input />
+                  )}
+                </FormItem>
               </Col>
           </Row>
         </div>

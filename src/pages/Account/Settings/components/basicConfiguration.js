@@ -239,6 +239,11 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
+                <FormItem style={{display:"none"}}>
+                  {getFieldDecorator('id')(
+                    <Input />
+                  )}
+                </FormItem>
               </Col>
           </Row>
         </div>
