@@ -805,8 +805,6 @@ class AllOrdersList extends PureComponent {
     const {selectedRows} = this.state;
     let type = false, _data = [];
     const setAudit = this.setAudit;
-
-    console.log(selectedRows)
     selectedRows.map(item=>{
       if(item.confirmTag === '0' || item.confirmTag === '1'){
         const list={}
