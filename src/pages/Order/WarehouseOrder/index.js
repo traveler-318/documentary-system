@@ -1241,7 +1241,8 @@ class AllOrdersList extends PureComponent {
           productName: row.productName,
           shipmentRemind: true,
           tenantId: row.tenantId,
-          userPhone: row.userPhone
+          userPhone: row.userPhone,
+          confirmTag: row.confirmTag,
         }
         subscription(params).then(res=>{
           console.log(res)
