@@ -1172,7 +1172,7 @@ class AllOrdersList extends PureComponent {
 
   // 物流订阅
   logisticsSubscribe =(row) =>{
-    console.log(row)
+    console.log(row);
     const list=this.getDataList;
     Modal.confirm({
       title: '提示',
