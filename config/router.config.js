@@ -357,6 +357,14 @@ export default [
               { path: '/system/registrationList/list', component: './System/registrationList/index' },
             ],
           },
+          {
+            path: '/system/timedTasks',
+            routes: [
+              { path: '/system/timedTasks', redirect: '/system/timedTasks/list' },
+              { path: '/system/timedTasks/list', component: './System/timedTasks/index' },
+              { path: '/system/timedTasks/add', component: './System/timedTasks/add' },
+            ],
+          },
         ],
       },
       {

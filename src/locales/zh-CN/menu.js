@@ -56,6 +56,7 @@ export default {
   'menu.system.client': '应用管理',
   'menu.system.smsrecharge': '充值管理',
   'menu.system.registrationList': '注册管理',
+  'menu.system.timedTasks': '定时任务',
   'menu.monitor': '系统监控',
   'menu.monitor.log': '日志管理',
   'menu.monitor.log.log_usual': '通用日志',
