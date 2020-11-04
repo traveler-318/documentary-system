@@ -122,17 +122,17 @@ class OrdersAdd extends PureComponent {
 
                 <FormItem {...formAllItemLayout} label="启动间隔时间">
                   {getFieldDecorator('startInterval',)(
-                    <InputNumber min={1} />
+                    <><InputNumber min={1} />&nbsp;&nbsp;签收后第二天开始执行</>
                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="时间间隔">
                   {getFieldDecorator('timeInterval',)(
-                    <InputNumber min={1} />
+                     <><InputNumber min={1} />&nbsp;&nbsp;每隔2天执行一次</>
                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="重复次数">
                   {getFieldDecorator('repeatNumber',)(
-                    <InputNumber min={1} />
+                    <><InputNumber min={1} />&nbsp;&nbsp;最多执行2次</>
                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="提醒时间">
