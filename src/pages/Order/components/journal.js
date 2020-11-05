@@ -13,6 +13,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import { getToken } from '@/utils/authority';
+import {getRecord } from '../../../services/newServices/order';
 
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -40,23 +41,28 @@ class Background extends PureComponent {
 
 
   componentWillMount() {
-    this.getImg()
+    this.getRecord()
   }
 
-  getImg = () =>{
-    const {params}=this.state
-    getImg(params.current,params.pageSize).then(res=>{
+  getRecord = () =>{
+    const {journalList}=this.props
+    getRecord(journalList.id).then(res=>{
       console.log(res)
-      this.setState({
-        data:{
-          list:res.data.records
-        },
-        pagination:{
-          current: res.data.current,
-          pageSize: res.data.size,
-          total: res.data.total
-        }
-      })
+
+      if(res.code === 200){
+        this.setState({
+          data:{
+            list:res.data.records
+          },
+          pagination:{
+            current: res.data.current,
+            pageSize: res.data.size,
+            total: res.data.total
+          }
+        })
+      }else {
+        message.error(res.msg)
+      }
     })
   }
 
@@ -99,38 +105,29 @@ class Background extends PureComponent {
 
     const columns=[
       {
-        title: '',
-        dataIndex: 'id',
-        width: 50,
-        render: (res,rows) => {
-          return(
-            <Radio checked={res===senderId?true:false} onChange={() =>this.onChange(rows)}></Radio>
-          )
-        },
+        title: '操作人',
+        dataIndex: 'receivingUser',
+        width: 200,
       },
       {
-        title: '详情图',
+        title: '操作内容',
         dataIndex: 'link',
-        width: 400,
-      },{
-        title: '操作',
-        key: 'operation',
-        fixed: 'right',
-        width: 80,
-        render: (row) => {
-          return(
-            <div>
-              <a onClick={()=>this.handleImg(row)}>查看</a>
-            </div>
-          )
-        },
+        width: 200,
       },
+      {
+        title: '操作时间',
+        dataIndex: 'deliveryTime',
+        width: 200,
+        render: (res) => {
+
+        },
+      }
     ]
 
     return (
       <div>
         <Modal
-          title="选择图片"
+          title="操作日志"
           visible={journalVisible}
           width={550}
           onCancel={handleCancelJournal}

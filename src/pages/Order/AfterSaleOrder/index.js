@@ -336,7 +336,7 @@ class AllOrdersList extends PureComponent {
 
       for(let j=0; j<tabCode.length; j++){
         tabCode[j]=tabCode[j];
-        if(tabCode[j] === 10){
+        if(tabCode[j] === 11){
           tabCode[j] = null
         }
         for(let i=0; i<ORDERSTATUS.length; i++){
@@ -781,7 +781,7 @@ class AllOrdersList extends PureComponent {
 
   // 批量审核
   batchAudit = () => {
-    const {selectedRows, tabKey} = this.state;
+    const {selectedRows,tabKey} = this.state;
 
     const toExamines = this.toExamines;
     if(selectedRows.length <= 0){
@@ -816,7 +816,7 @@ class AllOrdersList extends PureComponent {
           确定审核此订单吗？
           <Button key="submit" type="danger" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{toExamines('9');}} >拒绝</Button>
           <Button key="submit" style={{ position: 'absolute',right: '250px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button>
-          </div>,
+        </div>,
         onOk() {
           toExamines('1');
         },
@@ -834,11 +834,10 @@ class AllOrdersList extends PureComponent {
         cancelButtonProps: {
           type:"danger"
         },
-        keyboard:false,
         content:<div>
           确定审核此订单吗？
           <Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button>
-          </div>,
+        </div>,
         onOk() {
           // toExamines('1');
           toExamines('2');
@@ -848,16 +847,20 @@ class AllOrdersList extends PureComponent {
         },
       });
     }
+
+
   }
 
   toExamines = (confirmTag) => {
     const {selectedRows} = this.state;
     let type = false, _data = [];
     const setAudit = this.setAudit;
-    
     selectedRows.map(item=>{
       if(item.confirmTag === '0' || item.confirmTag === '1'){
-        _data.push(item.id)
+        const list={}
+        list.id=item.id;
+        list.outOrderNo=item.outOrderNo;
+        _data.push(list)
       }else{
         type = true;
       }
@@ -870,6 +873,7 @@ class AllOrdersList extends PureComponent {
         okText: '确定',
         okType: 'info',
         cancelText: '取消',
+        keyboard:false,
         onOk() {
           setAudit(_data,confirmTag)
         },
@@ -884,9 +888,13 @@ class AllOrdersList extends PureComponent {
 
 
   setAudit = (_data,confirmTag) => {
+    console.log({
+      confirmTag,
+      orderIdAndNo:_data
+    })
     toExamine({
       confirmTag,
-      orderIds:_data
+      orderIdAndNo:_data
     }).then(res=>{
       if(res.code === 200){
         message.success(res.msg);
@@ -1008,10 +1016,10 @@ class AllOrdersList extends PureComponent {
           <Button type="primary" icon="plus" onClick={()=>{
             router.push(`/order/AfterSaleOrder/add`);
           }}>添加</Button>
-          <Button
+{/*          <Button
             icon="menu-unfold"
             onClick={this.batchAudit}
-          >审核</Button>
+          >审核</Button>*/}
           <Button
             icon="appstore"
             onClick={this.bulkDelivery}

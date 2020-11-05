@@ -189,6 +189,13 @@ export async function getSalesmanLists(id) {
   });
 }
 
+// 获取操作日志详情
+export async function getRecord(id) {
+  return request(`/api/tracking_process/record/detail/${id}`, {
+    method: 'get',
+  });
+}
+
 // 物流订阅
 export async function subscription(params) {
   return request('/api/order/order/logisticsSubscription', {

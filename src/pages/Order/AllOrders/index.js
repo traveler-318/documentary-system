@@ -113,6 +113,7 @@ class AllOrdersList extends PureComponent {
       OrderImportVisible:false,
       // 首次打印提示弹框
       LogisticsAlertVisible:false,
+      journalList:{},
       tips:[],
       salesmangroup:[],
       countSice:0,
@@ -273,16 +274,15 @@ class AllOrdersList extends PureComponent {
           title: '操作',
           key: 'operation',
           fixed: 'right',
-          width: 110,
+          width: 150,
           render: (text,row) => {
               return(
                   <div>
                     <a onClick={()=>this.handleEdit(row)}>详情</a>
                     <Divider type="vertical" />
                     {
-                      row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<a onClick={()=>this.logisticsSubscribe(row)}>订阅</a>):''
+                      row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
                     }
-                    {/*<Divider type="vertical" />*/}
                     {/*<a onClick={()=>this.handleJournal(row)}>日志</a>*/}
 
 
@@ -972,10 +972,12 @@ class AllOrdersList extends PureComponent {
           <Button type="primary" icon="plus" onClick={()=>{
             router.push(`/order/AllOrders/add`);
           }}>添加</Button>
+{/*
           <Button
             icon="menu-unfold"
             onClick={this.batchAudit}
           >审核</Button>
+*/}
           <Button
             icon="appstore"
             onClick={this.bulkDelivery}
@@ -1357,7 +1359,8 @@ class AllOrdersList extends PureComponent {
   // 打开日志弹窗
   handleJournal = (row) => {
     this.setState({
-      journalVisible:true
+      journalVisible:true,
+      journalList:row
     })
   }
   // 关闭日志弹窗
@@ -1514,6 +1517,7 @@ class AllOrdersList extends PureComponent {
       selectedRows,
       detailsVisible,
       journalVisible,
+      journalList,
       selectedRowKeys,
       noDepositVisible,
       confirmTagVisible,
@@ -1618,6 +1622,7 @@ class AllOrdersList extends PureComponent {
         {journalVisible?(
           <Journal
             journalVisible={journalVisible}
+            journalList={journalList}
             handleCancelJournal={this.handleCancelJournal}
           />
         ):""}

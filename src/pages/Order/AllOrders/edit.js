@@ -10,7 +10,13 @@ import styles from './edit.less';
 import { CITY } from '../../../utils/city';
 import { getQueryString } from '../../../utils/utils';
 import { getCookie } from '../../../utils/support';
-import { updateData, getDetails,orderDetail,updateReminds } from '../../../services/newServices/order';
+import {
+  updateData,
+  getDetails,
+  orderDetail,
+  updateReminds,
+  productTreelist, subscription,
+} from '../../../services/newServices/order';
 import {ORDERSTATUS,ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import Survey from './components/Survey'
@@ -43,7 +49,10 @@ class OrdersEdit extends PureComponent {
         ownership:"3"
       },
       ids:'',
-      selectedOptions:""
+      selectedOptions:"",
+      primary:'primary',
+      primary1:'',
+      productList:[],
     };
   }
 
@@ -56,8 +65,15 @@ class OrdersEdit extends PureComponent {
     this.setState({
       detail:globalParameters.detailData,
     })
-
+    this.getTreeList();
     this.getEditDetails()
+  }
+
+  getTreeList = () => {
+    productTreelist().then(res=>{
+      console.log(res.data,"productTreelist")
+      this.setState({productList:res.data})
+    })
   }
 
 
@@ -73,6 +89,7 @@ class OrdersEdit extends PureComponent {
       this.getList(res.data)
     })
   }
+
   getList = (detail) =>{
     console.log(detail)
     const params={
@@ -148,12 +165,35 @@ class OrdersEdit extends PureComponent {
         const params = {
           ...values
         };
-        console.log(params)
+        // if(params.logisticsCompany !== detail.logisticsCompany || params.logisticsNumber !== detail.logisticsNumber){
+        //   if(detail.logisticsStatus){
+        //     Modal.confirm({
+        //       title: '提示',
+        //       content: '当前订单物流已经订阅,此次变更会删掉订阅有关信息,确认是否清理物流从新保存',
+        //       okText: '确定',
+        //       okType: 'danger',
+        //       cancelText: '取消',
+        //       keyboard:false,
+        //       async onOk() {
+        //
+        //       },
+        //       onCancel() {},
+        //     });
+        //   }
+        // }
+        // console.log(params)
+        // console.log(detail)
         updateData(params).then(res=>{
-          message.success(res.msg);
-          this.setState({
-            edit:true
-          })
+          if(res.code === 200){
+            message.success(res.msg);
+            this.setState({
+              edit:true,
+              primary:"primary",
+              primary1:''
+            })
+          }else {
+            message.error(res.msg);
+          }
           // router.push('/order/allOrders');
         })
       }
@@ -185,7 +225,9 @@ class OrdersEdit extends PureComponent {
 
   clickEdit = () => {
     this.setState({
-      edit:false
+      edit:false,
+      primary:'',
+      primary1:'primary'
     })
   };
 
@@ -219,6 +261,9 @@ class OrdersEdit extends PureComponent {
       detail,
       edit,
       orderListLength,
+      primary,
+      primary1,
+      productList
     } = this.state;
 
     const formAllItemLayout = {
@@ -229,7 +274,8 @@ class OrdersEdit extends PureComponent {
         span: 16,
       },
     };
-console.log(!detail.logisticsStatus === true,"123123")
+   console.log(!detail.logisticsStatus === true,"123123")
+   console.log(detail)
 
     return (
       <Panel title="详情" back="/order/AllOrders">
@@ -238,8 +284,8 @@ console.log(!detail.logisticsStatus === true,"123123")
             <Row gutter={24} style={{ margin: 0 }}>
               <Col span={8} style={{ padding: 0 }} className={styles.leftContent}>
                 <div className={styles.titleBtn}>
-                  <Button type="primary" onClick={this.handleSubmit}>保存</Button>
-                  <Button icon="edit" onClick={this.clickEdit}>编辑</Button>
+                  <Button type={primary} onClick={this.handleSubmit}>保存</Button>
+                  <Button type={primary1} icon="edit" onClick={this.clickEdit}>编辑</Button>
                   {/* <Button  icon="delete">删除</Button> */}
                   <Button
                     icon="bell"
@@ -260,7 +306,7 @@ console.log(!detail.logisticsStatus === true,"123123")
                         },
                       ],
                       initialValue: detail.userName,
-                    })(<Input disabled={detail.confirmTag === 0 ? edit : true} placeholder="请输入客户姓名" />)}
+                    })(<Input disabled={detail.confirmTag === '0' || detail.confirmTag === '1' || detail.confirmTag === '2' ? edit : true} placeholder="请输入客户姓名" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="手机号">
                     {getFieldDecorator('userPhone', {
@@ -268,7 +314,7 @@ console.log(!detail.logisticsStatus === true,"123123")
                         { required: true, validator: this.validatePhone },
                       ],
                       initialValue: detail.userPhone,
-                    })(<Input disabled={detail.userPhone ? true : edit} placeholder="" />)}
+                    })(<Input disabled={detail.confirmTag === '0' || detail.confirmTag === '1' || detail.confirmTag === '2' ? edit : true} placeholder="" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="备用手机号">
                     {getFieldDecorator('backPhone', {
@@ -338,31 +384,54 @@ console.log(!detail.logisticsStatus === true,"123123")
                       initialValue: detail.salesman,
                     })(<Input disabled placeholder="" />)}
                   </FormItem>
-                <FormItem {...formAllItemLayout} label="物流公司">
-                  {getFieldDecorator('logisticsCompany', {
-                    initialValue: detail.logisticsCompany,
-                  })(
-                  <Select 
-                  style={{height:45,float:"right"}}
-                  disabled={
-                    (!detail.logisticsStatus)
-                     ? edit : true}
-                  placeholder={"请选择物流公司"}>
-                    {Object.keys(LOGISTICSCOMPANY).map(key=>{
-                      return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
-                    })}
-                  </Select>
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="物流单号"  className={styles.salesman}>
-                  {getFieldDecorator('logisticsNumber', {
-                    initialValue: detail.logisticsNumber,
-                  })(<Input 
-                    disabled={!detail.logisticsStatus ? edit : true}
-                  placeholder="请输入物流单号" />)}
-                </FormItem>
+                  {/*<FormItem {...formAllItemLayout} label="SN">*/}
+                    {/*{getFieldDecorator('productCoding', {*/}
+                      {/*initialValue: detail.productCoding,*/}
+                    {/*})(<Input disabled={detail.productCoding ? true : edit} placeholder="" />)}*/}
+                  {/*</FormItem>*/}
+                  {/*<FormItem {...formAllItemLayout} label="产品类型">*/}
+                    {/*{getFieldDecorator('productType', {*/}
+                      {/*initialValue: detail.productType,*/}
+                    {/*})(*/}
+                      {/*<Cascader*/}
+                        {/*disabled={detail.productType ? true : edit}*/}
+                        {/*options={productList}*/}
+                        {/*fieldNames={{ label: 'value'}}*/}
+                        {/*onChange={(value, selectedOptions)=>{*/}
+                          {/*const { form } = this.props;*/}
+                          {/*const region = form.getFieldsValue();*/}
+                          {/*form.setFieldsValue({*/}
+                            {/*payAmount:selectedOptions[2].payamount*/}
+                          {/*})*/}
+                          {/*// }*/}
+                        {/*}}*/}
+                      {/*></Cascader>*/}
+                    {/*)}*/}
+                  {/*</FormItem>*/}
 
-
+                  <FormItem {...formAllItemLayout} label="物流公司">
+                    {getFieldDecorator('logisticsCompany', {
+                      initialValue: detail.logisticsCompany,
+                    })(
+                    <Select
+                    style={{height:45,float:"right"}}
+                    disabled={
+                      (!detail.logisticsStatus)
+                       ? edit : true}
+                    placeholder={"请选择物流公司"}>
+                      {Object.keys(LOGISTICSCOMPANY).map(key=>{
+                        return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
+                      })}
+                    </Select>
+                    )}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="物流单号"  className={styles.salesman}>
+                    {getFieldDecorator('logisticsNumber', {
+                      initialValue: detail.logisticsNumber,
+                    })(<Input
+                      disabled={!detail.logisticsStatus ? edit : true}
+                    placeholder="请输入物流单号" />)}
+                  </FormItem>
 
                   <FormDetailsTitle title="其他信息" />
                   <FormItem {...formAllItemLayout} label="微信号">
