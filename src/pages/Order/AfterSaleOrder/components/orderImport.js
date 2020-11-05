@@ -82,7 +82,8 @@ class OrderImport extends PureComponent {
       form.validateFieldsAndScroll((err, values) => {
         if (!err) {
             console.log(this.state.fileList,"values");
-            values.file = this.state.fileList[0]
+            values.file = this.state.fileList[0];
+            values.createTime=moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
             importOrder(values).then(res=>{
               if(res.code === 200){
                 message.success(res.msg)

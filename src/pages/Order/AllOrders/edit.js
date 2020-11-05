@@ -423,7 +423,7 @@ class OrdersEdit extends PureComponent {
                       initialValue: detail.productType,
                     })(
                       <Cascader
-                        disabled={detail.productType ? true : edit}
+                        disabled={detail.productType ? edit : true}
                         options={productList}
                         fieldNames={{ label: 'value'}}
                         onChange={(value, selectedOptions)=>{
@@ -434,7 +434,7 @@ class OrdersEdit extends PureComponent {
                           })
                           // }
                         }}
-                      ></Cascader>
+                      />
                     )}
                   </FormItem>
 
