@@ -81,7 +81,7 @@ function getFakeRoutes(req, res) {
         source: 'fund',
         children: [
           {
-            path: 'http://120.26.63.67:9010/doc.html',
+            path: 'http://120.26.63.67:9010/doc.html#/home',
             target: '_blank',
             code: 'doc',
             name: '接口文档',
