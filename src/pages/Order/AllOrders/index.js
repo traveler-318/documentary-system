@@ -38,6 +38,7 @@ import Details from './components/details'
 import ImportData from './components/ImportData'
 import Excel from './components/excel'
 import Text from './components/text'
+import Journal from '../components/journal'
 import OrderImport from './components/orderImport';
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
@@ -98,6 +99,8 @@ class AllOrdersList extends PureComponent {
       LogisticsConfigVisible:false,
       // 详情弹窗
       detailsVisible:false,
+      // 日志弹窗
+      journalVisible:false,
       // 免押宝导入弹窗
       noDepositVisible:false,
       // SN激活导入弹窗
@@ -279,6 +282,9 @@ class AllOrdersList extends PureComponent {
                     {
                       row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<a onClick={()=>this.logisticsSubscribe(row)}>订阅</a>):''
                     }
+                    {/*<Divider type="vertical" />*/}
+                    {/*<a onClick={()=>this.handleJournal(row)}>日志</a>*/}
+
 
                     {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
 
@@ -1348,6 +1354,20 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  // 打开日志弹窗
+  handleJournal = (row) => {
+    this.setState({
+      journalVisible:true
+    })
+  }
+  // 关闭日志弹窗
+  handleCancelJournal = () => {
+    this.setState({
+      journalVisible:false
+    })
+  }
+
+
   // 打开物流弹窗
   handleShowLogistics = (data) => {
     const { dispatch } = this.props;
@@ -1493,6 +1513,7 @@ class AllOrdersList extends PureComponent {
       LogisticsConfigVisible,
       selectedRows,
       detailsVisible,
+      journalVisible,
       selectedRowKeys,
       noDepositVisible,
       confirmTagVisible,
@@ -1508,7 +1529,6 @@ class AllOrdersList extends PureComponent {
     } = this.state;
 
     console.log(selectedRowKeys,"selectedRowKeys")
-    console.log(tips)
 
     const columns = this.state.columns.map((col, index) => ({
       ...col,
@@ -1566,34 +1586,42 @@ class AllOrdersList extends PureComponent {
             })}
           </Tabs>
         
-        <Grid
-          code={code}
-          form={form}
-          onSearch={this.handleSearch}
-          onSelectRow={this.onSelectRow}
-          renderSearchForm={this.renderSearchForm}
-          loading={loading}
-          data={data}
-          columns={columns}
-          scroll={{ x: 1000 }}
-          renderLeftButton={()=>this.renderLeftButton(tabKey)}
-          // renderRightButton={this.renderRightButton}
-          counterElection={true}
-          onChangeCheckbox={this.onChangeCheckbox}
-          selectedKey={selectedRowKeys}
-          tblProps={
-            {components:this.components}
-          }
-          // multipleChoice={true}
-        />
-        {/* 详情 */}
-        {detailsVisible?(
-          <Details
-            detailsVisible={detailsVisible}
-            handleCancelDetails={this.handleCancelDetails}
+          <Grid
+            code={code}
+            form={form}
+            onSearch={this.handleSearch}
+            onSelectRow={this.onSelectRow}
+            renderSearchForm={this.renderSearchForm}
+            loading={loading}
+            data={data}
+            columns={columns}
+            scroll={{ x: 1000 }}
+            renderLeftButton={()=>this.renderLeftButton(tabKey)}
+            // renderRightButton={this.renderRightButton}
+            counterElection={true}
+            onChangeCheckbox={this.onChangeCheckbox}
+            selectedKey={selectedRowKeys}
+            tblProps={
+              {components:this.components}
+            }
+            // multipleChoice={true}
+          />
+          {/* 详情 */}
+          {detailsVisible?(
+            <Details
+              detailsVisible={detailsVisible}
+              handleCancelDetails={this.handleCancelDetails}
+            />
+          ):""}
+        </div>
+        {/* 日志弹框 */}
+        {journalVisible?(
+          <Journal
+            journalVisible={journalVisible}
+            handleCancelJournal={this.handleCancelJournal}
           />
         ):""}
-</div>
+
         {/* 导出 */}
         {exportVisible?(
           <Export
