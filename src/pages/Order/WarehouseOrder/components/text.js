@@ -63,6 +63,7 @@ class Text extends PureComponent {
     const {  form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       console.log(values)
+      values.createTime=moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
       if (!err) {
         importText(values).then(res=>{
           if(res.code === 200){
@@ -88,8 +89,8 @@ class Text extends PureComponent {
     return(
       <div>
         <p>物流一致直接勾选,不一致则按照格式存放粘贴,金额一致就输入,不一致按照格式填写姓名,电话,地址,金额,物流名称,物流单号 如没有相关数据请留空即可（但是逗号需要保留）</p>
-        <p>示例：1、张三,18000000011,北京市丰台区西瓜路32号,100,顺丰速运,SF10010</p>
-        <p>2、李四,18000000012,北京市丰台区西瓜路33号,,,</p>
+        <p>示例：1、张三,18000000011,北京市丰台区西瓜路32号,100,顺丰速运,SF10010,0010ABC,2019-10-11 11:01:18</p>
+        <p>2、李四,18000000012,北京市丰台区西瓜路33号,,,,,</p>
         <p>物流公司名称需要和物流公司下选项里面的名字保持一致</p>
       </div>
     )
@@ -170,7 +171,7 @@ class Text extends PureComponent {
               </FormItem>
               <FormItem {...formAllItemLayout} label="文本信息">
                 {getFieldDecorator('partText')(
-                  <TextArea rows={8} placeholder="示例：张三,18000000011,北京市丰台区西瓜路32号,100,顺丰速运,SF10010" onChange={(e)=>this.onChange(e)} />
+                  <TextArea rows={8} placeholder="示例：张三,18000000011,北京市丰台区西瓜路32号,100,顺丰速运,SF10010,0010ABC,2019-10-11 11:01:18" onChange={(e)=>this.onChange(e)} />
                 )}
                 <Tooltip 
                   overlayStyle={{
