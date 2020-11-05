@@ -10,7 +10,7 @@ import styles from '../edit.less';
 import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../../actions/user';
 import func from '../../../../utils/Func';
 import { getCookie } from '../../../../utils/support';
-import { updateData, getRegion, getDetails } from '../../../../services/newServices/order';
+import { updateData, getRegion, getDetails,orderFollowing } from '../../../../services/newServices/order';
 import OrderList from './OrderList'
 import LogisticsDetails from './LogisticsDetails'
 import ReminderTimes from './time'
