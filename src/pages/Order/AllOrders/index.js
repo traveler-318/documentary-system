@@ -283,7 +283,7 @@ class AllOrdersList extends PureComponent {
                     {
                       row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
                     }
-                    {/*<a onClick={()=>this.handleJournal(row)}>日志</a>*/}
+                    <a onClick={()=>this.handleJournal(row)}>日志</a>
 
 
                     {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}

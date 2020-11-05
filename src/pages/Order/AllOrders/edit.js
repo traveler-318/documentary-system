@@ -160,50 +160,71 @@ class OrdersEdit extends PureComponent {
         }
       })
       values.id = detail.id;
-      values.userAddress=`${selectedOptions}${values.userAddress}`
+      values.userAddress=`${selectedOptions}${values.userAddress}`;
       if (!err) {
         const params = {
           ...values
         };
-        // if(params.logisticsCompany !== detail.logisticsCompany || params.logisticsNumber !== detail.logisticsNumber){
-        //   if(detail.logisticsStatus){
-        //     Modal.confirm({
-        //       title: '提示',
-        //       content: '当前订单物流已经订阅,此次变更会删掉订阅有关信息,确认是否清理物流从新保存',
-        //       okText: '确定',
-        //       okType: 'danger',
-        //       cancelText: '取消',
-        //       keyboard:false,
-        //       async onOk() {
-        //         const _data={
-        //           id:detail.id,
-        //           outOrderNo:detail.outOrderNo
-        //         }
-        //         deleteLogisticsSuber(_data).then(res=>{
-        //           console.log(res)
-        //         })
-        //       },
-        //       onCancel() {},
-        //     });
-        //   }else {
-        //     console.log(params)
-        //     console.log(detail)
-        //   }
-        // }
-
-        updateData(params).then(res=>{
-          if(res.code === 200){
-            message.success(res.msg);
-            this.setState({
-              edit:true,
-              primary:"primary",
-              primary1:''
-            })
+        if(params.logisticsCompany !== detail.logisticsCompany || params.logisticsNumber !== detail.logisticsNumber){
+          if(detail.logisticsStatus){
+            Modal.confirm({
+              title: '提示',
+              content: '当前订单物流已经订阅,此次变更会删掉订阅有关信息,确认是否清理物流从新保存',
+              okText: '确定',
+              okType: 'danger',
+              cancelText: '取消',
+              keyboard:false,
+              async onOk() {
+                const _data={
+                  id:detail.id,
+                  outOrderNo:detail.outOrderNo
+                }
+                deleteLogisticsSuber(_data).then(resp=>{
+                  console.log(resp)
+                  updateData(params).then(res=>{
+                    if(res.code === 200){
+                      message.success(res.msg);
+                      this.setState({
+                        edit:true,
+                        primary:"primary",
+                        primary1:''
+                      })
+                    }else {
+                      message.error(res.msg);
+                    }
+                  })
+                })
+              },
+              onCancel() {},
+            });
           }else {
-            message.error(res.msg);
+            updateData(params).then(res=>{
+              if(res.code === 200){
+                message.success(res.msg);
+                this.setState({
+                  edit:true,
+                  primary:"primary",
+                  primary1:''
+                })
+              }else {
+                message.error(res.msg);
+              }
+            })
           }
-          // router.push('/order/allOrders');
-        })
+        }else {
+          updateData(params).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              this.setState({
+                edit:true,
+                primary:"primary",
+                primary1:''
+              })
+            }else {
+              message.error(res.msg);
+            }
+          })
+        }
       }
     });
   };
@@ -392,30 +413,30 @@ class OrdersEdit extends PureComponent {
                       initialValue: detail.salesman,
                     })(<Input disabled placeholder="" />)}
                   </FormItem>
-                  {/*<FormItem {...formAllItemLayout} label="SN">*/}
-                    {/*{getFieldDecorator('productCoding', {*/}
-                      {/*initialValue: detail.productCoding,*/}
-                    {/*})(<Input disabled={detail.productCoding ? true : edit} placeholder="" />)}*/}
-                  {/*</FormItem>*/}
-                  {/*<FormItem {...formAllItemLayout} label="产品类型">*/}
-                    {/*{getFieldDecorator('productType', {*/}
-                      {/*initialValue: detail.productType,*/}
-                    {/*})(*/}
-                      {/*<Cascader*/}
-                        {/*disabled={detail.productType ? true : edit}*/}
-                        {/*options={productList}*/}
-                        {/*fieldNames={{ label: 'value'}}*/}
-                        {/*onChange={(value, selectedOptions)=>{*/}
-                          {/*const { form } = this.props;*/}
-                          {/*const region = form.getFieldsValue();*/}
-                          {/*form.setFieldsValue({*/}
-                            {/*payAmount:selectedOptions[2].payamount*/}
-                          {/*})*/}
-                          {/*// }*/}
-                        {/*}}*/}
-                      {/*></Cascader>*/}
-                    {/*)}*/}
-                  {/*</FormItem>*/}
+                  <FormItem {...formAllItemLayout} label="SN">
+                    {getFieldDecorator('productCoding', {
+                      initialValue: detail.productCoding,
+                    })(<Input disabled={detail.productCoding ? true : edit} placeholder="" />)}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="产品类型">
+                    {getFieldDecorator('productType', {
+                      initialValue: detail.productType,
+                    })(
+                      <Cascader
+                        disabled={detail.productType ? true : edit}
+                        options={productList}
+                        fieldNames={{ label: 'value'}}
+                        onChange={(value, selectedOptions)=>{
+                          const { form } = this.props;
+                          const region = form.getFieldsValue();
+                          form.setFieldsValue({
+                            payAmount:selectedOptions[2].payamount
+                          })
+                          // }
+                        }}
+                      ></Cascader>
+                    )}
+                  </FormItem>
 
                   <FormItem {...formAllItemLayout} label="物流公司">
                     {getFieldDecorator('logisticsCompany', {
