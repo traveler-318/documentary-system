@@ -98,13 +98,10 @@ class OrdersAdd extends PureComponent {
               <Col span={12}>
                
               <FormItem {...formAllItemLayout} label="定时任务">
-                  {getFieldDecorator('status', {
-                      initialValue: detail.status,
-                    })(
+                  {getFieldDecorator('status')(
                       <Switch />
                   )}
                 </FormItem>
-
                 <FormItem {...formAllItemLayout} label="启动间隔时间">
                   {getFieldDecorator('startInterval',)(
                     <InputNumber min={1} />
