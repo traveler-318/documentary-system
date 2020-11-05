@@ -162,6 +162,7 @@ class OrdersEdit extends PureComponent {
       values.id = detail.id;
       values.userAddress=`${selectedOptions}${values.userAddress}`;
       if (!err) {
+        values.productType = `${values.productType[0]}/${values.productType[1]}`;
         const params = {
           ...values
         };
@@ -189,6 +190,7 @@ class OrdersEdit extends PureComponent {
                         primary:"primary",
                         primary1:''
                       })
+                      this.getEditDetails()
                     }else {
                       message.error(res.msg);
                     }
@@ -206,6 +208,7 @@ class OrdersEdit extends PureComponent {
                   primary:"primary",
                   primary1:''
                 })
+                this.getEditDetails()
               }else {
                 message.error(res.msg);
               }
@@ -220,6 +223,7 @@ class OrdersEdit extends PureComponent {
                 primary:"primary",
                 primary1:''
               })
+              this.getEditDetails()
             }else {
               message.error(res.msg);
             }
@@ -416,14 +420,14 @@ class OrdersEdit extends PureComponent {
                   <FormItem {...formAllItemLayout} label="SN">
                     {getFieldDecorator('productCoding', {
                       initialValue: detail.productCoding,
-                    })(<Input disabled={detail.productCoding ? true : edit} placeholder="" />)}
+                    })(<Input disabled={detail.productCoding  ? edit : true} placeholder="" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="产品类型">
                     {getFieldDecorator('productType', {
-                      initialValue: detail.productType,
+                      initialValue: detail.productType.split("/") ,
                     })(
                       <Cascader
-                        disabled={detail.productType ? edit : true}
+                        disabled={detail.productType  ? edit : true}
                         options={productList}
                         fieldNames={{ label: 'value'}}
                         onChange={(value, selectedOptions)=>{
