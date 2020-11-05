@@ -237,7 +237,7 @@ class SMSrecord extends PureComponent {
       {
         title: '任务状态',
         dataIndex: 'status',
-        width: 160,
+        // width: 160,
         ellipsis: true,
       },
       
@@ -251,7 +251,6 @@ class SMSrecord extends PureComponent {
             <div>
               <a onClick={()=>this.handleEdit(row)}>修改</a>
               <Divider type="vertical" />
-              {/* <a onClick={()=>this.handleDelete(row)}>删除</a> */}
             </div>
           )
         },
@@ -265,7 +264,7 @@ class SMSrecord extends PureComponent {
           form={form}
           onSearch={this.handleSearch}
           onSelectRow={this.onSelectRow}
-          renderSearchForm={this.renderSearchForm}
+          // renderSearchForm={this.renderSearchForm}
           loading={loading}
           data={data}
           columns={columns}

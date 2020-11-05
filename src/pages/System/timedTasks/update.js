@@ -9,15 +9,14 @@ import Panel from '../../../components/Panel';
 
 import {
   updateStatus,
-  createData
+  updateData
 } from '../../../services/newServices/timedTasks';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
 
-@connect(({ user, loading }) => ({
-  user,
-  submitting: loading.effects['user/submit'],
+@connect(({ globalParameters}) => ({
+  globalParameters,
 }))
 @Form.create()
 class OrdersAdd extends PureComponent {
@@ -26,11 +25,19 @@ class OrdersAdd extends PureComponent {
     super(props);
     this.state = {
       loading:false,
+      detail:{}
     };
   }
 
 
   componentWillMount() {
+    const { globalParameters } = this.props;
+
+    console.log(globalParameters.detailData,"data");
+
+    this.setState({
+      detail:globalParameters.detailData
+    })
   }
 
 
@@ -39,21 +46,35 @@ class OrdersAdd extends PureComponent {
     const { form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-
+        console.log(values,"提交数据")
         values.deptId = getCookie("dept_id");
         values.tenantId = getCookie("tenantId");
-        values.status = values.status ? 1 : 0;
-        console.log(values,"提交数据");
-
+        if(values.productType && values.productType != ""){
+          console.log(values.productType[2])
+          console.log(values.productType[2].split("-"))
+          // values.payAmount = values.productType[2].split("-")[1];
+          values.productName = values.productType[2];
+          values.productType = `${values.productType[0]}/${values.productType[1]}`;
+        }
         createData(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
-            router.push('/system/timedTasks');
+            router.push('/order/allOrders');
           }
         })
       }
     });
   };
+
+  handleStatusChange = (checked) => {
+    let key = checked ? 1 : 0;
+    let param = {};
+    param['status'] = key;
+    param.taskId = this.state.detail.taskId
+    updateStatus(param,this.state.detail.id).then(res=>{
+      console.log(res)
+    })
+  }
 
   render() {
     const {
@@ -61,9 +82,8 @@ class OrdersAdd extends PureComponent {
     } = this.props;
 
     const {
-      salesmanList,
       loading,
-      productList
+      detail
     } = this.state;
 
     const formItemLayout = {
@@ -97,34 +117,39 @@ class OrdersAdd extends PureComponent {
             <Row gutter={24}>
               <Col span={12}>
                
-              <FormItem {...formAllItemLayout} label="定时任务">
+                <FormItem {...formAllItemLayout} label="定时任务">
                   {getFieldDecorator('status', {
                       initialValue: detail.status,
                     })(
-                      <Switch />
+                      <Switch onChange={this.handleStatusChange} />
                   )}
                 </FormItem>
 
                 <FormItem {...formAllItemLayout} label="启动间隔时间">
-                  {getFieldDecorator('startInterval',)(
-                    <InputNumber min={1} />
+                  {getFieldDecorator('startInterval', {
+                      initialValue: detail.startInterval,
+                    })(
+                    <><InputNumber min={1} />&nbsp;&nbsp;签收后第二天开始执行</>
                   )}
-                  &nbsp;&nbsp;签收后第{this.props.form.getFieldsValue("startInterval") || 0}天开始执行
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="时间间隔">
-                  {getFieldDecorator('timeInterval',)(
-                    <InputNumber min={1} />
+                  {getFieldDecorator('timeInterval', {
+                      initialValue: detail.timeInterval,
+                    })(
+                     <><InputNumber min={1} />&nbsp;&nbsp;每隔2天执行一次</>
                   )}
-                  每隔{this.props.form.getFieldsValue("timeInterval") || 0}天执行一次
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="重复次数">
-                  {getFieldDecorator('repeatNumber',)(
-                    <InputNumber min={1} />
+                  {getFieldDecorator('repeatNumber', {
+                      initialValue: detail.repeatNumber,
+                    })(
+                    <><InputNumber min={1} />&nbsp;&nbsp;最多执行2次</>
                   )}
-                  &nbsp;&nbsp;最多执行{this.props.form.getFieldsValue("repeatNumber") || 0}次
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="提醒时间">
-                  {getFieldDecorator('noticeHours',)(
+                  {getFieldDecorator('noticeHours', {
+                      initialValue: detail.noticeHours,
+                    })(
                     <TimePicker format={format} />
                   )}
                 </FormItem>
