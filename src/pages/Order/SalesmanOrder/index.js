@@ -40,6 +40,7 @@ import ImportData from './components/ImportData'
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 import Excel from './components/excel';
 import Text from './components/text';
+import OrderImport from './components/orderImport';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

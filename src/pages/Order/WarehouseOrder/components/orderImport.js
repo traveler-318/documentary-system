@@ -27,7 +27,8 @@ class OrderImport extends PureComponent {
       isCovered: 0,
       salesmanList:[],
       onReset: () => {},
-      fileList:[]
+      fileList:[],
+      createTime:''
     };
   }
 
@@ -83,7 +84,7 @@ class OrderImport extends PureComponent {
         if (!err) {
             console.log(this.state.fileList,"values");
             values.file = this.state.fileList[0];
-            values.createTime=moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
+            values.createTime=this.state.createTime
             importOrder(values).then(res=>{
               if(res.code === 200){
                 message.success(res.msg)
@@ -94,6 +95,18 @@ class OrderImport extends PureComponent {
             })
         }
       })
+  }
+
+  onChange = (value, dateString) => {
+    this.setState({
+      createTime:dateString
+    })
+  }
+
+  onOk = (value) => {
+    this.setState({
+      createTime:moment(value).format('YYYY-MM-DD HH:mm:ss')
+    })
   }
 
 
@@ -195,6 +208,19 @@ class OrderImport extends PureComponent {
                   </Select>
                 )}
             </Form.Item>
+            <FormItem {...formItemLayout} label="创建时间">
+              {getFieldDecorator('createTime', {
+
+              })(
+                <DatePicker
+                  showTime={{ format: 'HH:mm:ss' }}
+                  format="YYYY-MM-DD HH:mm:ss"
+                  placeholder="请选择提醒时间"
+                  onChange={this.onChange}
+                  onOk={this.onOk}
+                />
+              )}
+            </FormItem>
             <Form.Item {...formItemLayout} label="模板下载">
               <Button type="primary" icon="download" size="small" onClick={this.handleTemplate}>
                 点击下载

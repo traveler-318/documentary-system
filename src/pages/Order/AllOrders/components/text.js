@@ -42,6 +42,7 @@ class Text extends PureComponent {
     super(props);
     this.state = {
       salesmanList:[],
+      createTime:''
     };
   }
 
@@ -61,9 +62,9 @@ class Text extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const {  form } = this.props;
+    const {  createTime } = this.state;
     form.validateFieldsAndScroll((err, values) => {
-      console.log(values)
-      values.createTime=moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
+      values.createTime=createTime
       if (!err) {
         importText(values).then(res=>{
           if(res.code === 200){
@@ -76,6 +77,18 @@ class Text extends PureComponent {
       }
     });
   };
+
+  onChange = (value, dateString) => {
+    this.setState({
+      createTime:dateString
+    })
+  }
+
+  onOk = (value) => {
+    this.setState({
+      createTime:moment(value).format('YYYY-MM-DD HH:mm:ss')
+    })
+  }
 
   handlEeliminate = () => {
     this.props.form.resetFields();
@@ -158,6 +171,19 @@ class Text extends PureComponent {
                       return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
                     })}
                   </Select>
+                )}
+              </FormItem>
+              <FormItem {...formAllItemLayout} label="创建时间">
+                {getFieldDecorator('createTime', {
+
+                })(
+                  <DatePicker
+                    showTime={{ format: 'HH:mm:ss' }}
+                    format="YYYY-MM-DD HH:mm:ss"
+                    placeholder="请选择提醒时间"
+                    onChange={this.onChange}
+                    onOk={this.onOk}
+                  />
                 )}
               </FormItem>
               <FormItem {...formAllItemLayout} label="金额">

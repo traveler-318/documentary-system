@@ -27,7 +27,8 @@ class OrderImport extends PureComponent {
       isCovered: 0,
       salesmanList:[],
       onReset: () => {},
-      fileList:[]
+      fileList:[],
+      createTime:''
     };
   }
 
@@ -78,22 +79,35 @@ class OrderImport extends PureComponent {
   };
 
   handleOrderSave = () => {
-      const {form} = this.props;
-      form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-            console.log(this.state.fileList,"values");
-            values.file = this.state.fileList[0]
-            values.createTime=moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
-            importOrder(values).then(res=>{
-              if(res.code === 200){
-                message.success(res.msg)
-                this.props.handleOrderImportCancel();
-              }else{
-                message.error(res.msg)
-              }
-            })
-        }
-      })
+    const {form} = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log(this.state.fileList,"values");
+        values.file = this.state.fileList[0];
+        values.createTime=this.state.createTime
+        console.log(values)
+        importOrder(values).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg)
+            this.props.handleOrderImportCancel();
+          }else{
+            message.error(res.msg)
+          }
+        })
+      }
+    })
+  }
+
+  onChange = (value, dateString) => {
+    this.setState({
+      createTime:dateString
+    })
+  }
+
+  onOk = (value) => {
+    this.setState({
+      createTime:moment(value).format('YYYY-MM-DD HH:mm:ss')
+    })
   }
 
 
@@ -158,10 +172,10 @@ class OrderImport extends PureComponent {
         >
           <Form style={{ marginTop: 8 }} hideRequiredMark>
             <Form.Item {...formItemLayout} label="模板上传">
-              <Dragger 
-              {...propss}
-              onChange={this.onUpload}
-              
+              <Dragger
+                {...propss}
+                onChange={this.onUpload}
+
               >
                 <p className="ant-upload-drag-icon">
                   <Icon type="inbox" />
@@ -175,8 +189,8 @@ class OrderImport extends PureComponent {
             </FormItem> */}
             <Form.Item {...formItemLayout} label="订单类型">
               {getFieldDecorator('orderType', {
-                  initialValue: null,
-                })(
+                initialValue: null,
+              })(
                 <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
                   {ORDERTYPPE.map(item=>{
                     return (<Option value={item.key}>{item.name}</Option>)
@@ -186,15 +200,28 @@ class OrderImport extends PureComponent {
             </Form.Item>
             <Form.Item {...formItemLayout} label="销售">
               {getFieldDecorator('salesman', {
-                    initialValue: "全部",
-                  })(
-                  <Select placeholder={"请选择销售"} style={{ width: 120 }}>
-                    {salesmanList.map((item,index)=>{
-                      return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
-                    })}
-                  </Select>
-                )}
+                initialValue: "全部",
+              })(
+                <Select placeholder={"请选择销售"} style={{ width: 120 }}>
+                  {salesmanList.map((item,index)=>{
+                    return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
+                  })}
+                </Select>
+              )}
             </Form.Item>
+            <FormItem {...formItemLayout} label="创建时间">
+              {getFieldDecorator('createTime', {
+
+              })(
+                <DatePicker
+                  showTime={{ format: 'HH:mm:ss' }}
+                  format="YYYY-MM-DD HH:mm:ss"
+                  placeholder="请选择提醒时间"
+                  onChange={this.onChange}
+                  onOk={this.onOk}
+                />
+              )}
+            </FormItem>
             <Form.Item {...formItemLayout} label="模板下载">
               <Button type="primary" icon="download" size="small" onClick={this.handleTemplate}>
                 点击下载

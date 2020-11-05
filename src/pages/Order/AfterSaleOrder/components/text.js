@@ -42,6 +42,7 @@ class Text extends PureComponent {
     super(props);
     this.state = {
       salesmanList:[],
+      createTime:''
     };
   }
 
@@ -61,9 +62,9 @@ class Text extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const {  form } = this.props;
+    const {  createTime } = this.state;
     form.validateFieldsAndScroll((err, values) => {
-      console.log(values)
-      values.createTime=moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
+      values.createTime=createTime
       if (!err) {
         importText(values).then(res=>{
           if(res.code === 200){
@@ -76,6 +77,18 @@ class Text extends PureComponent {
       }
     });
   };
+
+  onChange = (value, dateString) => {
+    this.setState({
+      createTime:dateString
+    })
+  }
+
+  onOk = (value) => {
+    this.setState({
+      createTime:moment(value).format('YYYY-MM-DD HH:mm:ss')
+    })
+  }
 
   handlEeliminate = () => {
     this.props.form.resetFields();
@@ -160,6 +173,19 @@ class Text extends PureComponent {
                   </Select>
                 )}
               </FormItem>
+              <FormItem {...formAllItemLayout} label="创建时间">
+                {getFieldDecorator('createTime', {
+
+                })(
+                  <DatePicker
+                    showTime={{ format: 'HH:mm:ss' }}
+                    format="YYYY-MM-DD HH:mm:ss"
+                    placeholder="请选择提醒时间"
+                    onChange={this.onChange}
+                    onOk={this.onOk}
+                  />
+                )}
+              </FormItem>
               <FormItem {...formAllItemLayout} label="金额">
                 {getFieldDecorator('payAmount', {
 
@@ -173,7 +199,7 @@ class Text extends PureComponent {
                 {getFieldDecorator('partText')(
                   <TextArea rows={8} placeholder="示例：张三,18000000011,北京市丰台区西瓜路32号,100,顺丰速运,SF10010,0010ABC,2019-10-11 11:01:18" onChange={(e)=>this.onChange(e)} />
                 )}
-                <Tooltip 
+                <Tooltip
                   overlayStyle={{
                     width:"380px",
                     maxWidth:"380px"
