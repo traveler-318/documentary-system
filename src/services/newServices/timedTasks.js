@@ -13,8 +13,8 @@ export async function getList(params) {
   });
 }
 
-export async function updateStatus(params) {
-  return request("/api/tracking/task/updateStatus",{
+export async function updateStatus(params,id) {
+  return request("/api/tracking/task/updateStatus/"+id,{
     method: 'POST',
     body: params,
   });
@@ -27,8 +27,8 @@ export async function createData(params) {
   });
 }
 
-export async function updateData(params,id) {
-  return request("/api/tracking/task/update/"+id,{
+export async function updateData(params) {
+  return request("/api/tracking/task/update",{
     method: 'POST',
     body: params,
   });

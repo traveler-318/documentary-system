@@ -59,16 +59,14 @@ class TransferCustomers extends PureComponent {
         
         this.setState({loading:true });
 
-        let _data = listParam.map(item=>{
-            return {
-                deptId:getCookie("dept_id"),
-                id:item.id,
-                outOrderNo:item.outOrderNo,
-                salesman:values.salesman
-            }
+        let orderIds = listParam.map(item=>{
+            return item.id
         })
 
-        equipment(_data).then(res=>{
+        equipment({
+          orderIds,
+          salesman:values.salesman
+        }).then(res=>{
           this.setState({loading:false });
           if(res.code === 200){
             message.success(res.msg);
@@ -94,29 +92,20 @@ class TransferCustomers extends PureComponent {
       salesmanList
     } = this.state;
 
-    const formItemLayout = {
-      labelCol: {
-        span: 8,
-      },
-      wrapperCol: {
-        span: 16,
-      },
-    };
-
     const formAllItemLayout = {
       labelCol: {
-        span: 4,
+        span: 7,
       },
       wrapperCol: {
-        span: 20,
+        span: 17,
       },
     };
-    // confirmTag
+    
     return (
         <Modal
           title="转移客户"
           visible={TransferVisible}
-          width={560}
+          width={400}
           onCancel={handleCancelTransfer}
           footer={[
             <Button key="back" onClick={handleCancelTransfer}>
@@ -140,16 +129,16 @@ class TransferCustomers extends PureComponent {
                     })(
                     <Select placeholder={"请选择接收销售"}>
                     {salesmanList.map(item=>{
-                      return (<Option value={item.userName}>{item.userName}</Option>)
+                      return (<Option value={item.userAccount}>{item.userName}</Option>)
                     })}
                   </Select>
                   )}
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="备注信息">
+                {/* <FormItem {...formAllItemLayout} label="备注信息">
                   {getFieldDecorator('orderNote')(
                     <TextArea rows={4} />
                   )}
-                </FormItem>
+                </FormItem> */}
             </Form>
         </Modal>
     );

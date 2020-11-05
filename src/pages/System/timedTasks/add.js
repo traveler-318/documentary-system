@@ -6,7 +6,7 @@ import router from 'umi/router';
 
 const format = 'HH:mm';
 import Panel from '../../../components/Panel';
-
+import { getCookie } from '../../../utils/support';
 import {
   updateStatus,
   createData
@@ -14,6 +14,9 @@ import {
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
+let notificationTypes = [
+  {name:"定时逾期提醒",key:"定时逾期提醒"}
+]
 
 @connect(({ user, loading }) => ({
   user,
@@ -26,6 +29,10 @@ class OrdersAdd extends PureComponent {
     super(props);
     this.state = {
       loading:false,
+      startInterval:1,
+      timeInterval:1,
+      repeatNumber:1,
+      initialTimeValue:moment(`20:${Math.ceil(Math.random()*60)}`,format)
     };
   }
 
@@ -42,18 +49,29 @@ class OrdersAdd extends PureComponent {
 
         values.deptId = getCookie("dept_id");
         values.tenantId = getCookie("tenantId");
-        values.status = values.status ? 1 : 0;
+        values.status = '0';
+
+        values.noticeHours = moment(values.noticeHours).format(format)
+
         console.log(values,"提交数据");
 
         createData(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
             router.push('/system/timedTasks');
+          }else{
+            message.error(res.msg);
           }
         })
       }
     });
   };
+
+  numberChange = (key,value) => {
+    this.setState({
+      [value]:key
+    })
+  }
 
   render() {
     const {
@@ -63,17 +81,11 @@ class OrdersAdd extends PureComponent {
     const {
       salesmanList,
       loading,
-      productList
+      startInterval,
+      timeInterval,
+      repeatNumber,
+      initialTimeValue
     } = this.state;
-
-    const formItemLayout = {
-      labelCol: {
-        span: 8,
-      },
-      wrapperCol: {
-        span: 16,
-      },
-    };
 
     const formAllItemLayout = {
       labelCol: {
@@ -97,31 +109,55 @@ class OrdersAdd extends PureComponent {
             <Row gutter={24}>
               <Col span={12}>
                
-              <FormItem {...formAllItemLayout} label="定时任务">
+                {/* <FormItem {...formAllItemLayout} label="定时任务">
                   {getFieldDecorator('status')(
                       <Switch />
                   )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="启动间隔时间">
-                  {getFieldDecorator('startInterval',)(
-                    <InputNumber min={1} />
+                </FormItem> */}
+
+                <FormItem {...formAllItemLayout} label="通知类型">
+                  {getFieldDecorator('notificationTypes', {
+                      initialValue: "定时逾期提醒",
+                    })(
+                      <Select 
+                        style={{ width: 180 }}
+                        placeholder={"请选择通知类型"}
+                      >
+                        {notificationTypes.map(item=>{
+                          return (<Option value={item.name}>{item.name}</Option>)
+                        })}
+                      </Select>
                   )}
-                  &nbsp;&nbsp;签收后第{this.props.form.getFieldsValue("startInterval") || 0}天开始执行
+                </FormItem>
+
+                <FormItem {...formAllItemLayout} label="启动间隔时间">
+                  {getFieldDecorator('startInterval', {
+                      initialValue: 1,
+                    })( 
+                    <InputNumber min={1} onChange={(value)=>this.numberChange(value,"startInterval")} />
+                  )}
+                  &nbsp;&nbsp;签收后第{startInterval}天开始执行
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="时间间隔">
-                  {getFieldDecorator('timeInterval',)(
-                    <InputNumber min={1} />
+                  {getFieldDecorator('timeInterval', {
+                      initialValue: 1,
+                    })(
+                    <InputNumber min={1} onChange={(value)=>this.numberChange(value,"timeInterval")}/>
                   )}
-                  每隔{this.props.form.getFieldsValue("timeInterval") || 0}天执行一次
+                  &nbsp;&nbsp;每隔{timeInterval}天执行一次
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="重复次数">
-                  {getFieldDecorator('repeatNumber',)(
-                    <InputNumber min={1} />
+                  {getFieldDecorator('repeatNumber', {
+                      initialValue: 1,
+                    })(
+                    <InputNumber min={1} onChange={(value)=>this.numberChange(value,"repeatNumber")}/>
                   )}
-                  &nbsp;&nbsp;最多执行{this.props.form.getFieldsValue("repeatNumber") || 0}次
+                  &nbsp;&nbsp;最多执行{repeatNumber}次
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="提醒时间">
-                  {getFieldDecorator('noticeHours',)(
+                  {getFieldDecorator('noticeHours', {
+                      initialValue: initialTimeValue,
+                    })(
                     <TimePicker format={format} />
                   )}
                 </FormItem>

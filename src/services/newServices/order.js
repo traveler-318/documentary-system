@@ -56,7 +56,7 @@ export async function updateRemind(params) {
 }
 // 设备
 export async function equipment(params) {
-  return request('/api/order/order/updateEquipment', {
+  return request('/api/order/order/updateOrderAttribution', {
     method: 'POST',
     body: params,
   });
