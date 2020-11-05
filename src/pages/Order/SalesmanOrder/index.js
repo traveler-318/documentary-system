@@ -336,7 +336,7 @@ class AllOrdersList extends PureComponent {
 
       for(let j=0; j<tabCode.length; j++){
         tabCode[j]=tabCode[j];
-        if(tabCode[j] === 11){
+        if(tabCode[j] === "11"){
           tabCode[j] = null
         }
         for(let i=0; i<ORDERSTATUS.length; i++){

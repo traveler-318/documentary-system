@@ -15,7 +15,7 @@ import {
   getDetails,
   orderDetail,
   updateReminds,
-  productTreelist, subscription,
+  productTreelist, subscription,deleteLogisticsSuber
 } from '../../../services/newServices/order';
 import {ORDERSTATUS,ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
@@ -175,14 +175,22 @@ class OrdersEdit extends PureComponent {
         //       cancelText: '取消',
         //       keyboard:false,
         //       async onOk() {
-        //
+        //         const _data={
+        //           id:detail.id,
+        //           outOrderNo:detail.outOrderNo
+        //         }
+        //         deleteLogisticsSuber(_data).then(res=>{
+        //           console.log(res)
+        //         })
         //       },
         //       onCancel() {},
         //     });
+        //   }else {
+        //     console.log(params)
+        //     console.log(detail)
         //   }
         // }
-        // console.log(params)
-        // console.log(detail)
+
         updateData(params).then(res=>{
           if(res.code === 200){
             message.success(res.msg);

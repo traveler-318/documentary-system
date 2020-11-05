@@ -203,6 +203,14 @@ export async function subscription(params) {
     body: params,
   });
 }
+// 删除订阅
+export async function deleteLogisticsSuber(params) {
+  return request('/api/order/order/deleteLogisticsSuber', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 
 // 导出电话展示
 export async function getPhone() {
