@@ -89,10 +89,13 @@ class SMSrecord extends PureComponent {
 
   // 修改弹框
   handleEdit = (row) => {
-    this.setState({
-      handleEditVisible:true,
-      details:row
-    })
+    
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: row,
+    });
+    router.push('/system/timedTasks/update');
   }
 
   handleCancelEdit = (type) => {
@@ -223,6 +226,12 @@ class SMSrecord extends PureComponent {
       //   ellipsis: true,
       // },
       {
+        title: '通知类型',
+        dataIndex: 'notificationTypes',
+        width: 160,
+        ellipsis: true,
+      },
+      {
         title: '开始时间',
         dataIndex: 'noticeHours',
         width: 150,
@@ -239,6 +248,13 @@ class SMSrecord extends PureComponent {
         dataIndex: 'status',
         // width: 160,
         ellipsis: true,
+        render: (key,row)=>{
+          if (key === '0') {
+            return (<Badge status="error" text="已关闭" />)
+          } else if(key === '1'){
+            return (<Badge status="success" text="已开启" />)
+          }
+        }
       },
       
       {
