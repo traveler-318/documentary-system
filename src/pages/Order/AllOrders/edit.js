@@ -162,6 +162,7 @@ class OrdersEdit extends PureComponent {
       values.id = detail.id;
       values.userAddress=`${selectedOptions}${values.userAddress}`;
       if (!err) {
+        values.productName = values.productType[2];
         values.productType = `${values.productType[0]}/${values.productType[1]}`;
         const params = {
           ...values
@@ -375,7 +376,7 @@ class OrdersEdit extends PureComponent {
                         },
                       ],
                       initialValue: detail.userAddress,
-                    })(<Input title={detail.userAddress} disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1') ? edit : true} placeholder="请输入收货地址" />)}
+                    })(<Input title={detail.userAddress} disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2') ? edit : true} placeholder="请输入收货地址" />)}
                   </FormItem>
 {/*                  <FormItem {...formAllItemLayout} label="客戶状态">
                     {getFieldDecorator('userAddress', {
