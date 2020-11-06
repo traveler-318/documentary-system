@@ -427,7 +427,7 @@ class OrdersEdit extends PureComponent {
                       initialValue: detail.productType.split("/") ,
                     })(
                       <Cascader
-                        disabled={detail.productType  ? edit : true}
+                        disabled={edit}
                         options={productList}
                         fieldNames={{ label: 'value'}}
                         onChange={(value, selectedOptions)=>{
