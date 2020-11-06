@@ -101,7 +101,7 @@ class Text extends PureComponent {
   reactNode = () => {
     return(
       <div>
-        <p>物流一致直接勾选,不一致则按照格式存放粘贴,金额一致就输入,不一致按照格式填写姓名,电话,地址,金额,物流名称,物流单号 如没有相关数据请留空即可（但是逗号需要保留）</p>
+        <p>物流一致直接勾选,不一致则按照格式存放粘贴,金额一致就输入,不一致按照格式填写姓名,电话,地址,金额,物流名称,物流单号,SN设备号,创建时间 如没有相关数据请留空即可(但是逗号需要保留)</p>
         <p>示例：1、张三,18000000011,北京市丰台区西瓜路32号,100,顺丰速运,SF10010,0010ABC,2019-10-11 11:01:18</p>
         <p>2、李四,18000000012,北京市丰台区西瓜路33号,,,,,</p>
         <p>物流公司名称需要和物流公司下选项里面的名字保持一致</p>
@@ -185,6 +185,9 @@ class Text extends PureComponent {
                     onOk={this.onOk}
                   />
                 )}
+                <Tooltip
+                  title="订单统一创建时间"
+                ><Icon type='question-circle-o' style={{top:"2px"}} /></Tooltip>
               </FormItem>
               <FormItem {...formAllItemLayout} label="金额">
                 {getFieldDecorator('payAmount', {
@@ -197,9 +200,9 @@ class Text extends PureComponent {
               </FormItem>
               <FormItem {...formAllItemLayout} label="文本信息">
                 {getFieldDecorator('partText')(
-                  <TextArea rows={8} placeholder="示例：张三,18000000011,北京市丰台区西瓜路32号,100,顺丰速运,SF10010,0010ABC,2019-10-11 11:01:18" onChange={(e)=>this.onChange(e)} />
+                  <TextArea rows={8} placeholder="示例：张三,18000000011,北京市丰台区西瓜路32号,100,顺丰速运,SF10010,0010ABC,2019-10-11 11:01:18 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 姓名,电话,地址,金额,物流名称,物流单号,SN设备号,创建时间 如没有相关数据请留空即可(但是逗号需要保留)" onChange={(e)=>this.onChange(e)} />
                 )}
-                <Tooltip
+                <Tooltip 
                   overlayStyle={{
                     width:"380px",
                     maxWidth:"380px"
