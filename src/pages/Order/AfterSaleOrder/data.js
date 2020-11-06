@@ -49,14 +49,14 @@ export const ORDERTYPE = [
 ]
 // 订单来源
 export const ORDERSOURCE = [
-  {name:"新增",key:'1'},
-  {name:"导入",key:'2'},
-  {name:"H5扫码",key:'3'},
-  {name:"销售",key:'4'},
-  {name:"电销",key:'5'},
-  {name:"网销",key:'6'},
-  {name:"地推",key:'7'},
-  {name:"免押宝",key:'8'},
+  {name:"新增",key:1},
+  {name:"导入",key:2},
+  {name:"H5扫码",key:3},
+  {name:"销售",key:4},
+  {name:"电销",key:5},
+  {name:"网销",key:6},
+  {name:"地推",key:7},
+  {name:"免押宝",key:8},
 ]
 
 // 订单来源

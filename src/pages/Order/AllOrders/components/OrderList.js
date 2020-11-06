@@ -104,7 +104,7 @@ class OrderList extends PureComponent {
             ellipsis: true,
             render: (key)=>{
               return (
-                <div>{this.getText(key,ORDERSOURCE)} </div>
+                <div>{this.getText(parseInt(key),ORDERSOURCE)} </div>
               )
             }
         },
