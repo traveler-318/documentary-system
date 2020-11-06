@@ -421,7 +421,7 @@ class OrdersEdit extends PureComponent {
                   <FormItem {...formAllItemLayout} label="SN">
                     {getFieldDecorator('productCoding', {
                       initialValue: detail.productCoding,
-                    })(<Input disabled={detail.productCoding  ? edit : true} placeholder="" />)}
+                    })(<Input disabled={edit} placeholder="" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="产品类型">
                     {getFieldDecorator('productType', {
