@@ -82,6 +82,7 @@ class OrderList extends PureComponent {
         text = item.name
       }
     })
+    console.log(text)
     return text
   }
 

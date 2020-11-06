@@ -494,7 +494,7 @@ class OrdersEdit extends PureComponent {
                         getEditDetails={this.getEditDetails}
                       />
                     </TabPane>
-                    <TabPane tab={`订单(${orderListLength})`} key="2">
+                    <TabPane tab={`雷同订单(${orderListLength})`} key="2">
                       <OrderList
                         detail={detail}
                         orderDetail={orderDetail}
