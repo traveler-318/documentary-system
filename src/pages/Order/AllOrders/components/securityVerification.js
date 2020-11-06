@@ -26,6 +26,7 @@ class SecurityVerification extends PureComponent {
       timer:60,
       smsType:false,
       securityVerification:false,
+      loading:false
     };
   }
 
@@ -78,8 +79,14 @@ class SecurityVerification extends PureComponent {
                 message.error("请发送验证码");
                 return false;
             }
+            this.setState({
+              loading:true
+            })
             let param = {...this.props.param,...values}
             synbinding(param).then(res=>{
+              this.setState({
+                loading:false
+              })
                 if(res.code === 200){
                     message.success(res.msg);
                     this.props.handleCancelVerification("success");

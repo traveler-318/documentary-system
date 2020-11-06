@@ -200,6 +200,12 @@ class SMSrecord extends PureComponent {
 
     const columns = [
       {
+        title: '公司名称',
+        dataIndex: 'wechatId',
+        width: 150,
+        ellipsis: true,
+      },
+      {
         title: '客户姓名',
         dataIndex: 'userName',
         width: 150,

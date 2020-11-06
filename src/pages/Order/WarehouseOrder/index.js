@@ -102,6 +102,7 @@ class AllOrdersList extends PureComponent {
       detailsVisible:false,
       // 免押宝导入弹窗
       noDepositVisible:false,
+      confirmLoading: false,
       // SN激活导入弹窗
       excelVisible:false,
       // 文本导入弹窗
@@ -1174,6 +1175,7 @@ class AllOrdersList extends PureComponent {
         })
       }else{
         // return message.error('当前系统已经绑定您指定的同步账号,请联系管理员进行排查!');
+        const {confirmLoading} = this.state;
         Modal.confirm({
           title: '提醒',
           content: "当前系统已经绑定您指定的同步账号,确定同步数据吗？",
@@ -1181,14 +1183,28 @@ class AllOrdersList extends PureComponent {
           okType: 'primary',
           cancelText: '取消',
           keyboard:false,
-          onOk() {
-            syndata().then(res=>{
-              if(res.code === 200){
-                message.success(res.msg);
-              }else{
-                message.error(res.msg);
-              }
+          onOk:() => {
+            if(confirmLoading){
+              return message.info("请勿连续操作，请等待");
+            }
+            this.setState({
+              confirmLoading:true
             })
+            return new Promise((resolve, reject) => {
+              syndata().then(res=>{
+                this.setState({
+                  confirmLoading:false
+                })
+                if(res.code === 200){
+                  message.success(res.msg);
+                  resolve();
+                }else{
+                  message.error(res.msg);
+                  reject();
+                }
+              })
+            }).catch(() => console.log('Oops errors!'));
+            
           },
           onCancel() {},
         });

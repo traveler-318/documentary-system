@@ -276,7 +276,7 @@ class Register extends Component {
         
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
-            {getFieldDecorator('userName', {
+            {getFieldDecorator('wechatId', {
               rules: [
                 {
                   required: true,
@@ -285,9 +285,25 @@ class Register extends Component {
               ],
             })(
               <Input 
-              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              prefix={<Icon type="team" style={{ color: 'rgba(0,0,0,.25)' }} />}
               size="large" 
               placeholder={"请输入您的公司全名"} />
+            )}
+          </FormItem>
+          <FormItem>
+            {getFieldDecorator('userName', {
+              rules: [
+                {
+                  required: true,
+                  message: "请输入您的姓名",
+                },
+              ],
+            })(
+              <Input
+                size="large"
+                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder={"请输入您的姓名"}
+              />
             )}
           </FormItem>
           {/* <FormItem>
