@@ -425,7 +425,7 @@ class OrdersEdit extends PureComponent {
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="产品类型">
                     {getFieldDecorator('productType', {
-                      initialValue: detail.productType.split("/") ,
+                      initialValue: detail.productType?detail.productType.split("/"):detail.productType ,
                     })(
                       <Cascader
                         disabled={edit}
