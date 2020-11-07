@@ -47,7 +47,7 @@ class OrdersAdd extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
 
-        data.map(item=>{
+        data.list.map(item=>{
           if(item.notificationTypes === values.notificationTypes){
             return message.error("已存在此任务类型的任务，不能重复创建");
           }
