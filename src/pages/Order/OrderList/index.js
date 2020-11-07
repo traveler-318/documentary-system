@@ -24,7 +24,8 @@ import {
   getSalesmanLists,
   subscription,
   updateData,
-  salesmanList
+  salesmanList,
+  menuTab
 } from '../../../services/newServices/order';
 
 // getList as getSalesmanLists,
@@ -77,6 +78,7 @@ class AllOrdersList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      tabCode:[],
       // 反选数据
       selectedRowKeys:[],
       selectedRowKey:[],
@@ -317,8 +319,6 @@ class AllOrdersList extends PureComponent {
 
   // ============ 初始化数据 ===============
   componentWillMount() {
-    // this.getDataList();
-    // this.getSalesmanList();
 
     // 获取分组数据
     getSalesmangroup({
@@ -336,7 +336,41 @@ class AllOrdersList extends PureComponent {
       })
     })
 
-    this.getSalesman()
+    this.getSalesman();
+
+    console.log(this.props.match.params.id,"123")
+
+    // this.getMenuTab();
+    
+  }
+
+  getMenuTab = () => {
+
+    menuTab({
+      menuType:"3"
+    }).then(res=>{
+      
+      const tabCode = res.data.tabCode.split(",");
+      
+      let list = [];
+
+      for(let j=0; j<tabCode.length; j++){
+        tabCode[j] = tabCode[j] === "11" ? null : tabCode[j] ;
+        
+        for(let i=0; i<ORDERSTATUS.length; i++){
+          if(ORDERSTATUS[i].key === tabCode[j]) {
+            list.push({
+              name:ORDERSTATUS[i].name,
+              key:ORDERSTATUS[i].key,
+            })
+          }
+        }
+      }
+
+      this.setState({
+        tabCode:list
+      })
+    })
   }
 
   // 销售默认全部列表
