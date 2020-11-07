@@ -379,7 +379,7 @@ class Survey extends PureComponent {
               <Button
                 type="primary"
                 onClick={this.handleSubmit}
-              >提交</Button>
+              >写跟进</Button>
             </div>
           </div>
         </div>

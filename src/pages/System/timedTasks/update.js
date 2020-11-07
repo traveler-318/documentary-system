@@ -127,6 +127,7 @@ class OrdersAdd extends PureComponent {
                   <Select 
                     style={{ width: 180 }}
                     placeholder={"请选择通知类型"}
+                    disabled
                   >
                     {notificationTypes.map(item=>{
                       return (<Option value={item.name}>{item.name}</Option>)

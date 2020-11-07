@@ -256,13 +256,13 @@ class SMSrecord extends PureComponent {
         ellipsis: true,
       },
       {
-        title: '开始时间',
+        title: '提醒时间',
         dataIndex: 'noticeHours',
         width: 150,
         ellipsis: true,
       },
       {
-        title: '启动间隔时间',
+        title: '启动时间',
         dataIndex: 'startInterval',
         width: 100,
         ellipsis: true,
