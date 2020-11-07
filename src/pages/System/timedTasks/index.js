@@ -10,6 +10,7 @@ import Grid from '../../../components/Sword/Grid';
 import func from '../../../utils/Func';
 import {
   getList,
+  updateStatus
 } from '../../../services/newServices/timedTasks';
 import { setListData } from '../../../utils/publicMethod';
 import Add from './add';
@@ -263,19 +264,19 @@ class SMSrecord extends PureComponent {
       {
         title: '启动间隔时间',
         dataIndex: 'startInterval',
-        width: 150,
+        width: 100,
         ellipsis: true,
       },
       {
         title: '时间间隔',
         dataIndex: 'timeInterval',
-        width: 150,
+        width: 100,
         ellipsis: true,
       },
       {
         title: '重复次数',
         dataIndex: 'repeatNumber',
-        width: 150,
+        width: 100,
         ellipsis: true,
       },
       {
