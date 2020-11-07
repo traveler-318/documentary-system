@@ -101,6 +101,7 @@ class AllOrdersList extends PureComponent {
       detailsVisible:false,
       // 日志弹窗
       journalVisible:false,
+      journalList:{},
       // 免押宝导入弹窗
       noDepositVisible:false,
       confirmLoading: false,
@@ -114,7 +115,6 @@ class AllOrdersList extends PureComponent {
       OrderImportVisible:false,
       // 首次打印提示弹框
       LogisticsAlertVisible:false,
-      journalList:{},
       tips:[],
       salesmangroup:[],
       countSice:0,

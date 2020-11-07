@@ -33,7 +33,6 @@ class Background extends PureComponent {
         pageSize:10,
         current:1
       },
-      pagination: {},
       handleImgDetailsVisible:false,
       visible:false,
     };
@@ -50,14 +49,83 @@ class Background extends PureComponent {
       console.log(res)
 
       if(res.code === 200){
+        const data=res.data
+        const list=[];
+
+        if(data.thereviewUser){
+          const item={};
+          item.name=data.thereviewUser
+          item.time=data.thereviewTime
+          item.content="初审"
+          list.push(item)
+        }
+        if(data.approvedUser){
+          const item={};
+          item.name=data.approvedUser
+          item.time=data.approvedTime
+          item.content="终审"
+          list.push(item)
+        }
+        if(data.deliveryUser){
+          const item={};
+          item.name=data.deliveryUser
+          item.time=data.deliveryTime
+          item.content="已发货"
+          list.push(item)
+        }
+        if(data.onthewayUser){
+          const item={};
+          item.name=data.onthewayUser
+          item.time=data.onthewayTime
+          item.content="在途中"
+          list.push(item)
+        }
+        if(data.receivingUser){
+          const item={};
+          item.name=data.receivingUser
+          item.time=data.receivingTime
+          item.content="已签收"
+          list.push(item)
+        }
+        if(data.ongoingUser){
+          const item={};
+          item.name=data.ongoingUser
+          item.time=data.ongoingTime
+          item.content="跟进中"
+          list.push(item)
+        }
+        if(data.activationUser){
+          const item={};
+          item.name=data.activationUser
+          item.time=data.activationTime
+          item.content="已激活"
+          list.push(item)
+        }
+        if(data.refundUser){
+          const item={};
+          item.name=data.refundUser
+          item.time=data.refundTime
+          item.content="已退回"
+          list.push(item)
+        }
+        if(data.cancelUser){
+          const item={};
+          item.name=data.cancelUser
+          item.time=data.cancelTime
+          item.content="已取消"
+          list.push(item)
+        }
+
+        if(data.overdueUser){
+          const item={};
+          item.name=data.overdueUser
+          item.time=data.overdueTime
+          item.content="已过期"
+          list.push(item)
+        }
         this.setState({
           data:{
-            list:res.data.records
-          },
-          pagination:{
-            current: res.data.current,
-            pageSize: res.data.size,
-            total: res.data.total
+            list:list
           }
         })
       }else {
@@ -86,7 +154,6 @@ class Background extends PureComponent {
 
     const {
       data,
-      pagination,
       } = this.state;
 
     console.log(data)
@@ -106,20 +173,22 @@ class Background extends PureComponent {
     const columns=[
       {
         title: '操作人',
-        dataIndex: 'receivingUser',
+        dataIndex: 'name',
         width: 200,
       },
       {
         title: '操作内容',
-        dataIndex: 'link',
+        dataIndex: 'content',
         width: 200,
       },
       {
         title: '操作时间',
-        dataIndex: 'deliveryTime',
+        dataIndex: 'time',
         width: 200,
         render: (res) => {
-
+          return(
+            moment(res).format('YYYY-MM-DD HH:mm:ss')
+          )
         },
       }
     ]
@@ -140,7 +209,7 @@ class Background extends PureComponent {
             </Button>,
           ]}
         >
-          <Table rowKey={(record, index) => `${index}`} dataSource={data.list} pagination={pagination} columns={columns} onChange={this.handleSearch} />
+          <Table rowKey={(record, index) => `${index}`} dataSource={data.list} pagination={false} columns={columns} onChange={this.handleSearch} />
         </Modal>
       </div>
     );
