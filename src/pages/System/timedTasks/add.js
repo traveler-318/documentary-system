@@ -58,7 +58,7 @@ class OrdersAdd extends PureComponent {
         createData(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
-            router.push('/system/timedTasks');
+            this.props.handleCancelAdd("getList");
           }else{
             message.error(res.msg);
           }
@@ -76,6 +76,8 @@ class OrdersAdd extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
+      handleCancelAdd,
+      handleAddVisible
     } = this.props;
 
     const {
@@ -96,76 +98,70 @@ class OrdersAdd extends PureComponent {
       },
     };
 
-    const action = (
-      <Button type="primary" onClick={this.handleSubmit} loading={loading}>
-        提交
-      </Button>
-    );
 
     return (
-      <Panel title="新增" back="/system/timedTasks" action={action}>
+      <Modal
+        title="新增"
+        visible={handleAddVisible}
+        width={500}
+        onCancel={handleCancelAdd}
+        footer={[
+          <Button key="back" onClick={handleCancelAdd}>
+            取消
+          </Button>,
+          <Button type="primary" loading={loading} onClick={this.handleSubmit}>
+            确定
+          </Button>,
+        ]}
+      >
         <Form style={{ marginTop: 8 }}>
-          <Card>
-            <Row gutter={24}>
-              <Col span={12}>
-               
-                {/* <FormItem {...formAllItemLayout} label="定时任务">
-                  {getFieldDecorator('status')(
-                      <Switch />
-                  )}
-                </FormItem> */}
-
-                <FormItem {...formAllItemLayout} label="通知类型">
-                  {getFieldDecorator('notificationTypes', {
-                      initialValue: "定时逾期提醒",
-                    })(
-                      <Select 
-                        style={{ width: 180 }}
-                        placeholder={"请选择通知类型"}
-                      >
-                        {notificationTypes.map(item=>{
-                          return (<Option value={item.name}>{item.name}</Option>)
-                        })}
-                      </Select>
-                  )}
-                </FormItem>
-
-                <FormItem {...formAllItemLayout} label="启动间隔时间">
-                  {getFieldDecorator('startInterval', {
-                      initialValue: 1,
-                    })( 
-                    <InputNumber min={1} onChange={(value)=>this.numberChange(value,"startInterval")} />
-                  )}
-                  &nbsp;&nbsp;签收后第{startInterval}天开始执行
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="时间间隔">
-                  {getFieldDecorator('timeInterval', {
-                      initialValue: 1,
-                    })(
-                    <InputNumber min={1} onChange={(value)=>this.numberChange(value,"timeInterval")}/>
-                  )}
-                  &nbsp;&nbsp;每隔{timeInterval}天执行一次
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="重复次数">
-                  {getFieldDecorator('repeatNumber', {
-                      initialValue: 1,
-                    })(
-                    <InputNumber min={1} onChange={(value)=>this.numberChange(value,"repeatNumber")}/>
-                  )}
-                  &nbsp;&nbsp;最多执行{repeatNumber}次
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="提醒时间">
-                  {getFieldDecorator('noticeHours', {
-                      initialValue: initialTimeValue,
-                    })(
-                    <TimePicker format={format} />
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-          </Card>
+          <FormItem {...formAllItemLayout} label="通知类型">
+            {getFieldDecorator('notificationTypes', {
+                initialValue: "定时逾期提醒",
+              })(
+                <Select 
+                  style={{ width: 180 }}
+                  placeholder={"请选择通知类型"}
+                >
+                  {notificationTypes.map(item=>{
+                    return (<Option value={item.name}>{item.name}</Option>)
+                  })}
+                </Select>
+            )}
+          </FormItem>
+          <FormItem {...formAllItemLayout} label="启动间隔时间">
+            {getFieldDecorator('startInterval', {
+                initialValue: 1,
+              })( 
+              <InputNumber min={1} onChange={(value)=>this.numberChange(value,"startInterval")} />
+            )}
+            &nbsp;&nbsp;签收后第{startInterval}天开始执行
+          </FormItem>
+          <FormItem {...formAllItemLayout} label="时间间隔">
+            {getFieldDecorator('timeInterval', {
+                initialValue: 1,
+              })(
+              <InputNumber min={1} onChange={(value)=>this.numberChange(value,"timeInterval")}/>
+            )}
+            &nbsp;&nbsp;每隔{timeInterval}天执行一次
+          </FormItem>
+          <FormItem {...formAllItemLayout} label="重复次数">
+            {getFieldDecorator('repeatNumber', {
+                initialValue: 1,
+              })(
+              <InputNumber min={1} onChange={(value)=>this.numberChange(value,"repeatNumber")}/>
+            )}
+            &nbsp;&nbsp;最多执行{repeatNumber}次
+          </FormItem>
+          <FormItem {...formAllItemLayout} label="提醒时间">
+            {getFieldDecorator('noticeHours', {
+                initialValue: initialTimeValue,
+              })(
+              <TimePicker format={format} />
+            )}
+          </FormItem>
         </Form>
-      </Panel>
+      </Modal>
     );
   }
 }

@@ -12,9 +12,10 @@ import {
   getList,
 } from '../../../services/newServices/timedTasks';
 import { setListData } from '../../../utils/publicMethod';
-import Edit from './add'
+import Add from './add';
+import Update from './update'
 
-
+const { confirm } = Modal;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -58,7 +59,8 @@ class SMSrecord extends PureComponent {
       ],
       loading:false,
       handleEditVisible:false,
-      details:'',
+      handleAddVisible:false,
+      details:{},
       params:{
         size:10,
         current:1
@@ -89,13 +91,10 @@ class SMSrecord extends PureComponent {
 
   // 修改弹框
   handleEdit = (row) => {
-    
-    const { dispatch } = this.props;
-    dispatch({
-      type: `globalParameters/setDetailData`,
-      payload: row,
-    });
-    router.push('/system/timedTasks/update');
+    this.setState({
+      details:row,
+      handleEditVisible:true,
+    })
   }
 
   handleCancelEdit = (type) => {
@@ -107,6 +106,21 @@ class SMSrecord extends PureComponent {
     })
   }
 
+  // 新增
+  handleAdd = () => {
+    this.setState({
+      handleEditVisible:true,
+    })
+  }
+
+  handleCancelAdd = (type) => {
+    if(type === "getList"){
+      this.getDataList();
+    }
+    this.setState({
+      handleAddVisible:false
+    })
+  }
 
   // ============ 查询 ===============
   handleSearch = params => {
@@ -183,13 +197,36 @@ class SMSrecord extends PureComponent {
 
   renderLeftButton = () => (
     <>
-      <Button type="primary" icon="plus" onClick={()=>{
-        router.push(`/system/timedTasks/add`);
-      }}>任务</Button>
+      <Button type="primary" onClick={this.handleAdd}>配置任务</Button>
     </>
   );
   
- 
+  handleStatusChange = (checked,row) => {
+    confirm({
+      title: '提示',
+      content: '是否要修改该状态?',
+      okText: "确定",
+      cancelText: "取消",
+      onOk:()=>{
+        let key = checked ? '1' : '0';
+        let param = {};
+        param['status'] = key;
+        param.taskId = row.taskId
+        updateStatus(param,row.id).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+            this.getDataList();
+          }else{
+            message.error(res.msg);
+            this.getDataList();
+          }
+        })
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
 
   render() {
     const code = 'smsrecord';
@@ -198,7 +235,13 @@ class SMSrecord extends PureComponent {
       form,
     } = this.props;
 
-    const {data,loading,handleEditVisible,details} = this.state;
+    const {
+      data,
+      loading,
+      handleEditVisible,
+      details,
+      handleAddVisible
+    } = this.state;
 
     const columns = [
       {
@@ -207,24 +250,6 @@ class SMSrecord extends PureComponent {
         width: 150,
         ellipsis: true,
       },
-      // {
-      //   title: '姓名',
-      //   dataIndex: 'userPhone',
-      //   width: 150,
-      //   ellipsis: true,
-      // },
-      // {
-      //   title: '手机号',
-      //   dataIndex: 'wechatId',
-      //   width: 150,
-      //   ellipsis: true,
-      // },
-      // {
-      //   title: '操作人员',
-      //   dataIndex: 'sourceType',
-      //   width: 200,
-      //   ellipsis: true,
-      // },
       {
         title: '通知类型',
         dataIndex: 'notificationTypes',
@@ -238,7 +263,19 @@ class SMSrecord extends PureComponent {
         ellipsis: true,
       },
       {
-        title: '执行次数',
+        title: '启动间隔时间',
+        dataIndex: 'startInterval',
+        width: 150,
+        ellipsis: true,
+      },
+      {
+        title: '时间间隔',
+        dataIndex: 'timeInterval',
+        width: 150,
+        ellipsis: true,
+      },
+      {
+        title: '重复次数',
         dataIndex: 'repeatNumber',
         width: 150,
         ellipsis: true,
@@ -249,11 +286,9 @@ class SMSrecord extends PureComponent {
         // width: 160,
         ellipsis: true,
         render: (key,row)=>{
-          if (key === '0') {
-            return (<Badge status="error" text="已关闭" />)
-          } else if(key === '1'){
-            return (<Badge status="success" text="已开启" />)
-          }
+          return (
+            <Switch checked={key === '1' ? true : false} onChange={(checked)=>{this.handleStatusChange(checked,row)}} />
+          )
         }
       },
       
@@ -287,12 +322,19 @@ class SMSrecord extends PureComponent {
           scroll={{ x: 1000 }}
           renderLeftButton={()=>this.renderLeftButton()}
         />
-        {/* 详情 */}
+        {/* 修改 */}
         {handleEditVisible?(
-          <Edit
+          <Update
             handleEditVisible={handleEditVisible}
             details={details}
             handleCancelEdit={this.handleCancelEdit}
+          />
+        ):""}
+        {/* 新增 */}
+        {handleAddVisible?(
+          <Add
+            handleAddVisible={handleAddVisible}
+            handleCancelAdd={this.handleCancelAdd}
           />
         ):""}
       </Panel>
