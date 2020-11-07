@@ -172,13 +172,13 @@ class Background extends PureComponent {
 
     const columns=[
       {
-        title: '操作人',
-        dataIndex: 'name',
+        title: '操作类型(首次) ',
+        dataIndex: 'content',
         width: 200,
       },
       {
-        title: '操作内容',
-        dataIndex: 'content',
+        title: '操作人',
+        dataIndex: 'name',
         width: 200,
       },
       {
