@@ -169,6 +169,7 @@ class OrdersEdit extends PureComponent {
         const params = {
           ...values
         };
+        const _this=this;
         if(params.logisticsCompany !== detail.logisticsCompany || params.logisticsNumber !== detail.logisticsNumber){
           if(detail.logisticsStatus){
             Modal.confirm({
@@ -188,12 +189,12 @@ class OrdersEdit extends PureComponent {
                   updateData(params).then(res=>{
                     if(res.code === 200){
                       message.success(res.msg);
-                      this.setState({
+                      _this.setState({
                         edit:true,
                         primary:"primary",
                         primary1:''
                       })
-                      this.getEditDetails()
+                      _this.getEditDetails()
                     }else {
                       message.error(res.msg);
                     }
