@@ -658,6 +658,22 @@ export default [
         ],
       },
       {
+        path: '/orders',
+        routes: [
+          {
+            path: '/orders/orderList',
+            routes: [
+              { path: '/orders/orderList', redirect: '/orders/orderList/list' },
+              { path: '/orders/orderList/list', component: './Order/OrderList/index' },
+              { path: '/orders/orderList/add', component: './Order/OrderList/add' },
+              { path: '/orders/orderList/edit/:id', component: './Order/OrderList/edit' },
+              { path: '/orders/orderList/logisticsConfiguration', component: './Order/OrderList/components/logisticsConfiguration' },
+              { path: '/orders/orderList/img', component: './Order/OrderList/img' },
+            ],
+          },
+        ],
+      },
+      {
         path: '/logistics',
         routes: [
           {

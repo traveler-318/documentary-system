@@ -7,6 +7,13 @@ export default {
   'menu.order.smsrecord': '短信记录',
   'menu.order.mySubordinates': '我的下属',
 
+  'menu.orders': '订单管理',
+  'menu.orders.orderList': '全部订单',
+  'menu.orders.salesmanOrder': '销售订单',
+  'menu.orders.warehouseOrder': '仓库订单',
+  'menu.orders.afterSaleOrder': '售后订单',
+  // 'menu.order.orderList': '全部订单',
+
   'menu.logistics': '物流配置',
   'menu.logistics.authority': '授权配置',
   'menu.logistics.faceSheet': '打印模板',
