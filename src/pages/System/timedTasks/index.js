@@ -107,7 +107,7 @@ class SMSrecord extends PureComponent {
   // 新增
   handleAdd = () => {
     this.setState({
-      handleEditVisible:true,
+      handleAddVisible:true,
     })
   }
 
