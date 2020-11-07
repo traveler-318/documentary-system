@@ -41,6 +41,7 @@ import { getAdditionalinformationStatus } from '../../../services/newServices/lo
 
 import Excel from './components/excel';
 import Text from './components/text';
+import Journal from '../components/journal';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -100,6 +101,8 @@ class AllOrdersList extends PureComponent {
       LogisticsConfigVisible:false,
       // 详情弹窗
       detailsVisible:false,
+      // 日志弹窗
+      journalVisible:false,
       // 免押宝导入弹窗
       noDepositVisible:false,
       confirmLoading: false,
@@ -110,6 +113,7 @@ class AllOrdersList extends PureComponent {
       // 订单导入弹窗
       OrderImportVisible:false,
       salesmangroup:[],
+      journalList:{},
       countSice:0,
       columns:[
         {
@@ -268,16 +272,16 @@ class AllOrdersList extends PureComponent {
           title: '操作',
           key: 'operation',
           fixed: 'right',
-          width: 110,
+          width: 150,
           render: (text,row) => {
               return(
                   <div>
                     <a onClick={()=>this.handleEdit(row)}>详情</a>
                     <Divider type="vertical" />
                     {
-                      row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<a onClick={()=>this.logisticsSubscribe(row)}>订阅</a>):''
+                      row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
                     }
-
+                    <a onClick={()=>this.handleJournal(row)}>日志</a>
                     {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
 
                       {/* <a>跟进</a>
@@ -1412,6 +1416,20 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  // 打开日志弹窗
+  handleJournal = (row) => {
+    this.setState({
+      journalVisible:true,
+      journalList:row
+    })
+  }
+  // 关闭日志弹窗
+  handleCancelJournal = () => {
+    this.setState({
+      journalVisible:false
+    })
+  }
+
   // 打开物流弹窗
   handleShowLogistics = (data) => {
     const { dispatch } = this.props;
@@ -1560,6 +1578,8 @@ handleOrderImportCancel = () =>{
       selectedRowKeys,
       noDepositVisible,
       confirmTagVisible,
+      journalVisible,
+      journalList,
       currentList,
       textVisible,
       excelVisible,
@@ -1656,6 +1676,14 @@ handleOrderImportCancel = () =>{
           <Details
             detailsVisible={detailsVisible}
             handleCancelDetails={this.handleCancelDetails}
+          />
+        ):""}
+        {/* 日志弹框 */}
+        {journalVisible?(
+          <Journal
+            journalVisible={journalVisible}
+            journalList={journalList}
+            handleCancelJournal={this.handleCancelJournal}
           />
         ):""}
 

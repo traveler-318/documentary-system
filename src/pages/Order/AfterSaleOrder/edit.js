@@ -161,9 +161,11 @@ class OrdersEdit extends PureComponent {
       })
       values.id = detail.id;
       values.userAddress=`${selectedOptions}${values.userAddress}`;
-      if (!err) {
+      if(values.productType && values.productType != ""){
         values.productName = values.productType[2];
         values.productType = `${values.productType[0]}/${values.productType[1]}`;
+      }
+      if (!err) {
         const params = {
           ...values
         };
@@ -363,7 +365,7 @@ class OrdersEdit extends PureComponent {
                         <Cascader
                           // defaultValue={[detail.province, detail.city, detail.area]}
                           options={CITY}
-                          disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1') ? edit : true}
+                          disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2') ? edit : true}
                           onChange={this.onChange}
                         />
                       )}
@@ -376,7 +378,7 @@ class OrdersEdit extends PureComponent {
                           },
                         ],
                         initialValue: detail.userAddress,
-                      })(<Input title={detail.userAddress} disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true} placeholder="请输入收货地址" />)}
+                      })(<Input title={detail.userAddress} disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2') ? edit : true} placeholder="请输入收货地址" />)}
                     </FormItem>
                     {/*                  <FormItem {...formAllItemLayout} label="客戶状态">
                     {getFieldDecorator('userAddress', {
@@ -425,7 +427,7 @@ class OrdersEdit extends PureComponent {
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="产品类型">
                       {getFieldDecorator('productType', {
-                        initialValue: detail.productType?detail.productType.split("/"):detail.productType,
+                        initialValue: detail.productType?detail.productType.split("/"):null,
                       })(
                         <Cascader
                           disabled={edit}
@@ -449,9 +451,7 @@ class OrdersEdit extends PureComponent {
                       })(
                         <Select
                           style={{height:45,float:"right"}}
-                          disabled={
-                            (!detail.logisticsStatus)
-                              ? edit : true}
+                          disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
                           placeholder={"请选择物流公司"}>
                           {Object.keys(LOGISTICSCOMPANY).map(key=>{
                             return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
@@ -463,7 +463,7 @@ class OrdersEdit extends PureComponent {
                       {getFieldDecorator('logisticsNumber', {
                         initialValue: detail.logisticsNumber,
                       })(<Input
-                        disabled={!detail.logisticsStatus ? edit : true}
+                        disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
                         placeholder="请输入物流单号" />)}
                     </FormItem>
 

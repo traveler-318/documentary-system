@@ -41,6 +41,7 @@ import { getAdditionalinformationStatus } from '../../../services/newServices/lo
 import Excel from './components/excel';
 import Text from './components/text';
 import OrderImport from './components/orderImport';
+import Journal from '../components/journal';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -108,6 +109,9 @@ class AllOrdersList extends PureComponent {
       textVisible:false,
       // 订单导入弹窗
       OrderImportVisible:false,
+      // 日志弹窗
+      journalVisible:false,
+      journalList:{},
       salesmangroup:[],
       menuType:"1",
       countSice:0,
@@ -268,15 +272,16 @@ class AllOrdersList extends PureComponent {
           title: '操作',
           key: 'operation',
           fixed: 'right',
-          width: 110,
+          width: 150,
           render: (text,row) => {
               return(
                   <div>
                     <a onClick={()=>this.handleEdit(row)}>详情</a>
                     <Divider type="vertical" />
                     {
-                      row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<a onClick={()=>this.logisticsSubscribe(row)}>订阅</a>):''
+                      row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
                     }
+                    <a onClick={()=>this.handleJournal(row)}>日志</a>
 
                     {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
 
@@ -1192,6 +1197,20 @@ class AllOrdersList extends PureComponent {
     </>
   );
 
+  // 打开日志弹窗
+  handleJournal = (row) => {
+    this.setState({
+      journalVisible:true,
+      journalList:row
+    })
+  }
+  // 关闭日志弹窗
+  handleCancelJournal = () => {
+    this.setState({
+      journalVisible:false
+    })
+  }
+
   // 物流订阅
   logisticsSubscribe =(row) =>{
     console.log(row)
@@ -1518,6 +1537,8 @@ class AllOrdersList extends PureComponent {
       selectedRowKeys,
       noDepositVisible,
       confirmTagVisible,
+      journalVisible,
+      journalList,
       currentList,
       textVisible,
       excelVisible,
@@ -1611,6 +1632,14 @@ class AllOrdersList extends PureComponent {
           <Details
             detailsVisible={detailsVisible}
             handleCancelDetails={this.handleCancelDetails}
+          />
+        ):""}
+        {/* 日志弹框 */}
+        {journalVisible?(
+          <Journal
+            journalVisible={journalVisible}
+            journalList={journalList}
+            handleCancelJournal={this.handleCancelJournal}
           />
         ):""}
 
