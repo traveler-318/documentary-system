@@ -54,9 +54,7 @@ class SMSrecord extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:[
-
-      ],
+      data:[],
       loading:false,
       handleEditVisible:false,
       handleAddVisible:false,
@@ -335,6 +333,7 @@ class SMSrecord extends PureComponent {
           <Add
             handleAddVisible={handleAddVisible}
             handleCancelAdd={this.handleCancelAdd}
+            data={data}
           />
         ):""}
       </Panel>

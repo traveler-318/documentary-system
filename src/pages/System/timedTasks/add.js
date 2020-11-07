@@ -43,9 +43,15 @@ class OrdersAdd extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    const { form } = this.props;
+    const { form, data } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+
+        data.map(item=>{
+          if(item.notificationTypes === values.notificationTypes){
+            return message.error("已存在此任务类型的任务，不能重复创建");
+          }
+        })
 
         values.deptId = getCookie("dept_id");
         values.tenantId = getCookie("tenantId");
