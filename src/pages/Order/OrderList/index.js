@@ -341,8 +341,15 @@ class AllOrdersList extends PureComponent {
     console.log(this.props.match.params.id,"123")
 
     // this.getMenuTab();
-    
   }
+
+  componentWillReceiveProps(nextProps,preProps) {
+    console.log(nextProps,preProps,this.props)
+    // if (nextProps.location.hash !== this.props.location.hash) {
+      // window.leftMenu.forceUpdate(); //当路由不同时，强制更新左边栏组件
+    // }
+  }
+
 
   getMenuTab = () => {
 
@@ -1613,7 +1620,6 @@ class AllOrdersList extends PureComponent {
         <div className={styles.ordersTabs}>
           <Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange} style={{height:59}}>
             {ORDERSTATUS.map(item=>{
-              console.log(item.key,params.confirmTag,"123456")
               return (
                 <TabPane tab={
                   <span>
