@@ -3,6 +3,7 @@ import { Form, Input, Card, Row, Col, Button, Switch, Select, TimePicker, messag
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
+import { getCookie } from '../../../utils/support';
 
 const format = 'HH:mm';
 import Panel from '../../../components/Panel';
@@ -57,7 +58,9 @@ class OrdersAdd extends PureComponent {
         values.tenantId = detail.tenantId;
         values.id = detail.id;
         values.status = values.status ? '1' : '0';
-
+        values.deptId = getCookie("dept_id");
+        values.tenantId = getCookie("tenantId");
+        
         values.noticeHours = moment(values.noticeHours).format(format)
 
         console.log(values,"提交数据");
