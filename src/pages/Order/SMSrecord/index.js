@@ -187,8 +187,9 @@ class SMSrecord extends PureComponent {
         width: 100,
         render: (res) => {
           return(
-            <span>{res == 'true' ?"成功":"失败"}</span>
-          
+            <>
+              {res === 'true' ?<span>成功</span>:<span style={{color:"red"}}>失败</span>}
+            </>
           )
         },
       },
