@@ -60,6 +60,7 @@ class OrdersAdd extends PureComponent {
         values.status = values.status ? '1' : '0';
         values.deptId = getCookie("dept_id");
         values.tenantId = getCookie("tenantId");
+        values.taskId = detail.taskId;
         
         values.noticeHours = moment(values.noticeHours).format(format)
 
