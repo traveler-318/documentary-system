@@ -174,12 +174,12 @@ class Background extends PureComponent {
       {
         title: '操作类型(首次) ',
         dataIndex: 'content',
-        width: 200,
+        width: 140,
       },
       {
         title: '操作人',
         dataIndex: 'name',
-        width: 200,
+        width: 140,
       },
       {
         title: '操作时间',
