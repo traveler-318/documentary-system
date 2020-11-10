@@ -133,6 +133,31 @@ class AllOrdersList extends PureComponent {
           ellipsis: true,
         },
         {
+          title: '订单状态',
+          dataIndex: 'confirmTag',
+          width: 100,
+          render: (key,row)=>{
+            // 待审核、已激活、已取消、已退回-不可切换状态
+            if(key == '0' || key == '7' || key == '8' || key == '9'){
+              return (
+                <div>
+                  <Tag color={this.getORDERSCOLOR(key)}>
+                    {this.getORDERSTATUS(key)}
+                  </Tag>
+                </div>
+              )
+            }else{
+              return (
+                <div style={{cursor: 'pointer'}} onClick={()=>{this.changeConfirmTag(row)}}>
+                  <Tag color={this.getORDERSCOLOR(key)}>
+                    {this.getORDERSTATUS(key)}
+                  </Tag>
+                </div>
+              )
+            }
+          }
+        },
+        {
           title: '订单状态(免押宝)',
           dataIndex: 'mianyaStatus',
           width: 130,
@@ -193,31 +218,7 @@ class AllOrdersList extends PureComponent {
           dataIndex: 'payAmount',
           width: 150,
         },
-        {
-          title: '订单状态',
-          dataIndex: 'confirmTag',
-          width: 100,
-          render: (key,row)=>{
-            // 待审核、已激活、已取消、已退回-不可切换状态
-            if(key == '0' || key == '7' || key == '8' || key == '9'){
-              return (
-                <div>
-                  <Tag color={this.getORDERSCOLOR(key)}>
-                    {this.getORDERSTATUS(key)}
-                  </Tag>
-                </div>
-              )
-            }else{
-              return (
-                <div style={{cursor: 'pointer'}} onClick={()=>{this.changeConfirmTag(row)}}>
-                  <Tag color={this.getORDERSCOLOR(key)}>
-                    {this.getORDERSTATUS(key)}
-                  </Tag>
-                </div>
-              )
-            }
-          }
-        },
+        
         {
           title: '订单类型',
           dataIndex: 'orderType',
