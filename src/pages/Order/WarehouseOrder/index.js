@@ -437,8 +437,8 @@ class AllOrdersList extends PureComponent {
     if (dateRange) {
       payload = {
         ...params,
-        startTime: dateRange ? func.format(dateRange[0], 'YYYY-MM-DD hh:mm:ss') : null,
-        endTime: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD hh:mm:ss') : null,
+        startTime: dateRange ? func.format(dateRange[0], 'YYYY-MM-DD HH:mm:ss') : null,
+        endTime: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD HH:mm:ss') : null,
       };
       payload.dateRange = null;
     }
