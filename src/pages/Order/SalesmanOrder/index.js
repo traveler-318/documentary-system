@@ -429,7 +429,6 @@ class AllOrdersList extends PureComponent {
     const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
-      confirmTag:tabKey === 'null' ? null : tabKey
     };
     if (dateRange) {
       payload = {
@@ -449,6 +448,11 @@ class AllOrdersList extends PureComponent {
       payload.orderSource = null;
     }
     payload.salesman=getCookie("userName");
+
+    payload = {
+      ...payload,
+      confirmTag:tabKey === 'null' ? null : tabKey
+    };
 
     delete payload.dateRange
     // console.log(payload,"params")
@@ -1579,7 +1583,6 @@ class AllOrdersList extends PureComponent {
         <div className={styles.ordersTabs}>
           <Tabs type="card" activeKey={tabKey} onChange={this.statusChange} style={{height:59}}>
             {tabCode.map(item=>{
-              console.log(item.key,params.confirmTag,"123456")
               return (
                 <TabPane tab={
                   <span>

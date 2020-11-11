@@ -372,7 +372,6 @@ class AllOrdersList extends PureComponent {
   // 获取业务员数据
   getSalesmanList = (value = "all_all") => {
     getSalesmanLists(value).then(res=>{
-      console.log(res)
       if(res.code === 200){
         const list={
           userName:"全部",
@@ -390,7 +389,6 @@ class AllOrdersList extends PureComponent {
 
   // 选择分组
   changeGroup = (value) => {
-    console.log(value,"value")
     if(value){
       this.getSalesmanList(value)
       this.setState({
@@ -407,10 +405,7 @@ class AllOrdersList extends PureComponent {
     const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
-      confirmTag:tabKey === 'null' ? null : tabKey
     };
-    console.log(params)
-    console.log(payload)
     if (dateRange) {
       payload = {
         ...params,
@@ -449,9 +444,12 @@ class AllOrdersList extends PureComponent {
       payload.salesman = payload.salesman
     }
 
+    payload = {
+      ...payload,
+      confirmTag:tabKey === 'null' ? null : tabKey
+    };
 
     delete payload.dateRange
-    // console.log(payload,"params")
     this.setState({
       params:payload
     },()=>{
@@ -467,8 +465,6 @@ class AllOrdersList extends PureComponent {
     const { getFieldDecorator } = form;
 
     const { salesmanList, salesmangroup } = this.state;
-
-    console.log(salesmanList)
 
     return (
       <div className={"default_search_form"}>
@@ -650,7 +646,6 @@ class AllOrdersList extends PureComponent {
         }
       }
       if(tips.length > 0 ){
-        console.log(tips)
         this.setState({
           tips:tips,
           LogisticsFirst:1,
@@ -702,7 +697,6 @@ class AllOrdersList extends PureComponent {
   }
 
   onChangeRadio = (e) => {
-    console.log('radio checked', e.target.value);
     this.setState({
       radioChecked: e.target.value
     })
@@ -710,7 +704,6 @@ class AllOrdersList extends PureComponent {
 
   handleSubmitConfirmTag = (e) => {
     const { radioChecked, currentList } = this.state;
-    console.log(radioChecked)
     if(!radioChecked){
       return message.error("请选择需要更改的状态");
     }
@@ -847,10 +840,6 @@ class AllOrdersList extends PureComponent {
 
 
   setAudit = (_data,confirmTag) => {
-    console.log({
-      confirmTag,
-      orderIdAndNo:_data
-    })
     toExamine({
       confirmTag,
       orderIdAndNo:_data
@@ -904,7 +893,6 @@ class AllOrdersList extends PureComponent {
 
   // 左侧操作按钮
   renderLeftButton = (tabKey) => {
-    console.log(tabKey,"tabKey")
     return (<>
       {/* 待审核 */}
         {tabKey === '0'?(
@@ -1049,10 +1037,7 @@ class AllOrdersList extends PureComponent {
   );
 
   handleMenuClick = (menuRow) => {
-    console.log('click', menuRow);
     const {selectedRows} = this.state;
-
-
   }
 
   // 删除
@@ -1098,7 +1083,6 @@ class AllOrdersList extends PureComponent {
             userName:item.userName,
           }
         })
-        console.log(_data)
         updateReminds(_data).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
@@ -1128,7 +1112,6 @@ class AllOrdersList extends PureComponent {
   importData = () => {
     // 检查是否设置同步账号
     synCheck().then(res=>{
-      console.log(res,"调用接口")
       if(res.code === 200 && !res.data){
         // 成功打开面押宝同步弹窗  - false=没有同步，就开打弹窗进行同步验证
         this.setState({
@@ -1200,7 +1183,6 @@ class AllOrdersList extends PureComponent {
 
   // 物流订阅
   logisticsSubscribe =(row) =>{
-    console.log(row);
     const list=this.getDataList;
     Modal.confirm({
       title: '提示',
@@ -1231,7 +1213,6 @@ class AllOrdersList extends PureComponent {
           confirmTag: row.confirmTag,
         }
         subscription(params).then(res=>{
-          console.log(res)
           if(res.code === 200){
             message.success(res.msg);
             list()
@@ -1247,7 +1228,6 @@ class AllOrdersList extends PureComponent {
   getText = (key, type) => {
     let text = ""
     type.map(item=>{
-      console.log(item.key === key,item.key,key)
       if(item.key === key){
         text = item.name
         return item.name
@@ -1345,13 +1325,11 @@ class AllOrdersList extends PureComponent {
       tabKey:key,
       params:_params
     },()=>{
-      console.log(this.state.params,"keykeykey")
       this.handleSearch(this.state.params)
     })
   }
 
   onSelectRow = (rows,keys) => {
-    console.log(rows,keys,"rows")
     this.setState({
       selectedRows: rows,
       selectedRowKeys: keys,
@@ -1552,8 +1530,6 @@ class AllOrdersList extends PureComponent {
       params
     } = this.state;
 
-    console.log(selectedRowKeys,"selectedRowKeys")
-
     const columns = this.state.columns.map((col, index) => ({
       ...col,
       onHeaderCell: column => ({
@@ -1581,7 +1557,6 @@ class AllOrdersList extends PureComponent {
         <div className={styles.ordersTabs}>
           <Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange} style={{height:59}}>
             {ORDERSTATUS.map(item=>{
-              console.log(item.key,params.confirmTag,"123456")
               return (
                 <TabPane tab={
                   <span>
