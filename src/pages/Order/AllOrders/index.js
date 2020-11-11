@@ -660,7 +660,7 @@ class AllOrdersList extends PureComponent {
       }
       let param = [];
       for(let i=0; i<selectedRows.length; i++){
-        param.push(selectedRows[i].id)
+        param.push(selectedRows[i].taskId)
       }
 
       if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
