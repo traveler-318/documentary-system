@@ -48,6 +48,8 @@ const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
 
+const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+
 let modal;
 
 const ResizeableTitle = props => {
@@ -84,7 +86,7 @@ class AllOrdersList extends PureComponent {
       salesmanList:[],
       data:{},
       loading:false,
-      params:{
+      params:localStorage.salesmanOrderParams ? JSON.parse(localStorage.salesmanOrderParams) : {
         size:10,
         current:1
       },
@@ -454,8 +456,10 @@ class AllOrdersList extends PureComponent {
       confirmTag:tabKey === 'null' ? null : tabKey
     };
 
+    localStorage.setItem("afterSaleOrderParams",JSON.stringify(payload));
+
     delete payload.dateRange
-    // console.log(payload,"params")
+    
     this.setState({
       params:payload
     },()=>{
@@ -470,22 +474,28 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, salesmangroup } = this.state;
+    const { salesmanList, salesmangroup, params } = this.state;
 
     return (
       <div className={"default_search_form"}>
         <Form.Item label="姓名">
-          {getFieldDecorator('userName')(<Input placeholder="请输入姓名" />)}
+          {getFieldDecorator('userName',{
+            initialValue:params.userName
+          })(<Input placeholder="请输入姓名" />)}
         </Form.Item>
         <Form.Item label="手机号">
-          {getFieldDecorator('userPhone')(<Input placeholder="请输入手机号" />)}
+          {getFieldDecorator('userPhone',{
+            initialValue:params.userPhone
+          })(<Input placeholder="请输入手机号" />)}
         </Form.Item>
         <Form.Item label="SN">
-              {getFieldDecorator('productCoding')(<Input placeholder="请输入SN" />)}
+              {getFieldDecorator('productCoding',{
+            initialValue:params.productCoding
+          })(<Input placeholder="请输入SN" />)}
             </Form.Item>
         <Form.Item label="订单类型">
           {getFieldDecorator('orderType', {
-              initialValue: null,
+              initialValue: params.orderType ? params.orderType :null,
             })(
             <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
               {ORDERTYPPE.map(item=>{
@@ -494,9 +504,9 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        {/*<Form.Item label="分组">
+        <Form.Item label="分组">
           {getFieldDecorator('groupId', {
-                initialValue: "全部",
+                initialValue: params.groupId ? params.groupId : "全部",
               })(
               <Select
                 placeholder={"请选择分组"}
@@ -511,7 +521,7 @@ class AllOrdersList extends PureComponent {
         </Form.Item>
         <Form.Item label="销售">
           {getFieldDecorator('salesman', {
-                initialValue: "全部",
+                initialValue: params.salesman ? params.salesman : "全部",
               })(
               <Select placeholder={"请选择销售"} style={{ width: 120 }}>
                 {salesmanList.map((item,index)=>{
@@ -519,10 +529,10 @@ class AllOrdersList extends PureComponent {
                 })}
               </Select>
             )}
-        </Form.Item>*/}
+        </Form.Item>
         <Form.Item label="订单来源">
           {getFieldDecorator('orderSource', {
-            initialValue: "全部",
+            initialValue: params.orderSource ? params.orderSource : "全部",
           })(
             <Select placeholder={"请选择订单来源"} style={{ width: 120 }}>
               {ORDERSOURCE.map(item=>{
@@ -533,7 +543,7 @@ class AllOrdersList extends PureComponent {
         </Form.Item>
         <Form.Item label="物流状态">
           {getFieldDecorator('logisticsStatus', {
-            initialValue: "全部",
+            initialValue: params.logisticsStatus ? params.logisticsStatus : "全部",
           })(
             <Select placeholder={"请选择物流状态"} style={{ width: 120 }}>
               {LOGISTICSSTATUS.map(item=>{
@@ -542,33 +552,10 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        {/* <Form.Item label="订单状态">
-          {getFieldDecorator('confirmTag', {
-            initialValue: "全部",
-          })(
-            <Select placeholder={"请选择订单状态"} style={{ width: 120 }}>
-              {ORDERSTATUS.map(item=>{
-                return (<Option value={item.key}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item> */}
-
           <div>
-            {/* <Form.Item label="时间类型">
-              {getFieldDecorator('timeType', {
-                initialValue: 1,
-              })(
-                <Select placeholder={"请选择时间类型"} style={{ width: 120 }}>
-                  {TIMETYPE.map(item=>{
-                    return (<Option value={item.key}>{item.name}</Option>)
-                  })}
-                </Select>
-              )}
-            </Form.Item> */}
             <Form.Item label="下单时间">
               {getFieldDecorator('dateRange', {
-                initialValue: null,
+                initialValue:params.startTime ? [func.moment(params.startTime, dateFormat), func.moment(params.endTime, dateFormat)]: null,
               })(
                 <RangePicker showTime size={"default"} />
               )}

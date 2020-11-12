@@ -22,7 +22,9 @@ import {
   logisticsSubscription,
   getDetails,
   productTreelist,
-  logisticsPrintRequest
+  logisticsPrintRequest,
+  localPrinting,
+  logisticsRepeatPrint,
 } from '../../../../services/newServices/order'
 import {
   LOGISTICSCOMPANY,
@@ -359,7 +361,7 @@ class LogisticsConfiguration extends PureComponent {
   handlePrinting = (e) => {
     const { form } = this.props;
     const { detail,localPrintStatus, currentIndex } = this.state;
-    if(!detail.taskId){
+    if(!detail.taskId){ 
        form.validateFieldsAndScroll((err, values) => {
          if(!values.logisticsCompany){
            values.logisticsCompany=null
@@ -431,12 +433,43 @@ class LogisticsConfiguration extends PureComponent {
         }
       });
     }else{
-      message.error("你已经打印过了")
+      message.error("你已经打印过了");
+      return false;
+      const  tips=[];
+      const  tips1=[];
+      // 当前时间戳
+      const timestamp = (new Date()).getTime();
+      const timeInterval = 24 * 60 * 60 * 1000 * 2;
+
+      const time = timestamp - (new Date(listID[currentIndex].taskCreateTime)).getTime();
+      if( time > timeInterval){
+        message.info(listID[currentIndex].userName+"客户的订单 距离首次时间超过2天 禁止打印！");
+        return false
+      }
+      
+      if(listID[currentIndex].logisticsPrintType === "1" || listID[currentIndex].logisticsPrintType === "2"){
+          // 本地打印
+          localPrinting({
+            id:listID[currentIndex].id,
+            logisticsPrintType:listID[currentIndex].logisticsPrintType
+          }).then(res=>{
+            if(res.code === 200){
+              sessionStorage.setItem('imgBase64', res.data)
+              window.open(`#/order/allOrders/img`);
+            }else{
+              message.error(res.msg);
+            }
+          })
+      }else{
+        logisticsRepeatPrint([listID[currentIndex].taskId]).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+          }
+        })
+      }
+
     }
   }
-
-  handleChange = value => {
-  };
 
   saveSuccess = (msg) => {
     const {currentIndex, listID} = this.state;

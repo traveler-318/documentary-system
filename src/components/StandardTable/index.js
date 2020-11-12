@@ -119,12 +119,14 @@ class StandardTable extends PureComponent {
     const { selectedRowKeys, needTotalList, expandProps } = this.state;
     const { data = {}, counterElection, multipleChoice, rowKey, alert = false, ...rest } = this.props;
     const { list = [], pagination } = data;
+    console.log(data,"pagination")
     const paginationProps = pagination
       ? {
           showSizeChanger: true,
           showQuickJumper: true,
           ...pagination,
-          pageSizeOptions:[10,15,20]
+          pageSizeOptions:[10,15,20],
+          showTotal:(total, range) => `共${pagination.total}条数据`
         }
       : false;
 
