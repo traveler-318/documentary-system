@@ -758,7 +758,8 @@ class AllOrdersList extends PureComponent {
     }
     updateData({
       id:currentList.id,
-      confirmTag:radioChecked
+      confirmTag:radioChecked,
+      outOrderNo:currentList.outOrderNo
     }).then(res=>{
       if(res.code === 200){
         message.success(res.msg);

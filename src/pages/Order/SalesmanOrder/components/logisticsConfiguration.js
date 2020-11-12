@@ -343,6 +343,13 @@ class LogisticsConfiguration extends PureComponent {
     const { form } = this.props;
     const { detail } = this.state;
     form.validateFieldsAndScroll((err, values) => {
+      if(!values.logisticsCompany){
+        values.logisticsCompany=null
+      }
+      if(!values.logisticsNumber){
+        values.logisticsNumber=null
+      }
+
       if (!err) {
         this.saveData(values)
       }
@@ -354,7 +361,14 @@ class LogisticsConfiguration extends PureComponent {
     const { detail,localPrintStatus, currentIndex } = this.state;
     if(!detail.taskId){
        form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
+         if(!values.logisticsCompany){
+           values.logisticsCompany=null
+         }
+         if(!values.logisticsNumber){
+           values.logisticsNumber=null
+         }
+
+         if (!err) {
           console.log("先保存数据")
           // 先保存数据
           this.saveData(values,()=>{
