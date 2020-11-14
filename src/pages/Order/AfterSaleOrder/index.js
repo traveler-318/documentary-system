@@ -37,11 +37,14 @@ import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 import ImportData from './components/ImportData'
+
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
 import Excel from './components/excel';
 import Text from './components/text';
 import Journal from '../components/journal';
+import SMS from '../components/smsList';
+import VoiceList from '../components/voiceList';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -105,6 +108,13 @@ class AllOrdersList extends PureComponent {
       detailsVisible:false,
       // 日志弹窗
       journalVisible:false,
+      journalList:{},
+      // 短信弹窗
+      SMSVisible:false,
+      smsList:{},
+      // 语音弹窗
+      VoiceVisible:false,
+      voice:{},
       // 免押宝导入弹窗
       noDepositVisible:false,
       confirmLoading: false,
@@ -115,7 +125,6 @@ class AllOrdersList extends PureComponent {
       // 订单导入弹窗
       OrderImportVisible:false,
       salesmangroup:[],
-      journalList:{},
       countSice:0,
       columns:[
         {
@@ -285,6 +294,11 @@ class AllOrdersList extends PureComponent {
                       row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
                     }
                     <a onClick={()=>this.handleJournal(row)}>日志</a>
+                    <Divider type="vertical" />
+                    <a onClick={()=>this.handleSMS(row)}>短信</a>
+                    <Divider type="vertical" />
+                    <a onClick={()=>this.handleVoice(row)}>语音</a>
+
                     {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
 
                       {/* <a>跟进</a>
@@ -1400,6 +1414,34 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  // 打开短信弹窗
+  handleSMS = (row) => {
+    this.setState({
+      SMSVisible:true,
+      smsList:row
+    })
+  }
+  // 关闭短信弹窗
+  handleCancelSMS = () => {
+    this.setState({
+      SMSVisible:false
+    })
+  }
+
+  // 打开语音列表弹窗
+  handleVoice = (row) => {
+    this.setState({
+      VoiceVisible:true,
+      voice:row
+    })
+  }
+  // 关闭语音列表弹窗
+  handleCancelVoice = () => {
+    this.setState({
+      VoiceVisible:false
+    })
+  }
+
   // 打开物流弹窗
   handleShowLogistics = (data) => {
     const { dispatch } = this.props;
@@ -1550,6 +1592,10 @@ handleOrderImportCancel = () =>{
       confirmTagVisible,
       journalVisible,
       journalList,
+      SMSVisible,
+      smsList,
+      VoiceVisible,
+      voice,
       currentList,
       textVisible,
       excelVisible,
@@ -1649,6 +1695,22 @@ handleOrderImportCancel = () =>{
             journalVisible={journalVisible}
             journalList={journalList}
             handleCancelJournal={this.handleCancelJournal}
+          />
+        ):""}
+        {/* 短信弹框 */}
+        {SMSVisible?(
+          <SMS
+            SMSVisible={SMSVisible}
+            smsList={smsList}
+            handleCancelSMS={this.handleCancelSMS}
+          />
+        ):""}
+        {/* 语音列表弹框 */}
+        {VoiceVisible?(
+          <VoiceList
+            VoiceVisible={VoiceVisible}
+            voice={voice}
+            handleCancelVoice={this.handleCancelVoice}
           />
         ):""}
 

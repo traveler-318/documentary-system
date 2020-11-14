@@ -42,6 +42,9 @@ import Excel from './components/excel';
 import Text from './components/text';
 import OrderImport from './components/orderImport';
 import Journal from '../components/journal';
+import SMS from '../components/smsList'
+import VoiceList from '../components/voiceList'
+
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -114,6 +117,12 @@ class AllOrdersList extends PureComponent {
       // 日志弹窗
       journalVisible:false,
       journalList:{},
+      // 短信弹窗
+      SMSVisible:false,
+      smsList:{},
+      // 语音弹窗
+      VoiceVisible:false,
+      voice:{},
       salesmangroup:[],
       menuType:"1",
       countSice:0,
@@ -275,7 +284,7 @@ class AllOrdersList extends PureComponent {
           title: '操作',
           key: 'operation',
           fixed: 'right',
-          width: 150,
+          width: 250,
           render: (text,row) => {
               return(
                   <div>
@@ -285,6 +294,10 @@ class AllOrdersList extends PureComponent {
                       row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
                     }
                     <a onClick={()=>this.handleJournal(row)}>日志</a>
+                    <Divider type="vertical" />
+                    <a onClick={()=>this.handleSMS(row)}>短信</a>
+                    <Divider type="vertical" />
+                    <a onClick={()=>this.handleVoice(row)}>语音</a>
 
                     {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
 
@@ -1383,6 +1396,34 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  // 打开日志弹窗
+  handleJournal = (row) => {
+    this.setState({
+      journalVisible:true,
+      journalList:row
+    })
+  }
+  // 关闭日志弹窗
+  handleCancelJournal = () => {
+    this.setState({
+      journalVisible:false
+    })
+  }
+
+  // 打开短信弹窗
+  handleSMS = (row) => {
+    this.setState({
+      SMSVisible:true,
+      smsList:row
+    })
+  }
+  // 关闭日志弹窗
+  handleCancelSMS = () => {
+    this.setState({
+      SMSVisible:false
+    })
+  }
+
   // 打开物流弹窗
   handleShowLogistics = (data) => {
     const { dispatch } = this.props;
@@ -1533,6 +1574,10 @@ class AllOrdersList extends PureComponent {
       confirmTagVisible,
       journalVisible,
       journalList,
+      SMSVisible,
+      smsList,
+      VoiceVisible,
+      voice,
       currentList,
       textVisible,
       excelVisible,
@@ -1633,6 +1678,22 @@ class AllOrdersList extends PureComponent {
             journalVisible={journalVisible}
             journalList={journalList}
             handleCancelJournal={this.handleCancelJournal}
+          />
+        ):""}
+        {/* 短信弹框 */}
+        {SMSVisible?(
+          <SMS
+            SMSVisible={SMSVisible}
+            smsList={smsList}
+            handleCancelSMS={this.handleCancelSMS}
+          />
+        ):""}
+        {/* 语音列表弹框 */}
+        {VoiceVisible?(
+          <VoiceList
+            VoiceVisible={VoiceVisible}
+            voice={voice}
+            handleCancelVoice={this.handleCancelVoice}
           />
         ):""}
 

@@ -464,6 +464,8 @@ class LogisticsConfiguration extends PureComponent {
         logisticsRepeatPrint([listID[currentIndex].taskId]).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
+          }else {
+            message.error(res.msg);
           }
         })
       }

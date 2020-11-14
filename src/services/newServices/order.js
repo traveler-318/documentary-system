@@ -196,6 +196,19 @@ export async function getRecord(id) {
   });
 }
 
+// 订单发送短息记录列表
+export async function getFindSmsRecord(id) {
+  return request(`/api/order/order/findSmsRecord/${id}`, {
+    method: 'get',
+  });
+}
+// 订单语音接听记录列表
+export async function getFindVoiceRecord(id) {
+  return request(`/api/order/order/findVoiceRecord/${id}`, {
+    method: 'get',
+  });
+}
+
 // 物流订阅
 export async function subscription(params) {
   return request('/api/order/order/logisticsSubscription', {
