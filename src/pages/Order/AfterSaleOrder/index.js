@@ -323,7 +323,9 @@ class AllOrdersList extends PureComponent {
       ],
       confirmTagVisible:false,
       currentList:{},
-      radioChecked:null
+      radioChecked:null,
+      repeatLoading:false,
+      firstLoading:false,
     };
   }
 
@@ -672,6 +674,15 @@ class AllOrdersList extends PureComponent {
     if(selectedRows.length > 20){
       message.info('最多批量操作20条数据');
     }else{
+
+      // if(repeatLoading){
+      //   return message.info("请勿连续操作")
+      // }
+
+      this.setState({
+        repeatLoading:true
+      });
+
       for(let i=0; i<selectedRows.length; i++){
         const time = timestamp - (new Date(selectedRows[i].taskCreateTime)).getTime();
         if(!selectedRows[i].taskId){
@@ -712,6 +723,9 @@ class AllOrdersList extends PureComponent {
           id:selectedRows[0].id,
           logisticsPrintType:selectedRows[0].logisticsPrintType
         }).then(res=>{
+          this.setState({
+            repeatLoading:false
+          });
           if(res.code === 200){
             sessionStorage.setItem('imgBase64', res.data)
             window.open(`#/order/allOrders/img`);
@@ -719,14 +733,17 @@ class AllOrdersList extends PureComponent {
             message.error(res.msg);
           }
         })
-    }else{
+      }else{
 
-      logisticsRepeatPrint(param).then(res=>{
-        if(res.code === 200){
-          message.success(res.msg);
-        }
-      })
-    }
+        logisticsRepeatPrint(param).then(res=>{
+          this.setState({
+            repeatLoading:false
+          });
+          if(res.code === 200){
+            message.success(res.msg);
+          }
+        })
+      }
 
     }
   }

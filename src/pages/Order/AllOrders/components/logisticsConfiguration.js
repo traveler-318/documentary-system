@@ -360,7 +360,7 @@ class LogisticsConfiguration extends PureComponent {
   // 保存并打印
   handlePrinting = (e) => {
     const { form } = this.props;
-    const { detail,localPrintStatus, currentIndex } = this.state;
+    const { detail,localPrintStatus, currentIndex, listID } = this.state;
     if(!detail.taskId){ 
        form.validateFieldsAndScroll((err, values) => {
          if(!values.logisticsCompany){
@@ -376,7 +376,7 @@ class LogisticsConfiguration extends PureComponent {
             // 获取物流配置
             this.getDefaultData((res)=>{
               console.log(res,"获取物流配置成功");
-              const { listID } = this.state;
+              
               res.senderItem.printAddr = res.senderItem.administrativeAreas +""+ res.senderItem.printAddr;
               // senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem
               let param = {
@@ -433,10 +433,9 @@ class LogisticsConfiguration extends PureComponent {
         }
       });
     }else{
-      message.error("你已经打印过了");
-      return false;
-      const  tips=[];
-      const  tips1=[];
+      const tips=[];
+      const tips1=[];
+
       // 当前时间戳
       const timestamp = (new Date()).getTime();
       const timeInterval = 24 * 60 * 60 * 1000 * 2;
@@ -469,7 +468,6 @@ class LogisticsConfiguration extends PureComponent {
           }
         })
       }
-
     }
   }
 
