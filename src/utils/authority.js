@@ -111,6 +111,6 @@ export function removeAll() {
   localStorage.removeItem('sword-captcha-key');
   setCookie("dept_id","")
   setCookie("serverAddress","")
-  setCookie("tenantId","")
+  // setCookie("tenantId","")
   setCookie("userName","")
 }

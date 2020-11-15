@@ -118,10 +118,10 @@ export default {
         },
       });
       reloadAuthorized();
-      removeAll();
       yield put(
         routerRedux.push('/user/login?id='+(getCookie("tenantId") || ""))
       );
+      removeAll();
     },
   },
 

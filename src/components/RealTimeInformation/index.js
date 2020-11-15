@@ -8,8 +8,8 @@ let intervalDuration = 5000;
 let timer = null;
 let heartHandler = null;
 let oncloseTimer = null;
-let notifyKey = 'update-notify';
-
+let notifyKey = [] ;//'update-notify'
+let dataParamCode = 200;
 
 class RealTimeInformation extends Component {
   static propTypes = {
@@ -54,6 +54,7 @@ class RealTimeInformation extends Component {
 
         // 链接成功
         window.layoutSocket.onopen = function () {
+            
             console.log('websocket was connected');
             clearInterval(oncloseTimer);
             oncloseTimer = null;
@@ -76,7 +77,7 @@ class RealTimeInformation extends Component {
             console.log(dataParam,"event");
 
             if(dataParam.code === 200){
-               
+                dataParamCode = 200;
                 dataList.push(event.data);
                 console.log(!timer,"!timer!timer!timer!timer")
                 if(!timer){
@@ -95,6 +96,7 @@ class RealTimeInformation extends Component {
                     }
                 }
             }else if(dataParam.code === 401){
+                dataParamCode = 401;
                 // 断开链接
                 clearInterval(heartHandler);
                 clearTimeout(timer);
@@ -115,7 +117,7 @@ class RealTimeInformation extends Component {
             heartHandler = null;
             // 断链重连
             // this.initWebSocket();
-            if(!oncloseTimer){
+            if(!oncloseTimer && dataParamCode != 401){
                 oncloseTimer = setInterval(()=>{
                     if(!heartHandler){
                         console.log("重新链接------")
@@ -153,7 +155,6 @@ class RealTimeInformation extends Component {
                     this.openNotification(JSON.parse(_data),audio.duration*1000+1000);
                     audio.play();
                 }
-                
             }
             dataList.shift();
                 
@@ -166,18 +167,27 @@ class RealTimeInformation extends Component {
     }
 
     openNotification = (data,time) => {
+        notifyKey.push(data.id);
         notification.open({
           message: '新消息',
           description: data.data,
           duration: null,
-          key:notifyKey,
+          key:data.id,
           onClose:()=>{
             if(dataList.length > 0){
-                window.layoutSocket.send({"id":data.id,"pushType":data.type});
+                notifyKey.forEach((item, i) => {
+                    if (item == data.id) {
+                        notifyKey.splice(i, 1); // 从下标 i 开始, 删除 1 个元素
+                    }
+                })
+                window.layoutSocket.send(JSON.stringify({"id":data.id,"pushType":data.type}));
                 this.outputInformation();
             }
           }
         });
+        if(notifyKey.length < 3){
+            this.outputInformation();
+        }
     };
 
 
