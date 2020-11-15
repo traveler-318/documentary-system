@@ -48,7 +48,7 @@ class RealTimeInformation extends Component {
 
     initWebSocket = () => {
         
-        window.layoutSocket = new WebSocket(`ws://47.102.204.79:9060/imserver/${getCookie('tenantId')}/${getCookie('userName')}`);
+        window.layoutSocket = new WebSocket(`ws://121.40.58.47:9060/imserver/${getCookie('tenantId')}/${getCookie('userName')}`);
 
         // 链接成功
         window.layoutSocket.onopen = function () {

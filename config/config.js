@@ -82,8 +82,8 @@ export default {
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
-    '/imserver/35/admin': {
-      target: 'http://47.102.204.79:9060',
+    '/imserver/*': {
+      target: 'http://121.40.58.47:9060',
       changeOrigin: true,
     },
   },
