@@ -178,7 +178,8 @@ class RealTimeInformation extends Component {
     reactNode = () => {
         return(
         <div>
-            <span>新消息</span><span>(确认消息请关闭弹窗)</span>
+            <span>新消息</span>
+            <span style={{color: '#E6A23C',marginLeft:5,fontSize:'14px'}}>(确认消息请关闭弹窗)</span>
         </div>
         )
     }
@@ -186,7 +187,7 @@ class RealTimeInformation extends Component {
     openNotification = (data,time) => {
         notifyKey.push(data.id);
         notification.open({
-            message:'新消息 (确认消息请关闭弹窗)',
+            message:this.reactNode(),
           description: data.data,
           duration: null,
           key:data.id,
