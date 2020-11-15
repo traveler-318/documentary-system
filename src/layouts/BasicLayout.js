@@ -13,6 +13,7 @@ import SiderMenu from '@/components/SiderMenu';
 import getPageTitle from '@/utils/getPageTitle';
 import styles from './BasicLayout.less';
 
+
 // lazy load SettingDrawer
 const SettingDrawer = React.lazy(() => import('@/components/SettingDrawer'));
 
@@ -149,6 +150,7 @@ class BasicLayout extends React.Component {
             {params => (
               <Context.Provider value={this.getContext()}>
                 <div className={classNames(params)}>{layout}</div>
+                
               </Context.Provider>
             )}
           </ContainerQuery>

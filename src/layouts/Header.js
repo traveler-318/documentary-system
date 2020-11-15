@@ -9,6 +9,7 @@ import TopNavHeader from '@/components/TopNavHeader';
 import styles from './Header.less';
 import { clearCache } from '@/services/user';
 
+
 const { Header } = Layout;
 
 class HeaderView extends React.Component {
@@ -141,8 +142,10 @@ class HeaderView extends React.Component {
     const { visible } = this.state;
     const isTop = layout === 'topmenu';
     const width = this.getHeadWidth();
+    
     const HeaderDom = visible ? (
       <Header style={{ padding: 0, width }} className={fixedHeader ? styles.fixedHeader : ''}>
+        {/* <RealTimeInformation/> */}
         {isTop && !isMobile ? (
           <TopNavHeader
             theme={navTheme}

@@ -1,4 +1,7 @@
 // use localStorage to store the authority info, which might be sent from server in actual project.
+
+import { setCookie, getCookie } from '../utils/support';
+
 export function getAuthority(str) {
   // return localStorage.getItem('antd-pro-authority') || ['admin', 'user'];
   const authorityString =
@@ -106,4 +109,8 @@ export function removeAll() {
   localStorage.removeItem('sword-buttons');
   localStorage.removeItem('sword-current-user');
   localStorage.removeItem('sword-captcha-key');
+  setCookie("dept_id","")
+  setCookie("serverAddress","")
+  setCookie("tenantId","")
+  setCookie("userName","")
 }

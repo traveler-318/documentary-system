@@ -5,14 +5,16 @@ import ThirdRegister from '../../components/ThirdRegister';
 
 // eslint-disable-next-line import/extensions
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import home from '../../assets/home.svg'
-
+import home from '../../assets/home.svg';
+import RealTimeInformation from '../../components/RealTimeInformation/index';
+ 
 const { Panel } = Collapse;
 
 class Workplace extends PureComponent {
   render() {
     return (
       <PageHeaderWrapper>
+        <RealTimeInformation/>
         <img src={home} style={{width:"100%"}} />
         {/* <Card className={styles.card} bordered={false}>
           <Row gutter={24}>
