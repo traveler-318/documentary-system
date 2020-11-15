@@ -28,7 +28,9 @@ class RealTimeInformation extends Component {
     componentDidMount(){
         var is_support = ("WebSocket" in window);
         if (is_support) {
-            getCookie('userName') ? this.initWebSocket() : "";
+            if(getCookie('userName')){
+                this.initWebSocket();
+            }
         }else{
             console.log("您的浏览器不支持 WebSocket!")
         }
@@ -117,7 +119,12 @@ class RealTimeInformation extends Component {
                 oncloseTimer = setInterval(()=>{
                     if(!heartHandler){
                         console.log("重新链接------")
-                        getCookie('userName') ? this.initWebSocket() : "";
+                        if(getCookie('userName')){
+                            this.initWebSocket()
+                        }else{
+                            clearInterval(oncloseTimer);
+                            oncloseTimer = null;
+                        }
                     }
                 },8000)
             }
