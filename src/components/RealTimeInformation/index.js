@@ -50,6 +50,7 @@ class RealTimeInformation extends Component {
 
     initWebSocket = () => {
         // alert(process.env.NODE_ENV)
+        console.log(window.location.hostname,window.location.hostname === "47.102.204.79","判断环境")
         if(window.location.hostname === "47.102.204.79" || process.env.NODE_ENV === 'development'){
             window.layoutSocket = new WebSocket(`ws://47.102.204.79:9060/imserver/${getCookie('tenantId')}/${getCookie('userName')}`);
         }else{
@@ -62,7 +63,7 @@ class RealTimeInformation extends Component {
             clearInterval(oncloseTimer);
             oncloseTimer = null;
             heartHandler = setInterval(() => {
-                window.layoutSocket.send({"HeartBeat":1})
+                window.layoutSocket.send(JSON.stringify({"HeartBeat":1}))
             }, 60000)
         }
         //连接发生错误
@@ -169,10 +170,23 @@ class RealTimeInformation extends Component {
         
     }
 
+    title = ()=>{
+        return(
+            <div></div>
+        )
+    }
+    reactNode = () => {
+        return(
+        <div>
+            <span>新消息</span><span>(确认消息请关闭弹窗)</span>
+        </div>
+        )
+    }
+
     openNotification = (data,time) => {
         notifyKey.push(data.id);
         notification.open({
-          message: '新消息',
+            message:'新消息 (确认消息请关闭弹窗)',
           description: data.data,
           duration: null,
           key:data.id,
@@ -183,7 +197,9 @@ class RealTimeInformation extends Component {
                         notifyKey.splice(i, 1); // 从下标 i 开始, 删除 1 个元素
                     }
                 })
-                window.layoutSocket.send(JSON.stringify({"id":data.id,"pushType":data.type}));
+                let param = JSON.stringify({"id":data.id,"pushType":data.type});
+                console.log(param,typeof(param))
+                window.layoutSocket.send(param);
                 this.outputInformation();
             }
           }
