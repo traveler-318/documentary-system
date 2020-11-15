@@ -25,13 +25,14 @@ class RealTimeInformation extends Component {
     componentDidMount(){
         var is_support = ("WebSocket" in window);
         if (is_support) {
-            getCookie('userName') ? this.initWebSocket() : "";
+            getCookie('userName') && !window.layoutSocket ? this.initWebSocket() : "";
         }else{
             console.log("您的浏览器不支持 WebSocket!")
         }
     } 
 
     componentWillUnmount(){
+        console.log("关闭链接")
         clearInterval(heartHandler);
         heartHandler = null;
         timer = null;
@@ -79,19 +80,20 @@ class RealTimeInformation extends Component {
                     audio.load();
                     audio.oncanplay = () => {  
                         // 获取音频时长
-                        console.log("获取第一次音频时长",audio.duration*1000);
+                        // console.log("获取第一次音频时长",audio.duration*1000);
                         intervalDuration = audio.duration*1000+1000;
                         this.outputInformation();
                     }
                 }
-            }else{
+            }else if(dataParam.code === 401){
                 // 断开链接
-                // clearInterval(heartHandler);
-                // heartHandler = null;
-                // clearTimeout(timer);
-                // timer = null;
+                clearInterval(heartHandler);
+                clearTimeout(timer);
+                heartHandler = null;
+                timer = null;
                 // dataList = [];
-                // intervalDuration = 5000;
+                intervalDuration = 5000;
+                window.layoutSocket && window.layoutSocket.close();
                 // window.layoutSocket && window.layoutSocket.close();
             }
         });
@@ -100,18 +102,21 @@ class RealTimeInformation extends Component {
             console.log("ws close", e);
             clearTimeout(timer);
             clearInterval(heartHandler);
+            timer = null;
+            heartHandler = null;
             // 断链重连
             // this.initWebSocket();
-            getCookie('userName') ? this.initWebSocket() : "";
+            getCookie('userName') && !window.layoutSocket ? this.initWebSocket() : "";
         }
 
     }
 
     outputInformation = () => {
         timer = setTimeout(() => {
-            console.log("定时器响应",intervalDuration);
+            // console.log("定时器响应",intervalDuration);
             let _data = dataList[0];
             // 播放类型 0文字  1语音
+            // console.log(JSON.parse(_data).type,JSON.parse(_data).type === 0,"播放类型")
             if(JSON.parse(_data).type === 0){
                 intervalDuration = 10000;
                 this.openNotification(JSON.parse(_data).data,10000);
@@ -122,7 +127,7 @@ class RealTimeInformation extends Component {
                 audio.load();
                 audio.oncanplay = () => {  
                     // 获取音频时长
-                    console.log("myVid.duration",audio.duration*1000);
+                    // console.log("myVid.duration",audio.duration*1000);
                     intervalDuration = audio.duration*1000+1000;
                     this.openNotification(JSON.parse(_data).data,audio.duration*1000+1000);
                     audio.play();
