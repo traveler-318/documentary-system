@@ -7,6 +7,9 @@ let dataList = [];
 let intervalDuration = 5000;
 let timer = null;
 let heartHandler = null;
+let oncloseTimer = null;
+let notifyKey = 'update-notify';
+
 
 class RealTimeInformation extends Component {
   static propTypes = {
@@ -25,7 +28,7 @@ class RealTimeInformation extends Component {
     componentDidMount(){
         var is_support = ("WebSocket" in window);
         if (is_support) {
-            getCookie('userName') && !window.layoutSocket ? this.initWebSocket() : "";
+            getCookie('userName') ? this.initWebSocket() : "";
         }else{
             console.log("您的浏览器不支持 WebSocket!")
         }
@@ -34,6 +37,8 @@ class RealTimeInformation extends Component {
     componentWillUnmount(){
         console.log("关闭链接")
         clearInterval(heartHandler);
+        clearInterval(oncloseTimer);
+        oncloseTimer = null;
         heartHandler = null;
         timer = null;
         dataList = [];
@@ -48,6 +53,8 @@ class RealTimeInformation extends Component {
         // 链接成功
         window.layoutSocket.onopen = function () {
             console.log('websocket was connected');
+            clearInterval(oncloseTimer);
+            oncloseTimer = null;
             heartHandler = setInterval(() => {
                 window.layoutSocket.send({"HeartBeat":1})
             }, 60000)
@@ -67,7 +74,7 @@ class RealTimeInformation extends Component {
             console.log(dataParam,"event");
 
             if(dataParam.code === 200){
-                window.layoutSocket.send({"id":dataParam.id,"pushType":dataParam.type});
+               
                 dataList.push(event.data);
                 console.log(!timer,"!timer!timer!timer!timer")
                 if(!timer){
@@ -91,7 +98,7 @@ class RealTimeInformation extends Component {
                 clearTimeout(timer);
                 heartHandler = null;
                 timer = null;
-                // dataList = [];
+                dataList = [];
                 intervalDuration = 5000;
                 window.layoutSocket && window.layoutSocket.close();
                 // window.layoutSocket && window.layoutSocket.close();
@@ -106,7 +113,14 @@ class RealTimeInformation extends Component {
             heartHandler = null;
             // 断链重连
             // this.initWebSocket();
-            getCookie('userName') && !window.layoutSocket ? this.initWebSocket() : "";
+            if(!oncloseTimer){
+                oncloseTimer = setInterval(()=>{
+                    if(!heartHandler){
+                        console.log("重新链接------")
+                        getCookie('userName') ? this.initWebSocket() : "";
+                    }
+                },8000)
+            }
         }
 
     }
@@ -119,7 +133,7 @@ class RealTimeInformation extends Component {
             // console.log(JSON.parse(_data).type,JSON.parse(_data).type === 0,"播放类型")
             if(JSON.parse(_data).type === 0){
                 intervalDuration = 10000;
-                this.openNotification(JSON.parse(_data).data,10000);
+                this.openNotification(JSON.parse(_data),10000);
             }else{
                 const url = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&text=" + encodeURI(JSON.parse(_data).data);      
                 const audio = new Audio(url);
@@ -129,7 +143,7 @@ class RealTimeInformation extends Component {
                     // 获取音频时长
                     // console.log("myVid.duration",audio.duration*1000);
                     intervalDuration = audio.duration*1000+1000;
-                    this.openNotification(JSON.parse(_data).data,audio.duration*1000+1000);
+                    this.openNotification(JSON.parse(_data),audio.duration*1000+1000);
                     audio.play();
                 }
                 
@@ -139,18 +153,23 @@ class RealTimeInformation extends Component {
             if(dataList.length <= 0){
                 clearTimeout(timer);
                 timer = null;
-            }else{
-                this.outputInformation();
             }
         }, intervalDuration);
         
     }
 
-    openNotification = (text,time) => {
+    openNotification = (data,time) => {
         notification.open({
           message: '新消息',
-          description: text,
-          duration: time/1000
+          description: data.data,
+          duration: null,
+          key:notifyKey,
+          onClose:()=>{
+            if(dataList.length > 0){
+                window.layoutSocket.send({"id":data.id,"pushType":data.type});
+                this.outputInformation();
+            }
+          }
         });
     };
 

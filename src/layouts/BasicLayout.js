@@ -12,7 +12,7 @@ import Context from './MenuContext';
 import SiderMenu from '@/components/SiderMenu';
 import getPageTitle from '@/utils/getPageTitle';
 import styles from './BasicLayout.less';
-
+import RealTimeInformation from '@/components/RealTimeInformation/index';
 
 // lazy load SettingDrawer
 const SettingDrawer = React.lazy(() => import('@/components/SettingDrawer'));
@@ -150,7 +150,7 @@ class BasicLayout extends React.Component {
             {params => (
               <Context.Provider value={this.getContext()}>
                 <div className={classNames(params)}>{layout}</div>
-                
+                <RealTimeInformation/>
               </Context.Provider>
             )}
           </ContainerQuery>
