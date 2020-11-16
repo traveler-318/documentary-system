@@ -93,19 +93,20 @@ class RealTimeInformation extends Component {
                     timer = true;
                     // 获取第一次音频时长
                     intervalDuration = 1000;
-                    if(JSON.parse(_data).type === 0){
-                        this.outputInformation();
-                    }else{
-                        let _data = dataList[0];
-                        const url = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&per=0&text=" + encodeURI(JSON.parse(_data).data);      
-                        const audio = new Audio(url);
-                        audio.src = url;
-                        audio.load();
-                        audio.oncanplay = () => {  
-                            // 获取音频时长
-                            this.outputInformation();
-                        }
-                    }
+                    this.outputInformation();
+                    // if(JSON.parse(_data).type === 0){
+                    //     this.outputInformation();
+                    // }else{
+                    //     let _data = dataList[0];
+                    //     const texturl = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&per=0&text=" + encodeURI(JSON.parse(_data).data);      
+                    //     const textAudio = new Audio(texturl);
+                    //     textAudio.src = texturl;
+                    //     textAudio.load();
+                    //     textAudio.oncanplay = () => {  
+                    //         // 获取音频时长
+                    //         this.outputInformation();
+                    //     }
+                    // }
                 }
             }else if(dataParam.code === 401){
                 dataParamCode = 401;
