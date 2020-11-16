@@ -54,6 +54,7 @@ class RealTimeInformation extends Component {
         oncloseTimer = null;
         notifyKey = [];
         dataParamCode = 200;
+        notification.close();
     }
 
     initWebSocket = () => {
@@ -86,13 +87,14 @@ class RealTimeInformation extends Component {
             
             let dataParam = JSON.parse(event.data);
             console.log(dataParam,"event");
+            
 
             if(dataParam.code === 200){
                 dataParamCode = 200;
                 dataParam.customKey = dataList.length+Math.ceil(Math.random()*10);
                 dataList.push(JSON.stringify(dataParam));
                 // console.log(!timer,"!timer!timer!timer!timer")
-                if(!timer || notifyKey.length < 3){
+                if(!timer && notifyKey.length < 3){
                     console.log("第一条数据")
                     timer = true;
                     // 获取第一次音频时长
@@ -122,8 +124,8 @@ class RealTimeInformation extends Component {
                 dataList = [];
                 intervalDuration = 5000;
                 window.layoutSocket && window.layoutSocket.close();
-                // window.layoutSocket && window.layoutSocket.close();
             }
+
         });
 
         window.layoutSocket.onclose =  (e) => {
@@ -132,6 +134,7 @@ class RealTimeInformation extends Component {
             clearInterval(heartHandler);
             timer = null;
             heartHandler = null;
+            this.resetData();
             // 断链重连
             // this.initWebSocket();
             if(!oncloseTimer && dataParamCode != 401){
@@ -148,7 +151,6 @@ class RealTimeInformation extends Component {
                 },8000)
             }
         }
-
     }
 
     outputInformation = () => {
@@ -157,7 +159,6 @@ class RealTimeInformation extends Component {
             dataList.shift();
             console.log("定时器响应",_data,intervalDuration);
             // 播放类型 0文字  1语音
-            // console.log(JSON.parse(_data).type,JSON.parse(_data).type === 0,"播放类型")
             if(JSON.parse(_data).type === 0){
                 intervalDuration = 1000;
                 this.openNotification(JSON.parse(_data),1000);
@@ -169,15 +170,11 @@ class RealTimeInformation extends Component {
                 audio.oncanplay = () => {  
                     // 获取音频时长
                     // console.log("myVid.duration",audio.duration*1000);
-                    intervalDuration = audio.duration*1000+10000;
-                    this.openNotification(JSON.parse(_data),audio.duration*1000+10000);
+                    intervalDuration = audio.duration*1000+1000;
+                    this.openNotification(JSON.parse(_data),audio.duration*1000+1000);
                     audio.play();
                 }
             }
-            // if(dataList.length <= 0){
-            //     clearTimeout(timer);
-            //     timer = null;
-            // }
         }, intervalDuration);
     }
 
@@ -200,7 +197,7 @@ class RealTimeInformation extends Component {
                 })
                 console.log(notifyKey,data.id,"notifyKey")
                 let param = JSON.stringify({"id":data.id,"pushType":data.type});
-                window.layoutSocket.send(param);
+                // window.layoutSocket.send(param);
                 this.outputInformation();
             }else{
                 clearTimeout(timer);
@@ -208,9 +205,13 @@ class RealTimeInformation extends Component {
             }
           }
         });
-        // if(notifyKey.length < 3 && dataList.length > 0){
-        //     this.outputInformation();
-        // }
+        if(notifyKey.length < 3 && dataList.length > 0){
+            this.outputInformation();
+        }
+        if(dataList.length <= 0){
+            clearTimeout(timer);
+            timer = null;
+        }
     };
 
     reactNode = () => {
