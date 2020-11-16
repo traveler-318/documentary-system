@@ -56,7 +56,7 @@ class RealTimeInformation extends Component {
 
     initWebSocket = () => {
         // alert(process.env.NODE_ENV)
-        console.log(window.location.hostname,window.location.hostname === "47.102.204.79","判断环境")
+        // console.log(window.location.hostname,window.location.hostname === "47.102.204.79","判断环境")
         if(window.location.hostname === "47.102.204.79" || process.env.NODE_ENV === 'development'){
             window.layoutSocket = new WebSocket(`ws://47.102.204.79:9060/imserver/${getCookie('tenantId')}/${getCookie('userName')}`);
         }else{
@@ -88,8 +88,9 @@ class RealTimeInformation extends Component {
             if(dataParam.code === 200){
                 dataParamCode = 200;
                 dataList.push(event.data);
-                console.log(!timer,"!timer!timer!timer!timer")
+                // console.log(!timer,"!timer!timer!timer!timer")
                 if(!timer){
+                    console.log("第一条数据")
                     timer = true;
                     // 获取第一次音频时长
                     intervalDuration = 1000;
@@ -149,8 +150,8 @@ class RealTimeInformation extends Component {
 
     outputInformation = () => {
         timer = setTimeout(() => {
-            // console.log("定时器响应",intervalDuration);
             let _data = dataList[0];
+            console.log("定时器响应",_data,intervalDuration);
             // 播放类型 0文字  1语音
             // console.log(JSON.parse(_data).type,JSON.parse(_data).type === 0,"播放类型")
             if(JSON.parse(_data).type === 0){
@@ -195,7 +196,6 @@ class RealTimeInformation extends Component {
                     }
                 })
                 let param = JSON.stringify({"id":data.id,"pushType":data.type});
-                console.log(param,typeof(param))
                 window.layoutSocket.send(param);
                 this.outputInformation();
             }
