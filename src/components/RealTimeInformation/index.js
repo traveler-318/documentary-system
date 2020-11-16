@@ -91,7 +91,7 @@ class RealTimeInformation extends Component {
                 dataParamCode = 200;
                 dataList.push(event.data);
                 // console.log(!timer,"!timer!timer!timer!timer")
-                if(!timer){
+                if(!timer || notifyKey.length < 3){
                     console.log("第一条数据")
                     timer = true;
                     // 获取第一次音频时长
@@ -207,9 +207,9 @@ class RealTimeInformation extends Component {
             }
           }
         });
-        if(notifyKey.length < 3 && dataList.length > 0){
-            this.outputInformation();
-        }
+        // if(notifyKey.length < 3 && dataList.length > 0){
+        //     this.outputInformation();
+        // }
     };
 
     reactNode = () => {
