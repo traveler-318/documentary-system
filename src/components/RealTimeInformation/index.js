@@ -89,7 +89,8 @@ class RealTimeInformation extends Component {
 
             if(dataParam.code === 200){
                 dataParamCode = 200;
-                dataList.push(event.data);
+                dataParam.customKey = dataList.length+Math.ceil(Math.random()*10);
+                dataList.push(JSON.stringify(dataParam));
                 // console.log(!timer,"!timer!timer!timer!timer")
                 if(!timer || notifyKey.length < 3){
                     console.log("第一条数据")
@@ -183,17 +184,17 @@ class RealTimeInformation extends Component {
     
 
     openNotification = (data,time) => {
-        notifyKey.push(data.id);
+        notifyKey.push(data.customKey);
         console.log(notifyKey,"notifyKey1");
         notification.open({
             message:this.reactNode(),
           description: data.data,
           duration: null,
-          key:data.id,
+          key:data.customKey,
           onClose:()=>{
             if(dataList.length > 0){
                 notifyKey.forEach((item, i) => {
-                    if (item == data.id) {
+                    if (item == data.customKey) {
                         notifyKey.splice(i, 1); // 从下标 i 开始, 删除 1 个元素
                     }
                 })
