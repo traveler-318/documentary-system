@@ -30,6 +30,8 @@ class RealTimeInformation extends Component {
         if (is_support) {
             if(getCookie('userName')){
                 this.initWebSocket();
+            }else{
+                this.resetData();
             }
         }else{
             console.log("您的浏览器不支持 WebSocket!")
@@ -172,10 +174,10 @@ class RealTimeInformation extends Component {
             }
             dataList.shift();
                 
-            if(dataList.length <= 0){
-                clearTimeout(timer);
-                timer = null;
-            }
+            // if(dataList.length <= 0){
+            //     clearTimeout(timer);
+            //     timer = null;
+            // }
         }, intervalDuration);
     }
 
@@ -183,6 +185,7 @@ class RealTimeInformation extends Component {
 
     openNotification = (data,time) => {
         notifyKey.push(data.id);
+        console.log(notifyKey,"notifyKey1");
         notification.open({
             message:this.reactNode(),
           description: data.data,
@@ -195,9 +198,13 @@ class RealTimeInformation extends Component {
                         notifyKey.splice(i, 1); // 从下标 i 开始, 删除 1 个元素
                     }
                 })
+                console.log(notifyKey,data.id,"notifyKey")
                 let param = JSON.stringify({"id":data.id,"pushType":data.type});
                 window.layoutSocket.send(param);
                 this.outputInformation();
+            }else{
+                clearTimeout(timer);
+                timer = null;
             }
           }
         });
