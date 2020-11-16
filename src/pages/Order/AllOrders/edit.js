@@ -15,7 +15,7 @@ import {
   getDetails,
   orderDetail,
   updateReminds,
-  productTreelist, subscription,deleteLogisticsSuber
+  productTreelist, subscription, deleteLogisticsSuber, localPrinting, logisticsRepeatPrint,
 } from '../../../services/newServices/order';
 import {ORDERSTATUS,ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
@@ -53,6 +53,7 @@ class OrdersEdit extends PureComponent {
       primary:'primary',
       primary1:'',
       productList:[],
+      repeatLoading:false,
     };
   }
 
@@ -91,7 +92,6 @@ class OrdersEdit extends PureComponent {
   }
 
   getList = (detail) =>{
-    console.log(detail)
     const params={
       userAddress:detail.userAddress,
       userPhone:detail.userPhone,
@@ -268,6 +268,73 @@ class OrdersEdit extends PureComponent {
     })
   };
 
+  // 复打
+  repeat = () => {
+    const {detail}=this.state;
+    // 当前时间戳
+    const timestamp = (new Date()).getTime();
+    const timeInterval = 24 * 60 * 60 * 1000 * 2;
+    const time = timestamp - (new Date(detail.taskCreateTime)).getTime();
+    this.setState({
+      repeatLoading:true
+    });
+    const  tips=[];
+    if(!detail.taskId){
+      tips.push(detail.userName)
+      Modal.confirm({
+        title: '提示',
+        content: detail.userName+"客户没有首次打印记录,不能进行重复打印!",
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk() {},
+        onCancel() {},
+      });
+    }else if( time > timeInterval){
+      tips.push(detail.userName)
+      Modal.confirm({
+        title: '提示',
+        content: detail.userName+"客户的订单 距离首次时间超过2天 禁止打印！",
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk() {},
+        onCancel() {},
+      });
+    }
+    if(tips.length > 0 ){
+      return false;
+    }
+    if(detail.logisticsPrintType === "1" || detail.logisticsPrintType === "2"){
+      // 本地打印
+      localPrinting({
+        id:detail.id,
+        logisticsPrintType:detail.logisticsPrintType
+      }).then(res=>{
+        this.setState({
+          repeatLoading:false
+        });
+        if(res.code === 200){
+          sessionStorage.setItem('imgBase64', res.data)
+          window.open(`#/order/allOrders/img`);
+        }else{
+          message.error(res.msg);
+        }
+      })
+    }else{
+      let param = [];
+      param.push(detail.taskId)
+      logisticsRepeatPrint(param).then(res=>{
+        this.setState({
+          repeatLoading:false
+        });
+        if(res.code === 200){
+          message.success(res.msg);
+        }
+      })
+    }
+  };
+
   getText = (key, type) => {
     let text = ""
     type.map(item=>{
@@ -328,6 +395,7 @@ class OrdersEdit extends PureComponent {
                     icon="bell"
                     onClick={this.handleReminds}
                   >提醒</Button>
+                  <Button icon="copy" onClick={this.repeat}>复打</Button>
                   {/* <Button  icon="folder">归档</Button> */}
                 </div>
                 <div className={styles.editList} style={{ padding: '20px' }}>
