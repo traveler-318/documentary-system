@@ -153,6 +153,7 @@ class RealTimeInformation extends Component {
     outputInformation = () => {
         timer = setTimeout(() => {
             let _data = dataList[0];
+            dataList.shift();
             console.log("定时器响应",_data,intervalDuration);
             // 播放类型 0文字  1语音
             // console.log(JSON.parse(_data).type,JSON.parse(_data).type === 0,"播放类型")
@@ -172,8 +173,6 @@ class RealTimeInformation extends Component {
                     audio.play();
                 }
             }
-            dataList.shift();
-                
             // if(dataList.length <= 0){
             //     clearTimeout(timer);
             //     timer = null;
@@ -208,7 +207,7 @@ class RealTimeInformation extends Component {
             }
           }
         });
-        if(notifyKey.length < 3){
+        if(notifyKey.length < 3 && dataList.length > 0){
             this.outputInformation();
         }
     };
