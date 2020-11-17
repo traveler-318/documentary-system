@@ -24,7 +24,7 @@ class GoodsAdd extends PureComponent {
       data:{
         code: "",
         payType: 'SHIPPER',
-        expType: '标准快递',
+        expType: '微小件特惠',
         valinsPay:0,
         collection:0,
         needChild:0,

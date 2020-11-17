@@ -19,6 +19,10 @@ export const PAYMENTMETHOD = [
 ]
 export const EXPRESSTYPE = [
   {
+    key:"微小件特惠",
+    value:"微小件特惠"
+  },
+  {
     key:"标准快递",
     value:"标准快递"
   },
