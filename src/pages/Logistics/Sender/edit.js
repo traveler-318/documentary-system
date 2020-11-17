@@ -44,16 +44,22 @@ class SenderEdit extends PureComponent {
       values.deptId = getCookie("dept_id");
       values.addrCoding=JSON.stringify(values.addrCoding);
       const { cityparam } = this.state;
+      const params = {
+        ...values,
+        id:data.id,
+      };
+      if(!cityparam){
+        params.administrativeAreas=data.administrativeAreas
+      }else {
+        params.administrativeAreas=cityparam.name
+      }
       if (!err) {
-        const params = {
-          ...values,
-          id:data.id,
-          administrativeAreas:cityparam.name
-        };
         getDeliverySubmit(params).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
             router.push('/logistics/sender');
+          }else {
+            message.error(res.msg);
           }
         })
       }
