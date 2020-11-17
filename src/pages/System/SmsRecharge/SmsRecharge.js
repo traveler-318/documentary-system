@@ -54,20 +54,20 @@ class SmsRecharge extends PureComponent {
   // ============ 提交 ===============
   handleSubmit = (item) => {
     console.log(item)
-    message.error("充值功能正在维护!如有需要请联系负责人充值")
-    // getUnWeChatBind().then(res=>{
-    //   console.log(res)
-    //   if(res.code === 200){
-    //     const url=res.data+"&money="+item.price;
-    //     this.setState({
-    //       bindingQRCode:url,
-    //       bindingQRCodeVisible:true,
-    //       money:item.price
-    //     })
-    //   }else {
-    //     message.error(res.msg)
-    //   }
-    // })
+    // message.error("充值功能正在维护!如有需要请联系负责人充值")
+    getUnWeChatBind().then(res=>{
+      console.log(res)
+      if(res.code === 200){
+        const url=res.data+"&money="+item.price;
+        this.setState({
+          bindingQRCode:url,
+          bindingQRCodeVisible:true,
+          money:item.price
+        })
+      }else {
+        message.error(res.msg)
+      }
+    })
   };
 
   onChange = (e) => {
@@ -89,21 +89,21 @@ class SmsRecharge extends PureComponent {
     const price=e.target.value
     if(e.keyCode === 13) {
       if(e.target.value % 10 == 0){
-        message.error("充值功能正在维护!如有需要请联系负责人充值")
+        // message.error("充值功能正在维护!如有需要请联系负责人充值")
 
-        // getUnWeChatBind().then(res=>{
-        //   if(res.code === 200){
-        //     const url=res.data+"&money="+price;
-        //     console.log(url)
-        //     this.setState({
-        //       bindingQRCode:url,
-        //       bindingQRCodeVisible:true,
-        //       money:price
-        //     })
-        //   }else {
-        //     message.error(res.msg)
-        //   }
-        // })
+        getUnWeChatBind().then(res=>{
+          if(res.code === 200){
+            const url=res.data+"&money="+price;
+            console.log(url)
+            this.setState({
+              bindingQRCode:url,
+              bindingQRCodeVisible:true,
+              money:price
+            })
+          }else {
+            message.error(res.msg)
+          }
+        })
       }else{
         message.error("仅支持10的整数倍,请输入正确的数量")
       }
