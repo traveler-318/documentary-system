@@ -474,9 +474,15 @@ class AllOrdersList extends PureComponent {
       confirmTag:tabKey === 'null' ? null : tabKey
     };
 
+    payload.pay_pany_id = payload.productType ? payload.productType[0] : null;
+    payload.product_type_id = payload.productType ? payload.productType[1] : null;
+    payload.product_id = payload.productType ? payload.productType[2] : null;
+    
+
     localStorage.setItem("AllOrdersparams",JSON.stringify(payload));
 
     delete payload.dateRange;
+    delete payload.productType;
 
     this.setState({
       params:payload
@@ -571,29 +577,14 @@ class AllOrdersList extends PureComponent {
           )}
         </Form.Item>
         <FormItem label="产品分类">
-          {/* 新增一个注释解决没打包的问题 */}
+          
           {getFieldDecorator('productType', {
-              initialValue: null,
+              initialValue: params.productType ? params.productType : null,
             })(
               <Cascader
                 options={productList}
                 fieldNames={{ label: 'value',value: "id"}}
-                // onChange={(value, selectedOptions)=>{
-                //   console.log(value, selectedOptions,"产品分类改变")
-                //   // this.setState({
-                //   //   payamount:selectedOptions[2].payamount
-                //   // })
-                //   const { form } = this.props;
-                //   console.log(form,"1")
-                //   console.log(form.getFieldsValue,"2");
-                //   const region = form.getFieldsValue();
-                //   console.log(region,"3");
-                //   // if(!region.payamount || region.payamount === "" || region.payamount === null){
-                //     form.setFieldsValue({
-                //       payAmount:selectedOptions[2].payamount
-                //     })
-                //   // }
-                // }}
+                changeOnSelect={true}
               ></Cascader>
           )}
         </FormItem>
