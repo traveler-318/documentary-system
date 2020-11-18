@@ -53,6 +53,7 @@ export default {
   'menu.system': '系统管理',
   'menu.system.user': '用户管理',
   'menu.system.dept': '公司管理',
+  'menu.system.organization': '组织管理',
   'menu.system.dict': '系统字典',
   'menu.system.post': '岗位管理',
   'menu.system.dictbiz': '业务字典',
