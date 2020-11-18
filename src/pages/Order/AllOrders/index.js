@@ -25,7 +25,8 @@ import {
   subscription,
   updateData,
   salesmanList,
-  productTreelist
+  productTreelist,
+  batchLogisticsSubscription
 } from '../../../services/newServices/order';
 
 // getList as getSalesmanLists,
@@ -327,7 +328,8 @@ class AllOrdersList extends PureComponent {
       ],
       confirmTagVisible:false,
       currentList:{},
-      radioChecked:null
+      radioChecked:null,
+      _listArr:[]
     };
   }
 
@@ -940,6 +942,49 @@ class AllOrdersList extends PureComponent {
     this.handleShowLogistics(selectedRows)
   }
 
+
+  // 批量订阅
+  bulkSubscription = () => {
+    const {selectedRows,_listArr} = this.state;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+    // sessionStorage.removeItem("listArr");
+    // localStorage.removeItem("listArr")
+
+
+    // batchLogisticsSubscription(params).then(res=>{
+    //   if(res.code === 200){
+    //     message.success(res.msg);
+    //     list()
+    //   }else{
+    //     message.error(res.msg);
+    //   }
+    // })
+    const listArr=[];
+    for(let i=0; i<selectedRows.length; i++){
+      const item={};
+      if(selectedRows[i].logisticsCompany && selectedRows[i].logisticsNumber && !selectedRows[i].logisticsStatus){
+        item.confirmTag=selectedRows[i].confirmTag;
+        item.deptId=selectedRows[i].deptId;
+        item.id=selectedRows[i].id;
+        item.logisticsCompany=selectedRows[i].logisticsCompany;
+        item.logisticsNumber=selectedRows[i].logisticsNumber;
+        item.logisticsType=selectedRows[i].logisticsType;
+        item.outOrderNo=selectedRows[i].outOrderNo;
+        item.productCoding=selectedRows[i].productCoding;
+        item.productName=selectedRows[i].productName;
+        item.shipmentRemind=true;
+        item.tenantId=selectedRows[i].tenantId;
+        item.userPhone=selectedRows[i].userPhone;
+        listArr.push(item)
+      }
+    }
+    this.setState({
+      _listArr:listArr
+    })
+  }
+
   // 测试
 
   // 左侧操作按钮
@@ -979,7 +1024,13 @@ class AllOrdersList extends PureComponent {
           </>
         ):""}
 
-        {/* 已发货什么都没有 */}
+        {/* 已发货 */}
+      {tabKey === '3'?(<>
+        <Button
+          icon="tags"
+          onClick={this.bulkSubscription}
+        >批量订阅</Button></>):""}
+
         {/* 在途中什么都没有 */}
 
        {/* 已签收 */}
