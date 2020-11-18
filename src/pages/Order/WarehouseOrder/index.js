@@ -501,9 +501,9 @@ class AllOrdersList extends PureComponent {
       confirmTag:tabKey === 'null' ? null : tabKey
     };
 
-    payload.pay_pany_id = payload.productType ? payload.productType[0] : null;
-    payload.product_type_id = payload.productType ? payload.productType[1] : null;
-    payload.product_id = payload.productType ? payload.productType[2] : null;
+    payload.payPanyId = payload.productType ? payload.productType[0] : null;
+    payload.productTypeId = payload.productType ? payload.productType[1] : null;
+    payload.productId = payload.productType ? payload.productType[2] : null;
 
     localStorage.setItem("warehouseOrderParams",JSON.stringify(payload));
 
