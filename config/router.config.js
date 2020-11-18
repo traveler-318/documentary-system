@@ -281,6 +281,17 @@ export default [
             ],
           },
           {
+            path: '/system/organization',
+            routes: [
+              { path: '/system/organization', redirect: '/system/Organization/list' },
+              { path: '/system/organization/list', component: './System/Organization/Organization' },
+              { path: '/system/organization/add', component: './System/Organization/OrganizationAdd' },
+              { path: '/system/organization/add/:id', component: './System/Organization/OrganizationAdd' },
+              { path: '/system/organization/edit/:id', component: './System/Organization/OrganizationEdit' },
+              { path: '/system/organization/view/:id', component: './System/Organization/OrganizationView' },
+            ],
+          },
+          {
             path: '/system/post',
             routes: [
               { path: '/system/post', redirect: '/system/post/list' },

@@ -266,6 +266,42 @@ function getFakeButtons(req, res) {
             alias: 'view',
           },
         ],
+      },{
+        code: 'organization',
+        children: [
+          {
+            code: 'organization_add',
+            name: '新增',
+            path: '/system/organization/add',
+            source: 'plus',
+            action: 1,
+            alias: 'add',
+          },
+          {
+            code: 'organization_edit',
+            name: '修改',
+            path: '/system/organization/edit',
+            source: 'form',
+            action: 2,
+            alias: 'edit',
+          },
+          {
+            code: 'organization_delete',
+            name: '删除',
+            path: '/api/blade-system/organization/remove',
+            source: 'delete',
+            action: 3,
+            alias: 'delete',
+          },
+          {
+            code: 'organization_view',
+            name: '查看',
+            path: '/system/organization/view',
+            source: 'file-text',
+            action: 2,
+            alias: 'view',
+          },
+        ],
       },
       {
         code: 'dict',
