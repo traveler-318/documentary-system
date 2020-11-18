@@ -24,7 +24,8 @@ import {
   getSalesmanLists,
   subscription,
   updateData,
-  salesmanList
+  salesmanList,
+  productTreelist
 } from '../../../services/newServices/order';
 
 // getList as getSalesmanLists,
@@ -93,6 +94,7 @@ class AllOrdersList extends PureComponent {
       },
       tabKey:sessionStorage.orderTabKey ? sessionStorage.orderTabKey : '0',
       selectedRows:[],
+      productList:[],
       // 物流弹窗
       logisticsVisible:false,
       // 导出
@@ -350,7 +352,14 @@ class AllOrdersList extends PureComponent {
       })
     })
 
-    this.getSalesman()
+    this.getSalesman();
+    this.getTreeList();
+  }
+  getTreeList = () => {
+    productTreelist().then(res=>{
+      console.log(res.data,"productTreelist")
+      this.setState({productList:res.data})
+    })
   }
 
   // 销售默认全部列表
@@ -414,6 +423,7 @@ class AllOrdersList extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
+    console.log(params,"查询参数")
     const { dateRange } = params;
     const { tabKey, salesmanList } = this.state;
     let payload = {
@@ -558,6 +568,32 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
+        <FormItem label="产品分类">
+          {getFieldDecorator('productType', {
+              initialValue: null,
+            })(
+              <Cascader
+                options={productList}
+                fieldNames={{ label: 'value',value: "id"}}
+                // onChange={(value, selectedOptions)=>{
+                //   console.log(value, selectedOptions,"产品分类改变")
+                //   // this.setState({
+                //   //   payamount:selectedOptions[2].payamount
+                //   // })
+                //   const { form } = this.props;
+                //   console.log(form,"1")
+                //   console.log(form.getFieldsValue,"2");
+                //   const region = form.getFieldsValue();
+                //   console.log(region,"3");
+                //   // if(!region.payamount || region.payamount === "" || region.payamount === null){
+                //     form.setFieldsValue({
+                //       payAmount:selectedOptions[2].payamount
+                //     })
+                //   // }
+                // }}
+              ></Cascader>
+          )}
+        </FormItem>
           <div>
             <Form.Item label="下单时间">
               {getFieldDecorator('dateRange', {
