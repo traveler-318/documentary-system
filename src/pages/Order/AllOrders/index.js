@@ -490,7 +490,7 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, salesmangroup, params } = this.state;
+    const { salesmanList, salesmangroup, params, productList } = this.state;
 
     return (
       <div className={"default_search_form"}>
@@ -569,6 +569,7 @@ class AllOrdersList extends PureComponent {
           )}
         </Form.Item>
         <FormItem label="产品分类">
+          {/* 新增一个注释解决没打包的问题 */}
           {getFieldDecorator('productType', {
               initialValue: null,
             })(
