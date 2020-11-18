@@ -474,9 +474,9 @@ class AllOrdersList extends PureComponent {
       confirmTag:tabKey === 'null' ? null : tabKey
     };
 
-    payload.pay_pany_id = payload.productType ? payload.productType[0] : null;
-    payload.product_type_id = payload.productType ? payload.productType[1] : null;
-    payload.product_id = payload.productType ? payload.productType[2] : null;
+    payload.payPanyId = payload.productType ? payload.productType[0] : payload.payPanyId ? payload.payPanyId : null;
+    payload.productTypeId = payload.productType ? payload.productType[1] : payload.productTypeId ? payload.productTypeId  : null;
+    payload.productId = payload.productType ? payload.productType[2] : payload.productId ? payload.productId  : null;
     
 
     localStorage.setItem("AllOrdersparams",JSON.stringify(payload));
@@ -499,6 +499,8 @@ class AllOrdersList extends PureComponent {
     const { getFieldDecorator } = form;
 
     const { salesmanList, salesmangroup, params, productList } = this.state;
+
+    console.log(params,"params.productType")
 
     return (
       <div className={"default_search_form"}>
@@ -577,11 +579,11 @@ class AllOrdersList extends PureComponent {
           )}
         </Form.Item>
         <Form.Item label="产品分类">
-          
           {getFieldDecorator('productType', {
-              initialValue: params.productType ? params.productType : null,
+              initialValue: params.payPanyId ? [params.payPanyId,params.productTypeId,params.productId] : null,
             })(
               <Cascader
+                style={{ width: 260 }}
                 options={productList}
                 fieldNames={{ label: 'value',value: "id"}}
                 changeOnSelect={true}

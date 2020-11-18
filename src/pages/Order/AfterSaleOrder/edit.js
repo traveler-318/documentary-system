@@ -54,9 +54,9 @@ class OrdersEdit extends PureComponent {
       primary1:'',
       productList:[],
       repeatLoading:false,
-      pay_pany_id:null,
-      product_type_id:null,
-      product_id:null,
+      payPanyId:null,
+      productTypeId:null,
+      productId:null,
     };
   }
 
@@ -88,9 +88,9 @@ class OrdersEdit extends PureComponent {
     getDetails(params).then(res=>{
       this.setState({
         detail:res.data,
-        pay_pany_id:res.data.pay_pany_id,
-        product_type_id:res.data.product_type_id,
-        product_id:res.data.product_id,
+        payPanyId:res.data.payPanyId,
+        productTypeId:res.data.productTypeId,
+        productId:res.data.productId,
       })
       this.getList(res.data)
     })
@@ -153,7 +153,7 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail,selectedOptions, pay_pany_id, product_type_id, product_id, } = this.state;
+    const { detail,selectedOptions, payPanyId, productTypeId, productId, } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       //ORDERSTATUS.map(item => {
       //  if(item.name === values.confirmTag){
@@ -170,9 +170,9 @@ class OrdersEdit extends PureComponent {
       if(values.productType && values.productType != ""){
         values.productName = values.productType[2];
         values.productType = `${values.productType[0]}/${values.productType[1]}`;
-        values.pay_pany_id = pay_pany_id;
-        values.product_type_id = product_type_id; 
-        values.product_id = product_id;
+        values.payPanyId = payPanyId;
+        values.productTypeId = productTypeId; 
+        values.productId = productId;
       }
       if (!err) {
         const params = {
@@ -515,9 +515,9 @@ class OrdersEdit extends PureComponent {
                             const { form } = this.props;
 
                             this.setState({
-                              pay_pany_id:selectedOptions[0].id,
-                              product_type_id:selectedOptions[1].id,
-                              product_id :selectedOptions[2].id,
+                              payPanyId:selectedOptions[0].id,
+                              productTypeId:selectedOptions[1].id,
+                              productId :selectedOptions[2].id,
                             })
 
                             form.setFieldsValue({
