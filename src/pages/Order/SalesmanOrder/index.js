@@ -465,9 +465,7 @@ class AllOrdersList extends PureComponent {
       };
       payload.dateRange = null;
     }
-    if(payload.groupId && payload.groupId === "全部"){
-      payload.groupId = null;
-    }
+    
     if(payload.logisticsStatus && payload.logisticsStatus === "全部"){
       payload.logisticsStatus = null;
     }
@@ -533,32 +531,6 @@ class AllOrdersList extends PureComponent {
               })}
             </Select>
           )}
-        </Form.Item>
-        <Form.Item label="分组">
-          {getFieldDecorator('groupId', {
-                initialValue: params.groupId ? params.groupId : "全部",
-              })(
-              <Select
-                placeholder={"请选择分组"}
-                style={{ width: 120 }}
-                onChange={this.changeGroup}
-              >
-                {salesmangroup.map(item=>{
-                  return (<Option value={item.id}>{item.groupName}</Option>)
-                })}
-              </Select>
-            )}
-        </Form.Item>
-        <Form.Item label="销售">
-          {getFieldDecorator('salesman', {
-                initialValue: params.salesman ? params.salesman : "全部",
-              })(
-              <Select placeholder={"请选择销售"} style={{ width: 120 }}>
-                {salesmanList.map((item,index)=>{
-                  return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
-                })}
-              </Select>
-            )}
         </Form.Item>
         <Form.Item label="订单来源">
           {getFieldDecorator('orderSource', {
