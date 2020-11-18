@@ -1665,6 +1665,15 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
+    const formAllItemLayout = {
+      labelCol: {
+        span: 4,
+      },
+      wrapperCol: {
+        span: 20,
+      },
+    };
+
     const {
       data,
       loading,
@@ -1897,20 +1906,22 @@ class AllOrdersList extends PureComponent {
               {"name":"已取消",key:9},
               {"name":"已过期",key:10},
               {"name":"全部",key:null}, */}
-              {currentList.confirmTag === '10' ? (
-                <Radio.Group onChange={this.onChangeRadio}>
-                  <Radio value={7}>已激活</Radio>
-                  <Radio value={8}>已退回</Radio>
-                </Radio.Group>
-              ) : (
-                <Radio.Group onChange={this.onChangeRadio}>
-                  <Radio value={7}>已激活</Radio>
-                  <Radio value={8}>已退回</Radio>
-                  <Radio value={9}>已取消</Radio>
-                </Radio.Group>
-              )}
               <Form>
-                <FormItem label="修改原因">
+                <FormItem {...formAllItemLayout} label="订单状态">
+                  {currentList.confirmTag === '10' ? (
+                    <Radio.Group onChange={this.onChangeRadio}>
+                      <Radio value={7}>已激活</Radio>
+                      <Radio value={8}>已退回</Radio>
+                    </Radio.Group>
+                  ) : (
+                    <Radio.Group onChange={this.onChangeRadio}>
+                      <Radio value={7}>已激活</Radio>
+                      <Radio value={8}>已退回</Radio>
+                      <Radio value={9}>已取消</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem {...formAllItemLayout} label="修改原因">
                   <TextArea rows={2} disabled />
                 </FormItem>
               </Form>
