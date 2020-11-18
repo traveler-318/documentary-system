@@ -166,8 +166,8 @@ class ProductManagement extends PureComponent {
               <div>
                 <Divider type="vertical" />
                 <a onClick={()=>this.handleEdit(row)}>修改</a>
-                <Divider type="vertical" />
-                <a onClick={()=>this.handleClick(row)}>删除</a>
+                {/* <Divider type="vertical" />
+                <a onClick={()=>this.handleClick(row)}>删除</a> */}
               </div>
             )
           },
