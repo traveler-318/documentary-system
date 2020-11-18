@@ -160,11 +160,11 @@ class ProductManagement extends PureComponent {
           title: '操作',
           key: 'operation',
           fixed: 'right',
-          width: 150,
+          width: 80,
           render: (res,row) => {
             return(
               <div>
-                <Divider type="vertical" />
+                {/* <Divider type="vertical" /> */}
                 <a onClick={()=>this.handleEdit(row)}>修改</a>
                 {/* <Divider type="vertical" />
                 <a onClick={()=>this.handleClick(row)}>删除</a> */}
