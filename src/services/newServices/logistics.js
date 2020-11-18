@@ -79,6 +79,7 @@ export async function getSurfacesingleStatus(params) {
     body: params,
   });
 }
+// 打印模板刷新
 export async function refreshStatus(params) {
   return request(`/api/logistics/surfacesingle/refreshStatus/${params}`, {
     method: 'GET',

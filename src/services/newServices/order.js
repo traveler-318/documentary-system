@@ -224,6 +224,14 @@ export async function deleteLogisticsSuber(params) {
   });
 }
 
+// 发货批量订阅
+export async function batchLogisticsSubscription(params) {
+  return request('/api/order/order/batchLogisticsSubscription', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 
 // 导出电话展示
 export async function getPhone() {
