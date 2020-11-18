@@ -574,7 +574,7 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <FormItem label="产品分类">
+        <Form.Item label="产品分类">
           
           {getFieldDecorator('productType', {
               initialValue: params.productType ? params.productType : null,
@@ -585,7 +585,7 @@ class AllOrdersList extends PureComponent {
                 changeOnSelect={true}
               ></Cascader>
           )}
-        </FormItem>
+        </Form.Item>
           <div>
             <Form.Item label="下单时间">
               {getFieldDecorator('dateRange', {

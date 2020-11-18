@@ -43,7 +43,10 @@ class OrdersAdd extends PureComponent {
       productList:[],
       selectedOptions:[],
       payamount:null,
-      userName:''
+      userName:'',
+      pay_pany_id:null,
+      product_type_id:null,
+      product_id:null,
     };
   }
 
@@ -96,7 +99,7 @@ class OrdersAdd extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { cityparam, selectedOptions, payamount } = this.state;
+    const { cityparam, selectedOptions, payamount, pay_pany_id, product_type_id, product_id,  } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log(values,"提交数据")
@@ -109,6 +112,9 @@ class OrdersAdd extends PureComponent {
           // values.payAmount = payamount;
           values.productName = values.productType[2];
           values.productType = `${values.productType[0]}/${values.productType[1]}`;
+          values.pay_pany_id = pay_pany_id;
+          values.product_type_id = product_type_id; 
+          values.product_id = product_id;
         }
         values.userAddress = `${selectedOptions}${values.userAddress}`;
         createData(values).then(res=>{
@@ -317,6 +323,13 @@ class OrdersAdd extends PureComponent {
                         onChange={(value, selectedOptions)=>{
                           console.log(value, selectedOptions,"123")
                           const { form } = this.props;
+
+                          this.setState({
+                            pay_pany_id:selectedOptions[0].id,
+                            product_type_id:selectedOptions[1].id,
+                            product_id :selectedOptions[2].id,
+                          })
+
                           form.setFieldsValue({
                             payAmount:selectedOptions[2].payamount
                           })

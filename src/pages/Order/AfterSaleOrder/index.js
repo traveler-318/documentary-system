@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Badge, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs, Radio, Tag } from 'antd';
+import { Button, Col, Form, Input, Badge, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs, Radio, Tag, Cascader } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import { Resizable } from 'react-resizable';
@@ -25,7 +25,8 @@ import {
   subscription,
   updateData,
   salesmanList,
-  menuTab
+  menuTab,
+  productTreelist
 } from '../../../services/newServices/order';
 
 // getList as getSalesmanLists,
@@ -96,6 +97,7 @@ class AllOrdersList extends PureComponent {
       tabCode:[],
       tabKey:sessionStorage.afterSaleOrderTabKey ? sessionStorage.afterSaleOrderTabKey : '0',
       selectedRows:[],
+      productList:[],
       // 物流弹窗
       logisticsVisible:false,
       // 导出
@@ -375,7 +377,15 @@ class AllOrdersList extends PureComponent {
       })
     })
 
-    this.getSalesman()
+    this.getSalesman();
+    this.getTreeList();
+  }
+
+  getTreeList = () => {
+    productTreelist().then(res=>{
+      console.log(res.data,"productTreelist")
+      this.setState({productList:res.data})
+    })
   }
 
   // 销售默认全部列表
@@ -487,9 +497,14 @@ class AllOrdersList extends PureComponent {
       confirmTag:tabKey === 'null' ? null : tabKey
     };
 
+    payload.pay_pany_id = payload.productType ? payload.productType[0] : null;
+    payload.product_type_id = payload.productType ? payload.productType[1] : null;
+    payload.product_id = payload.productType ? payload.productType[2] : null;
+
     localStorage.setItem("afterSaleOrderParams",JSON.stringify(payload));
 
     delete payload.dateRange;
+    delete payload.productType;
 
     this.setState({
       params:payload
@@ -505,7 +520,7 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, salesmangroup, params } = this.state;
+    const { salesmanList, salesmangroup, params, productList } = this.state;
 
     return (
       <div className={"default_search_form"}>
@@ -581,6 +596,18 @@ class AllOrdersList extends PureComponent {
                 return (<Option value={item.key}>{item.name}</Option>)
               })}
             </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="产品分类">
+          
+          {getFieldDecorator('productType', {
+              initialValue: params.productType ? params.productType : null,
+            })(
+              <Cascader
+                options={productList}
+                fieldNames={{ label: 'value',value: "id"}}
+                changeOnSelect={true}
+              ></Cascader>
           )}
         </Form.Item>
           <div>

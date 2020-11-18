@@ -229,7 +229,7 @@ class Logistics extends PureComponent {
                     },
                   ],
                 })(
-                  <Select placeholder="请选择支付公司" onChange={(key,row)=>{this.onChange(key,row,"payPanyId")}}>
+                  <Select disabled placeholder="请选择支付公司" onChange={(key,row)=>{this.onChange(key,row,"payPanyId")}}>
                     {paypanyList.map((item)=>{
                       return (<Option key={item.id} value={item.payName}>{item.payName}</Option>)
                     })}
@@ -246,7 +246,7 @@ class Logistics extends PureComponent {
                     },
                   ],
                 })(
-                  <Select placeholder="请选择支付类型" onChange={(key,row)=>{this.onChange(key,row,"productTypeId")}}>
+                  <Select disabled placeholder="请选择支付类型" onChange={(key,row)=>{this.onChange(key,row,"productTypeId")}}>
                     {productcategoryList.map((item)=>{
                       return (<Option key={item.id} value={item.id}>{item.productTypeName}</Option>)
                     })}

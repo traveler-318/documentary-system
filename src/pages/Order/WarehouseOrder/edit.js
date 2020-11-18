@@ -54,6 +54,9 @@ class OrdersEdit extends PureComponent {
       primary1:'',
       productList:[],
       repeatLoading:false,
+      pay_pany_id:null,
+      product_type_id:null,
+      product_id:null,
     };
   }
 
@@ -85,7 +88,9 @@ class OrdersEdit extends PureComponent {
     getDetails(params).then(res=>{
       this.setState({
         detail:res.data,
-        // selectedOptions:res.data.province+res.data.city+res.data.area
+        pay_pany_id:res.data.pay_pany_id,
+        product_type_id:res.data.product_type_id,
+        product_id:res.data.product_id,
       })
       this.getList(res.data)
     })
@@ -148,7 +153,7 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail,selectedOptions } = this.state;
+    const { detail,selectedOptions, pay_pany_id, product_type_id, product_id, } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       //ORDERSTATUS.map(item => {
       //  if(item.name === values.confirmTag){
@@ -165,6 +170,9 @@ class OrdersEdit extends PureComponent {
       if(values.productType && values.productType != ""){
         values.productName = values.productType[2];
         values.productType = `${values.productType[0]}/${values.productType[1]}`;
+        values.pay_pany_id = pay_pany_id;
+        values.product_type_id = product_type_id; 
+        values.product_id = product_id;
       }
       if (!err) {
         const params = {
@@ -497,7 +505,7 @@ class OrdersEdit extends PureComponent {
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="产品类型">
                       {getFieldDecorator('productType', {
-                        initialValue: detail.productType?detail.productType.split("/"):null ,
+                        initialValue: detail.productType?[...detail.productType.split("/"),detail.productName]:null, 
                       })(
                         <Cascader
                           disabled={edit}
@@ -505,7 +513,13 @@ class OrdersEdit extends PureComponent {
                           fieldNames={{ label: 'value'}}
                           onChange={(value, selectedOptions)=>{
                             const { form } = this.props;
-                            const region = form.getFieldsValue();
+                            
+                            this.setState({
+                              pay_pany_id:selectedOptions[0].id,
+                              product_type_id:selectedOptions[1].id,
+                              product_id :selectedOptions[2].id,
+                            })
+
                             form.setFieldsValue({
                               payAmount:selectedOptions[2].payamount
                             })
