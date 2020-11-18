@@ -38,7 +38,7 @@ class Logistics extends PureComponent {
       },
       paypanyList:[],
       productcategoryList:[],
-      payPanyId:"",
+      payPanyName:"",
       productTypeName:"",
       handleImgVisible:false,
       Imglist:[]
@@ -48,11 +48,6 @@ class Logistics extends PureComponent {
 
   componentWillMount() {
     const {details} = this.props;
-    console.log(details)
-    this.setState({
-      payPanyId:details.payPanyId,
-      productTypeName:details.productTypeName,
-    })
 
     this.getProductcategoryLists(details.payPanyId)
 
@@ -63,6 +58,16 @@ class Logistics extends PureComponent {
       this.setState({
         paypanyList:res.data.records
       })
+      const {details} = this.props;
+      for(let i=0; i<res.data.records.length; i++){
+        if(parseInt(details.payPanyId) === res.data.records[i].id){
+          this.setState({
+            payPanyName:res.data.records[i].payName,
+          })
+        }
+      }
+
+      
     })
   }
 
@@ -75,6 +80,15 @@ class Logistics extends PureComponent {
       this.setState({
         productcategoryList:res.data.records
       })
+      const {details} = this.props;
+      for(let i=0; i<res.data.records.length; i++){
+        if(parseInt(details.productTypeId) === res.data.records[i].id){
+          this.setState({
+            productTypeName:res.data.records[i].productTypeName,
+          })
+        }
+      }
+      
     })
   }
 
@@ -100,10 +114,10 @@ class Logistics extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
       if (!err) {
-        const {payPanyId,productTypeName} = this.state;
+        const {payPanyName,productTypeName} = this.state;
         const params = {
           ...values,
-          payPanyId,
+          payPanyName,
           productTypeName,
           deptId:getCookie("dept_id"),
           id:details.id,
@@ -220,8 +234,8 @@ class Logistics extends PureComponent {
           <div className={styles.add}>
             <Form style={{ marginTop: 8 }}>
               <FormItem {...formAllItemLayout} label="支付公司">
-                {getFieldDecorator('payPanyName', {
-                  initialValue: details.payPanyName,
+                {getFieldDecorator('payPanyId', {
+                  initialValue: parseInt(details.payPanyId),
                   rules: [
                     {
                       required: true,
@@ -231,7 +245,7 @@ class Logistics extends PureComponent {
                 })(
                   <Select disabled placeholder="请选择支付公司" onChange={(key,row)=>{this.onChange(key,row,"payPanyId")}}>
                     {paypanyList.map((item)=>{
-                      return (<Option key={item.id} value={item.payName}>{item.payName}</Option>)
+                      return (<Option key={item.id} value={item.id}>{item.payName}</Option>)
                     })}
                   </Select>
                 )}

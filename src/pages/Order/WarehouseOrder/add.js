@@ -282,7 +282,9 @@ class OrdersAdd extends PureComponent {
                   })(
                   <Select placeholder={"请选择订单来源"}>
                     {ORDERSOURCE.map(item=>{
-                      return (<Option value={item.key}>{item.name}</Option>)
+                      if(item.key != null){
+                        return (<Option value={item.key}>{item.name}</Option>)
+                      }
                     })}
                   </Select>
                   )}
