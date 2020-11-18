@@ -50,6 +50,7 @@ const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
+const { TextArea } = Input;
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
@@ -1636,6 +1637,15 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
+    const formAllItemLayout = {
+      labelCol: {
+        span: 4,
+      },
+      wrapperCol: {
+        span: 20,
+      },
+    };
+
     const {
       data,
       loading,
@@ -1902,6 +1912,11 @@ class AllOrdersList extends PureComponent {
                   <Radio value={9}>已取消</Radio>
                 </Radio.Group>
               )}
+              <Form>
+                <FormItem label="修改原因">
+                  <TextArea rows={2} disabled />
+                </FormItem>
+              </Form>
         </Modal>) :""
           }
       </Panel>

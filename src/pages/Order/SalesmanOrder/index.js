@@ -51,6 +51,7 @@ const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
+const { TextArea } = Input;
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
@@ -1831,6 +1832,11 @@ class AllOrdersList extends PureComponent {
                   <Radio value={9}>已取消</Radio>
                 </Radio.Group>
               )}
+              <Form>
+                <FormItem label="修改原因">
+                  <TextArea rows={2} disabled />
+                </FormItem>
+              </Form>
         </Modal>):""}
       </Panel>
     );
