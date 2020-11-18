@@ -472,9 +472,9 @@ class AllOrdersList extends PureComponent {
       confirmTag:tabKey === 'null' ? null : tabKey
     };
 
-    payload.pay_pany_id = payload.productType[0] || null;
-    payload.product_type_id = payload.productType[1] || null;
-    payload.product_id = payload.productType[2] || null;
+    payload.pay_pany_id = payload.productType ? payload.productType[0] : null;
+    payload.product_type_id = payload.productType ? payload.productType[1] : null;
+    payload.product_id = payload.productType ? payload.productType[2] : null;
     
 
     localStorage.setItem("AllOrdersparams",JSON.stringify(payload));
@@ -575,7 +575,7 @@ class AllOrdersList extends PureComponent {
           )}
         </Form.Item>
         <FormItem label="产品分类">
-          {/* 新增一个注释解决没打包的问题 */}
+          
           {getFieldDecorator('productType', {
               initialValue: params.productType ? params.productType : null,
             })(
