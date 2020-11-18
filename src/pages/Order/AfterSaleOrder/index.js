@@ -1051,6 +1051,7 @@ class AllOrdersList extends PureComponent {
       batchLogisticsSubscription(listArr).then(res=>{
         if(res.code === 200){
           message.success(res.msg);
+          this.getDataList()
         }else{
           message.error(res.msg);
         }
