@@ -582,6 +582,7 @@ class AllOrdersList extends PureComponent {
               initialValue: params.productType ? params.productType : null,
             })(
               <Cascader
+                style={{ width: 260 }}
                 options={productList}
                 fieldNames={{ label: 'value',value: "id"}}
                 changeOnSelect={true}
