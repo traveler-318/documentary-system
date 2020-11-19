@@ -4,14 +4,14 @@ import router from 'umi/router';
 import { Button, Col, Divider, Form, Input, Row, Tag } from 'antd';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import { DEPT_LIST } from '../../../actions/dept';
+import { DEPT_LIST } from '../../../actions/organization';
 import { tenantMode } from '../../../defaultSettings';
 
 const FormItem = Form.Item;
 
-@connect(({ dept, loading }) => ({
-  dept,
-  loading: loading.models.dept,
+@connect(({ organization, loading }) => ({
+  organization,
+  loading: loading.models.organization,
 }))
 @Form.create()
 class Organization extends PureComponent {
@@ -86,8 +86,9 @@ class Organization extends PureComponent {
     const {
       form,
       loading,
-      dept: { data },
+      organization: { data },
     } = this.props;
+    console.log(data)
 
     const columns = [
       {

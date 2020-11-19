@@ -200,7 +200,12 @@ class OrderImport extends PureComponent {
             </Form.Item>
             <Form.Item {...formItemLayout} label="销售">
               {getFieldDecorator('salesman', {
-                initialValue: "全部",
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择销售',
+                  },
+                ],
               })(
                 <Select placeholder={"请选择销售"} style={{ width: 120 }}>
                   {salesmanList.map((item,index)=>{
@@ -211,7 +216,12 @@ class OrderImport extends PureComponent {
             </Form.Item>
             <FormItem {...formItemLayout} label="创建时间">
               {getFieldDecorator('createTime', {
-
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择提醒时间',
+                  },
+                ],
               })(
                 <DatePicker
                   showTime={{ format: 'HH:mm:ss' }}

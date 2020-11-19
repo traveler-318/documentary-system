@@ -46,6 +46,7 @@ import Text from './components/text';
 import Journal from '../components/journal';
 import SMS from '../components/smsList';
 import VoiceList from '../components/voiceList';
+import OrderImport from './components/orderImport';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

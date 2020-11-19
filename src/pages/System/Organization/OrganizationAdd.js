@@ -4,14 +4,14 @@ import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
 import func from '../../../utils/Func';
-import { DEPT_INIT, DEPT_SUBMIT, DEPT_DETAIL, DEPT_CLEAR_DETAIL } from '../../../actions/dept';
+import { DEPT_INIT, DEPT_SUBMIT, DEPT_DETAIL, DEPT_CLEAR_DETAIL } from '../../../actions/organization';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
-@connect(({ dept, loading }) => ({
-  dept,
-  submitting: loading.effects['dept/submit'],
+@connect(({ organization, loading }) => ({
+  organization,
+  submitting: loading.effects['organization/submit'],
 }))
 @Form.create()
 class OrganizationAdd extends PureComponent {
@@ -43,12 +43,14 @@ class OrganizationAdd extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      dept: {
+      organization: {
         detail,
         init: { tree, category },
       },
       submitting,
     } = this.props;
+
+    console.log(category)
 
     const formItemLayout = {
       labelCol: {
