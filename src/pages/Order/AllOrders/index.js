@@ -958,7 +958,6 @@ class AllOrdersList extends PureComponent {
         const idSame=true;
         for(let j=0; j<_listArr.length; j++){
           if(selectedRows[i].id === _listArr[j].id){
-            console.log("id相同")
             idSame=false;
           }
         }
@@ -1005,16 +1004,28 @@ class AllOrdersList extends PureComponent {
       _listArr:listArr
     })
     console.log(listArr)
-    if(listArr.length > 0){
-      batchLogisticsSubscription(listArr).then(res=>{
-        if(res.code === 200){
-          message.success(res.msg);
-          this.getDataList()
-        }else{
-          message.error(res.msg);
+    const _this=this;
+    Modal.confirm({
+      title: '提示',
+      content: '请确认订单号、物流名称无误后再进行物流订阅操作！此操作属于扣费行为不可逆转！',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      keyboard:false,
+      async onOk() {
+        if(listArr.length > 0){
+          batchLogisticsSubscription(listArr).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              _this.getDataList()
+            }else{
+              message.error(res.msg);
+            }
+          })
         }
-      })
-    }
+      },
+      onCancel() {},
+    });
   }
 
   // 测试
