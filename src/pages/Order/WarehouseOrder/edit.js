@@ -88,9 +88,9 @@ class OrdersEdit extends PureComponent {
     getDetails(params).then(res=>{
       this.setState({
         detail:res.data,
-        payPanyId:res.data.payPanyId,
-        productTypeId:res.data.productTypeId,
-        productId:res.data.productId,
+        payPanyId:res.data.payPanyId || '0',
+        productTypeId:res.data.productTypeId || '0',
+        productId:res.data.productId || '0',
       })
       this.getList(res.data)
     })
