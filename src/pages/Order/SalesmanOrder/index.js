@@ -1052,11 +1052,11 @@ class AllOrdersList extends PureComponent {
         ):""}
 
         {/* 已发货 */}
-      {/*{tabKey === '3'?(<>*/}
-        {/*<Button*/}
-          {/*icon="tags"*/}
-          {/*onClick={this.bulkSubscription}*/}
-        {/*>批量订阅</Button></>):""}*/}
+      {tabKey === '3'?(<>
+        <Button
+          icon="tags"
+          onClick={this.bulkSubscription}
+        >批量订阅</Button></>):""}
         {/* 在途中什么都没有 */}
 
        {/* 已签收 */}
