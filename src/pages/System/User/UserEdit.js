@@ -297,9 +297,7 @@ class UserEdit extends PureComponent {
                       allowClear
                       showSearch
                       treeNodeFilterProp="title"
-                      multiple
                       placeholder="请选择所属机构"
-                      disabled
                     />
                   )}
                 </FormItem>
