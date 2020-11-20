@@ -62,22 +62,20 @@ class Organization extends PureComponent {
   };
 
   renderActionButton = (keys, rows) => {
-    console.log(rows[0].parentId === "0",rows,"row")
-    if(rows[0].parentId === "0"){
-      return (
-        <Fragment>
-          <Divider type="vertical" />
-          <a
-            title="新增下级"
-            onClick={() => {
-              this.handleClick(rows[0].id);
-            }}
-          >
-            新增下级
-          </a>
-        </Fragment>
-      )
-    }
+    console.log(rows[0].parentId === "0",rows,"row");
+    return (
+      <Fragment>
+        <Divider type="vertical" />
+        <a
+          title="新增下级"
+          onClick={() => {
+            this.handleClick(rows[0].id);
+          }}
+        >
+          新增下级
+        </a>
+      </Fragment>
+    )
   };
 
   render() {
