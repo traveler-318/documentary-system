@@ -99,20 +99,6 @@ class OrganizationAdd extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="机构全称">
-                  {getFieldDecorator('fullName', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入机构全称',
-                      },
-                    ],
-                  })(<Input placeholder="请输入机构全称" />)}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
                 <FormItem {...formItemLayout} label="上级机构">
                   {getFieldDecorator('parentId', {
                     initialValue: detail.id,
@@ -129,6 +115,8 @@ class OrganizationAdd extends PureComponent {
                   )}
                 </FormItem>
               </Col>
+            </Row>
+            <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} className={styles.inputItem} label="机构类型">
                   {getFieldDecorator('deptCategory', {

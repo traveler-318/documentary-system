@@ -82,7 +82,7 @@ class UserEdit extends PureComponent {
       form: { getFieldDecorator },
       user: {
         detail,
-        init: { roleTree, deptTree, postList, tenantList },
+        init: { roleTree, organizationTree, deptTree, postList, tenantList },
       },
       submitting,
     } = this.props;
@@ -282,11 +282,35 @@ class UserEdit extends PureComponent {
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="所属机构">
-                  {getFieldDecorator('deptId', {
+                  {getFieldDecorator('organizationId', {
                     rules: [
                       {
                         required: true,
                         message: '请选择所属机构',
+                      },
+                    ],
+                    initialValue: func.split(detail.organizationId),
+                  })(
+                    <TreeSelect
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      treeData={organizationTree}
+                      allowClear
+                      showSearch
+                      treeNodeFilterProp="title"
+                      multiple
+                      placeholder="请选择所属机构"
+                      disabled
+                    />
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="所属公司">
+                  {getFieldDecorator('deptId', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择所属公司',
                       },
                     ],
                     initialValue: func.split(detail.deptId),
@@ -298,12 +322,14 @@ class UserEdit extends PureComponent {
                       showSearch
                       treeNodeFilterProp="title"
                       multiple
-                      placeholder="请选择所属机构"
+                      placeholder="请选择所属公司"
                       disabled
                     />
                   )}
                 </FormItem>
               </Col>
+            </Row>
+            <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="所属岗位">
                   {getFieldDecorator('postId', {

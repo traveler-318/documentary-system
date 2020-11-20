@@ -73,17 +73,12 @@ class OrganizationView extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="机构全称">
-                  <span>{detail.fullName}</span>
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
                 <FormItem {...formItemLayout} label="上级机构">
                   <span>{detail.parentName}</span>
                 </FormItem>
               </Col>
+            </Row>
+            <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="机构类型">
                   <span>{detail.deptCategoryName}</span>

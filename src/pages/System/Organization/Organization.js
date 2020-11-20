@@ -38,11 +38,6 @@ class Organization extends PureComponent {
             {getFieldDecorator('tenantId')(<Input placeholder="请输入角色名称" />)}
           </FormItem>
         </Col>
-        <Col md={6} sm={24}>
-          <FormItem label="机构全称">
-            {getFieldDecorator('fullName')(<Input placeholder="请输入机构全称" />)}
-          </FormItem>
-        </Col>
         <Col>
           <div style={{ float: 'right' }}>
             <Button type="primary" htmlType="submit">
@@ -96,10 +91,6 @@ class Organization extends PureComponent {
       {
         title: '机构名称',
         dataIndex: 'deptName',
-      },
-      {
-        title: '机构全称',
-        dataIndex: 'fullName',
       },
       {
         title: '机构类型',
