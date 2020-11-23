@@ -150,7 +150,8 @@ class BasicLayout extends React.Component {
             {params => (
               <Context.Provider value={this.getContext()}>
                 <div className={classNames(params)}>{layout}</div>
-                <RealTimeInformation/>
+                {/* 暂时关闭 */}
+                {/* <RealTimeInformation/> */}
               </Context.Provider>
             )}
           </ContainerQuery>
