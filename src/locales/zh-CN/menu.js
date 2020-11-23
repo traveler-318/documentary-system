@@ -50,6 +50,7 @@ export default {
   'menu.authority.role': '角色管理',
   'menu.authority.data_scope': '数据权限',
   'menu.authority.api_scope': '接口权限',
+  'menu.authority.executive': '主管授权',
   'menu.system': '系统管理',
   'menu.system.user': '用户管理',
   'menu.system.dept': '公司管理',
