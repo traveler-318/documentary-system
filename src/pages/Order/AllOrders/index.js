@@ -485,6 +485,10 @@ class AllOrdersList extends PureComponent {
     delete payload.dateRange;
     delete payload.productType;
 
+    for(let key in payload){
+      payload[key] = payload[key] === "" ? null : payload[key]
+    }
+
     this.setState({
       params:payload
     },()=>{
@@ -500,8 +504,6 @@ class AllOrdersList extends PureComponent {
     const { getFieldDecorator } = form;
 
     const { salesmanList, salesmangroup, params, productList } = this.state;
-
-    console.log(params,"params.productType")
 
     return (
       <div className={"default_search_form"}>

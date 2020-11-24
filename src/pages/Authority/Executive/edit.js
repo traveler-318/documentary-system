@@ -325,7 +325,7 @@ class OrdersEdit extends PureComponent {
         });
         if(res.code === 200){
           sessionStorage.setItem('imgBase64', res.data)
-          window.open(`#/order/allOrders/img`);
+          window.open(`#/authority/executive/img`);
         }else{
           message.error(res.msg);
         }
@@ -387,11 +387,9 @@ class OrdersEdit extends PureComponent {
         span: 16,
       },
     };
-   console.log(!detail.logisticsStatus === true,"123123")
-   console.log(detail)
 
     return (
-      <Panel title="详情" back="/order/AllOrders">
+      <Panel title="详情" back="/authority/executive">
         <Form style={{ marginTop: 8 }}>
           <Card bordered={false} className={styles.editContent}>
             <Row gutter={24} style={{ margin: 0 }}>

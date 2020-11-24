@@ -509,6 +509,10 @@ class AllOrdersList extends PureComponent {
     delete payload.dateRange;
     delete payload.productType;
 
+    for(let key in payload){
+      payload[key] = payload[key] === "" ? null : payload[key]
+    }
+
     this.setState({
       params:payload
     },()=>{

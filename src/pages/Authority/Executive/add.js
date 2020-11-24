@@ -115,7 +115,7 @@ class OrdersAdd extends PureComponent {
         createData(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
-            router.push('/order/allOrders');
+            router.push('/authority/executive');
           }
         })
       }
@@ -200,7 +200,7 @@ class OrdersAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back="/order/AllOrders" action={action}>
+      <Panel title="新增" back="/authority/executive" action={action}>
         <Form style={{ marginTop: 8 }}>
           <div></div>
           <Card title="创建客户" className={styles.card} bordered={false}>
