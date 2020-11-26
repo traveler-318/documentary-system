@@ -39,9 +39,9 @@ import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 import ImportData from './components/ImportData'
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
-import Excel from './components/excel';
-import Text from './components/text';
-import OrderImport from './components/orderImport';
+import Excel from '../AllOrders/components/excel';
+import Text from '../AllOrders/components/text';
+import OrderImport from '../AllOrders/components/orderImport';
 import Journal from '../components/journal';
 import SMS from '../components/smsList'
 import VoiceList from '../components/voiceList'

@@ -38,12 +38,12 @@ import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 import ImportData from './components/ImportData'
-import Excel from './components/excel'
-import Text from './components/text'
+import Excel from '../../Order/AllOrders/components/excel'
+import Text from '../../Order/AllOrders/components/text'
 import Journal from '../../Order/components/journal'
 import SMS from '../../Order/components/smsList'
 import VoiceList from '../../Order/components/voiceList'
-import OrderImport from './components/orderImport';
+import OrderImport from '../../Order/AllOrders/components/orderImport';
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;

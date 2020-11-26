@@ -1,19 +1,5 @@
 import React, { PureComponent } from 'react';
-import {
-  Modal,
-  Checkbox,
-  Form,
-  Input,
-  Icon,
-  Select,
-  Col,
-  Button,
-  DatePicker,
-  message,
-  Switch,
-  Upload,
-  Row,
-} from 'antd';
+import { Modal, Checkbox, Form, Input, Icon, Select, Col, Button, DatePicker, message, Switch, Upload,Row, Spin } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -43,7 +29,8 @@ class OrderImport extends PureComponent {
       salesmanList:[],
       onReset: () => {},
       fileList:[],
-      createTime:''
+      createTime:'',
+      loading: false,
     };
   }
 
@@ -100,14 +87,20 @@ class OrderImport extends PureComponent {
         console.log(this.state.fileList,"values");
         values.file = this.state.fileList[0];
         values.createTime=this.state.createTime
-        console.log(values)
         importOrder(values).then(res=>{
+          this.setState({
+            loading:false,
+          })
           if(res.code === 200){
             message.success(res.msg)
             this.props.handleOrderImportCancel();
           }else{
             message.error(res.msg)
           }
+        })
+      }else{
+        this.setState({
+          loading:false,
         })
       }
     })
@@ -134,7 +127,7 @@ class OrderImport extends PureComponent {
       handleOrderImportCancel
     } = this.props;
 
-    const {isCovered,salesmanList,fileList} = this.state;
+    const {isCovered,salesmanList,fileList,loading} = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -184,15 +177,22 @@ class OrderImport extends PureComponent {
           visible={OrderImportVisible}
           confirmLoading={confirmLoading}
           onCancel={handleOrderImportCancel}
-          footer={[
-            <Button key="back" onClick={handleOrderImportCancel}>
-              取消
-            </Button>,
-            <Button type="primary" onClick={this.handleOrderSave}>
-              确认
-            </Button>,
-          ]}
+          loading={loading}
+          onOk = {()=>{
+            if(loading){
+              return false;
+            }
+            this.setState({
+              loading:true,
+            })
+            this.handleOrderSave();
+          }}
         >
+          <Spin 
+            tip="导入中请稍等..."
+            style={{botton:"-77px",right:"-10px",zIndex:1000,top:0}}
+            spinning={loading}
+          >
           <Form style={{ marginTop: 8 }} hideRequiredMark>
             <Form.Item {...formItemLayout} label="模板上传">
               <Dragger
@@ -272,7 +272,9 @@ class OrderImport extends PureComponent {
               </Button>
             </Form.Item>
           </Form>
+          </Spin>
         </Modal>
+       
       </>
     );
   }

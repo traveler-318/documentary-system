@@ -189,15 +189,15 @@ class UserAdd extends PureComponent {
           <Card title="详细信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="用户昵称">
+                <FormItem {...formItemLayout} label="用户姓名">
                   {getFieldDecorator('name', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入用户昵称',
+                        message: '请输入用户姓名',
                       },
                     ],
-                  })(<Input placeholder="请输入用户昵称" />)}
+                  })(<Input placeholder="请输入用户姓名" />)}
                 </FormItem>
               </Col>
               <Col span={10}>

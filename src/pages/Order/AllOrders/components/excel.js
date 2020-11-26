@@ -98,14 +98,7 @@ class Export extends PureComponent {
           visible={excelVisible}
           confirmLoading={confirmLoading}
           onCancel={handleExcelCancel}
-          footer={[
-            <Button key="back" onClick={handleExcelCancel}>
-              取消
-            </Button>,
-            <Button type="primary" onClick={handleExcelCancel}>
-              确认
-            </Button>,
-          ]}
+          footer={null}
         >
           <Form style={{ marginTop: 8 }} hideRequiredMark>
             <FormItem {...formItemLayout} label="模板上传">
