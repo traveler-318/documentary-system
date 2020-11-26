@@ -1,5 +1,19 @@
 import React, { PureComponent } from 'react';
-import { Modal, Checkbox, Form, Input, Icon, Select, Col, Button, DatePicker, message, Switch, Upload } from 'antd';
+import {
+  Modal,
+  Checkbox,
+  Form,
+  Input,
+  Icon,
+  Select,
+  Col,
+  Button,
+  DatePicker,
+  message,
+  Switch,
+  Upload,
+  Row,
+} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -10,6 +24,7 @@ import {
 } from '../../../../services/newServices/order';
 import { getList,getVCode,exportOrder,getPhone, importOrder } from '../../../../services/newServices/order'
 import { getAccessToken, getToken } from '../../../../utils/authority';
+import styles from '../edit.less';
 
 
 const FormItem = Form.Item;
@@ -85,6 +100,7 @@ class OrderImport extends PureComponent {
         console.log(this.state.fileList,"values");
         values.file = this.state.fileList[0];
         values.createTime=this.state.createTime
+        console.log(values)
         importOrder(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg)
@@ -131,6 +147,14 @@ class OrderImport extends PureComponent {
         md: { span: 16 },
       },
     };
+    const formItemLayout1 = {
+      labelCol: {
+        span: 10,
+      },
+      wrapperCol: {
+        span: 11,
+      },
+    };
 
     const propss = {
       onRemove: file => {
@@ -156,7 +180,7 @@ class OrderImport extends PureComponent {
       <>
         <Modal
           title="订单导入"
-          width={500}
+          width={550}
           visible={OrderImportVisible}
           confirmLoading={confirmLoading}
           onCancel={handleOrderImportCancel}
@@ -186,17 +210,28 @@ class OrderImport extends PureComponent {
             {/* <FormItem {...formItemLayout} label="数据覆盖">
               <Switch checkedChildren="是" unCheckedChildren="否" onChange={this.onSwitchChange} />
             </FormItem> */}
-            <Form.Item {...formItemLayout} label="订单类型">
-              {getFieldDecorator('orderType', {
-                initialValue: null,
-              })(
-                <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
-                  {ORDERTYPPE.map(item=>{
-                    return (<Option value={item.key}>{item.name}</Option>)
-                  })}
-                </Select>
-              )}
-            </Form.Item>
+            <Row gutter={24} style={{ margin: 0 }}>
+              <Col span={12} style={{ padding: 0 }}>
+                <Form.Item {...formItemLayout1} label="订单类型">
+                  {getFieldDecorator('orderType', {
+                    initialValue: null,
+                  })(
+                    <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
+                      {ORDERTYPPE.map(item=>{
+                        return (<Option value={item.key}>{item.name}</Option>)
+                      })}
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={12} style={{ padding: 0 }}>
+                <FormItem {...formItemLayout1} label="订单金额">
+                  {getFieldDecorator('payAmount', {
+
+                  })(<Input placeholder="请输入金额" />)}
+                </FormItem>
+              </Col>
+            </Row>
             <Form.Item {...formItemLayout} label="销售">
               {getFieldDecorator('salesman', {
                 rules: [
