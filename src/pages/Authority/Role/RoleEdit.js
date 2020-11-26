@@ -36,6 +36,14 @@ class RoleEdit extends PureComponent {
           'name':"售后角色",
           'code':"afterteam"
         },
+        {
+          'name':"销售主管",
+          'code':"salesdirector"
+        },
+        {
+          'name':"售后主管",
+          'code':"aftersalesdirector"
+        },
       ],
       roleAliasValue:"",
       openType:false
