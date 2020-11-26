@@ -32,7 +32,7 @@ class SenderAdd extends PureComponent {
       ],
       groupingList:[],
       params:{
-        size:10,
+        size:100,
         current:1
       },
       afterlist:[]
