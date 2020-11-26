@@ -37,17 +37,19 @@ import Export from './components/export'
 import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
-import ImportData from './components/ImportData'
+
 
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
-import Excel from '../AllOrders/components/excel';
-import Text from '../AllOrders/components/text';
+
 import Journal from '../components/journal';
 import SMS from '../components/smsList';
 import VoiceList from '../components/voiceList';
-import OrderImport from '../AllOrders/components/orderImport';
 
+import OrderImport from '../components/orderImport';
+import Excel from '../components/excel';
+import Text from '../components/text';
+import ImportData from '../components/ImportData';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
