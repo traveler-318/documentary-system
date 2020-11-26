@@ -277,8 +277,6 @@ export async function importOrder(params) {
   formData.append('salesman', salesman);
   formData.append('orderType', orderType);
   formData.append('file', file);
-
-  console.log(formData)
   return request('/api/order/order/importOrder', {
     method: 'POST',
     body: formData,
