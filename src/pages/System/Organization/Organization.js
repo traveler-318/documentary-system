@@ -4,14 +4,14 @@ import router from 'umi/router';
 import { Button, Col, Divider, Form, Input, Row, Tag } from 'antd';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import { DEPT_LIST } from '../../../actions/dept';
+import { DEPT_LIST } from '../../../actions/organization';
 import { tenantMode } from '../../../defaultSettings';
 
 const FormItem = Form.Item;
 
-@connect(({ dept, loading }) => ({
-  dept,
-  loading: loading.models.dept,
+@connect(({ organization, loading }) => ({
+  organization,
+  loading: loading.models.organization,
 }))
 @Form.create()
 class Organization extends PureComponent {
@@ -38,11 +38,6 @@ class Organization extends PureComponent {
             {getFieldDecorator('tenantId')(<Input placeholder="请输入角色名称" />)}
           </FormItem>
         </Col>
-        <Col md={6} sm={24}>
-          <FormItem label="机构全称">
-            {getFieldDecorator('fullName')(<Input placeholder="请输入机构全称" />)}
-          </FormItem>
-        </Col>
         <Col>
           <div style={{ float: 'right' }}>
             <Button type="primary" htmlType="submit">
@@ -62,22 +57,20 @@ class Organization extends PureComponent {
   };
 
   renderActionButton = (keys, rows) => {
-    console.log(rows[0].parentId === "0",rows,"row")
-    if(rows[0].parentId === "0"){
-      return (
-        <Fragment>
-          <Divider type="vertical" />
-          <a
-            title="新增下级"
-            onClick={() => {
-              this.handleClick(rows[0].id);
-            }}
-          >
-            新增下级
-          </a>
-        </Fragment>
-      )
-    }
+    console.log(rows[0].parentId === "0",rows,"row");
+    return (
+      <Fragment>
+        <Divider type="vertical" />
+        <a
+          title="新增下级"
+          onClick={() => {
+            this.handleClick(rows[0].id);
+          }}
+        >
+          新增下级
+        </a>
+      </Fragment>
+    )
   };
 
   render() {
@@ -86,8 +79,9 @@ class Organization extends PureComponent {
     const {
       form,
       loading,
-      dept: { data },
+      organization: { data },
     } = this.props;
+    console.log(data)
 
     const columns = [
       {
@@ -97,10 +91,6 @@ class Organization extends PureComponent {
       {
         title: '机构名称',
         dataIndex: 'deptName',
-      },
-      {
-        title: '机构全称',
-        dataIndex: 'fullName',
       },
       {
         title: '机构类型',

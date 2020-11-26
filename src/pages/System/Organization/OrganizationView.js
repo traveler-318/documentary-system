@@ -3,13 +3,13 @@ import { Form, Card, Button, Row, Col } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
-import { DEPT_DETAIL } from '../../../actions/dept';
+import { DEPT_DETAIL } from '../../../actions/organization';
 import styles from '../../../layouts/Sword.less';
 
 const FormItem = Form.Item;
 
-@connect(({ dept }) => ({
-  dept,
+@connect(({ organization }) => ({
+  organization,
 }))
 @Form.create()
 class OrganizationView extends PureComponent {
@@ -29,12 +29,13 @@ class OrganizationView extends PureComponent {
         params: { id },
       },
     } = this.props;
-    router.push(`/system/dept/edit/${id}`);
+    console.log(id)
+    router.push(`/system/organization/edit/${id}`);
   };
 
   render() {
     const {
-      dept: { detail },
+      organization: { detail },
     } = this.props;
 
     const formItemLayout = {
@@ -62,7 +63,7 @@ class OrganizationView extends PureComponent {
     );
 
     return (
-      <Panel title="查看" back="/system/dept" action={action}>
+      <Panel title="查看" back="/system/organization" action={action}>
         <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
@@ -72,17 +73,12 @@ class OrganizationView extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="机构全称">
-                  <span>{detail.fullName}</span>
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
                 <FormItem {...formItemLayout} label="上级机构">
                   <span>{detail.parentName}</span>
                 </FormItem>
               </Col>
+            </Row>
+            <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="机构类型">
                   <span>{detail.deptCategoryName}</span>

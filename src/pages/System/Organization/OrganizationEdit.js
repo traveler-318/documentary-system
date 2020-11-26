@@ -14,14 +14,14 @@ import {
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
-import { DEPT_DETAIL, DEPT_INIT, DEPT_SUBMIT } from '../../../actions/dept';
+import { DEPT_DETAIL, DEPT_INIT, DEPT_SUBMIT } from '../../../actions/organization';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
-@connect(({ dept, loading }) => ({
-  dept,
-  submitting: loading.effects['dept/submit'],
+@connect(({ organization, loading }) => ({
+  organization,
+  submitting: loading.effects['organization/submit'],
 }))
 @Form.create()
 class OrganizationEdit extends PureComponent {
@@ -69,7 +69,7 @@ class OrganizationEdit extends PureComponent {
   render() {
     const {
       form: { getFieldDecorator },
-      dept: {
+      organization: {
         detail,
         init: { tree, category },
       },
@@ -124,21 +124,6 @@ class OrganizationEdit extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="机构全称">
-                  {getFieldDecorator('fullName', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入机构全称',
-                      },
-                    ],
-                    initialValue: detail.fullName,
-                  })(<Input placeholder="请输入机构全称" />)}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col span={10}>
                 <FormItem {...formItemLayout} label="上级机构">
                   {getFieldDecorator('parentId', {
                     initialValue: detail.parentId === '0' ? detail.id : detail.parentId,
@@ -155,6 +140,8 @@ class OrganizationEdit extends PureComponent {
                   )}
                 </FormItem>
               </Col>
+            </Row>
+            <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} className={styles.inputItem} label="机构类型">
                   {getFieldDecorator('deptCategory', {

@@ -229,6 +229,17 @@ export default [
               { path: '/authority/apiscope/list', component: './Authority/ApiScope/ApiScope' },
             ],
           },
+          {
+            path: '/authority/executive',
+            routes: [
+              { path: '/authority/executive', redirect: '/authority/executive/list' },
+              { path: '/authority/executive/list', component: './Authority/Executive/index' },
+              { path: '/authority/executive/add', component: './Authority/Executive/add' },
+              { path: '/authority/executive/edit/:id', component: './Authority/Executive/edit' },
+              { path: '/authority/executive/logisticsConfiguration', component: './Authority/Executive/components/logisticsConfiguration' },
+              { path: '/authority/executive/img', component: './Authority/Executive/img' },
+            ],
+          },
         ],
       },
       {

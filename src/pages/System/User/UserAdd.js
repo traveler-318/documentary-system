@@ -72,7 +72,7 @@ class UserAdd extends PureComponent {
     const {
       form: { getFieldDecorator },
       user: {
-        init: { roleTree, deptTree, postList, tenantList },
+        init: { roleTree,organizationTree, deptTree, postList, tenantList },
       },
       submitting,
     } = this.props;
@@ -105,10 +105,12 @@ class UserAdd extends PureComponent {
       if(item.id === getCookie("dept_id")){
         _deptTree.push(item)
       }
-      
     })
 
-    console.log(_deptTree,"_deptTree")
+    let _organizationTree = [];
+    organizationTree.map(item=>{
+      _organizationTree.push(item)
+    })
 
     return (
       <Panel title="新增" back="/system/user" action={action}>
@@ -187,15 +189,15 @@ class UserAdd extends PureComponent {
           <Card title="详细信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="用户昵称">
+                <FormItem {...formItemLayout} label="用户姓名">
                   {getFieldDecorator('name', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入用户昵称',
+                        message: '请输入用户姓名',
                       },
                     ],
-                  })(<Input placeholder="请输入用户昵称" />)}
+                  })(<Input placeholder="请输入用户姓名" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
@@ -293,7 +295,7 @@ class UserAdd extends PureComponent {
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="所属机构">
-                  {getFieldDecorator('deptId', {
+                  {getFieldDecorator('organizationId', {
                     rules: [
                       {
                         required: true,
@@ -303,7 +305,7 @@ class UserAdd extends PureComponent {
                   })(
                     <TreeSelect
                       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                      treeData={_deptTree}
+                      treeData={_organizationTree}
                       allowClear
                       showSearch
                       treeNodeFilterProp="title"
@@ -312,6 +314,29 @@ class UserAdd extends PureComponent {
                   )}
                 </FormItem>
               </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="所属公司">
+                  {getFieldDecorator('deptId', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择所属公司',
+                      },
+                    ],
+                  })(
+                    <TreeSelect
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      treeData={_deptTree}
+                      allowClear
+                      showSearch
+                      treeNodeFilterProp="title"
+                      placeholder="请选择所属公司"
+                    />
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="所属岗位">
                   {getFieldDecorator('postId', {

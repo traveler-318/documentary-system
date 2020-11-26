@@ -12,7 +12,7 @@ import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY, LOGISTICSSTATUS } from './data.js';
 import {
-  getList,
+  getPermissions,
   deleteData,
   updateRemind,
   localPrinting,
@@ -38,12 +38,12 @@ import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 import ImportData from './components/ImportData'
-import Excel from './components/excel'
-import Text from './components/text'
-import Journal from '../components/journal'
-import SMS from '../components/smsList'
-import VoiceList from '../components/voiceList'
-import OrderImport from './components/orderImport';
+import Excel from '../../Order/AllOrders/components/excel'
+import Text from '../../Order/AllOrders/components/text'
+import Journal from '../../Order/components/journal'
+import SMS from '../../Order/components/smsList'
+import VoiceList from '../../Order/components/voiceList'
+import OrderImport from '../../Order/AllOrders/components/orderImport';
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
@@ -384,7 +384,7 @@ class AllOrdersList extends PureComponent {
     this.setState({
       loading:true,
     })
-    getList(params).then(res=>{
+    getPermissions(params).then(res=>{
       this.setState({
         countSice:res.data.total,
         data:setListData(res.data),
@@ -504,6 +504,8 @@ class AllOrdersList extends PureComponent {
     const { getFieldDecorator } = form;
 
     const { salesmanList, salesmangroup, params, productList } = this.state;
+
+    console.log(params,"params.productType")
 
     return (
       <div className={"default_search_form"}>

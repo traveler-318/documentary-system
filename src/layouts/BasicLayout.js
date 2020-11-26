@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Layout } from 'antd';
+import { Layout, Spin } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { ContainerQuery } from 'react-container-query';
@@ -148,11 +148,13 @@ class BasicLayout extends React.Component {
         <DocumentTitle title={getPageTitle(pathname, breadcrumbNameMap)}>
           <ContainerQuery query={query}>
             {params => (
-              <Context.Provider value={this.getContext()}>
-                <div className={classNames(params)}>{layout}</div>
-                {/* 暂时关闭 */}
-                {/* <RealTimeInformation/> */}
-              </Context.Provider>
+              // <Spin tip="请稍等..." spinning={true}>
+                <Context.Provider value={this.getContext()}>
+                  <div className={classNames(params)}>{layout}</div>
+                  {/* 暂时关闭 */}
+                  {/* <RealTimeInformation/> */}
+                </Context.Provider>
+              // </Spin>
             )}
           </ContainerQuery>
         </DocumentTitle>

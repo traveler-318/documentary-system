@@ -39,9 +39,9 @@ import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 import ImportData from './components/ImportData'
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
-import Excel from './components/excel';
-import Text from './components/text';
-import OrderImport from './components/orderImport';
+import Excel from '../AllOrders/components/excel';
+import Text from '../AllOrders/components/text';
+import OrderImport from '../AllOrders/components/orderImport';
 import Journal from '../components/journal';
 import SMS from '../components/smsList'
 import VoiceList from '../components/voiceList'
@@ -487,6 +487,10 @@ class AllOrdersList extends PureComponent {
 
     delete payload.dateRange;
     delete payload.productType;
+
+    for(let key in payload){
+      payload[key] = payload[key] === "" ? null : payload[key]
+    }
     
     this.setState({
       params:payload
@@ -743,21 +747,38 @@ class AllOrdersList extends PureComponent {
     if(!radioChecked){
       return message.error("请选择需要更改的状态");
     }
-    updateData({
-      id:currentList.id,
-      confirmTag:radioChecked,
-      outOrderNo:currentList.outOrderNo
-    }).then(res=>{
-      if(res.code === 200){
-        message.success(res.msg);
-        this.setState({
-          confirmTagVisible:false
-        });
-        this.getDataList();
-      }else{
-        message.error(res.msg)
-      }
-    })
+    Modal.confirm({
+      title: '提醒',
+      content: "此次操作无法再次变更,确认操作!",
+      okText: '确定',
+      okType: 'primary',
+      cancelText: '取消',
+      keyboard:false,
+      onOk:() => {
+        return new Promise((resolve, reject) => {
+          updateData({
+            id:currentList.id,
+            confirmTag:radioChecked,
+            outOrderNo:currentList.outOrderNo
+          }).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              this.setState({
+                confirmTagVisible:false
+              });
+              this.getDataList();
+              resolve();
+            }else{
+              message.error(res.msg);
+              reject();
+            }
+          })
+
+        }).catch(() => console.log('Oops errors!'));
+        
+      },
+      onCancel() {},
+    });
   }
 
   // =========关闭物流弹窗========

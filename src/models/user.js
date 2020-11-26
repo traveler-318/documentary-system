@@ -5,6 +5,7 @@ import { query as queryUsers, list, submit, update, detail, remove, grant } from
 import { select as tenants } from '../services/tenant';
 import { tree as roles } from '../services/role';
 import { tree as depts } from '../services/dept';
+import { tree as organization } from '../services/newServices/organization';
 import { select as posts } from '../services/post';
 import { getCurrentUser } from '../utils/authority';
 
@@ -20,6 +21,7 @@ export default {
     },
     init: {
       roleTree: [],
+      organizationTree: [],
       deptTree: [],
       postList: [],
       tenantList: [],
@@ -60,11 +62,13 @@ export default {
     },
     *fetchInit({ payload }, { call, put }) {
       const responseRole = yield call(roles, payload);
+      const responseOrganization = yield call(organization, payload);
       const responseDept = yield call(depts, payload);
       const responsePost = yield call(posts, payload);
       const responseTenant = yield call(tenants, payload);
       if (
         responseRole.success &&
+        responseOrganization.success &&
         responseDept.success &&
         responsePost.success &&
         responseTenant.success
@@ -73,6 +77,7 @@ export default {
           type: 'saveInit',
           payload: {
             roleTree: responseRole.data,
+            organizationTree: responseOrganization.data,
             deptTree: responseDept.data,
             postList: responsePost.data,
             tenantList: responseTenant.data,
@@ -93,6 +98,7 @@ export default {
     },
     *fetchChangeInit({ payload }, { call, put }) {
       const responseRole = yield call(roles, payload);
+      const responseOrganization = yield call(organization, payload);
       const responseDept = yield call(depts, payload);
       const responsePost = yield call(posts, payload);
       if (responseRole.success && responseDept.success && responsePost.success) {
@@ -100,6 +106,7 @@ export default {
           type: 'saveChangeInit',
           payload: {
             roleTree: responseRole.data,
+            organizationTree: responseOrganization.data,
             deptTree: responseDept.data,
             postList: responsePost.data,
           },
@@ -195,6 +202,7 @@ export default {
     saveChangeInit(state, action) {
       const newState = state;
       newState.init.roleTree = action.payload.roleTree;
+      newState.init.organizationTree = action.payload.organizationTree;
       newState.init.deptTree = action.payload.deptTree;
       newState.init.postList = action.payload.postList;
       return {

@@ -46,6 +46,7 @@ class UserEdit extends PureComponent {
           id,
           ...values,
           roleId: func.join(values.roleId),
+          organizationId: values.organizationId.toString(),
           deptId: func.join(values.deptId),
           postId: func.join(values.postId),
           birthday: func.format(values.birthday),
@@ -82,7 +83,7 @@ class UserEdit extends PureComponent {
       form: { getFieldDecorator },
       user: {
         detail,
-        init: { roleTree, deptTree, postList, tenantList },
+        init: { roleTree, organizationTree, deptTree, postList, tenantList },
       },
       submitting,
     } = this.props;
@@ -164,16 +165,16 @@ class UserEdit extends PureComponent {
           <Card title="详细信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="用户昵称">
+                <FormItem {...formItemLayout} label="用户姓名">
                   {getFieldDecorator('name', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入用户昵称',
+                        message: '请输入用户姓名',
                       },
                     ],
                     initialValue: detail.name,
-                  })(<Input placeholder="请输入用户昵称" />)}
+                  })(<Input placeholder="请输入用户姓名" />)}
                 </FormItem>
               </Col>
               {/* <Col span={10}>
@@ -282,11 +283,33 @@ class UserEdit extends PureComponent {
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="所属机构">
-                  {getFieldDecorator('deptId', {
+                  {getFieldDecorator('organizationId', {
                     rules: [
                       {
                         required: true,
                         message: '请选择所属机构',
+                      },
+                    ],
+                    initialValue: func.split(detail.organizationId),
+                  })(
+                    <TreeSelect
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      treeData={organizationTree}
+                      allowClear
+                      showSearch
+                      treeNodeFilterProp="title"
+                      placeholder="请选择所属机构"
+                    />
+                  )}
+                </FormItem>
+              </Col>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="所属公司">
+                  {getFieldDecorator('deptId', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择所属公司',
                       },
                     ],
                     initialValue: func.split(detail.deptId),
@@ -298,12 +321,14 @@ class UserEdit extends PureComponent {
                       showSearch
                       treeNodeFilterProp="title"
                       multiple
-                      placeholder="请选择所属机构"
+                      placeholder="请选择所属公司"
                       disabled
                     />
                   )}
                 </FormItem>
               </Col>
+            </Row>
+            <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} label="所属岗位">
                   {getFieldDecorator('postId', {
