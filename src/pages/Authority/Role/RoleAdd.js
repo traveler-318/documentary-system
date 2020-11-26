@@ -23,10 +23,6 @@ class RoleAdd extends PureComponent {
     super(props);
     this.state = {
       roleAlias:[
-        // {
-        //   'name':"分公司管理员",
-        //   'code':"branchadmin"
-        // },
         {
           'name':"销售角色",
           'code':"salesrole"
