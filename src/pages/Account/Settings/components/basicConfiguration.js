@@ -175,13 +175,13 @@ class BaseView extends Component {
               </FormItem>
               <FormItem
                 {...formItemLayout}
-                label={"昵称"}
+                label={"姓名"}
               >
                 {getFieldDecorator('name', {
                   rules: [
                     {
                       required: true,
-                      message: "请输入您的昵称!",
+                      message: "请输入您的姓名!",
                     },
                   ],
                 })(<Input />)}

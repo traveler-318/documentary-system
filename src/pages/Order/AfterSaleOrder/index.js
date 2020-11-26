@@ -41,12 +41,12 @@ import ImportData from './components/ImportData'
 
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 
-import Excel from './components/excel';
-import Text from './components/text';
+import Excel from '../AllOrders/components/excel';
+import Text from '../AllOrders/components/text';
 import Journal from '../components/journal';
 import SMS from '../components/smsList';
 import VoiceList from '../components/voiceList';
-import OrderImport from './components/orderImport';
+import OrderImport from '../AllOrders/components/orderImport';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
