@@ -10,6 +10,14 @@ export async function getList(params) {
   });
 }
 
+// 主管授权订单列表
+export async function getPermissions(params) {
+  return request(`/api/order/permissions/list`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function getDetails(params) {
   return request(`/api/order/order/detail?${stringify(params)}`);
 }

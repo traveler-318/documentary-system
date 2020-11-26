@@ -12,7 +12,7 @@ import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY, LOGISTICSSTATUS } from './data.js';
 import {
-  getList,
+  getPermissions,
   deleteData,
   updateRemind,
   localPrinting,
@@ -384,7 +384,7 @@ class AllOrdersList extends PureComponent {
     this.setState({
       loading:true,
     })
-    getList(params).then(res=>{
+    getPermissions(params).then(res=>{
       this.setState({
         countSice:res.data.total,
         data:setListData(res.data),

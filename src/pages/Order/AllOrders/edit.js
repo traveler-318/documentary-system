@@ -387,8 +387,6 @@ class OrdersEdit extends PureComponent {
         span: 16,
       },
     };
-   console.log(!detail.logisticsStatus === true,"123123")
-   console.log(detail)
 
     return (
       <Panel title="详情" back="/order/AllOrders">

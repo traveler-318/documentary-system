@@ -1,5 +1,19 @@
 import React, { PureComponent } from 'react';
-import { Modal, Checkbox, Form, Input, Icon, Select, Col, Button, DatePicker, message, Switch, Upload } from 'antd';
+import {
+  Modal,
+  Checkbox,
+  Form,
+  Input,
+  Icon,
+  Select,
+  Col,
+  Button,
+  DatePicker,
+  message,
+  Switch,
+  Upload,
+  Row,
+} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -10,6 +24,7 @@ import {
 } from '../../../../services/newServices/order';
 import { getList,getVCode,exportOrder,getPhone, importOrder } from '../../../../services/newServices/order'
 import { getAccessToken, getToken } from '../../../../utils/authority';
+import styles from '../edit.less';
 
 
 const FormItem = Form.Item;
@@ -79,22 +94,23 @@ class OrderImport extends PureComponent {
   };
 
   handleOrderSave = () => {
-      const {form} = this.props;
-      form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-            console.log(this.state.fileList,"values");
-            values.file = this.state.fileList[0];
-            values.createTime=this.state.createTime
-            importOrder(values).then(res=>{
-              if(res.code === 200){
-                message.success(res.msg)
-                this.props.handleOrderImportCancel();
-              }else{
-                message.error(res.msg)
-              }
-            })
-        }
-      })
+    const {form} = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log(this.state.fileList,"values");
+        values.file = this.state.fileList[0];
+        values.createTime=this.state.createTime
+        console.log(values)
+        importOrder(values).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg)
+            this.props.handleOrderImportCancel();
+          }else{
+            message.error(res.msg)
+          }
+        })
+      }
+    })
   }
 
   onChange = (value, dateString) => {
@@ -131,6 +147,14 @@ class OrderImport extends PureComponent {
         md: { span: 16 },
       },
     };
+    const formItemLayout1 = {
+      labelCol: {
+        span: 10,
+      },
+      wrapperCol: {
+        span: 11,
+      },
+    };
 
     const propss = {
       onRemove: file => {
@@ -156,7 +180,7 @@ class OrderImport extends PureComponent {
       <>
         <Modal
           title="订单导入"
-          width={500}
+          width={550}
           visible={OrderImportVisible}
           confirmLoading={confirmLoading}
           onCancel={handleOrderImportCancel}
@@ -171,10 +195,10 @@ class OrderImport extends PureComponent {
         >
           <Form style={{ marginTop: 8 }} hideRequiredMark>
             <Form.Item {...formItemLayout} label="模板上传">
-              <Dragger 
-              {...propss}
-              onChange={this.onUpload}
-              
+              <Dragger
+                {...propss}
+                onChange={this.onUpload}
+
               >
                 <p className="ant-upload-drag-icon">
                   <Icon type="inbox" />
@@ -186,39 +210,50 @@ class OrderImport extends PureComponent {
             {/* <FormItem {...formItemLayout} label="数据覆盖">
               <Switch checkedChildren="是" unCheckedChildren="否" onChange={this.onSwitchChange} />
             </FormItem> */}
-            <Form.Item {...formItemLayout} label="订单类型">
-              {getFieldDecorator('orderType', {
-                  initialValue: null,
-                })(
-                <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
-                  {ORDERTYPPE.map(item=>{
-                    return (<Option value={item.key}>{item.name}</Option>)
+            <Row gutter={24} style={{ margin: 0 }}>
+              <Col span={12} style={{ padding: 0 }}>
+                <Form.Item {...formItemLayout1} label="订单类型">
+                  {getFieldDecorator('orderType', {
+                    initialValue: null,
+                  })(
+                    <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
+                      {ORDERTYPPE.map(item=>{
+                        return (<Option value={item.key}>{item.name}</Option>)
+                      })}
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={12} style={{ padding: 0 }}>
+                <FormItem {...formItemLayout1} label="订单金额">
+                  {getFieldDecorator('payAmount', {
+
+                  })(<Input placeholder="请输入金额" />)}
+                </FormItem>
+              </Col>
+            </Row>
+            <Form.Item {...formItemLayout} label="销售">
+              {getFieldDecorator('salesman', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择销售',
+                  },
+                ],
+              })(
+                <Select placeholder={"请选择销售"} style={{ width: 120 }}>
+                  {salesmanList.map((item,index)=>{
+                    return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
                   })}
                 </Select>
               )}
-            </Form.Item>
-            <Form.Item {...formItemLayout} label="销售">
-              {getFieldDecorator('salesman', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请选择销售',
-                    },
-                  ],
-                  })(
-                  <Select placeholder={"请选择销售"} style={{ width: 120 }}>
-                    {salesmanList.map((item,index)=>{
-                      return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
-                    })}
-                  </Select>
-                )}
             </Form.Item>
             <FormItem {...formItemLayout} label="创建时间">
               {getFieldDecorator('createTime', {
                 rules: [
                   {
                     required: true,
-                    message: '请选择销售',
+                    message: '请选择提醒时间',
                   },
                 ],
               })(
