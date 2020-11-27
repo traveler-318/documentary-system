@@ -46,9 +46,11 @@ class OrganizationEdit extends PureComponent {
       form,
     } = this.props;
     const parentId = form.getFieldValue('parentId');
-    if (id === parentId.toString()) {
-      message.warn('上级机构不能选择自身!');
-      return;
+    if(parentId){
+      if (id === parentId.toString()) {
+        message.warn('上级机构不能选择自身!');
+        return;
+      }
     }
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
