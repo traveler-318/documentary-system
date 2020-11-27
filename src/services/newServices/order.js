@@ -10,7 +10,7 @@ export async function getList(params) {
   });
 }
 
-// 主管授权订单列表
+// 下属订单订单列表
 export async function getPermissions(params) {
   return request(`/api/order/permissions/list`, {
     method: 'POST',

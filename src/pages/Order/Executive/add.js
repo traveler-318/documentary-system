@@ -101,8 +101,6 @@ class OrdersAdd extends PureComponent {
         values.tenantId = getCookie("tenantId");
         values = {...values,...cityparam};
         if(values.productType && values.productType != ""){
-          console.log(values.productType[2])
-          console.log(values.productType[2].split("-"))
           // values.payAmount = values.productType[2].split("-")[1];
           // values.payAmount = payamount;
           values.productName = values.productType[2];
@@ -115,7 +113,7 @@ class OrdersAdd extends PureComponent {
         createData(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
-            router.push('/authority/executive');
+            router.push('/order/executive');
           }
         })
       }
@@ -200,7 +198,7 @@ class OrdersAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back="/authority/executive" action={action}>
+      <Panel title="新增" back="/order/executive" action={action}>
         <Form style={{ marginTop: 8 }}>
           <div></div>
           <Card title="创建客户" className={styles.card} bordered={false}>

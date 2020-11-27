@@ -229,17 +229,6 @@ export default [
               { path: '/authority/apiscope/list', component: './Authority/ApiScope/ApiScope' },
             ],
           },
-          {
-            path: '/authority/executive',
-            routes: [
-              { path: '/authority/executive', redirect: '/authority/executive/list' },
-              { path: '/authority/executive/list', component: './Authority/Executive/index' },
-              { path: '/authority/executive/add', component: './Authority/Executive/add' },
-              { path: '/authority/executive/edit/:id', component: './Authority/Executive/edit' },
-              { path: '/authority/executive/logisticsConfiguration', component: './Authority/Executive/components/logisticsConfiguration' },
-              { path: '/authority/executive/img', component: './Authority/Executive/img' },
-            ],
-          },
         ],
       },
       {
@@ -558,6 +547,17 @@ export default [
               { path: '/order/allOrders/edit/:id', component: './Order/AllOrders/edit' },
               { path: '/order/allOrders/logisticsConfiguration', component: './Order/AllOrders/components/logisticsConfiguration' },
               { path: '/order/allOrders/img', component: './Order/AllOrders/img' },
+            ],
+          },
+          {
+            path: '/order/executive',
+            routes: [
+              { path: '/order/executive', redirect: '/order/executive/list' },
+              { path: '/order/executive/list', component: './Order/Executive/index' },
+              { path: '/order/executive/add', component: './Order/Executive/add' },
+              { path: '/order/executive/edit/:id', component: './Order/Executive/edit' },
+              { path: '/order/executive/logisticsConfiguration', component: './Order/Executive/components/logisticsConfiguration' },
+              { path: '/order/executive/img', component: './Order/Executive/img' },
             ],
           },
           {

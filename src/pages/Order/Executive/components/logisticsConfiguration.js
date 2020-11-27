@@ -410,7 +410,7 @@ class LogisticsConfiguration extends PureComponent {
                 logisticsPrintRequest(param).then(response=>{
                   if(response.code === 200){
                     sessionStorage.setItem('imgBase64', response.data)
-                    window.open(`#/authority/executive/img`);
+                    window.open(`#/order/executive/img`);
                     // 刷新详情数据
                     this.getDetailsData(listID[currentIndex].id);
                   }else{
@@ -454,7 +454,7 @@ class LogisticsConfiguration extends PureComponent {
           }).then(res=>{
             if(res.code === 200){
               sessionStorage.setItem('imgBase64', res.data)
-              window.open(`#/authority/executive/img`);
+              window.open(`#/order/executive/img`);
             }else{
               message.error(res.msg);
             }
@@ -555,7 +555,7 @@ class LogisticsConfiguration extends PureComponent {
     console.log(detail,"detaildetaildetail")
 
     return (
-      <Panel title="发货配置" back="/authority/executive">
+      <Panel title="发货配置" back="/order/executive">
         <div style={{background:"#fff",marginBottom:10,padding:"10px 10px 10px 20px"}}>
           <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
             保存

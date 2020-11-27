@@ -294,12 +294,12 @@ class UserAdd extends PureComponent {
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="所属机构">
+                <FormItem {...formItemLayout} label="所属组织">
                   {getFieldDecorator('organizationId', {
                     rules: [
                       {
                         required: true,
-                        message: '请选择所属机构',
+                        message: '请选择所属组织',
                       },
                     ],
                   })(
@@ -309,7 +309,7 @@ class UserAdd extends PureComponent {
                       allowClear
                       showSearch
                       treeNodeFilterProp="title"
-                      placeholder="请选择所属机构"
+                      placeholder="请选择所属组织"
                     />
                   )}
                 </FormItem>

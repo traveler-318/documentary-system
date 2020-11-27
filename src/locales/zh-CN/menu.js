@@ -6,6 +6,7 @@ export default {
   'menu.order.afterSaleOrder': '售后订单',
   'menu.order.smsrecord': '短信记录',
   'menu.order.mySubordinates': '我的下属',
+  'menu.order.executive': '下属订单',
 
   'menu.orders': '订单管理',
   'menu.orders.orderList': '全部订单',
@@ -50,7 +51,6 @@ export default {
   'menu.authority.role': '角色管理',
   'menu.authority.data_scope': '数据权限',
   'menu.authority.api_scope': '接口权限',
-  'menu.authority.executive': '主管授权',
   'menu.system': '系统管理',
   'menu.system.user': '用户管理',
   'menu.system.dept': '公司管理',

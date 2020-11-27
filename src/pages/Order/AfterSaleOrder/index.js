@@ -477,9 +477,6 @@ class AllOrdersList extends PureComponent {
     if(payload.orderSource && payload.orderSource === "全部"){
       payload.orderSource = null;
     }
-    if(payload.salesman == "全部"){
-      payload.salesman = null
-    }
 
     if(payload.groupId){
       let text = ""
