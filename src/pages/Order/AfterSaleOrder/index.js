@@ -465,11 +465,9 @@ class AllOrdersList extends PureComponent {
       };
       payload.dateRange = null;
     }
-    if(payload.salesman && payload.salesman === "全部"){
-      payload.salesman = null;
-    }
     if(payload.groupId && payload.groupId === "全部"){
       payload.groupId = null;
+      payload.salesman = null;
     }
     if(payload.logisticsStatus && payload.logisticsStatus === "全部"){
       payload.logisticsStatus = null;
@@ -481,18 +479,16 @@ class AllOrdersList extends PureComponent {
       payload.salesman = null
     }
 
-    if(payload.groupId && !payload.salesman){
+    if(payload.groupId){
       let text = ""
-      for(let i=0; i<salesmanList.length; i++){
-        if(salesmanList[i] != "全部"){
-          if(payload.salesman == salesmanList[i].userName){
-            text +=salesmanList[i].userAccount
-          }
+      if(payload.salesman === "全部"){
+        for(let i=0; i<salesmanList.length; i++){
+          text +=salesmanList[i].userAccount+","
         }
+        payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"");
+      }else{
+        payload.salesman = payload.salesman
       }
-      payload.salesman = text;
-    }else{
-      payload.salesman = payload.salesman
     }
 
     payload = {

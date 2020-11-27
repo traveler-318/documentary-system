@@ -465,14 +465,31 @@ class AllOrdersList extends PureComponent {
       };
       payload.dateRange = null;
     }
-    
+    if(payload.groupId && payload.groupId === "全部"){
+      payload.groupId = null;
+      payload.salesman = null;
+    }
     if(payload.logisticsStatus && payload.logisticsStatus === "全部"){
       payload.logisticsStatus = null;
     }
     if(payload.orderSource && payload.orderSource === "全部"){
       payload.orderSource = null;
     }
-    payload.salesman=getCookie("userName");
+    if(payload.salesman == "全部"){
+      payload.salesman = null
+    }
+
+    if(payload.groupId){
+      let text = ""
+      if(payload.salesman === "全部"){
+        for(let i=0; i<salesmanList.length; i++){
+          text +=salesmanList[i].userAccount+","
+        }
+        payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"");
+      }else{
+        payload.salesman = payload.salesman
+      }
+    }
 
     payload = {
       ...payload,
@@ -487,7 +504,7 @@ class AllOrdersList extends PureComponent {
 
     delete payload.dateRange;
     delete payload.productType;
-    
+
     this.setState({
       params:payload
     },()=>{

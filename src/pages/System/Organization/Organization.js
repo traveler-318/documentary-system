@@ -23,33 +23,7 @@ class Organization extends PureComponent {
 
   // ============ 查询表单 ===============
   renderSearchForm = onReset => {
-    const { form } = this.props;
-    const { getFieldDecorator } = form;
 
-    return (
-      <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-        <Col md={6} sm={24}>
-          <FormItem label="机构名称">
-            {getFieldDecorator('deptName')(<Input placeholder="请输入机构名称" />)}
-          </FormItem>
-        </Col>
-        <Col md={6} sm={24}>
-          <FormItem label="租户ID">
-            {getFieldDecorator('tenantId')(<Input placeholder="请输入角色名称" />)}
-          </FormItem>
-        </Col>
-        <Col>
-          <div style={{ float: 'right' }}>
-            <Button type="primary" htmlType="submit">
-              查询
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={onReset}>
-              重置
-            </Button>
-          </div>
-        </Col>
-      </Row>
-    );
   };
 
   handleClick = parentId => {
@@ -81,7 +55,6 @@ class Organization extends PureComponent {
       loading,
       organization: { data },
     } = this.props;
-    console.log(data)
 
     const columns = [
       {
@@ -89,11 +62,11 @@ class Organization extends PureComponent {
         dataIndex: 'tenantId',
       },
       {
-        title: '机构名称',
+        title: '组织名称',
         dataIndex: 'deptName',
       },
       {
-        title: '机构类型',
+        title: '组织类型',
         dataIndex: 'deptCategoryName',
         render: deptCategoryName => (
           <span>

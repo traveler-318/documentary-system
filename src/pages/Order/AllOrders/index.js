@@ -360,7 +360,6 @@ class AllOrdersList extends PureComponent {
   }
   getTreeList = () => {
     productTreelist().then(res=>{
-      console.log(res.data,"productTreelist")
       this.setState({productList:res.data})
     })
   }
@@ -426,7 +425,6 @@ class AllOrdersList extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
-    console.log(params,"查询参数")
     const { dateRange } = params;
     const { tabKey, salesmanList } = this.state;
     let payload = {
@@ -440,11 +438,9 @@ class AllOrdersList extends PureComponent {
       };
       // payload.dateRange = null;
     }
-    if(payload.salesman && payload.salesman === "全部"){
-      payload.salesman = null;
-    }
     if(payload.groupId && payload.groupId === "全部"){
       payload.groupId = null;
+      payload.salesman = null;
     }
     if(payload.logisticsStatus && payload.logisticsStatus === "全部"){
       payload.logisticsStatus = null;
@@ -452,22 +448,16 @@ class AllOrdersList extends PureComponent {
     if(payload.orderSource && payload.orderSource === "全部"){
       payload.orderSource = null;
     }
-    if(payload.salesman == "全部"){
-      payload.salesman = null
-    }
-
-    if(payload.groupId && !payload.salesman){
+    if(payload.groupId){
       let text = ""
-      for(let i=0; i<salesmanList.length; i++){
-        if(salesmanList[i] != "全部"){
-          if(payload.salesman == salesmanList[i].userName){
-            text +=salesmanList[i].userAccount
-          }
+      if(payload.salesman === "全部"){
+        for(let i=0; i<salesmanList.length; i++){
+          text +=salesmanList[i].userAccount+","
         }
+        payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"");
+      }else{
+        payload.salesman = payload.salesman
       }
-      payload.salesman = text;
-    }else{
-      payload.salesman = payload.salesman
     }
 
     payload = {
@@ -500,8 +490,6 @@ class AllOrdersList extends PureComponent {
     const { getFieldDecorator } = form;
 
     const { salesmanList, salesmangroup, params, productList } = this.state;
-
-    console.log(params,"params.productType")
 
     return (
       <div className={"default_search_form"}>
@@ -1022,7 +1010,6 @@ class AllOrdersList extends PureComponent {
     this.setState({
       _listArr:listArr
     })
-    console.log(listArr)
     const _this=this;
     Modal.confirm({
       title: '提示',
