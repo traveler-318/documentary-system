@@ -37,14 +37,14 @@ import Export from './components/export'
 import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
-import ImportData from './components/ImportData'
-import Excel from './components/excel'
-import Text from './components/text'
 import Journal from '../components/journal'
 import SMS from '../components/smsList'
 import VoiceList from '../components/voiceList'
-import OrderImport from './components/orderImport';
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
+import OrderImport from '../components/orderImport';
+import ImportData from '../components/ImportData';
+import Excel from '../components/excel';
+import Text from '../components/text';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -474,6 +474,10 @@ class AllOrdersList extends PureComponent {
 
     delete payload.dateRange;
     delete payload.productType;
+
+    for(let key in payload){
+      payload[key] = payload[key] === "" ? null : payload[key]
+    }
 
     this.setState({
       params:payload

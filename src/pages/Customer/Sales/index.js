@@ -88,7 +88,8 @@ class AuthorityList extends PureComponent {
         }
       })
     })
-    getSalesmangroup(params).then(res=>{
+    getSalesmangroup({size:100,
+      current:1}).then(res=>{
       this.setState({
         groupingList:res.data.records
       })

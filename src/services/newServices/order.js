@@ -10,6 +10,14 @@ export async function getList(params) {
   });
 }
 
+// 主管授权订单列表
+export async function getPermissions(params) {
+  return request(`/api/order/permissions/list`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function getDetails(params) {
   return request(`/api/order/order/detail?${stringify(params)}`);
 }
@@ -269,8 +277,6 @@ export async function importOrder(params) {
   formData.append('salesman', salesman);
   formData.append('orderType', orderType);
   formData.append('file', file);
-
-  console.log(formData)
   return request('/api/order/order/importOrder', {
     method: 'POST',
     body: formData,

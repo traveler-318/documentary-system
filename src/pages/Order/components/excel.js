@@ -4,8 +4,8 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 
-import { exportSNCodeTemplate } from '../../../../services/newServices/order';
-import { getAccessToken, getToken } from '../../../../utils/authority';
+import { exportSNCodeTemplate } from '../../../services/newServices/order';
+import { getAccessToken, getToken } from '../../../utils/authority';
 
 
 const FormItem = Form.Item;

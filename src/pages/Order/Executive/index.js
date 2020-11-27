@@ -12,11 +12,11 @@ import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY, LOGISTICSSTATUS } from './data.js';
 import {
-  getList,
+  getPermissions,
   deleteData,
   updateRemind,
-  logisticsRepeatPrint,
   localPrinting,
+  logisticsRepeatPrint,
   updateReminds,
   toExamine,
   synCheck,
@@ -25,8 +25,8 @@ import {
   subscription,
   updateData,
   salesmanList,
-  menuTab,
-  productTreelist, batchLogisticsSubscription,
+  productTreelist,
+  batchLogisticsSubscription
 } from '../../../services/newServices/order';
 
 // getList as getSalesmanLists,
@@ -38,18 +38,14 @@ import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 
-
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
-
-
-import Journal from '../components/journal';
-import SMS from '../components/smsList';
-import VoiceList from '../components/voiceList';
-
-import OrderImport from '../components/orderImport';
-import Excel from '../components/excel';
-import Text from '../components/text';
-import ImportData from '../components/ImportData';
+import ImportData from '../../Order/components/ImportData';
+import Excel from '../../Order/components/excel';
+import Text from '../../Order/components/text';
+import Journal from '../../Order/components/journal';
+import SMS from '../../Order/components/smsList';
+import VoiceList from '../../Order/components/voiceList';
+import OrderImport from '../../Order/components/orderImport';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -94,12 +90,11 @@ class AllOrdersList extends PureComponent {
       salesmanList:[],
       data:{},
       loading:false,
-      params:localStorage.afterSaleOrderParams ? JSON.parse(localStorage.afterSaleOrderParams) : {
+      params:localStorage.executiveOrdersparams ? JSON.parse(localStorage.executiveOrdersparams) : {
         size:10,
         current:1
       },
-      tabCode:[],
-      tabKey:sessionStorage.afterSaleOrderTabKey ? sessionStorage.afterSaleOrderTabKey : '0',
+      tabKey:sessionStorage.executiveOrderTabKey ? sessionStorage.executiveOrderTabKey : '0',
       selectedRows:[],
       productList:[],
       // 物流弹窗
@@ -128,8 +123,13 @@ class AllOrdersList extends PureComponent {
       excelVisible:false,
       // 文本导入弹窗
       textVisible:false,
+      // 文本导入弹窗
+      textVisible:false,
       // 订单导入弹窗
       OrderImportVisible:false,
+      // 首次打印提示弹框
+      LogisticsAlertVisible:false,
+      tips:[],
       salesmangroup:[],
       countSice:0,
       columns:[
@@ -152,7 +152,7 @@ class AllOrdersList extends PureComponent {
         {
           title: '订单状态',
           dataIndex: 'confirmTag',
-          width: 100,
+          width: 90,
           render: (key,row)=>{
             // 待审核、已激活、已取消、已退回-不可切换状态
             if(key == '0' || key == '7' || key == '8' || key == '9'){
@@ -290,7 +290,7 @@ class AllOrdersList extends PureComponent {
           title: '操作',
           key: 'operation',
           fixed: 'right',
-          width: 150,
+          width: 250,
           render: (text,row) => {
               return(
                   <div>
@@ -330,8 +330,6 @@ class AllOrdersList extends PureComponent {
       confirmTagVisible:false,
       currentList:{},
       radioChecked:null,
-      repeatLoading:false,
-      firstLoading:false,
       _listArr:[]
     };
   }
@@ -357,35 +355,9 @@ class AllOrdersList extends PureComponent {
       })
     })
 
-    menuTab({
-      menuType:"3"
-    }).then(res=>{
-      const tabCode = res.data.tabCode.split(",");
-      let list=[]
-
-      for(let j=0; j<tabCode.length; j++){
-        tabCode[j]=tabCode[j];
-        if(tabCode[j] === "11"){
-          tabCode[j] = null
-        }
-        for(let i=0; i<ORDERSTATUS.length; i++){
-          if(ORDERSTATUS[i].key === tabCode[j]) {
-            let item={}
-            item.name=ORDERSTATUS[i].name;
-            item.key=ORDERSTATUS[i].key;
-            list.push(item)
-          }
-        }
-      }
-      this.setState({
-        tabCode:list
-      })
-    })
-
     this.getSalesman();
     this.getTreeList();
   }
-
   getTreeList = () => {
     productTreelist().then(res=>{
       console.log(res.data,"productTreelist")
@@ -412,7 +384,7 @@ class AllOrdersList extends PureComponent {
     this.setState({
       loading:true,
     })
-    getList(params).then(res=>{
+    getPermissions(params).then(res=>{
       this.setState({
         countSice:res.data.total,
         data:setListData(res.data),
@@ -454,6 +426,7 @@ class AllOrdersList extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
+    console.log(params,"查询参数")
     const { dateRange } = params;
     const { tabKey, salesmanList } = this.state;
     let payload = {
@@ -462,10 +435,10 @@ class AllOrdersList extends PureComponent {
     if (dateRange) {
       payload = {
         ...params,
-        startTime: dateRange ? func.format(dateRange[0], 'YYYY-MM-DD HH:mm:ss') : null,
-        endTime: dateRange ? func.format(dateRange[1], 'YYYY-MM-DD HH:mm:ss') : null,
+        startTime: dateRange ? func.format(dateRange[0], dateFormat) : null,
+        endTime: dateRange ? func.format(dateRange[1], dateFormat) : null,
       };
-      payload.dateRange = null;
+      // payload.dateRange = null;
     }
     if(payload.groupId && payload.groupId === "全部"){
       payload.groupId = null;
@@ -477,10 +450,6 @@ class AllOrdersList extends PureComponent {
     if(payload.orderSource && payload.orderSource === "全部"){
       payload.orderSource = null;
     }
-    if(payload.salesman == "全部"){
-      payload.salesman = null
-    }
-
     if(payload.groupId){
       let text = ""
       if(payload.salesman === "全部"){
@@ -501,8 +470,9 @@ class AllOrdersList extends PureComponent {
     payload.payPanyId = payload.productType ? payload.productType[0] : payload.payPanyId ? payload.payPanyId : null;
     payload.productTypeId = payload.productType ? payload.productType[1] : payload.productTypeId ? payload.productTypeId  : null;
     payload.productId = payload.productType ? payload.productType[2] : payload.productId ? payload.productId  : null;
+    
 
-    localStorage.setItem("afterSaleOrderParams",JSON.stringify(payload));
+    localStorage.setItem("executiveOrdersparams",JSON.stringify(payload));
 
     delete payload.dateRange;
     delete payload.productType;
@@ -526,6 +496,8 @@ class AllOrdersList extends PureComponent {
     const { getFieldDecorator } = form;
 
     const { salesmanList, salesmangroup, params, productList } = this.state;
+
+    console.log(params,"params.productType")
 
     return (
       <div className={"default_search_form"}>
@@ -604,7 +576,6 @@ class AllOrdersList extends PureComponent {
           )}
         </Form.Item>
         <Form.Item label="产品分类">
-          
           {getFieldDecorator('productType', {
               initialValue: params.payPanyId ? [params.payPanyId,params.productTypeId,params.productId] : null,
             })(
@@ -620,6 +591,7 @@ class AllOrdersList extends PureComponent {
             <Form.Item label="下单时间">
               {getFieldDecorator('dateRange', {
                 initialValue:params.startTime ? [func.moment(params.startTime, dateFormat), func.moment(params.endTime, dateFormat)]: null,
+                // params.dateRange ? params.dateRange : null,
               })(
                 <RangePicker showTime size={"default"} />
               )}
@@ -642,11 +614,20 @@ class AllOrdersList extends PureComponent {
     );
   };
 
+
+  // ====== 首次打印提示弹框 ======
+  handleLogisticsAlert =() =>{
+    this.setState({
+      LogisticsAlertVisible:false
+    })
+  }
+
   // =========首次打印===========
   first = () => {
     const {selectedRows} = this.state;
     const { dispatch } = this.props;
     const  tips=[];
+    
     if(selectedRows.length <= 0){
       return  message.info('请至少选择一条数据');
     }
@@ -655,21 +636,18 @@ class AllOrdersList extends PureComponent {
       message.info('最多批量操作20条数据');
     }else{
       for(let i=0; i<selectedRows.length; i++){
+        const item={}
         if(selectedRows[i].taskId){
-          tips.push(selectedRows[i].userName);
-          Modal.confirm({
-            title: '提示',
-            content: "客户"+selectedRows[i].userName+"订单已打印过!只能进行重复打印!",
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            keyboard:false,
-            onOk() {},
-            onCancel() {},
-          });
+          item.name="客户"+selectedRows[i].userName+"订单已打印过!只能进行重复打印!"
+          tips.push(item);
         }
       }
       if(tips.length > 0 ){
+        this.setState({
+          tips:tips,
+          LogisticsFirst:0,
+          LogisticsAlertVisible:true
+        })
         return false;
       }
       dispatch({
@@ -689,14 +667,14 @@ class AllOrdersList extends PureComponent {
     const {selectedRows} = this.state;
     const { dispatch } = this.props;
     const  tips=[];
+    const  tips1=[]
+    // 当前时间戳
+    const timestamp = (new Date()).getTime();
+    const timeInterval = 24 * 60 * 60 * 1000 * 2;
 
     if(selectedRows.length <= 0){
       return  message.info('请至少选择一条数据');
     }
-
-    // 当前时间戳
-    const timestamp = (new Date()).getTime();
-    const timeInterval = 24 * 60 * 60 * 1000 * 2;
 
     if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
       if(selectedRows.length > 1){
@@ -707,42 +685,24 @@ class AllOrdersList extends PureComponent {
     if(selectedRows.length > 20){
       message.info('最多批量操作20条数据');
     }else{
-
-      // if(repeatLoading){
-      //   return message.info("请勿连续操作")
-      // }
-
-      this.setState({
-        repeatLoading:true
-      });
-
       for(let i=0; i<selectedRows.length; i++){
         const time = timestamp - (new Date(selectedRows[i].taskCreateTime)).getTime();
-        if(!selectedRows[i].taskId){
-          tips.push(selectedRows[i].userName)
-          Modal.confirm({
-            title: '提示',
-            content: selectedRows[i].userName+"客户没有首次打印记录,不能进行重复打印!",
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk() {},
-            onCancel() {},
-          });
+        if(!selectedRows[i].taskId || selectedRows[i].logisticsPrintType === "0"){
+          const item1={};
+          item1.name=selectedRows[i].userName+"客户没有首次打印记录,不能进行重复打印!";
+          tips.push(item1)
         }else if( time > timeInterval){
-          tips.push(selectedRows[i].userName)
-          Modal.confirm({
-            title: '提示',
-            content: selectedRows[i].userName+"客户的订单 距离首次时间超过2天 禁止打印！",
-            okText: '确定',
-            okType: 'danger',
-            cancelText: '取消',
-            onOk() {},
-            onCancel() {},
-          });
+          const item2={};
+          item2.name=selectedRows[i].userName+"客户的订单 距离首次时间超过2天 禁止打印！";
+          tips.push(item2)
         }
       }
       if(tips.length > 0 ){
+        this.setState({
+          tips:tips,
+          LogisticsFirst:1,
+          LogisticsAlertVisible:true
+        })
         return false;
       }
       let param = [];
@@ -751,33 +711,25 @@ class AllOrdersList extends PureComponent {
       }
 
       if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
-        // 本地打印
-        localPrinting({
-          id:selectedRows[0].id,
-          logisticsPrintType:selectedRows[0].logisticsPrintType
-        }).then(res=>{
-          this.setState({
-            repeatLoading:false
-          });
-          if(res.code === 200){
-            sessionStorage.setItem('imgBase64', res.data)
-            window.open(`#/order/allOrders/img`);
-          }else{
-            message.error(res.msg);
-          }
-        })
+          // 本地打印
+          localPrinting({
+            id:selectedRows[0].id,
+            logisticsPrintType:selectedRows[0].logisticsPrintType
+          }).then(res=>{
+            if(res.code === 200){
+              sessionStorage.setItem('imgBase64', res.data)
+              window.open(`#/order/allOrders/img`);
+            }else{
+              message.error(res.msg);
+            }
+          })
       }else{
-
         logisticsRepeatPrint(param).then(res=>{
-          this.setState({
-            repeatLoading:false
-          });
           if(res.code === 200){
             message.success(res.msg);
           }
         })
       }
-
     }
   }
 
@@ -839,6 +791,8 @@ class AllOrdersList extends PureComponent {
       },
       onCancel() {},
     });
+
+    
   }
 
   // =========关闭物流弹窗========
@@ -885,7 +839,7 @@ class AllOrdersList extends PureComponent {
           确定审核此订单吗？
           <Button key="submit" type="danger" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{toExamines('9');}} >拒绝</Button>
           <Button key="submit" style={{ position: 'absolute',right: '250px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button>
-        </div>,
+          </div>,
         onOk() {
           toExamines('1');
         },
@@ -906,7 +860,7 @@ class AllOrdersList extends PureComponent {
         content:<div>
           确定审核此订单吗？
           <Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button>
-        </div>,
+          </div>,
         onOk() {
           // toExamines('1');
           toExamines('2');
@@ -917,7 +871,7 @@ class AllOrdersList extends PureComponent {
       });
     }
 
-
+    
   }
 
   toExamines = (confirmTag) => {
@@ -934,7 +888,7 @@ class AllOrdersList extends PureComponent {
         type = true;
       }
     })
-
+    
     if(type){
       Modal.confirm({
         title: '提醒',
@@ -957,7 +911,6 @@ class AllOrdersList extends PureComponent {
 
 
   setAudit = (_data,confirmTag) => {
-    
     toExamine({
       confirmTag,
       orderIdAndNo:_data
@@ -1007,13 +960,13 @@ class AllOrdersList extends PureComponent {
     this.handleShowLogistics(selectedRows)
   }
 
+
   // 批量订阅
   bulkSubscription = () => {
     const {selectedRows,_listArr} = this.state;
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
-    console.log(_listArr)
     const listArr=[];
     if(_listArr.length > 0){
       for(let i=0; i<selectedRows.length; i++){
@@ -1099,7 +1052,7 @@ class AllOrdersList extends PureComponent {
         {tabKey === '0'?(
         <>
           <Button type="primary" icon="plus" onClick={()=>{
-            router.push(`/order/AfterSaleOrder/add`);
+            router.push(`/order/AllOrders/add`);
           }}>添加</Button>
           <Button
             icon="menu-unfold"
@@ -1111,13 +1064,13 @@ class AllOrdersList extends PureComponent {
           >免押同步</Button>
         </>
         ):tabKey === '1'?(
-          <>
-            <Button
-              icon="menu-unfold"
-              type="primary"
-              onClick={this.batchAudit}
-            >审核</Button>
-            </>
+        <>
+          <Button
+            icon="menu-unfold"
+            type="primary"
+            onClick={this.batchAudit}
+          >审核</Button>
+          </>
         ):tabKey === '2'?(
           <>
           {/* 已审核 */}
@@ -1135,6 +1088,7 @@ class AllOrdersList extends PureComponent {
           icon="tags"
           onClick={this.bulkSubscription}
         >批量订阅</Button></>):""}
+
         {/* 在途中什么都没有 */}
 
        {/* 已签收 */}
@@ -1159,7 +1113,7 @@ class AllOrdersList extends PureComponent {
         {/* 除了全部，其他状态都有导出按钮 */}
           {tabKey != 'null'?(<Button
               icon="upload"
-              type={(tabKey === "0" || tabKey === "1" || tabKey === "2" || tabKey === "4" || tabKey === "6") ? "" : "primary"}
+              type={(tabKey === "0" || tabKey === "1" || tabKey === "2" || tabKey === "5" || tabKey === "6") ? "" : "primary"}
               onClick={this.exportFile}
             >导出</Button>):""
           }
@@ -1167,12 +1121,14 @@ class AllOrdersList extends PureComponent {
         {/* 全部 */}
         {tabKey === 'null'?(<>
           <Button type="primary" icon="plus" onClick={()=>{
-            router.push(`/order/AfterSaleOrder/add`);
+            router.push(`/order/AllOrders/add`);
           }}>添加</Button>
-{/*          <Button
+{/*
+          <Button
             icon="menu-unfold"
             onClick={this.batchAudit}
-          >审核</Button>*/}
+          >审核</Button>
+*/}
           <Button
             icon="appstore"
             onClick={this.bulkDelivery}
@@ -1324,6 +1280,7 @@ class AllOrdersList extends PureComponent {
       }else{
         // return message.error('当前系统已经绑定您指定的同步账号,请联系管理员进行排查!');
         const {confirmLoading} = this.state;
+        
         Modal.confirm({
           title: '提醒',
           content: "当前系统已经绑定您指定的同步账号,确定同步数据吗？",
@@ -1331,6 +1288,7 @@ class AllOrdersList extends PureComponent {
           okType: 'primary',
           cancelText: '取消',
           keyboard:false,
+          // confirmLoading:confirmLoading,
           onOk:() => {
             if(confirmLoading){
               return message.info("请勿连续操作，请等待");
@@ -1373,7 +1331,7 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: row,
     });
-    router.push(`/order/afterSaleOrder/edit/${row.id}`);
+    router.push(`/order/allOrders/edit/${row.id}`);
   }
 
   renderRightButton = () => (
@@ -1518,8 +1476,9 @@ class AllOrdersList extends PureComponent {
     return text;
   }
 
+
   statusChange = (key) => {
-    sessionStorage.afterSaleOrderTabKey = key;
+    sessionStorage.executiveOrderTabKey = key;
     let _params = {...this.state.params}
     _params.current = 1
     this.setState({
@@ -1597,6 +1556,7 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+
   // 打开物流弹窗
   handleShowLogistics = (data) => {
     const { dispatch } = this.props;
@@ -1605,7 +1565,7 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setListId`,
       payload: data,
     });
-    router.push('/order/AfterSaleOrder/logisticsConfiguration');
+    router.push('/order/allOrders/logisticsConfiguration');
 
     // this.setState({
     //   logisticsVisible:true
@@ -1669,6 +1629,18 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  handleResize = index => (e, { size }) => {
+    this.setState(({ columns }) => {
+      const nextColumns = [...columns];
+      nextColumns[index] = {
+        ...nextColumns[index],
+        width: size.width,
+      };
+      return { columns: nextColumns };
+    });
+  };
+
+
   // SN激活导入弹窗
   handleExcelImport = () =>{
     this.setState({
@@ -1681,7 +1653,7 @@ class AllOrdersList extends PureComponent {
       excelVisible: false,
     });
   }
-
+  
   // 文本导入弹窗
   handleTextImport = () =>{
     this.setState({
@@ -1694,30 +1666,18 @@ class AllOrdersList extends PureComponent {
       textVisible: false,
     });
   }
-
-// 订单导入弹窗
-handleOrderImport = () =>{
-  this.setState({
-    OrderImportVisible: true,
-  });
-}
-
-handleOrderImportCancel = () =>{
-  this.setState({
-    OrderImportVisible: false,
-  });
-}
-
-  handleResize = index => (e, { size }) => {
-    this.setState(({ columns }) => {
-      const nextColumns = [...columns];
-      nextColumns[index] = {
-        ...nextColumns[index],
-        width: size.width,
-      };
-      return { columns: nextColumns };
+  // 订单导入弹窗
+  handleOrderImport = () =>{
+    this.setState({
+      OrderImportVisible: true,
     });
-  };
+  }
+
+  handleOrderImportCancel = () =>{
+    this.setState({
+      OrderImportVisible: false,
+    });
+  }
 
   components = {
     header: {
@@ -1751,22 +1711,24 @@ handleOrderImportCancel = () =>{
       LogisticsConfigVisible,
       selectedRows,
       detailsVisible,
-      selectedRowKeys,
-      noDepositVisible,
-      confirmTagVisible,
       journalVisible,
-      journalList,
       SMSVisible,
       smsList,
       VoiceVisible,
       voice,
-      currentList,
+      journalList,
+      selectedRowKeys,
+      noDepositVisible,
+      confirmTagVisible,
       textVisible,
+      currentList,
       excelVisible,
-      tabCode,
+      OrderImportVisible,
+      LogisticsFirst,
+      LogisticsAlertVisible,
+      tips,
       countSice,
-      params,
-      OrderImportVisible
+      params
     } = this.state;
 
     const columns = this.state.columns.map((col, index) => ({
@@ -1793,10 +1755,9 @@ handleOrderImportCancel = () =>{
 
     return (
       <Panel>
-        {/* <TabPanes/> */}
         <div className={styles.ordersTabs}>
-          <Tabs type="card" activeKey={tabKey} onChange={this.statusChange} style={{height:59}}>
-            {tabCode.map(item=>{
+          <Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange} style={{height:59}}>
+            {ORDERSTATUS.map(item=>{
               return (
                 <TabPane tab={
                   <span>
@@ -1825,34 +1786,34 @@ handleOrderImportCancel = () =>{
             })}
           </Tabs>
         
-        <Grid
-          code={code}
-          form={form}
-          onSearch={this.handleSearch}
-          onSelectRow={this.onSelectRow}
-          renderSearchForm={this.renderSearchForm}
-          loading={loading}
-          data={data}
-          columns={columns}
-          scroll={{ x: 1000 }}
-          renderLeftButton={()=>this.renderLeftButton(tabKey)}
-          // renderRightButton={this.renderRightButton}
-          counterElection={true}
-          onChangeCheckbox={this.onChangeCheckbox}
-          selectedKey={selectedRowKeys}
-          tblProps={
-            {components:this.components}
-          }
-          // multipleChoice={true}
-        />
-        </div>
-        {/* 详情 */}
-        {detailsVisible?(
-          <Details
-            detailsVisible={detailsVisible}
-            handleCancelDetails={this.handleCancelDetails}
+          <Grid
+            code={code}
+            form={form}
+            onSearch={this.handleSearch}
+            onSelectRow={this.onSelectRow}
+            renderSearchForm={this.renderSearchForm}
+            loading={loading}
+            data={data}
+            columns={columns}
+            scroll={{ x: 1000 }}
+            renderLeftButton={()=>this.renderLeftButton(tabKey)}
+            // renderRightButton={this.renderRightButton}
+            counterElection={true}
+            onChangeCheckbox={this.onChangeCheckbox}
+            selectedKey={selectedRowKeys}
+            tblProps={
+              {components:this.components}
+            }
+            // multipleChoice={true}
           />
-        ):""}
+          {/* 详情 */}
+          {detailsVisible?(
+            <Details
+              detailsVisible={detailsVisible}
+              handleCancelDetails={this.handleCancelDetails}
+            />
+          ):""}
+        </div>
         {/* 日志弹框 */}
         {journalVisible?(
           <Journal
@@ -1932,7 +1893,6 @@ handleOrderImportCancel = () =>{
             handleTextCancel={this.handleTextCancel}
           />
         ):""}
-
         {/* 订单导入弹窗 */}
         {OrderImportVisible?(
           <OrderImport
@@ -1940,8 +1900,32 @@ handleOrderImportCancel = () =>{
           handleOrderImportCancel={this.handleOrderImportCancel}
           />
         ):""}
-        {
-          confirmTagVisible ? (
+
+
+        <Modal
+          title="提示"
+          visible={LogisticsAlertVisible}
+          width={500}
+          onCancel={this.handleLogisticsAlert}
+          footer={[
+            <Button key="back" onClick={this.handleLogisticsAlert}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" onClick={()=>this.handleLogisticsAlert()}>
+              确定
+            </Button>,
+          ]}
+        >
+          <div>
+            {tips.map(item=>{
+              return(
+              <p>{item.name}</p>
+              )
+            })}
+          </div>
+        </Modal>
+          {
+            confirmTagVisible ? (
         <Modal
           title="修改状态"
           visible={confirmTagVisible}
@@ -1959,9 +1943,9 @@ handleOrderImportCancel = () =>{
           {/* 1、 已审核、已发货、在途中、已签收 跟进中 可以手动切换成已激活、已取消、已退回，
           2、已激活、已取消、已退回这三种状态下不能手动切换状态
           3、已过期  可以手动更改成已激活、已退回 */}
-         {/* {"name":"待审核",key:0},
+          {/* {"name":"待审核",key:0},
               {"name":"初审",key:1},
-              {"name":"终审",key:2},
+              {"name":"已审核",key:2},
               {"name":"已发货",key:3},
               {"name":"在途中",key:4},
               {"name":"已签收",key:5},
@@ -1991,9 +1975,8 @@ handleOrderImportCancel = () =>{
                   <TextArea rows={2} disabled />
                 </FormItem>
               </Form>
-        </Modal>
-        ) : ""
-      }
+        </Modal>) :""
+          }
       </Panel>
     );
   }
