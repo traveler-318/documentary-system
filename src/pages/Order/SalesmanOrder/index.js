@@ -1537,6 +1537,20 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  // 打开语音列表弹窗
+  handleVoice = (row) => {
+    this.setState({
+      VoiceVisible:true,
+      voice:row
+    })
+  }
+  // 关闭语音列表弹窗
+  handleCancelVoice = () => {
+    this.setState({
+      VoiceVisible:false
+    })
+  }
+
   // 打开物流弹窗
   handleShowLogistics = (data) => {
     const { dispatch } = this.props;

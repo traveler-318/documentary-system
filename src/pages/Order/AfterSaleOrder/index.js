@@ -290,7 +290,7 @@ class AllOrdersList extends PureComponent {
           title: '操作',
           key: 'operation',
           fixed: 'right',
-          width: 150,
+          width: 250,
           render: (text,row) => {
               return(
                   <div>

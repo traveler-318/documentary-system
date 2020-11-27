@@ -187,13 +187,17 @@ class Survey extends PureComponent {
 
   handleEmpty = () => {
     this.setState({
-      describe:""
+      describe:"",
+      reminderTime:"",
     })
 };
 
   handleSubmit = () => {
     const { detail , describe, reminderTime } = this.state;
     let { followRecords } = this.state;
+    if(describe === ""){
+      return message.error("请输入跟进内容");
+    }
     let param = {
       userName:detail.userName,
       describe,
@@ -217,7 +221,8 @@ class Survey extends PureComponent {
     _param.followRecords = JSON.stringify({
       list:followRecords
     })
-    console.log(_param)
+    console.log(_param);
+    console.log(JSON.parse(_param.followRecords))
 
     // if(detail.confirmTag === '4'){
       orderFollowing(_param).then(res=>{
