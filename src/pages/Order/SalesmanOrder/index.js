@@ -466,7 +466,6 @@ class AllOrdersList extends PureComponent {
     }
     if(payload.groupId && payload.groupId === "全部"){
       payload.groupId = null;
-      payload.salesman = null;
     }
     if(payload.logisticsStatus && payload.logisticsStatus === "全部"){
       payload.logisticsStatus = null;

@@ -1,6 +1,26 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Button, Col, Form, Input, Badge, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs, Radio, Tag, Cascader } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Badge,
+  Row,
+  Select,
+  DatePicker,
+  Divider,
+  Dropdown,
+  Menu,
+  Icon,
+  Modal,
+  message,
+  Tabs,
+  Radio,
+  Tag,
+  Cascader,
+  TreeSelect,
+} from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import { Resizable } from 'react-resizable';
@@ -26,7 +46,8 @@ import {
   updateData,
   salesmanList,
   productTreelist,
-  batchLogisticsSubscription
+  batchLogisticsSubscription,
+  getCurrenttree
 } from '../../../services/newServices/order';
 
 // getList as getSalesmanLists,
@@ -38,7 +59,6 @@ import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
 
-import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 import ImportData from '../components/ImportData';
 import Excel from '../components/excel';
 import Text from '../components/text';
@@ -330,7 +350,8 @@ class AllOrdersList extends PureComponent {
       confirmTagVisible:false,
       currentList:{},
       radioChecked:null,
-      _listArr:[]
+      _listArr:[],
+      organizationTree:[]
     };
   }
 
@@ -357,7 +378,9 @@ class AllOrdersList extends PureComponent {
 
     this.getSalesman();
     this.getTreeList();
+    this.currenttree();
   }
+
   getTreeList = () => {
     productTreelist().then(res=>{
       console.log(res.data,"productTreelist")
@@ -375,6 +398,16 @@ class AllOrdersList extends PureComponent {
       res.data.records.unshift(list);
       this.setState({
         salesmanList:res.data.records
+      })
+    })
+  }
+
+  // 组织列表
+  currenttree = () => {
+    getCurrenttree().then(res=>{
+      console.log(res)
+      this.setState({
+        organizationTree:res.data
       })
     })
   }
@@ -495,9 +528,8 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, salesmangroup, params, productList } = this.state;
+    const { salesmanList, salesmangroup, params, productList,organizationTree } = this.state;
 
-    console.log(params,"params.productType")
 
     return (
       <div className={"default_search_form"}>
@@ -585,6 +617,21 @@ class AllOrdersList extends PureComponent {
                 fieldNames={{ label: 'value',value: "id"}}
                 changeOnSelect={true}
               ></Cascader>
+          )}
+        </Form.Item>
+        <Form.Item label="所属组织">
+          {getFieldDecorator('organizationId', {
+            // initialValue: params.organizationId ? params.organizationId : null
+          })(
+            <TreeSelect
+              style={{ width: 200 }}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              treeData={organizationTree}
+              allowClear
+              showSearch
+              treeNodeFilterProp="title"
+              placeholder="请选择所属组织"
+            />
           )}
         </Form.Item>
           <div>
