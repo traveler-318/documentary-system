@@ -205,6 +205,7 @@ class Survey extends PureComponent {
     let _param = {
       id:detail.id,
       deptId:detail.deptId,
+      tenantId:detail.tenantId,
       confirmTag:detail.confirmTag,
       outOrderNo:detail.outOrderNo,
       salesman:detail.salesman,
