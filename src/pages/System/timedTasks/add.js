@@ -15,7 +15,7 @@ const FormItem = Form.Item;
 const { TextArea } = Input;
 
 let notificationTypes = [
-  {name:"定时逾期提醒",key:"定时逾期提醒"}
+  {name:"激活提醒",key:"激活提醒"}
 ]
 
 @connect(({ user, loading }) => ({
@@ -129,7 +129,7 @@ class OrdersAdd extends PureComponent {
         <Form style={{ marginTop: 8 }}>
           <FormItem {...formAllItemLayout} label="通知类型">
             {getFieldDecorator('notificationTypes', {
-                initialValue: "定时逾期提醒",
+                initialValue: "激活提醒",
               })(
                 <Select 
                   style={{ width: 180 }}
@@ -141,7 +141,7 @@ class OrdersAdd extends PureComponent {
                 </Select>
             )}
           </FormItem>
-          <FormItem {...formAllItemLayout} label="启动间隔时间">
+          <FormItem {...formAllItemLayout} label="启动时间">
             {getFieldDecorator('startInterval', {
                 initialValue: 1,
               })( 
