@@ -12,6 +12,7 @@ import {
   Row,
   Col,
   Select,
+  Tooltip
 } from 'antd';
 import { getUserInfo, updateInfo } from '../../../../services/user';
 import { getToken } from '../../../../utils/authority';
@@ -158,6 +159,16 @@ class BaseView extends Component {
                 {getFieldDecorator('aftersalesPhone')(
                   <Input />
                 )}
+                <Tooltip title={'用户下单时悬浮按钮上的投诉电话'}>
+                  <Icon 
+                    type='question-circle-o'
+                    style={{
+                      position: 'absolute',
+                      top: '4px',
+                      right: '-20px'
+                    }} 
+                  />
+                </Tooltip>
               </FormItem>
               <FormItem style={{display:"none"}}>
                   {getFieldDecorator('id')(

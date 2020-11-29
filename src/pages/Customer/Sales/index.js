@@ -347,12 +347,12 @@ class AuthorityList extends PureComponent {
 
     const columns = [
       {
-        title: '业务员账号',
+        title: '销售账号',
         dataIndex: 'userAccount',
         width: 150,
       },
       {
-        title: '业务员姓名',
+        title: '销售姓名',
         dataIndex: 'userName',
         width: 150,
       },
@@ -378,7 +378,7 @@ class AuthorityList extends PureComponent {
         width: 150,
       },
       {
-        title: '售后',
+        title: '专属售后',
         dataIndex: 'name',
         width: 140,
       },

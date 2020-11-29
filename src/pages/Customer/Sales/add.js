@@ -235,21 +235,31 @@ class SenderAdd extends PureComponent {
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="售后人员：">
+                <FormItem {...formItemLayout} label="专属售后：">
                   {getFieldDecorator('afterId', {
                     rules: [
                       {
                         required: true,
-                        message: '请选择售后人员',
+                        message: '请选择专属售后',
                       },
                     ],
                   })(
-                    <Select placeholder="请选择售后人员">
+                    <Select placeholder="请选择专属售后">
                       {afterlist.map((item)=>{
                         return (<Option value={item.id}>{item.name}</Option>)
                       })}
                     </Select>
                   )}
+                  <Tooltip title={'催激活短信里面的号码，就是专属售后的电话号码'}>
+                    <Icon 
+                      type='question-circle-o'
+                      style={{
+                        position: 'absolute',
+                        top: '4px',
+                        right: '-20px'
+                      }} 
+                    />
+                  </Tooltip>
                 </FormItem>
               </Col>
             </Row>
