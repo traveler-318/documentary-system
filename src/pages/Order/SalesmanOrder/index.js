@@ -466,7 +466,6 @@ class AllOrdersList extends PureComponent {
     }
     if(payload.groupId && payload.groupId === "全部"){
       payload.groupId = null;
-      payload.salesman = null;
     }
     if(payload.logisticsStatus && payload.logisticsStatus === "全部"){
       payload.logisticsStatus = null;
@@ -1535,6 +1534,20 @@ class AllOrdersList extends PureComponent {
   handleCancelSMS = () => {
     this.setState({
       SMSVisible:false
+    })
+  }
+
+  // 打开语音列表弹窗
+  handleVoice = (row) => {
+    this.setState({
+      VoiceVisible:true,
+      voice:row
+    })
+  }
+  // 关闭语音列表弹窗
+  handleCancelVoice = () => {
+    this.setState({
+      VoiceVisible:false
     })
   }
 

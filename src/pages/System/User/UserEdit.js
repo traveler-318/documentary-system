@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, TreeSelect, DatePicker, Select } from 'antd';
+import { Form, Input, Card, Row, Col, Button, TreeSelect, DatePicker, Select, Tooltip, Icon } from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
@@ -76,6 +76,16 @@ class UserEdit extends PureComponent {
     }else{
       callback();
     }
+  }
+
+  reactNode = () => {
+    return(
+      <div>
+        <p>1、售后号码：必须正确填写，否则催客户激活的短信里面的号码会异常</p>
+        <p>2、销售号码：需要正确填写，否则用户会联系不到销售</p>
+        <p>3、其他成员也需要正确填写后面需要用到</p>
+      </div>
+    )
   }
 
   render() {
@@ -198,6 +208,21 @@ class UserEdit extends PureComponent {
                     ],
                     initialValue: detail.phone,
                   })(<Input placeholder="请输入手机号码" />)}
+                  <Tooltip 
+                    overlayStyle={{
+                      width:"380px",
+                      maxWidth:"380px",
+                      position:'absolute'
+                    }}
+                    title={this.reactNode}
+                  ><Icon 
+                    type='question-circle-o'
+                    style={{
+                      position: 'absolute',
+                      top: '4px',
+                      right: '-20px'
+                    }} 
+                  /></Tooltip>
                 </FormItem>
               </Col>
             </Row>

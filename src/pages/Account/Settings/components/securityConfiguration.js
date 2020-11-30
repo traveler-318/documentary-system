@@ -216,12 +216,12 @@ class BaseView extends Component {
                   ],
                 })(<Input />)}
               </FormItem>
-              <FormItem {...formItemLayout} label={'网关访问域名'}>
+              <FormItem {...formItemLayout} label={'网关域名'}>
                 {getFieldDecorator('serverAddress', {
                   rules: [
                     {
                       required: true,
-                      message: '请输入网关访问域名',
+                      message: '请输入网关域名',
                     },
                   ],
                 })(<Input />)}

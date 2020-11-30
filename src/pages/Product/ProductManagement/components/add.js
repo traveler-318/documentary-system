@@ -168,6 +168,15 @@ class Logistics extends PureComponent {
     })
   }
 
+  reactNode = () => {
+    return(
+      <div>
+        <p>1、建议图片宽度800-1000像素，高度不限</p>
+        <p>2、建议上传前压缩图片尺寸，可提升图片加载速度</p>
+        <p>3、点我去压缩：<a target="_blank" href="https://tinypng.com/">https://tinypng.com/</a></p>
+      </div>
+    )
+  }
 
   render() {
     const {
@@ -283,6 +292,7 @@ class Logistics extends PureComponent {
                 {getFieldDecorator('h5Background', {
                   initialValue: Img,
                 })(<Input placeholder="请选择详情图" onClick={()=>{this.handleImg()}}/>)}
+                <Tooltip title={this.reactNode}><Icon type='question-circle-o' /></Tooltip>
               </FormItem>
               <FormItem {...formAllItemLayout} label="价格">
                 {getFieldDecorator('price', {

@@ -181,12 +181,18 @@ class Survey extends PureComponent {
 
   handleEmpty = () => {
     this.setState({
-      describe:""
+      describe:"",
+      reminderTime:"",
     })
 };
 
   handleSubmit = () => {
     const { detail , describe, reminderTime } = this.state;
+
+    if(describe === ""){
+      return message.error("请输入跟进内容");
+    }
+
     let { followRecords } = this.state;
     let param = {
       userName:detail.userName,
@@ -201,6 +207,7 @@ class Survey extends PureComponent {
     let _param = {
       id:detail.id,
       deptId:detail.deptId,
+      tenantId:detail.tenantId,
       confirmTag:detail.confirmTag,
       outOrderNo:detail.outOrderNo,
       salesman:detail.salesman,

@@ -17,6 +17,10 @@ export async function getPermissions(params) {
     body: params,
   });
 }
+// 下属订单搜索条件
+export async function getCurrenttree() {
+  return request(`/api/order/permissions/currenttree`);
+}
 
 export async function getDetails(params) {
   return request(`/api/order/order/detail?${stringify(params)}`);
