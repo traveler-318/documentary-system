@@ -475,7 +475,6 @@ class AllOrdersList extends PureComponent {
     }
     if(payload.groupId && payload.groupId === "全部"){
       payload.groupId = null;
-      payload.salesman = null;
     }
     if(payload.logisticsStatus && payload.logisticsStatus === "全部"){
       payload.logisticsStatus = null;
@@ -483,8 +482,9 @@ class AllOrdersList extends PureComponent {
     if(payload.orderSource && payload.orderSource === "全部"){
       payload.orderSource = null;
     }
-    let text = ""
-    if(payload.salesman === "全部"){
+    let text = "";
+    if(payload.salesman === "全部" || payload.salesman === ""){
+      console.log(salesmanList)
       for(let i=0; i<salesmanList.length; i++){
         text +=salesmanList[i].userAccount+","
       }
