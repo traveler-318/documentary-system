@@ -26,6 +26,11 @@ export async function getDetails(params) {
   return request(`/api/order/order/detail?${stringify(params)}`);
 }
 
+// 组织分组
+export async function getCurrentsalesman() {
+  return request(`/api/order/permissions/currentsalesman`);
+}
+
 export async function createData(params) {
   return request('/api/order/order/save', {
     method: 'POST',

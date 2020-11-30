@@ -47,7 +47,8 @@ import {
   salesmanList,
   productTreelist,
   batchLogisticsSubscription,
-  getCurrenttree
+  getCurrenttree,
+  getCurrentsalesman
 } from '../../../services/newServices/order';
 
 // getList as getSalesmanLists,
@@ -360,19 +361,12 @@ class AllOrdersList extends PureComponent {
     // this.getDataList();
     // this.getSalesmanList();
 
-    // 获取分组数据
-    getSalesmangroup({
-      size:100,
-      current:1
-    }).then(res=>{
-      const list={
-        groupName:"全部",
-        id:"",
-        userAccount:''
-      };
-      res.data.records.unshift(list);
+    // 获取组织数据
+    getCurrentsalesman().then(res=>{
+      console.log(res,"???????????????")
+      res.data.unshift('全部');
       this.setState({
-        salesmangroup:res.data.records
+        salesmangroup:res.data
       })
     })
 
@@ -557,7 +551,7 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="分组">
+        <Form.Item label="组织">
           {getFieldDecorator('groupId', {
                 initialValue: params.groupId ? params.groupId : "全部",
               })(
@@ -566,8 +560,8 @@ class AllOrdersList extends PureComponent {
                 style={{ width: 120 }}
                 onChange={this.changeGroup}
               >
-                {salesmangroup.map(item=>{
-                  return (<Option value={item.id}>{item.groupName}</Option>)
+                {salesmangroup.map((item,key)=>{
+                  return (<Option value={key}>{item}</Option>)
                 })}
               </Select>
             )}
