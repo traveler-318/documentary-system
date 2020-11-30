@@ -478,16 +478,14 @@ class AllOrdersList extends PureComponent {
       payload.orderSource = null;
     }
 
-    if(payload.groupId){
-      let text = ""
-      if(payload.salesman === "全部"){
-        for(let i=0; i<salesmanList.length; i++){
-          text +=salesmanList[i].userAccount+","
-        }
-        payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"");
-      }else{
-        payload.salesman = payload.salesman
+    let text = ""
+    if(payload.salesman === "全部"){
+      for(let i=0; i<salesmanList.length; i++){
+        text +=salesmanList[i].userAccount+","
       }
+      payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"");
+    }else{
+      payload.salesman = payload.salesman
     }
 
     payload = {
