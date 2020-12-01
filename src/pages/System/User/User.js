@@ -105,6 +105,10 @@ class User extends PureComponent {
       newPassword,
       confirmLoading
     } = this.state;
+    if(newPassword){
+      message.error('请输入新密码');
+      return false;
+    }
     if(confirmLoading){ return false; }
     this.setState({ confirmLoading:true });
     const _this = this;
@@ -348,8 +352,6 @@ class User extends PureComponent {
       },
     } = this.props;
 
-    const { getFieldDecorator } = form;
-    
     console.log(data,"current")
 
     console.log(data,"data")
@@ -538,22 +540,15 @@ class User extends PureComponent {
         >
           <Form style={{ marginTop: 8 }}>
             <FormItem {...formAllItemLayout} label="新密码">
-              {getFieldDecorator('userName', {
-                initialValue:newPassword,
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入新密码',
-                  },
-                ],
-              })(<Input 
+              <Input 
                 placeholder="请输入新密码"
                 onChange={({ target: { value } }) => {
                   this.setState({
                     newPassword:value
                   })
                 }}
-               />)}
+                value={newPassword}
+               />
             </FormItem>
             <FormItem {...formItemLayout} label="">
               <Button type="primary" icon="copy" size="small" onClick={this.copyNewPassword}>
