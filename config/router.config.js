@@ -542,11 +542,11 @@ export default [
             path: '/order/allOrders',
             routes: [
               { path: '/order/allOrders', redirect: '/order/allOrders/list' },
-              { path: '/order/allOrders/list', component: './Order/AllOrders/index' },
-              { path: '/order/allOrders/add', component: './Order/AllOrders/add' },
-              { path: '/order/allOrders/edit/:id', component: './Order/AllOrders/edit' },
-              { path: '/order/allOrders/logisticsConfiguration', component: './Order/AllOrders/components/logisticsConfiguration' },
-              { path: '/order/allOrders/img', component: './Order/AllOrders/img' },
+              { path: '/order/allOrders/list', component: './Order/allOrders/index' },
+              { path: '/order/allOrders/add', component: './Order/components/add' },
+              { path: '/order/allOrders/edit/:id', component: './Order/components/edit' },
+              { path: '/order/allOrders/logisticsConfiguration', component: './Order/allOrders/components/logisticsConfiguration' },
+              { path: '/order/allOrders/img', component: './Order/components/img' },
             ],
           },
           {
@@ -554,39 +554,38 @@ export default [
             routes: [
               { path: '/order/executive', redirect: '/order/executive/list' },
               { path: '/order/executive/list', component: './Order/Executive/index' },
-              { path: '/order/executive/add', component: './Order/Executive/add' },
-              { path: '/order/executive/edit/:id', component: './Order/Executive/edit' },
+              { path: '/order/executive/add', component: './Order/components/add' },
+              { path: '/order/executive/edit/:id', component: './Order/components/edit' },
               { path: '/order/executive/logisticsConfiguration', component: './Order/Executive/components/logisticsConfiguration' },
-              { path: '/order/executive/img', component: './Order/Executive/img' },
             ],
           },
           {
-            path: '/order/SalesmanOrder',  //业务员订单
+            path: '/order/salesmanOrder',  //业务员订单
             routes: [
-              { path: '/order/SalesmanOrder', redirect: '/order/SalesmanOrder/list' },
-              { path: '/order/SalesmanOrder/list', component: './Order/SalesmanOrder/index' },
-              { path: '/order/salesmanOrder/add', component: './Order/SalesmanOrder/add' },
-              { path: '/order/salesmanOrder/edit/:id', component: './Order/SalesmanOrder/edit' },
+              { path: '/order/salesmanOrder', redirect: '/order/SalesmanOrder/list' },
+              { path: '/order/salesmanOrder/list', component: './Order/SalesmanOrder/index' },
+              { path: '/order/salesmanOrder/add', component: './Order/components/add' },
+              { path: '/order/salesmanOrder/edit/:id', component: './Order/components/edit' },
               { path: '/order/salesmanOrder/logisticsConfiguration', component: './Order/SalesmanOrder/components/logisticsConfiguration' },
             ],
           },
           {
-            path: '/order/WarehouseOrder',  //仓库订单
+            path: '/order/warehouseOrder',  //仓库订单
             routes: [
-              { path: '/order/WarehouseOrder', redirect: '/order/WarehouseOrder/list' },
-              { path: '/order/WarehouseOrder/list', component: './Order/WarehouseOrder/index' },
-              { path: '/order/warehouseOrder/add', component: './Order/WarehouseOrder/add' },
-              { path: '/order/warehouseOrder/edit/:id', component: './Order/WarehouseOrder/edit' },
+              { path: '/order/warehouseOrder', redirect: '/order/WarehouseOrder/list' },
+              { path: '/order/warehouseOrder/list', component: './Order/WarehouseOrder/index' },
+              { path: '/order/warehouseOrder/add', component: './Order/components/add' },
+              { path: '/order/warehouseOrder/edit/:id', component: './Order/components/edit' },
               { path: '/order/warehouseOrder/logisticsConfiguration', component: './Order/WarehouseOrder/components/logisticsConfiguration' },
             ],
           },
           {
-            path: '/order/AfterSaleOrder',  //售后订单
+            path: '/order/afterSaleOrder',  //售后订单
             routes: [
-              { path: '/order/AfterSaleOrder', redirect: '/order/AfterSaleOrder/list' },
-              { path: '/order/AfterSaleOrder/list', component: './Order/AfterSaleOrder/index' },
-              { path: '/order/afterSaleOrder/add', component: './Order/AfterSaleOrder/add' },
-              { path: '/order/afterSaleOrder/edit/:id', component: './Order/AfterSaleOrder/edit' },
+              { path: '/order/afterSaleOrder', redirect: '/order/AfterSaleOrder/list' },
+              { path: '/order/afterSaleOrder/list', component: './Order/AfterSaleOrder/index' },
+              { path: '/order/afterSaleOrder/add', component: './Order/components/add' },
+              { path: '/order/afterSaleOrder/edit/:id', component: './Order/components/edit' },
               { path: '/order/afterSaleOrder/logisticsConfiguration', component: './Order/AfterSaleOrder/components/logisticsConfiguration' },
             ],
           },

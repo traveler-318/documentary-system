@@ -20,6 +20,7 @@ import { USER_INIT, USER_LIST, USER_ROLE_GRANT, USER_UPDATE } from '../../../act
 import { resetPassword } from '../../../services/user';
 import { tenantMode } from '../../../defaultSettings';
 import { getAccessToken, getToken } from '../../../utils/authority';
+import { randomLetters, randomNumber, copyToClipboard } from '../../../utils/publicMethod';
 
 const FormItem = Form.Item;
 const { TreeNode } = Tree;
@@ -41,6 +42,8 @@ class User extends PureComponent {
     deptId: 0,
     isCovered: 0,
     onReset: () => {},
+    passwordVisible: false,
+    newPassword:""
   };
 
   componentWillMount() {
@@ -87,24 +90,54 @@ class User extends PureComponent {
         message.warn('请先选择一条数据!');
         return;
       }
-      Modal.confirm({
-        title: '重置密码确认',
-        content: '确定将选择账号密码重置为123456?',
-        okText: '确定',
-        okType: 'danger',
-        cancelText: '取消',
-        async onOk() {
-          const response = await resetPassword({ userIds: keys });
-          if (response.success) {
-            message.success(response.msg);
-          } else {
-            message.error(response.msg || '重置失败');
-          }
-        },
-        onCancel() {},
+      this.setState({ 
+        passwordVisible:true,
+        newPassword:randomLetters()+randomNumber(),
+        keys
       });
     }
   };
+
+  // 修改密码
+  changePassword = () =>{
+    const {
+      keys,
+      newPassword,
+      confirmLoading
+    } = this.state;
+    if(newPassword === ""){
+      message.error('请输入新密码');
+      return false;
+    }
+    if(confirmLoading){ return false; }
+    this.setState({ confirmLoading:true });
+    const _this = this;
+    Modal.confirm({
+      title: '修改密码',
+      content: `确定将选择账号密码修改为${newPassword}?`,
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        const response = await resetPassword({ 
+          userIds: keys, 
+          password: newPassword,
+        });
+        _this.setState({ confirmLoading:false });
+        if (response.success) {
+          message.success(response.msg);
+          _this.setState({ passwordVisible:false });
+        } else {
+          message.error(response.msg || '修改失败');
+        }
+      },
+      onCancel() {},
+    });
+  }
+  // 复制密码
+  copyNewPassword = () => {
+    copyToClipboard(this.state.newPassword);
+  }
 
   handleGrant = () => {
     const { checkedTreeKeys } = this.state;
@@ -300,7 +333,15 @@ class User extends PureComponent {
   render() {
     const code = 'user';
 
-    const { visible, excelVisible, confirmLoading, checkedTreeKeys, isCovered } = this.state;
+    const { 
+      visible, 
+      excelVisible, 
+      confirmLoading, 
+      checkedTreeKeys, 
+      isCovered,
+      passwordVisible,
+      newPassword
+    } = this.state;
 
     const {
       form,
@@ -310,6 +351,7 @@ class User extends PureComponent {
         init: { roleTree, deptTree },
       },
     } = this.props;
+
     console.log(data,"current")
 
     console.log(data,"data")
@@ -330,6 +372,15 @@ class User extends PureComponent {
         xs: { span: 24 },
         sm: { span: 12 },
         md: { span: 16 },
+      },
+    };
+
+    const formAllItemLayout = {
+      labelCol: {
+        span: 6,
+      },
+      wrapperCol: {
+        span: 18,
       },
     };
 
@@ -475,6 +526,35 @@ class User extends PureComponent {
             />
           </Col>
         </Row>
+        <Modal
+          title="修改密码"
+          visible={passwordVisible}
+          width={350}
+          onOk={this.changePassword}
+          confirmLoading={confirmLoading}
+          onCancel={()=>{
+            this.setState({
+              passwordVisible:false,
+            })
+          }}
+        >
+          <Form style={{ marginTop: 8 }}>
+            <FormItem {...formAllItemLayout} label="新密码">
+              <Input 
+                placeholder="请输入新密码"
+                onChange={({ target: { value } }) => {
+                  this.setState({
+                    newPassword:value
+                  })
+                }}
+                value={newPassword}
+               />
+               <Button type="primary" icon="copy" size="small" onClick={this.copyNewPassword}>
+                点击复制密码
+              </Button>
+            </FormItem>
+          </Form>
+        </Modal>
         <Modal
           title="权限配置"
           width={350}

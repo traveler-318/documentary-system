@@ -26,6 +26,8 @@ import {
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
+let backUrl = "";
+
 @connect(({ user, loading }) => ({
   user,
   submitting: loading.effects['user/submit'],
@@ -53,6 +55,18 @@ class OrdersAdd extends PureComponent {
     this.getSalesmanList();
     // this.assemblingData();
     this.getTreeList();
+
+    if(window.location.hash.indexOf("allOrders") != -1){
+      backUrl = "/order/allOrders/list?type=details"
+    }else if(window.location.hash.indexOf("salesmanOrder") != -1){
+      backUrl = "/order/salesmanOrder/list?type=details"
+    }else if(window.location.hash.indexOf("warehouseOrder") != -1){
+      backUrl = "/order/warehouseOrder/list?type=details"
+    }else if(window.location.hash.indexOf("afterSaleOrder") != -1){
+      backUrl = "/order/afterSaleOrder/list?type=details"
+    }else if(window.location.hash.indexOf("executive") != -1){
+      backUrl = "/order/executive/list?type=details"
+    }
   }
 
   getTreeList = () => {
@@ -101,6 +115,8 @@ class OrdersAdd extends PureComponent {
         values.tenantId = getCookie("tenantId");
         values = {...values,...cityparam};
         if(values.productType && values.productType != ""){
+          console.log(values.productType[2])
+          console.log(values.productType[2].split("-"))
           // values.payAmount = values.productType[2].split("-")[1];
           // values.payAmount = payamount;
           values.productName = values.productType[2];
@@ -113,7 +129,7 @@ class OrdersAdd extends PureComponent {
         createData(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
-            router.push('/order/executive');
+            router.push('/order/allOrders');
           }
         })
       }
@@ -198,7 +214,7 @@ class OrdersAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back="/order/executive" action={action}>
+      <Panel title="新增" back={backUrl} action={action}>
         <Form style={{ marginTop: 8 }}>
           <div></div>
           <Card title="创建客户" className={styles.card} bordered={false}>

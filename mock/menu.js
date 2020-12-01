@@ -214,7 +214,7 @@ function getFakeButtons(req, res) {
           },
           {
             code: 'user_reset',
-            name: '密码重置',
+            name: '修改密码',
             path: '/api/blade-system/user/reset-password',
             source: 'retweet',
             action: 1,

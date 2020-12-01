@@ -5,7 +5,7 @@ export const STATUS = [
 ]
 
 export const TEMPID =[
-  {value:'申通快递',id:"1d437167a92a4daea4c75387a09342ab"},
+  {value:'申通快递',id:"0926b46c331444c68838a65c1d51be15"},
   {value:'顺丰速运',id:"47da0036ad9e4d99b7ca5cf56cd92ba2"},
   {value:'德邦',id:"39b4fe4306774d29b2c5a6898a91b04d"},
   {value:'京东物流',id:"640677b0599442f2becf631c30699de7"},

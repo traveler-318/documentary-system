@@ -5,12 +5,12 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 
 
-import Panel from '../../../../components/Panel';
-import Grid from '../../../../components/Sword/Grid';
-import { ORDER_LIST } from '../../../../actions/order';
-import func from '../../../../utils/Func';
-import { orderDetail } from '../../../../services/newServices/order';
-import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY } from '../data.js';
+import Panel from '../../../components/Panel';
+import Grid from '../../../components/Sword/Grid';
+import { ORDER_LIST } from '../../../actions/order';
+import func from '../../../utils/Func';
+import { orderDetail } from '../../../services/newServices/order';
+import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY } from './data.js';
 
 const FormItem = Form.Item;
 
@@ -72,7 +72,7 @@ class OrderList extends PureComponent {
 
   // 详情
   handleDetsils = (row) => {
-    router.push(`/order/allOrders/edit/${row.id}`);
+    router.push(`/order/afterSaleOrder/edit/${row.id}`);
   }
 
   getText = (key, type) => {
@@ -82,7 +82,6 @@ class OrderList extends PureComponent {
         text = item.name
       }
     })
-    console.log(text)
     return text
   }
 

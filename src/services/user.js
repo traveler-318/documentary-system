@@ -104,6 +104,10 @@ export async function getUserInfo() {
   return request('/api/blade-user/info');
 }
 
+export async function getSMSBalance() {
+  return request('/api/blade-user/userMoneyInfo');
+}
+
 export async function updatePassword(params) {
   const values = params;
   values.oldPassword = md5(values.oldPassword);

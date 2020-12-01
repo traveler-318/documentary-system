@@ -11,6 +11,7 @@ export const NETSELECT = [
   {name:"zhongtong",key:4},
   {name:"debangkuaidi",key:5},
   {name:"yuantong",key:6},
+  {name:"shentong",key:7},
 ]
 
 

@@ -15,13 +15,13 @@ import {
   getDetails,
   orderDetail,
   updateReminds,
-  productTreelist, subscription, deleteLogisticsSuber, localPrinting, logisticsRepeatPrint,
+  productTreelist, subscription,deleteLogisticsSuber
 } from '../../../services/newServices/order';
 import {ORDERSTATUS,ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
-import Survey from './components/Survey'
+import Survey from './Survey'
 import { setListData } from '../../../utils/publicMethod';
-import OrderList from './components/OrderList';
+import OrderList from './OrderList';
 import {
   LOGISTICSCOMPANY,
 } from './data.js';
@@ -29,6 +29,8 @@ import {
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { TabPane } = Tabs;
+
+let backUrl = "";
 
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -70,7 +72,21 @@ class OrdersEdit extends PureComponent {
       detail:globalParameters.detailData,
     })
     this.getTreeList();
-    this.getEditDetails()
+    this.getEditDetails();
+
+    if(window.location.hash.indexOf("allOrders") != -1){
+      backUrl = "/order/allOrders/list?type=details"
+    }else if(window.location.hash.indexOf("salesmanOrder") != -1){
+      backUrl = "/order/salesmanOrder/list?type=details"
+    }else if(window.location.hash.indexOf("warehouseOrder") != -1){
+      backUrl = "/order/warehouseOrder/list?type=details"
+    }else if(window.location.hash.indexOf("afterSaleOrder") != -1){
+      backUrl = "/order/afterSaleOrder/list?type=details"
+    }else if(window.location.hash.indexOf("executive") != -1){
+      backUrl = "/order/executive/list?type=details"
+    }
+
+    
   }
 
   getTreeList = () => {
@@ -389,9 +405,10 @@ class OrdersEdit extends PureComponent {
     };
     console.log(!detail.logisticsStatus === true,"123123")
     console.log(detail)
+    
 
     return (
-      <Panel title="详情" back="/order/warehouseOrder">
+      <Panel title="详情" back={backUrl}>
         <Form style={{ marginTop: 8 }}>
           <Card bordered={false} className={styles.editContent}>
             <Row gutter={24} style={{ margin: 0 }}>
@@ -513,7 +530,7 @@ class OrdersEdit extends PureComponent {
                           fieldNames={{ label: 'value'}}
                           onChange={(value, selectedOptions)=>{
                             const { form } = this.props;
-                            
+
                             this.setState({
                               payPanyId:selectedOptions[0].id,
                               productTypeId:selectedOptions[1].id,

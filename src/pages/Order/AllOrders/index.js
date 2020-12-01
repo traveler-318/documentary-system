@@ -10,6 +10,7 @@ import Grid from '../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
+import { getQueryString1 } from '../../../utils/utils';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY, LOGISTICSSTATUS } from './data.js';
 import {
   getList,
@@ -32,8 +33,7 @@ import {
 // getList as getSalesmanLists,
 import { getSalesmangroup } from '../../../services/newServices/sales';
 import styles from './index.less';
-import Logistics from './components/Logistics'
-import Export from './components/export'
+import Export from '../components/export'
 import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'
@@ -90,15 +90,13 @@ class AllOrdersList extends PureComponent {
       salesmanList:[],
       data:{},
       loading:false,
-      params:localStorage.AllOrdersparams ? JSON.parse(localStorage.AllOrdersparams) : {
+      params:{
         size:10,
         current:1
       },
       tabKey:sessionStorage.orderTabKey ? sessionStorage.orderTabKey : '0',
       selectedRows:[],
       productList:[],
-      // 物流弹窗
-      logisticsVisible:false,
       // 导出
       exportVisible:false,
       // 转移客户
@@ -338,6 +336,12 @@ class AllOrdersList extends PureComponent {
   componentWillMount() {
     // this.getDataList();
     // this.getSalesmanList();
+
+    if(getQueryString1('type') === "details" && localStorage.AllOrdersparams){
+      this.setState({
+        params: JSON.parse(localStorage.AllOrdersparams)
+      })
+    }
 
     // 获取分组数据
     getSalesmangroup({
@@ -1045,7 +1049,7 @@ class AllOrdersList extends PureComponent {
         {tabKey === '0'?(
         <>
           <Button type="primary" icon="plus" onClick={()=>{
-            router.push(`/order/AllOrders/add`);
+            router.push(`/order/allOrders/add`);
           }}>添加</Button>
           <Button
             icon="menu-unfold"
@@ -1114,7 +1118,7 @@ class AllOrdersList extends PureComponent {
         {/* 全部 */}
         {tabKey === 'null'?(<>
           <Button type="primary" icon="plus" onClick={()=>{
-            router.push(`/order/AllOrders/add`);
+            router.push(`/order/allOrders/add`);
           }}>添加</Button>
 {/*
           <Button
@@ -1560,20 +1564,6 @@ class AllOrdersList extends PureComponent {
     });
     router.push('/order/allOrders/logisticsConfiguration');
 
-    // this.setState({
-    //   logisticsVisible:true
-    // })
-  }
-
-  // 关闭物流弹窗
-  handleCancelLogistics = (type) => {
-    // getlist代表点击保存成功关闭弹窗后需要刷新列表
-    if(type === "getlist"){
-      this.getDataList();
-    }
-    this.setState({
-      logisticsVisible:false
-    })
   }
 
   // 打开转移客户弹窗
@@ -1698,7 +1688,6 @@ class AllOrdersList extends PureComponent {
       data,
       loading,
       tabKey,
-      logisticsVisible,
       exportVisible,
       TransferVisible,
       LogisticsConfigVisible,
@@ -1837,14 +1826,6 @@ class AllOrdersList extends PureComponent {
           <Export
             exportVisible={exportVisible}
             handleCancelExport={this.handleCancelExport}
-          />
-        ):""}
-
-        {/* 物流 */}
-        {logisticsVisible?(
-          <Logistics
-            logisticsVisible={logisticsVisible}
-            handleCancelLogistics={this.handleCancelLogistics}
           />
         ):""}
 

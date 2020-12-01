@@ -4,14 +4,14 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 
-import Panel from '../../../../components/Panel';
-import FormTitle from '../../../../components/FormTitle';
-import styles from '../edit.less';
-import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../../actions/user';
-import func from '../../../../utils/Func';
-import { getCookie } from '../../../../utils/support';
-import { updateData, getRegion, getDetails,orderFollowing } from '../../../../services/newServices/order';
-import {ORDERSTATUS} from '../data'
+import Panel from '../../../components/Panel';
+import FormTitle from '../../../components/FormTitle';
+import styles from './edit.less';
+import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
+import func from '../../../utils/Func';
+import { getCookie } from '../../../utils/support';
+import { updateData, getRegion, getDetails,orderFollowing } from '../../../services/newServices/order';
+import {ORDERSTATUS} from './data'
 import LogisticsDetails from './LogisticsDetails'
 import ReminderTimes from './time'
 import EditTime from './editTime'
@@ -42,16 +42,7 @@ class Survey extends PureComponent {
       },
       describe:"",
       orderType:[
-        // {"name":"待审核",key:0,className:""},
-        // {"name":"已审核",key:1,className:""},
-        // {"name":"已发货",key:2,className:""},
-        // {"name":"在途中",key:3,className:""},
-        // {"name":"已签收",key:4,className:""},
-        // {"name":"跟进中",key:5,className:""},
-        // {"name":"已激活",key:6,className:""},
-        // {"name":"已退回",key:7,className:""},
-        // {"name":"已取消",key:8,className:""},
-        // {"name":"已过期",key:9,className:""},
+
       ],
       followRecords:[],
       reminderTime:"",
@@ -74,7 +65,6 @@ class Survey extends PureComponent {
   }
 
   UNSAFE_componentWillReceiveProps(nex){
-    // const { orderType } = this.state;
 
     const { detail } = this.props;
     let list = [];
@@ -87,6 +77,7 @@ class Survey extends PureComponent {
       detail:nex.detail,
       followRecords:list
     })
+
     let _type = ORDERSTATUS.map(item=>{
       let _item = {...item}
       if(Number(item.key) <= Number(nex.detail.confirmTag)){
@@ -94,6 +85,7 @@ class Survey extends PureComponent {
       }else{
         _item.className = ""
       }
+
       return _item
     })
 
@@ -187,13 +179,17 @@ class Survey extends PureComponent {
 
   handleEmpty = () => {
     this.setState({
-      describe:""
+      describe:"",
+      reminderTime:"",
     })
 };
 
   handleSubmit = () => {
     const { detail , describe, reminderTime } = this.state;
     let { followRecords } = this.state;
+    if(describe === ""){
+      return message.error("请输入跟进内容");
+    }
     let param = {
       userName:detail.userName,
       describe,
@@ -207,6 +203,7 @@ class Survey extends PureComponent {
     let _param = {
       id:detail.id,
       deptId:detail.deptId,
+      tenantId:detail.tenantId,
       confirmTag:detail.confirmTag,
       outOrderNo:detail.outOrderNo,
       salesman:detail.salesman,
@@ -220,20 +217,21 @@ class Survey extends PureComponent {
     console.log(_param)
 
     // if(detail.confirmTag === '4'){
-      orderFollowing(_param).then(res=>{
-        if(res.code === 200){
-          message.success(res.msg);
-          this.props.getEditDetails();
-          this.handleEmpty();
-        }else{
-          message.error(res.msg);
-        }
-      })
+    orderFollowing(_param).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg);
+        this.props.getEditDetails();
+        this.handleEmpty();
+      }else{
+        message.error(res.msg);
+      }
+    })
     // }else {
     //   message.warning("当物流签收后才能进入跟进状态");
     // }
 
   }
+
 
   handleReminderTime = () => {
     this.setState({

@@ -410,7 +410,7 @@ class LogisticsConfiguration extends PureComponent {
                 logisticsPrintRequest(param).then(response=>{
                   if(response.code === 200){
                     sessionStorage.setItem('imgBase64', response.data)
-                    window.open(`#/order/executive/img`);
+                    window.open(`#/order/allOrders/img`);
                     // 刷新详情数据
                     this.getDetailsData(listID[currentIndex].id);
                   }else{
@@ -454,7 +454,7 @@ class LogisticsConfiguration extends PureComponent {
           }).then(res=>{
             if(res.code === 200){
               sessionStorage.setItem('imgBase64', res.data)
-              window.open(`#/order/executive/img`);
+              window.open(`#/order/allOrders/img`);
             }else{
               message.error(res.msg);
             }

@@ -12,7 +12,7 @@ export default {
   'button.recovery.name': '恢复',
   'button.expand.name': '展开',
   'button.role.name': '角色配置',
-  'button.reset-password.name': '密码重置',
+  'button.reset-password.name': '修改密码',
   'button.back.name': '返回',
   'button.deploy.name': '部署',
   'button.download.name': '下载',

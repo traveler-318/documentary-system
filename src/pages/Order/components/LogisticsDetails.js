@@ -15,12 +15,12 @@ import {
   Empty
 } from 'antd';
 import { connect } from 'dva';
-import styles from '../edit.less';
+import styles from './edit.less';
 import moment from 'moment';
 import router from 'umi/router';
-import { getCookie } from '../../../../utils/support';
-import { logisticsQuery } from '../../../../services/newServices/order';
-import { getLogisticsQuery } from '../data';
+import { getCookie } from '../../../utils/support';
+import { logisticsQuery } from '../../../services/newServices/order';
+import { getLogisticsQuery } from './data';
 
 
 const FormItem = Form.Item;

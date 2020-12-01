@@ -155,7 +155,7 @@ class OrdersAdd extends PureComponent {
       },
     };
     return (
-      <Panel title="详情" back="/order/AllOrders">
+      <Panel title="详情" back="/order/allOrders">
         <Form style={{ marginTop: 8 }}>
           <Card bordered={false} className={styles.editContent}>
             <Row gutter={24} style={{ margin: 0 }}>
