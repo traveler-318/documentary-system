@@ -34,7 +34,7 @@ import {
 import { getSalesmangroup } from '../../../services/newServices/sales';
 import styles from './index.less';
 import Logistics from './components/Logistics'
-import Export from './components/export'
+import Export from '../components/export'
 import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
 import Details from './components/details'

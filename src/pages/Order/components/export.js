@@ -4,15 +4,14 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 
-import { tenantMode } from '../../../../defaultSettings';
-import { getCookie } from '../../../../utils/support';
-import { getList,getVCode,exportOrder,getPhone } from '../../../../services/newServices/order'
-import { exportData,currentTime } from '../data.js';
-import { getToken } from '../../../../utils/authority';
+import { tenantMode, clientId, clientSecret } from '../../../defaultSettings';
+import { getCookie } from '../../../utils/support';
+import { getList,getVCode,exportOrder,getPhone } from '../../../services/newServices/order'
+import { exportData,currentTime } from './data.js';
+import { getToken } from '../../../utils/authority';
 import { Base64 } from 'js-base64';
-import { clientId, clientSecret } from '../../../../defaultSettings';
-import { ORDERSOURCE } from '../data';
-import styles from '../index.less';
+import { ORDERSOURCE } from './data';
+import styles from './index.less';
 import axios from 'axios'
 
 const FormItem = Form.Item;
@@ -244,7 +243,7 @@ class Export extends PureComponent {
       responseType: "blob"
     }).then(res => {
       console.log(res)
-      if(res.status === 200){
+      if(res.code === 200){
         let data = res.data;
         let fileReader = new FileReader();
         fileReader.readAsText(data, 'utf-8');
@@ -257,9 +256,8 @@ class Export extends PureComponent {
           }
         };
       }else {
-        message.error("导出失败");
+        message.error(res.msg);
       }
-
     })
   }
 

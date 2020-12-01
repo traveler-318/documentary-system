@@ -557,7 +557,6 @@ export default [
               { path: '/order/executive/add', component: './Order/components/add' },
               { path: '/order/executive/edit/:id', component: './Order/components/edit' },
               { path: '/order/executive/logisticsConfiguration', component: './Order/Executive/components/logisticsConfiguration' },
-              { path: '/order/executive/img', component: './Order/Executive/img' },
             ],
           },
           {
