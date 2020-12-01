@@ -34,20 +34,18 @@ import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGI
 import {
   getPermissions,
   deleteData,
-  updateRemind,
   localPrinting,
   logisticsRepeatPrint,
   updateReminds,
   toExamine,
   synCheck,
   syndata,
-  getSalesmanLists,
   subscription,
   updateData,
-  salesmanList,
   productTreelist,
   batchLogisticsSubscription,
-  getCurrenttree
+  getCurrenttree,
+  getCurrentsalesman
 } from '../../../services/newServices/order';
 
 // getList as getSalesmanLists,
@@ -141,8 +139,6 @@ class AllOrdersList extends PureComponent {
       confirmLoading: false,
       // SN激活导入弹窗
       excelVisible:false,
-      // 文本导入弹窗
-      textVisible:false,
       // 文本导入弹窗
       textVisible:false,
       // 订单导入弹窗
@@ -360,52 +356,33 @@ class AllOrdersList extends PureComponent {
     // this.getDataList();
     // this.getSalesmanList();
 
-    // 获取分组数据
-    getSalesmangroup({
-      size:100,
-      current:1
-    }).then(res=>{
-      const list={
-        groupName:"全部",
-        id:"",
-        userAccount:''
-      };
-      res.data.records.unshift(list);
-      this.setState({
-        salesmangroup:res.data.records
-      })
-    })
-
-    this.getSalesman();
     this.getTreeList();
     this.currenttree();
   }
 
   getTreeList = () => {
     productTreelist().then(res=>{
-      console.log(res.data,"productTreelist")
       this.setState({productList:res.data})
     })
   }
 
   // 销售默认全部列表
-  getSalesman = () => {
-    salesmanList({size:100,current:1}).then(res=>{
-      const list={
-        userName:"全部",
-        userAccount:""
-      };
-      res.data.records.unshift(list);
-      this.setState({
-        salesmanList:res.data.records
-      })
-    })
-  }
+  // getSalesman = () => {
+  //   salesmanList({size:100,current:1}).then(res=>{
+  //     const list={
+  //       userName:"全部",
+  //       userAccount:""
+  //     };
+  //     res.data.records.unshift(list);
+  //     this.setState({
+  //       salesmanList:res.data.records
+  //     })
+  //   })
+  // }
 
   // 组织列表
   currenttree = () => {
     getCurrenttree().then(res=>{
-      console.log(res)
       this.setState({
         organizationTree:res.data
       })
@@ -427,33 +404,25 @@ class AllOrdersList extends PureComponent {
     })
   }
 
-  // 获取业务员数据
+  // 根据组织获取对应的业务员数据
   getSalesmanList = (value = "all_all") => {
-    getSalesmanLists(value).then(res=>{
+    getCurrentsalesman(value).then(res=>{
       if(res.code === 200){
-        const list={
-          userName:"全部",
-          userAccount:""
-        };
-        res.data.unshift(list);
+        res.data.unshift('全部');
         this.setState({
           salesmanList:res.data
         })
-        const { form } = this.props;
-        form.setFieldsValue({salesman:"全部"});
       }
     })
   }
 
-  // 选择分组
+  // 选择组织
   changeGroup = (value) => {
     if(value){
       this.getSalesmanList(value)
       this.setState({
         salesmanList:[]
       })
-    }else {
-      this.getSalesman()
     }
   }
 
@@ -473,8 +442,8 @@ class AllOrdersList extends PureComponent {
       };
       // payload.dateRange = null;
     }
-    if(payload.groupId && payload.groupId === "全部"){
-      payload.groupId = null;
+    if(payload.organizationId && payload.organizationId === ""){
+      payload.organizationId = null;
     }
     if(payload.logisticsStatus && payload.logisticsStatus === "全部"){
       payload.logisticsStatus = null;
@@ -484,11 +453,10 @@ class AllOrdersList extends PureComponent {
     }
     let text = "";
     if(payload.salesman === "全部" || payload.salesman === ""){
-      console.log(salesmanList)
       for(let i=0; i<salesmanList.length; i++){
-        text +=salesmanList[i].userAccount+","
+        text +=salesmanList[i]+","
       }
-      payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"");
+      payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"").substr(3);
     }else{
       payload.salesman = payload.salesman
     }
@@ -511,7 +479,6 @@ class AllOrdersList extends PureComponent {
     for(let key in payload){
       payload[key] = payload[key] === "" ? null : payload[key]
     }
-
     this.setState({
       params:payload
     },()=>{
@@ -527,7 +494,6 @@ class AllOrdersList extends PureComponent {
     const { getFieldDecorator } = form;
 
     const { salesmanList, salesmangroup, params, productList,organizationTree } = this.state;
-
 
     return (
       <div className={"default_search_form"}>
@@ -557,20 +523,36 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="分组">
-          {getFieldDecorator('groupId', {
-                initialValue: params.groupId ? params.groupId : "全部",
-              })(
-              <Select
-                placeholder={"请选择分组"}
-                style={{ width: 120 }}
-                onChange={this.changeGroup}
-              >
-                {salesmangroup.map(item=>{
-                  return (<Option value={item.id}>{item.groupName}</Option>)
-                })}
-              </Select>
-            )}
+        {/*<Form.Item label="组织">*/}
+          {/*{getFieldDecorator('groupId', {*/}
+                {/*initialValue: params.groupId ? params.groupId : "全部",*/}
+              {/*})(*/}
+              {/*<Select*/}
+                {/*placeholder={"请选择分组"}*/}
+                {/*style={{ width: 120 }}*/}
+                {/*onChange={this.changeGroup}*/}
+              {/*>*/}
+                {/*{salesmangroup.map((item,key)=>{*/}
+                  {/*return (<Option value={key}>{item}</Option>)*/}
+                {/*})}*/}
+              {/*</Select>*/}
+            {/*)}*/}
+        {/*</Form.Item>*/}
+        <Form.Item label="所属组织">
+          {getFieldDecorator('organizationId', {
+            initialValue: params.organizationId ? params.organizationId : null
+          })(
+            <TreeSelect
+              style={{ width: 200 }}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              onChange={this.changeGroup}
+              treeData={organizationTree}
+              allowClear
+              showSearch
+              treeNodeFilterProp="title"
+              placeholder="请选择所属组织"
+            />
+          )}
         </Form.Item>
         <Form.Item label="销售">
           {getFieldDecorator('salesman', {
@@ -578,7 +560,7 @@ class AllOrdersList extends PureComponent {
               })(
               <Select placeholder={"请选择销售"} style={{ width: 120 }}>
                 {salesmanList.map((item,index)=>{
-                  return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
+                  return (<Option key={index} value={item}>{item}</Option>)
                 })}
               </Select>
             )}
@@ -617,21 +599,6 @@ class AllOrdersList extends PureComponent {
               ></Cascader>
           )}
         </Form.Item>
-        <Form.Item label="所属组织">
-          {getFieldDecorator('organizationId', {
-            // initialValue: params.organizationId ? params.organizationId : null
-          })(
-            <TreeSelect
-              style={{ width: 200 }}
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              treeData={organizationTree}
-              allowClear
-              showSearch
-              treeNodeFilterProp="title"
-              placeholder="请选择所属组织"
-            />
-          )}
-        </Form.Item>
           <div>
             <Form.Item label="下单时间">
               {getFieldDecorator('dateRange', {
@@ -648,7 +615,7 @@ class AllOrdersList extends PureComponent {
                 <FormattedMessage id="button.search.name" />
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={()=>{
-                this.getSalesman();
+                // this.getSalesman();
                 onReset()
               }}>
                 <FormattedMessage id="button.reset.name" />

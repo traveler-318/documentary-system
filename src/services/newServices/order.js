@@ -21,6 +21,10 @@ export async function getPermissions(params) {
 export async function getCurrenttree() {
   return request(`/api/order/permissions/currenttree`);
 }
+// 组织获取业务员列表
+export async function getCurrentsalesman(id) {
+  return request(`/api/order/permissions/currentsalesman/${id}`);
+}
 
 export async function getDetails(params) {
   return request(`/api/order/order/detail?${stringify(params)}`);
