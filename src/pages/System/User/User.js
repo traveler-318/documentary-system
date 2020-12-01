@@ -347,6 +347,9 @@ class User extends PureComponent {
         init: { roleTree, deptTree },
       },
     } = this.props;
+
+    const { getFieldDecorator } = form;
+    
     console.log(data,"current")
 
     console.log(data,"data")
