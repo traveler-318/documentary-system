@@ -85,7 +85,8 @@ class OrderImport extends PureComponent {
       if (!err) {
         console.log(this.state.fileList,"values");
         values.file = this.state.fileList[0];
-        values.createTime=this.state.createTime
+        values.createTime=this.state.createTime;
+
         importOrder(values).then(res=>{
           this.setState({
             loading:false,
@@ -226,7 +227,7 @@ class OrderImport extends PureComponent {
               <Col span={12} style={{ padding: 0 }}>
                 <FormItem {...formItemLayout1} label="订单金额">
                   {getFieldDecorator('payAmount', {
-
+                    initialValue: null,
                   })(<Input placeholder="请输入金额" />)}
                 </FormItem>
               </Col>
