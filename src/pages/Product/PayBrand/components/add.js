@@ -14,7 +14,7 @@ import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
 import { getAddSave } from '../../../../services/newServices/product';
-import {paymentCompany,} from '../../../Order/allOrders/data.js';
+import {paymentCompany,} from '../../../Order/components/data.js';
 
 const { Option } = Select;
 const FormItem = Form.Item;
