@@ -72,7 +72,17 @@ class OrderList extends PureComponent {
 
   // 详情
   handleDetsils = (row) => {
-    router.push(`/order/afterSaleOrder/edit/${row.id}`);
+    if(window.location.hash.indexOf("allOrders") != -1){
+      router.push(`/order/allOrders/edit/${row.id}`);
+    }else if(window.location.hash.indexOf("salesmanOrder") != -1){
+      router.push(`/order/salesmanOrder/edit/${row.id}`);
+    }else if(window.location.hash.indexOf("warehouseOrder") != -1){
+      router.push(`/order/warehouseOrder/edit/${row.id}`);
+    }else if(window.location.hash.indexOf("afterSaleOrder") != -1){
+      router.push(`/order/afterSaleOrder/edit/${row.id}`);
+    }else if(window.location.hash.indexOf("executive") != -1){
+      router.push(`/order/executive/edit/${row.id}`);
+    }
   }
 
   getText = (key, type) => {
