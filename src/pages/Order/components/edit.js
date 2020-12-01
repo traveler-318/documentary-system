@@ -77,11 +77,11 @@ class OrdersEdit extends PureComponent {
     if(window.location.hash.indexOf("allOrders") != -1){
       backUrl = "/order/allOrders/list?type=details"
     }else if(window.location.hash.indexOf("salesmanOrder") != -1){
-      backUrl = "/order/SalesmanOrder/list?type=details"
+      backUrl = "/order/salesmanOrder/list?type=details"
     }else if(window.location.hash.indexOf("warehouseOrder") != -1){
-      backUrl = "/order/WarehouseOrder/list?type=details"
+      backUrl = "/order/warehouseOrder/list?type=details"
     }else if(window.location.hash.indexOf("afterSaleOrder") != -1){
-      backUrl = "/order/AfterSaleOrder/list?type=details"
+      backUrl = "/order/afterSaleOrder/list?type=details"
     }else if(window.location.hash.indexOf("executive") != -1){
       backUrl = "/order/executive/list?type=details"
     }
