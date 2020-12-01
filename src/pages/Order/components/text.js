@@ -22,7 +22,7 @@ import { importText,exportOrder } from '../../../services/newServices/order'
 import { getAccessToken, getToken } from '../../../utils/authority';
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
 import { LOGISTICSCOMPANY } from './data';
-import styles  from '../AllOrders/index.less';
+import styles  from './index.less';
 import { getCookie } from '../../../utils/support';
 import { getProductattributeAdd } from '../../../services/newServices/product';
 

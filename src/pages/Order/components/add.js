@@ -26,6 +26,7 @@ import {
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
+let backUrl = "";
 
 @connect(({ user, loading }) => ({
   user,
@@ -42,7 +43,10 @@ class OrdersAdd extends PureComponent {
       cityparam:{},
       productList:[],
       selectedOptions:[],
-      payamount:null
+      payamount:null,
+      payPanyId:null,
+      productTypeId:null,
+      productId:null,
     };
   }
 
@@ -51,6 +55,18 @@ class OrdersAdd extends PureComponent {
     this.getSalesmanList();
     // this.assemblingData();
     this.getTreeList();
+
+    if(window.location.hash.indexOf("allOrders") != -1){
+      backUrl = "/order/allOrders/list?type=details"
+    }else if(window.location.hash.indexOf("salesmanOrder") != -1){
+      backUrl = "/order/salesmanOrder/list?type=details"
+    }else if(window.location.hash.indexOf("warehouseOrder") != -1){
+      backUrl = "/order/warehouseOrder/list?type=details"
+    }else if(window.location.hash.indexOf("afterSaleOrder") != -1){
+      backUrl = "/order/afterSaleOrder/list?type=details"
+    }else if(window.location.hash.indexOf("executive") != -1){
+      backUrl = "/order/executive/list?type=details"
+    }
   }
 
   getTreeList = () => {
@@ -91,7 +107,7 @@ class OrdersAdd extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { cityparam, selectedOptions, payamount } = this.state;
+    const { cityparam, selectedOptions, payamount, payPanyId, productTypeId, productId, } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log(values,"提交数据")
@@ -105,6 +121,9 @@ class OrdersAdd extends PureComponent {
           // values.payAmount = payamount;
           values.productName = values.productType[2];
           values.productType = `${values.productType[0]}/${values.productType[1]}`;
+          values.payPanyId = payPanyId;
+          values.productTypeId = productTypeId; 
+          values.productId = productId;
         }
         values.userAddress = `${selectedOptions}${values.userAddress}`;
         createData(values).then(res=>{
@@ -195,7 +214,7 @@ class OrdersAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back="/order/allOrders" action={action}>
+      <Panel title="新增" back={backUrl} action={action}>
         <Form style={{ marginTop: 8 }}>
           <div></div>
           <Card title="创建客户" className={styles.card} bordered={false}>
@@ -277,7 +296,9 @@ class OrdersAdd extends PureComponent {
                   })(
                   <Select placeholder={"请选择订单来源"}>
                     {ORDERSOURCE.map(item=>{
-                      return (<Option value={item.key}>{item.name}</Option>)
+                        if(item.key != null){
+                          return (<Option value={item.key}>{item.name}</Option>)
+                        }
                     })}
                   </Select>
                   )}
@@ -309,9 +330,11 @@ class OrdersAdd extends PureComponent {
                         fieldNames={{ label: 'value'}}
                         onChange={(value, selectedOptions)=>{
                           console.log(value, selectedOptions,"产品分类改变")
-                          // this.setState({
-                          //   payamount:selectedOptions[2].payamount
-                          // })
+                          this.setState({
+                            payPanyId:selectedOptions[0].id,
+                            productTypeId:selectedOptions[1].id,
+                            productId :selectedOptions[2].id,
+                          })
                           const { form } = this.props;
                           console.log(form,"1")
                           console.log(form.getFieldsValue,"2");

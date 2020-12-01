@@ -555,7 +555,7 @@ class LogisticsConfiguration extends PureComponent {
     console.log(detail,"detaildetaildetail")
 
     return (
-      <Panel title="发货配置" back="/order/AllOrders">
+      <Panel title="发货配置" back="/order/allOrders">
         <div style={{background:"#fff",marginBottom:10,padding:"10px 10px 10px 20px"}}>
           <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
             保存

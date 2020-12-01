@@ -1074,7 +1074,7 @@ class AllOrdersList extends PureComponent {
         {tabKey === '0'?(
         <>
           <Button type="primary" icon="plus" onClick={()=>{
-            router.push(`/order/AllOrders/add`);
+            router.push(`/order/executive/add`);
           }}>添加</Button>
           <Button
             icon="menu-unfold"
@@ -1143,7 +1143,7 @@ class AllOrdersList extends PureComponent {
         {/* 全部 */}
         {tabKey === 'null'?(<>
           <Button type="primary" icon="plus" onClick={()=>{
-            router.push(`/order/AllOrders/add`);
+            router.push(`/order/executive/add`);
           }}>添加</Button>
 {/*
           <Button
@@ -1353,7 +1353,7 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: row,
     });
-    router.push(`/order/allOrders/edit/${row.id}`);
+    router.push(`/order/executive/edit/${row.id}`);
   }
 
   renderRightButton = () => (
