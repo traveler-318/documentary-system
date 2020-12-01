@@ -271,6 +271,7 @@ class OrderImport extends PureComponent {
                 点击下载
               </Button>
             </Form.Item>
+            <div style={{color:"red",paddingLeft:'33px'}}>*注意：当你选择了订单金额、创建时间，将会覆盖导入文件中的数据内容</div>
           </Form>
           </Spin>
         </Modal>
