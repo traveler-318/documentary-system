@@ -10,6 +10,7 @@ import Grid from '../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../actions/order';
 import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
+import { getQueryString1 } from '../../../utils/utils';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY, LOGISTICSSTATUS } from './data.js';
 import {
   getList,
@@ -90,7 +91,7 @@ class AllOrdersList extends PureComponent {
       salesmanList:[],
       data:{},
       loading:false,
-      params:localStorage.warehouseOrderParams ? JSON.parse(localStorage.warehouseOrderParams) : {
+      params:{
         size:10,
         current:1
       },
@@ -334,6 +335,12 @@ class AllOrdersList extends PureComponent {
   componentWillMount() {
     // this.getDataList();
     // this.getSalesmanList();
+
+    if(getQueryString1('type') === "details" && localStorage.warehouseOrderParams){
+      this.setState({
+        params: JSON.parse(localStorage.warehouseOrderParams)
+      })
+    }
 
     // 获取分组数据
     getSalesmangroup({

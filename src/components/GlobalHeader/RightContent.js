@@ -9,7 +9,7 @@ import HeaderDropdown from '../HeaderDropdown';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
 
-import { getUserInfo } from '../../services/user';
+import { getSMSBalance } from '../../services/user';
 
 export default class GlobalHeaderRight extends PureComponent {
 
@@ -21,10 +21,10 @@ export default class GlobalHeaderRight extends PureComponent {
   }
 
   componentDidMount() {
-    getUserInfo().then(resp => {
+    getSMSBalance().then(resp => {
+      console.log(resp,"resprespresp")
       if (resp.code === 200) {
-        console.log(resp)
-        this.setState({ remainingMoney: resp.data.remainingMoney});
+        this.setState({ remainingMoney: resp.data});
       } else {
         message.error(resp.msg || '获取数据失败');
       }
