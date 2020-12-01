@@ -14,7 +14,7 @@ import moment from 'moment';
 import router from 'umi/router';
 import { getCookie } from '../../../../utils/support';
 import { getProductattributeAdd, getPaypanyList, getProductcategoryList } from '../../../../services/newServices/product';
-import {paymentCompany,} from '../../../Order/allOrders/data.js';
+import {paymentCompany,} from '../../../Order/components/data.js';
 import styles from '../add.less';
 import H5Background from './h5Background'
 

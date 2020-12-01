@@ -542,10 +542,10 @@ export default [
             path: '/order/allOrders',
             routes: [
               { path: '/order/allOrders', redirect: '/order/allOrders/list' },
-              { path: '/order/allOrders/list', component: './Order/allOrders/index' },
+              { path: '/order/allOrders/list', component: './Order/AllOrders/index' },
               { path: '/order/allOrders/add', component: './Order/components/add' },
               { path: '/order/allOrders/edit/:id', component: './Order/components/edit' },
-              { path: '/order/allOrders/logisticsConfiguration', component: './Order/allOrders/components/logisticsConfiguration' },
+              { path: '/order/allOrders/logisticsConfiguration', component: './Order/AllOrders/components/logisticsConfiguration' },
               { path: '/order/allOrders/img', component: './Order/components/img' },
             ],
           },
