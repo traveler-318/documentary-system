@@ -59,7 +59,21 @@ class OrdersEdit extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productId:null,
+      detailsId:null
     };
+  }
+
+  componentWillReceiveProps(nexProps,prePorps) {
+    console.log("12323123",nexProps.match.params.id,this.state.detailsId);
+    if(nexProps.match.params.id != this.state.detailsId){
+      // 获取详情数据
+      this.setState({
+        detailsId:nexProps.match.params.id,
+      },()=>{
+        this.getTreeList();
+        this.getEditDetails();
+      });
+    }
   }
 
 
@@ -69,10 +83,12 @@ class OrdersEdit extends PureComponent {
     console.log(globalParameters)
     // 获取详情数据
     this.setState({
-      detail:globalParameters.detailData,
+      detailsId:this.props.match.params.id,
+    },()=>{
+      this.getTreeList();
+      this.getEditDetails();
     })
-    this.getTreeList();
-    this.getEditDetails();
+    
 
     if(window.location.hash.indexOf("allOrders") != -1){
       backUrl = "/order/allOrders/list?type=details"
@@ -99,7 +115,7 @@ class OrdersEdit extends PureComponent {
 
   getEditDetails = () => {
     const params={
-      id:this.props.match.params.id
+      id:this.state.detailsId
     }
     getDetails(params).then(res=>{
       this.setState({
