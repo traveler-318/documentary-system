@@ -426,10 +426,13 @@ class AllOrdersList extends PureComponent {
   // 选择组织
   changeGroup = (value) => {
     if(value){
-      this.getSalesmanList(value)
+      this.getSalesmanList(value);
       this.setState({
         salesmanList:[]
       })
+      this.props.form.setFieldsValue({
+        salesman: `全部`
+      });
     }
   }
 
