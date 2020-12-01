@@ -280,10 +280,12 @@ export async function importText(params) {
 
 // 订单导入
 export async function importOrder(params) {
-  const { salesman, file, orderType } = params;
+  const { salesman, file, orderType,payAmount,createTime } = params;
   const formData = new FormData();
   formData.append('salesman', salesman);
   formData.append('orderType', orderType);
+  formData.append('payAmount', payAmount);
+  formData.append('createTime', createTime);
   formData.append('file', file);
   return request('/api/order/order/importOrder', {
     method: 'POST',
