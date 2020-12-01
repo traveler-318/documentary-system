@@ -33,7 +33,6 @@ import {
 // getList as getSalesmanLists,
 import { getSalesmangroup } from '../../../services/newServices/sales';
 import styles from './index.less';
-import Logistics from './components/Logistics'
 import Export from '../components/export'
 import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
@@ -99,8 +98,6 @@ class AllOrdersList extends PureComponent {
       tabKey:sessionStorage.salesmanOrderTabKey ? sessionStorage.salesmanOrderTabKey : '0',
       selectedRows:[],
       productList:[],
-      // 物流弹窗
-      logisticsVisible:false,
       // 导出
       exportVisible:false,
       // 转移客户
@@ -1567,21 +1564,6 @@ class AllOrdersList extends PureComponent {
       payload: data,
     });
     router.push('/order/salesmanOrder/logisticsConfiguration');
-
-    // this.setState({
-    //   logisticsVisible:true
-    // })
-  }
-
-  // 关闭物流弹窗
-  handleCancelLogistics = (type) => {
-    // getlist代表点击保存成功关闭弹窗后需要刷新列表
-    if(type === "getlist"){
-      this.getDataList();
-    }
-    this.setState({
-      logisticsVisible:false
-    })
   }
 
   // 打开转移客户弹窗
@@ -1706,7 +1688,6 @@ class AllOrdersList extends PureComponent {
       data,
       loading,
       tabKey,
-      logisticsVisible,
       exportVisible,
       TransferVisible,
       LogisticsConfigVisible,
@@ -1845,14 +1826,6 @@ class AllOrdersList extends PureComponent {
           <Export
             exportVisible={exportVisible}
             handleCancelExport={this.handleCancelExport}
-          />
-        ):""}
-
-        {/* 物流 */}
-        {logisticsVisible?(
-          <Logistics
-            logisticsVisible={logisticsVisible}
-            handleCancelLogistics={this.handleCancelLogistics}
           />
         ):""}
 
