@@ -105,7 +105,7 @@ class User extends PureComponent {
       newPassword,
       confirmLoading
     } = this.state;
-    if(newPassword){
+    if(newPassword === ""){
       message.error('请输入新密码');
       return false;
     }
@@ -377,10 +377,10 @@ class User extends PureComponent {
 
     const formAllItemLayout = {
       labelCol: {
-        span: 4,
+        span: 6,
       },
       wrapperCol: {
-        span: 20,
+        span: 18,
       },
     };
 
@@ -549,10 +549,8 @@ class User extends PureComponent {
                 }}
                 value={newPassword}
                />
-            </FormItem>
-            <FormItem {...formItemLayout} label="">
-              <Button type="primary" icon="copy" size="small" onClick={this.copyNewPassword}>
-                点击复制新密码
+               <Button type="primary" icon="copy" size="small" onClick={this.copyNewPassword}>
+                点击复制密码
               </Button>
             </FormItem>
           </Form>
