@@ -106,6 +106,14 @@ class BaseView extends Component {
     callback('请输入正整数!');
   }
 
+  validatePhone = (rule, value, callback) => {
+    if (!(/^1[3456789]\d{9}$/.test(value))) {
+      callback(new Error('请输入正确的手机号格式'));
+    }else{
+      callback();
+    }
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -189,12 +197,13 @@ class BaseView extends Component {
               <FormItem {...formItemLayout} label={"联系电话"}>
                 {getFieldDecorator('phone', {
                   rules: [
-                    {
-                      required: true,
-                      message: "请输入您的联系电话!",
-                    },
+                    // {
+                    //   required: true,
+                    //   message: "请输入您的联系电话!",
+                    // },
+                    { required: true, validator: this.validatePhone },
                   ],
-                })(<Input disabled />)}
+                })(<Input />)}
               </FormItem>
               <FormItem {...formItemLayout} label={"电子邮箱"}>
                 {getFieldDecorator('email', {
