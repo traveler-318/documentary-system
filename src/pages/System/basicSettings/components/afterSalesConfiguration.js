@@ -12,6 +12,7 @@ import {
   Row,
   Col,
   Select,
+  Tooltip
 } from 'antd';
 import { getUserInfo, updateInfo } from '../../../../services/user';
 import { getToken } from '../../../../utils/authority';
@@ -106,14 +107,6 @@ class BaseView extends Component {
     callback('请输入正整数!');
   }
 
-  validatePhone = (rule, value, callback) => {
-    if (!(/^1[3456789]\d{9}$/.test(value))) {
-      callback(new Error('请输入正确的手机号格式'));
-    }else{
-      callback();
-    }
-  }
-
   render() {
     const {
       form: { getFieldDecorator },
@@ -152,69 +145,36 @@ class BaseView extends Component {
         <div className={styles.basicConfiguration}>
           <Row gutter={24}>
               <Col span={12}>
-              <FormItem
-                {...formItemLayout}
-                label={"头像"}
-              >
-                {getFieldDecorator('avatar', {
-                  // rules: [
-                  //   {
-                  //     required: true,
-                  //     message: "请上传头像",
-                  //   },
-                  // ],
-                })(
-                  <Upload
-                    name="file"
-                    listType="picture-card"
-                    className="avatar-uploader"
-                    showUploadList={false}
-                    beforeUpload={this.beforeUpload}
-                    onChange={this.handleChange}
-                    {...uploadProp}
-                  >
-                    {avatar ? (
-                      <img src={avatar} alt="avatar" style={{ width: '100%' }} />
-                    ) : (
-                        uploadButton
-                      )}
-                  </Upload>
+              <FormItem {...formItemLayout} label={'提示内容'}>
+                {getFieldDecorator('promptContent', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入提示内容',
+                    },
+                  ],
+                })(<Input />)}
+              </FormItem>
+              <FormItem {...formItemLayout} label={'投诉电话'}>
+                {getFieldDecorator('aftersalesPhone')(
+                  <Input />
                 )}
+                <Tooltip title={'用户下单时悬浮按钮上的投诉电话'}>
+                  <Icon 
+                    type='question-circle-o'
+                    style={{
+                      position: 'absolute',
+                      top: '4px',
+                      right: '-20px'
+                    }} 
+                  />
+                </Tooltip>
               </FormItem>
-              <FormItem
-                {...formItemLayout}
-                label={"姓名"}
-              >
-                {getFieldDecorator('name', {
-                  rules: [
-                    {
-                      required: true,
-                      message: "请输入您的姓名!",
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label={"联系电话"}>
-                {getFieldDecorator('phone', {
-                  rules: [
-                    // {
-                    //   required: true,
-                    //   message: "请输入您的联系电话!",
-                    // },
-                    { required: true, validator: this.validatePhone },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label={"电子邮箱"}>
-                {getFieldDecorator('email', {
-                  rules: [
-                    {
-                      required: true,
-                      message: "请输入您的电子邮箱!",
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
+              <FormItem style={{display:"none"}}>
+                  {getFieldDecorator('id')(
+                    <Input />
+                  )}
+                </FormItem>
               </Col>
           </Row>
         </div>

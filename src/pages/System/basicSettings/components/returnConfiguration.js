@@ -106,14 +106,6 @@ class BaseView extends Component {
     callback('请输入正整数!');
   }
 
-  validatePhone = (rule, value, callback) => {
-    if (!(/^1[3456789]\d{9}$/.test(value))) {
-      callback(new Error('请输入正确的手机号格式'));
-    }else{
-      callback();
-    }
-  }
-
   render() {
     const {
       form: { getFieldDecorator },
@@ -197,24 +189,132 @@ class BaseView extends Component {
               <FormItem {...formItemLayout} label={"联系电话"}>
                 {getFieldDecorator('phone', {
                   rules: [
-                    // {
-                    //   required: true,
-                    //   message: "请输入您的联系电话!",
-                    // },
-                    { required: true, validator: this.validatePhone },
+                    {
+                      required: true,
+                      message: "请输入您的联系电话!",
+                    },
                   ],
-                })(<Input />)}
+                })(<Input disabled />)}
               </FormItem>
-              <FormItem {...formItemLayout} label={"电子邮箱"}>
+              <FormItem {...formItemLayout} label={"邮箱"}>
                 {getFieldDecorator('email', {
                   rules: [
                     {
                       required: true,
-                      message: "请输入您的电子邮箱!",
+                      message: "请输入您的邮箱!",
                     },
                   ],
                 })(<Input />)}
               </FormItem>
+              <FormItem {...formItemLayout} label={'提示内容'}>
+                {getFieldDecorator('promptContent', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入提示内容',
+                    },
+                  ],
+                })(<Input />)}
+              </FormItem>
+              <FormItem {...formItemLayout} label={'网关域名'}>
+                {getFieldDecorator('serverAddress', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入网关域名',
+                    },
+                  ],
+                })(<Input />)}
+              </FormItem>
+              <FormItem {...formItemLayout} label={'短信签名'}>
+                {getFieldDecorator('smsSignature')(
+                  <Input />
+                )}
+              </FormItem>
+              <FormItem {...formItemLayout} label={'投诉电话'}>
+                {getFieldDecorator('aftersalesPhone')(
+                  <Input />
+                )}
+              </FormItem>
+              <FormItem {...formItemLayout} label={'有效期天数'}>
+                {getFieldDecorator('periodValidity', {
+                  rules: [{ validator: this.checkInteger }],
+                })(
+                  <Input />
+                )}
+              </FormItem>
+              <FormItem {...formItemLayout} label={'备注'}>
+                {getFieldDecorator('note')(
+                  <TextArea rows={4} />
+                )}
+              </FormItem>
+              </Col>
+
+              {/* ------------------------------------------ */}
+
+              <Col span={12} style={{marginTop:151}}>
+                <FormItem {...formItemLayout} label={'帐号启用'}>
+                  {getFieldDecorator('status')(
+                    <Radio.Group>
+                      <Radio key={1} value={1}>启用</Radio>
+                      <Radio key={0} value={0}>禁用</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'系统告警'}>
+                  {getFieldDecorator('alarmStatus')(
+                    <Radio.Group>
+                      <Radio key={1} value={1}>启用</Radio>
+                      <Radio key={0} value={0}>禁用</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'二维码开关'}>
+                  {getFieldDecorator('qrcodeStatus')(
+                    <Radio.Group>
+                      <Radio key={1} value={1}>启用</Radio>
+                      <Radio key={0} value={0}>禁用</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'物流查询'}>
+                  {getFieldDecorator('logisticsStatus')(
+                    <Radio.Group>
+                      <Radio key={1} value={1}>启用</Radio>
+                      <Radio key={0} value={0}>禁用</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'提醒类型'}>
+                  {getFieldDecorator('smsStatus')(
+                    <Radio.Group>
+                      <Radio key={0} value={0}>关闭</Radio>
+                      <Radio key={1} value={1}>短信</Radio>
+                      <Radio key={2} value={2}>短信+语音</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'发货提醒'}>
+                  {getFieldDecorator('shipmentRemindStatus')(
+                    <Radio.Group>
+                      <Radio key={1} value={1}>启用</Radio>
+                      <Radio key={0} value={0}>禁用</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'本地打印'}>
+                  {getFieldDecorator('localPrintStatus')(
+                    <Radio.Group>
+                      <Radio key={1} value={1}>是</Radio>
+                      <Radio key={0} value={0}>否</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem style={{display:"none"}}>
+                  {getFieldDecorator('id')(
+                    <Input />
+                  )}
+                </FormItem>
               </Col>
           </Row>
         </div>

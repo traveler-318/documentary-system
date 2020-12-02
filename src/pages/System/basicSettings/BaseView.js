@@ -34,12 +34,12 @@ const { TabPane } = Tabs;
 //   {name:"二级",key:2},
 // ]
 const topTabPane = [
-  {name:"个人配置",key:'1'},
-  // {name:"版本信息",key:'6'},
-  // {name:"安全配置",key:'2'},
-  // {name:"功能配置",key:'3'},
-  // {name:"售后配置",key:'4'},
-  // {name:"退货配置",key:'5'},
+  {name:"基本配置",key:'1'},
+  {name:"安全配置",key:'2'},
+  {name:"功能配置",key:'3'},
+  {name:"售后配置",key:'4'},
+  {name:"退货配置",key:'5'},
+  {name:"版本信息",key:'6'},
 ]
 
 
@@ -103,7 +103,7 @@ class BaseView extends Component {
     );
 
     return (
-      <Panel title="个人设置" back="/" action={action}>
+      <Panel title="基本设置" back="/" action={action}>
         <Form style={{ marginTop: 8 }} hideRequiredMark>
           <div style={{background:"#ffffff"}}>
             <Tabs defaultActiveKey={TabsKey} onChange={this.onChangeTabsKey}>

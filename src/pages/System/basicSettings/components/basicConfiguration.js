@@ -152,69 +152,51 @@ class BaseView extends Component {
         <div className={styles.basicConfiguration}>
           <Row gutter={24}>
               <Col span={12}>
-              <FormItem
-                {...formItemLayout}
-                label={"头像"}
-              >
-                {getFieldDecorator('avatar', {
-                  // rules: [
-                  //   {
-                  //     required: true,
-                  //     message: "请上传头像",
-                  //   },
-                  // ],
-                })(
-                  <Upload
-                    name="file"
-                    listType="picture-card"
-                    className="avatar-uploader"
-                    showUploadList={false}
-                    beforeUpload={this.beforeUpload}
-                    onChange={this.handleChange}
-                    {...uploadProp}
-                  >
-                    {avatar ? (
-                      <img src={avatar} alt="avatar" style={{ width: '100%' }} />
-                    ) : (
-                        uploadButton
-                      )}
-                  </Upload>
-                )}
-              </FormItem>
-              <FormItem
-                {...formItemLayout}
-                label={"姓名"}
-              >
-                {getFieldDecorator('name', {
-                  rules: [
-                    {
-                      required: true,
-                      message: "请输入您的姓名!",
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label={"联系电话"}>
-                {getFieldDecorator('phone', {
-                  rules: [
-                    // {
-                    //   required: true,
-                    //   message: "请输入您的联系电话!",
-                    // },
-                    { required: true, validator: this.validatePhone },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label={"电子邮箱"}>
-                {getFieldDecorator('email', {
-                  rules: [
-                    {
-                      required: true,
-                      message: "请输入您的电子邮箱!",
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
+                <FormItem {...formItemLayout} label={"联系电话"}>
+                  {getFieldDecorator('phone', {
+                    rules: [
+                      // {
+                      //   required: true,
+                      //   message: "请输入您的联系电话!",
+                      // },
+                      { required: true, validator: this.validatePhone },
+                    ],
+                  })(<Input />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'网关域名'}>
+                  {getFieldDecorator('serverAddress', {
+                    rules: [
+                      {
+                        required: true,
+                        message: '请输入网关域名',
+                      },
+                    ],
+                  })(<Input />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'短信签名'}>
+                  {getFieldDecorator('smsSignature')(
+                    <Input />
+                  )}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'帐号启用'}>
+                  {getFieldDecorator('status')(
+                    <Radio.Group>
+                      <Radio key={1} value={1}>启用</Radio>
+                      <Radio key={0} value={0}>禁用</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'备注'}>
+                  {getFieldDecorator('note')(
+                    <TextArea rows={4} />
+                  )}
+                </FormItem>
+              
+                <FormItem style={{display:"none"}}>
+                  {getFieldDecorator('id')(
+                    <Input />
+                  )}
+                </FormItem>
               </Col>
           </Row>
         </div>
