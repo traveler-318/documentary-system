@@ -15,7 +15,11 @@ import {
   getDetails,
   orderDetail,
   updateReminds,
-  productTreelist, subscription,deleteLogisticsSuber
+  productTreelist, 
+  subscription,
+  deleteLogisticsSuber, 
+  localPrinting, 
+  logisticsRepeatPrint,
 } from '../../../services/newServices/order';
 import {ORDERSTATUS,ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
