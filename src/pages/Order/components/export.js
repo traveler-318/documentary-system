@@ -162,7 +162,7 @@ class Export extends PureComponent {
     const userName=getCookie("userName");
     getVCode(userName,tenantId,2).then(res=>{
     //   console.log(res)
-      if(res.status=== 200){
+      if(res.code=== 200){
         this.setState({
           smsType:false,
           retransmission: true,
@@ -170,7 +170,7 @@ class Export extends PureComponent {
         })
         this.setTimer();
       }else {
-        message.error("导出失败");
+        message.error(res.mas);
       }
     })
   }
@@ -243,7 +243,7 @@ class Export extends PureComponent {
       responseType: "blob"
     }).then(res => {
       console.log(res)
-      if(res.code === 200){
+      if(res.status === 200){
         let data = res.data;
         let fileReader = new FileReader();
         fileReader.readAsText(data, 'utf-8');
@@ -256,7 +256,7 @@ class Export extends PureComponent {
           }
         };
       }else {
-        message.error(res.msg);
+        message.error("导出失败");
       }
     })
   }
