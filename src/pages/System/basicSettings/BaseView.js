@@ -101,7 +101,6 @@ class BaseView extends Component {
         提交
       </Button>
     );
-
     return (
       <Panel title="基本设置" back="/" action={action}>
         <Form style={{ marginTop: 8 }} hideRequiredMark>
@@ -112,7 +111,7 @@ class BaseView extends Component {
                   return (
                     <TabPane tab={item.name} key={item.key}>
                       {
-                        TabsKey === "1" ? (
+                        item.key === "1" ? (
                           <BasicConfiguration
                           ref={form => {
                             this.BasicView = form;
@@ -121,14 +120,14 @@ class BaseView extends Component {
                         ) :""
                       }
                       {
-                        TabsKey === "2" ? (
+                        item.key === "2" ? (
                           <Empty 
                             style={{margin:"40px 8px"}}
                           />
                         ) :""
                       }
                       {
-                        TabsKey === "3" ? (
+                        item.key === "3" ? (
                           <FunctionConfiguration
                           ref={form => {
                             this.BasicView = form;
@@ -137,7 +136,7 @@ class BaseView extends Component {
                         ) :""
                       }
                       {
-                        TabsKey === "4" ? (
+                        item.key === "4" ? (
                           <AfterSalesConfiguration
                           ref={form => {
                             this.BasicView = form;
@@ -146,14 +145,14 @@ class BaseView extends Component {
                         ) :""
                       }
                       {
-                        TabsKey === "5" ? (
+                        item.key === "5" ? (
                           <Empty 
                             style={{margin:"40px 8px"}}
                           />
                         ) :""
                       }
                       {
-                        TabsKey === "6" ? (
+                        item.key === "6" ? (
                           <VersionInformation 
                             style={{margin:"40px 8px"}}
                           />

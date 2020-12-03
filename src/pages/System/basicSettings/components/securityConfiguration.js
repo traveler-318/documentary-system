@@ -32,7 +32,7 @@ class BaseView extends Component {
     loading: false,
   };
 
-  componentDidMount() {
+  componentWillMount() {
     this.setBaseInfo();
   }
 
