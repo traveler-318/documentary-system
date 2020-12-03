@@ -243,7 +243,7 @@ class Export extends PureComponent {
       responseType: "blob"
     }).then(res => {
       console.log(res)
-      if(res.code === 200){
+      if(res.status === 200){
         let data = res.data;
         let fileReader = new FileReader();
         fileReader.readAsText(data, 'utf-8');
@@ -256,7 +256,7 @@ class Export extends PureComponent {
           }
         };
       }else {
-        message.error(res.msg);
+        message.error("导出失败");
       }
     })
   }
@@ -397,8 +397,6 @@ class Export extends PureComponent {
       params,
       checkedList
     } = this.state;
-
-    console.log(params)
 
     return (
       <>
