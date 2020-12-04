@@ -35,7 +35,7 @@ const { TabPane } = Tabs;
 // ]
 const topTabPane = [
   {name:"基本配置",key:'1'},
-  {name:"安全配置",key:'2'},
+  // {name:"安全配置",key:'2'},
   {name:"功能配置",key:'3'},
   {name:"售后配置",key:'4'},
   {name:"退货配置",key:'5'},
