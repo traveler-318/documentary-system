@@ -441,6 +441,9 @@ class OrdersEdit extends PureComponent {
           footer={null}
           bodyStyle={{paddingTop:0}}
           maskClosable={false}
+          style={{
+            top:40
+          }}
         >
         <Form style={{ marginTop: 8 }}>
           <Card bordered={false} className={styles.editContent}>
