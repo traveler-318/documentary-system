@@ -112,6 +112,7 @@ class ImportFile extends PureComponent {
           title="用户数据导入"
           width={500}
           visible={excelVisible}
+          maskClosable={false}
           confirmLoading={confirmLoading}
           onOk={this.handleExcelImport}
           onCancel={this.handleExcelCancel}

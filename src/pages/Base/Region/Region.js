@@ -449,6 +449,7 @@ class Region extends PureComponent {
           confirmLoading={confirmLoading}
           onOk={this.handleExcelImport}
           onCancel={this.handleExcelCancel}
+          maskClosable={false}
           okText="确认"
           cancelText="取消"
         >
@@ -474,6 +475,7 @@ class Region extends PureComponent {
         </Modal>
         <Modal
           title="行政区划数据调试"
+          maskClosable={false}
           width={500}
           visible={debugVisible}
           onOk={this.handleDebugCancel}

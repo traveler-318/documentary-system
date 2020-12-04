@@ -78,6 +78,7 @@ class Equipment extends PureComponent {
         <>
           <Modal
             title="免押宝导入数据"
+            maskClosable={false}
             visible={noDepositVisible}
             width={430}
             onCancel={handleCancelNoDeposit}

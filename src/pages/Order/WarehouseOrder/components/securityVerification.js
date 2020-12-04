@@ -118,6 +118,7 @@ class SecurityVerification extends PureComponent {
         <>
           <Modal
             title="安全验证"
+            maskClosable={false}
             visible={verificationVisible}
             width={430}
             onCancel={handleCancelVerification}

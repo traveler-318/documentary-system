@@ -103,6 +103,7 @@ class TransferCustomers extends PureComponent {
         <Modal
           title="转移客户"
           visible={TransferVisible}
+          maskClosable={false}
           width={400}
           onCancel={handleCancelTransfer}
           footer={[

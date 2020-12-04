@@ -102,6 +102,7 @@ class ThirdRegister extends PureComponent {
         width={800}
         visible={visible}
         closable={false}
+        maskClosable={false}
         footer={[
           <Button key="submit" type="primary" loading={loading} onClick={this.handleSubmit}>
             注册

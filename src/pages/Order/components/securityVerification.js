@@ -128,6 +128,7 @@ class SecurityVerification extends PureComponent {
             visible={verificationVisible}
             width={430}
             onCancel={handleCancelVerification}
+            maskClosable={false}
             footer={[
               <Button key="back" onClick={handleCancelVerification}>
                 取消

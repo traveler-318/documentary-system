@@ -100,6 +100,7 @@ class PayBrandAdd extends PureComponent {
       <div>
         <Modal
           title="新增"
+          maskClosable={false}
           visible={handleAddVisible}
           width={500}
           onCancel={handleCancelAdd}

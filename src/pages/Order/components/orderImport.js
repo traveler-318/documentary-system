@@ -183,6 +183,7 @@ class OrderImport extends PureComponent {
           visible={OrderImportVisible}
           confirmLoading={confirmLoading}
           onCancel={handleOrderImportCancel}
+          maskClosable={false}
           loading={loading}
           onOk = {()=>{
             if(loading){

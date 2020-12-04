@@ -119,6 +119,7 @@ class Equipment extends PureComponent {
         <Modal
           title="设备序列号"
           visible={equipmeentVisible}
+          maskClosable={false}
           width={560}
           onCancel={handleCancelEquipment}
           footer={[

@@ -243,7 +243,7 @@ class Export extends PureComponent {
       responseType: "blob"
     }).then(res => {
       console.log(res)
-      if(res.status === 200){
+      if(!res.data.code){
         let data = res.data;
         let fileReader = new FileReader();
         fileReader.readAsText(data, 'utf-8');
@@ -403,8 +403,10 @@ class Export extends PureComponent {
         <Modal
           title="数据导出"
           visible={exportVisible}
+          maskClosable={false}
           width={760}
           onCancel={()=>this.handleCancel()}
+          maskClosable={false}
           footer={[
             <Button key="back" onClick={()=>this.handleCancel()}>
               取消
@@ -475,6 +477,7 @@ class Export extends PureComponent {
           visible={exportFileVisible}
           width={360}
           onCancel={this.handleCancelExportFile}
+          maskClosable={false}
           footer={[
             <Button key="back" onClick={this.handleCancelExportFile}>
               取消

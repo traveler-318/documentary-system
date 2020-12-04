@@ -230,6 +230,7 @@ class Logistics extends PureComponent {
         <Modal
           title="修改"
           visible={handleEditVisible}
+          maskClosable={false}
           width={600}
           onCancel={handleCancelEdit}
           footer={[

@@ -90,6 +90,7 @@ class ReminderTimes extends PureComponent {
     return (
         <Modal
           title="提醒时间"
+          maskClosable={false}
           visible={reminderTimeVisible}
           width={500}
           onCancel={()=>handleReminderTimeBack("")}

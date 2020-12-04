@@ -57,12 +57,11 @@ class Logistics extends PureComponent {
       <div>
         <Modal
           title="支付宝支付"
+          maskClosable={false}
           visible={bindingQRCodeVisible}
           width={360}
           onCancel={handleCancelBindingQRCode}
-          footer={[
-
-          ]}
+          footer={null}
         >
           <div>
             <QRCode

@@ -174,6 +174,7 @@ class FlowFollow extends PureComponent {
           confirmLoading={followLoading}
           onOk={this.handleDeleteProcessInstance}
           onCancel={this.handleStateCancel}
+          maskClosable={false}
         >
           <Form style={{ marginTop: 8 }}>
             <Card className={styles.card} bordered={false}>

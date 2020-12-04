@@ -119,11 +119,10 @@ class LogisticsDetails extends PureComponent {
         <Modal
           title="物流详情"
           visible={logisticsDetailsVisible}
+          maskClosable={false}
           width={550}
           onCancel={handleLogisticsDetails}
-          footer={[
-
-          ]}
+          footer={null}
         >
           <div className={styles.logisticsTime}>
             {data.length <= 0 ? (

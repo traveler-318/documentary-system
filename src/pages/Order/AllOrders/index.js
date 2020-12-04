@@ -36,7 +36,7 @@ import styles from './index.less';
 import Export from '../components/export'
 import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
-import Details from './components/details'
+import PopupDetails from '../components/popupDetails'
 import Journal from '../components/journal'
 import SMS from '../components/smsList'
 import VoiceList from '../components/voiceList'
@@ -91,10 +91,6 @@ class AllOrdersList extends PureComponent {
       data:{},
       loading:false,
       params:{
-        size:10,
-        current:1
-      },
-      seachParams:{
         size:10,
         current:1
       },
@@ -296,7 +292,7 @@ class AllOrdersList extends PureComponent {
           render: (text,row) => {
               return(
                   <div>
-                    <a onClick={()=>this.handleEdit(row)}>详情</a>
+                    <a onClick={()=>this.handleDetails(row)}>详情</a>
                     <Divider type="vertical" />
                     {
                       row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
@@ -338,33 +334,6 @@ class AllOrdersList extends PureComponent {
 
   // ============ 初始化数据 ===============
   componentWillMount() {
-    // this.getDataList();
-    // this.getSalesmanList();
-
-    if(getQueryString1('type') === "details" && localStorage.AllOrdersparams){
-      debugger
-      let _param = JSON.parse(localStorage.AllOrdersparams);
-      if(_param.salesman){
-        if(_param.salesman.split(",").length > 1){
-          _param.salesman = "";
-          // this.getSalesmanList(_param.groupId);
-          // _param.groupId = "全部";
-        }
-      }
-      localStorage.removeItem("AllOrdersparams");
-      this.setState({
-        params: _param,
-        salesmanList:this.props.globalParameters.paramList
-      })
-    }else{
-      this.setState({
-        params: {
-          size:10,
-          current:1
-        }
-      })
-      this.getSalesman();
-    }
 
     // 获取分组数据
     getSalesmangroup({
@@ -382,7 +351,7 @@ class AllOrdersList extends PureComponent {
       })
     })
 
-    // this.getSalesman();
+    this.getSalesman();
     this.getTreeList();
   }
   getTreeList = () => {
@@ -493,10 +462,6 @@ class AllOrdersList extends PureComponent {
     payload.payPanyId = payload.productType ? payload.productType[0] : payload.payPanyId ? payload.payPanyId : null;
     payload.productTypeId = payload.productType ? payload.productType[1] : payload.productTypeId ? payload.productTypeId  : null;
     payload.productId = payload.productType ? payload.productType[2] : payload.productId ? payload.productId  : null;
-    
-    this.setState({
-      seachParams:payload
-    })
 
     delete payload.dateRange;
     delete payload.productType;
@@ -525,22 +490,18 @@ class AllOrdersList extends PureComponent {
       <div className={"default_search_form"}>
         <Form.Item label="姓名">
           {getFieldDecorator('userName',{
-            initialValue:params.userName
           })(<Input placeholder="请输入姓名" />)}
         </Form.Item>
         <Form.Item label="手机号">
           {getFieldDecorator('userPhone',{
-            initialValue:params.userPhone
           })(<Input placeholder="请输入手机号" />)}
         </Form.Item>
         <Form.Item label="SN">
               {getFieldDecorator('productCoding',{
-            initialValue:params.productCoding
           })(<Input placeholder="请输入SN" />)}
             </Form.Item>
         <Form.Item label="订单类型">
           {getFieldDecorator('orderType', {
-              initialValue: params.orderType ? params.orderType :null,
             })(
             <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
               {ORDERTYPPE.map(item=>{
@@ -551,7 +512,6 @@ class AllOrdersList extends PureComponent {
         </Form.Item>
         <Form.Item label="分组">
           {getFieldDecorator('groupId', {
-                initialValue: params.groupId ? params.groupId : "全部",
               })(
               <Select
                 placeholder={"请选择分组"}
@@ -566,7 +526,6 @@ class AllOrdersList extends PureComponent {
         </Form.Item>
         <Form.Item label="销售">
           {getFieldDecorator('salesman', {
-                initialValue: (params.salesman && params.salesman.split(",").length === 1) ? params.salesman : "全部",
               })(
               <Select placeholder={"请选择销售"} style={{ width: 120 }}>
                 {salesmanList.map((item,index)=>{
@@ -577,7 +536,6 @@ class AllOrdersList extends PureComponent {
         </Form.Item>
         <Form.Item label="订单来源">
           {getFieldDecorator('orderSource', {
-            initialValue: params.orderSource ? params.orderSource : "全部",
           })(
             <Select placeholder={"请选择订单来源"} style={{ width: 120 }}>
               {ORDERSOURCE.map(item=>{
@@ -588,7 +546,6 @@ class AllOrdersList extends PureComponent {
         </Form.Item>
         <Form.Item label="物流状态">
           {getFieldDecorator('logisticsStatus', {
-            initialValue: params.logisticsStatus ? params.logisticsStatus : "全部",
           })(
             <Select placeholder={"请选择物流状态"} style={{ width: 120 }}>
               {LOGISTICSSTATUS.map(item=>{
@@ -599,7 +556,6 @@ class AllOrdersList extends PureComponent {
         </Form.Item>
         <Form.Item label="产品分类">
           {getFieldDecorator('productType', {
-              initialValue: params.payPanyId ? [params.payPanyId,params.productTypeId,params.productId] : null,
             })(
               <Cascader
                 style={{ width: 260 }}
@@ -612,8 +568,6 @@ class AllOrdersList extends PureComponent {
           <div>
             <Form.Item label="下单时间">
               {getFieldDecorator('dateRange', {
-                initialValue:params.startTime ? [func.moment(params.startTime, dateFormat), func.moment(params.endTime, dateFormat)]: null,
-                // params.dateRange ? params.dateRange : null,
               })(
                 <RangePicker showTime size={"default"} />
               )}
@@ -1352,12 +1306,6 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: row,
     });
-    dispatch({
-      type: `globalParameters/setParam`,
-      payload: this.state.salesmanList,
-    });
-    localStorage.setItem("AllOrdersparams",JSON.stringify(this.state.seachParams));
-    router.push(`/order/allOrders/edit/${row.id}`);
   }
 
   renderRightButton = () => (
@@ -1819,7 +1767,7 @@ class AllOrdersList extends PureComponent {
           />
           {/* 详情 */}
           {detailsVisible?(
-            <Details
+            <PopupDetails
               detailsVisible={detailsVisible}
               handleCancelDetails={this.handleCancelDetails}
             />
@@ -1908,6 +1856,7 @@ class AllOrdersList extends PureComponent {
         <Modal
           title="提示"
           visible={LogisticsAlertVisible}
+          maskClosable={false}
           width={500}
           onCancel={this.handleLogisticsAlert}
           footer={[
@@ -1932,6 +1881,7 @@ class AllOrdersList extends PureComponent {
         <Modal
           title="修改状态"
           visible={confirmTagVisible}
+          maskClosable={false}
           width={560}
           onCancel={this.handleCancelConfirmTag}
           footer={[

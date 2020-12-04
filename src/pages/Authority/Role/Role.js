@@ -258,6 +258,7 @@ class Role extends PureComponent {
           onCancel={this.handleCancel}
           okText="确认"
           cancelText="取消"
+          maskClosable={false}
         >
           <Tabs defaultActiveKey="1" size="small">
             <TabPane tab="菜单权限" key="1">

@@ -198,6 +198,7 @@ class Background extends PureComponent {
         <Modal
           title="操作日志"
           visible={journalVisible}
+          maskClosable={false}
           width={550}
           onCancel={handleCancelJournal}
           footer={[

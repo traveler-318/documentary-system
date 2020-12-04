@@ -214,6 +214,7 @@ class Background extends PureComponent {
       <div>
         <Modal
           title="选择图片"
+          maskClosable={false}
           visible={handleImgVisible}
           width={550}
           onCancel={handleCancelImg}
@@ -242,6 +243,7 @@ class Background extends PureComponent {
 
       <Modal
           title="附件上传"
+          maskClosable={false}
           width={500}
           visible={visible}
           onOk={this.cancelModal}

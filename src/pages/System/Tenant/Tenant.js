@@ -304,6 +304,7 @@ class Tenant extends PureComponent {
         />
         <Modal
           title="租户授权配置"
+          maskClosable={false}
           width={400}
           visible={settingVisible}
           onOk={this.handleSetting}
@@ -341,6 +342,7 @@ class Tenant extends PureComponent {
         </Modal>
         <Modal
           title="租户数据源配置"
+          maskClosable={false}
           width={400}
           visible={datasourceVisible}
           onOk={this.handleDatasource}

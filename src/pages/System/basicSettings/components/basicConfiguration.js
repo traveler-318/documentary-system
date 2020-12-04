@@ -152,8 +152,8 @@ class BaseView extends Component {
         <div className={styles.basicConfiguration}>
           <Row gutter={24}>
               <Col span={12}>
-                <FormItem {...formItemLayout} label={"联系电话"}>
-                  {getFieldDecorator('phone', {
+                {/* <FormItem {...formItemLayout} label={"联系电话"}>
+                  {getFieldDecorator('contactNumber', {
                     rules: [
                       // {
                       //   required: true,
@@ -161,8 +161,8 @@ class BaseView extends Component {
                       // },
                       { required: true, validator: this.validatePhone },
                     ],
-                  })(<Input />)}
-                </FormItem>
+                  })(<Input disabled />)}
+                </FormItem> */}
                 <FormItem {...formItemLayout} label={'网关域名'}>
                   {getFieldDecorator('serverAddress', {
                     rules: [

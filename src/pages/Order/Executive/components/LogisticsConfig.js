@@ -366,6 +366,7 @@ class LogisticsConfig extends PureComponent {
         <Modal
           title="物流配置"
           visible={LogisticsConfigVisible}
+          maskClosable={false}
           width={560}
           onCancel={handleCancelLogisticsConfig}
           footer={[
@@ -397,6 +398,7 @@ class LogisticsConfig extends PureComponent {
         <Modal
           title={title}
           visible={LogisticsVisible}
+          maskClosable={false}
           onCancel={this.handleCancel}
           width={1000}
           footer={[
