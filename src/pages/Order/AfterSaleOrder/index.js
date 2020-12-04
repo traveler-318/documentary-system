@@ -98,6 +98,10 @@ class AllOrdersList extends PureComponent {
         size:10,
         current:1
       },
+      seachParams:{
+        size:10,
+        current:1
+      },
       tabCode:[],
       tabKey:sessionStorage.afterSaleOrderTabKey ? sessionStorage.afterSaleOrderTabKey : '0',
       selectedRows:[],
@@ -337,9 +341,25 @@ class AllOrdersList extends PureComponent {
     // this.getSalesmanList();
 
     if(getQueryString1('type') === "details" && localStorage.afterSaleOrderParams){
+      let _param = JSON.parse(localStorage.afterSaleOrderParams);
+      if(_param.salesman){
+        if(_param.salesman.split(",").length > 1){
+          _param.salesman = "";
+        }
+      }
+      localStorage.removeItem("afterSaleOrderParams");
       this.setState({
-        params: JSON.parse(localStorage.afterSaleOrderParams)
+        params: _param,
+        salesmanList:this.props.globalParameters.paramList
       })
+    }else{
+      this.setState({
+        params: {
+          size:10,
+          current:1
+        }
+      })
+      this.getSalesman();
     }
 
     // 获取分组数据
@@ -383,7 +403,7 @@ class AllOrdersList extends PureComponent {
       })
     })
 
-    this.getSalesman();
+    // this.getSalesman();
     this.getTreeList();
   }
 
@@ -498,7 +518,9 @@ class AllOrdersList extends PureComponent {
     payload.productTypeId = payload.productType ? payload.productType[1] : payload.productTypeId ? payload.productTypeId  : null;
     payload.productId = payload.productType ? payload.productType[2] : payload.productId ? payload.productId  : null;
 
-    localStorage.setItem("afterSaleOrderParams",JSON.stringify(payload));
+    this.setState({
+      seachParams:payload
+    })
 
     delete payload.dateRange;
     delete payload.productType;
@@ -568,7 +590,7 @@ class AllOrdersList extends PureComponent {
         </Form.Item>
         <Form.Item label="销售">
           {getFieldDecorator('salesman', {
-                initialValue: params.salesman ? params.salesman : "全部",
+                initialValue: (params.salesman && params.salesman.split(",").length === 1)  ? params.salesman : "全部",
               })(
               <Select placeholder={"请选择销售"} style={{ width: 120 }}>
                 {salesmanList.map((item,index)=>{
@@ -1369,6 +1391,11 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: row,
     });
+    dispatch({
+      type: `globalParameters/setParam`,
+      payload: this.state.salesmanList,
+    });
+    localStorage.setItem("afterSaleOrderParams",JSON.stringify(this.state.seachParams));
     router.push(`/order/afterSaleOrder/edit/${row.id}`);
   }
 
