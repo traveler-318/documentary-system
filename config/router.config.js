@@ -246,6 +246,13 @@ export default [
             ],
           },
           {
+            path: '/system/basic',
+            routes: [
+              { path: '/system/basic', component: './System/basicSettings/BaseView' },
+            ],
+          },
+          // Basic settings
+          {
             path: '/system/dict',
             routes: [
               { path: '/system/dict', redirect: '/system/dict/list' },

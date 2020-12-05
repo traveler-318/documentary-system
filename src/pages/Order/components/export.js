@@ -243,7 +243,11 @@ class Export extends PureComponent {
       responseType: "blob"
     }).then(res => {
       console.log(res)
+<<<<<<< HEAD
       if(res.status === 200){
+=======
+      if(!res.data.code){
+>>>>>>> dev
         let data = res.data;
         let fileReader = new FileReader();
         fileReader.readAsText(data, 'utf-8');
@@ -398,15 +402,15 @@ class Export extends PureComponent {
       checkedList
     } = this.state;
 
-    console.log(params)
-
     return (
       <>
         <Modal
           title="数据导出"
           visible={exportVisible}
+          maskClosable={false}
           width={760}
           onCancel={()=>this.handleCancel()}
+          maskClosable={false}
           footer={[
             <Button key="back" onClick={()=>this.handleCancel()}>
               取消
@@ -477,6 +481,7 @@ class Export extends PureComponent {
           visible={exportFileVisible}
           width={360}
           onCancel={this.handleCancelExportFile}
+          maskClosable={false}
           footer={[
             <Button key="back" onClick={this.handleCancelExportFile}>
               取消

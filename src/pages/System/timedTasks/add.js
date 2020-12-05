@@ -115,6 +115,7 @@ class OrdersAdd extends PureComponent {
       <Modal
         title="新增"
         visible={handleAddVisible}
+        maskClosable={false}
         width={500}
         onCancel={handleCancelAdd}
         footer={[

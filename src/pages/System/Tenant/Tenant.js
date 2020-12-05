@@ -39,6 +39,18 @@ class Tenant extends PureComponent {
     datasourceLoading: false,
     selectedRows: [],
     params: {},
+    versionList:[
+      {
+        id:'1',
+        version:'试用'
+      },{
+        id:'2',
+        version:'标准'
+      },{
+        id:'3',
+        version:'企业'
+      }
+    ]
   };
 
   // ============ 查询 ===============
@@ -80,10 +92,11 @@ class Tenant extends PureComponent {
   handleSetting = () => {
     const { form } = this.props;
     const accountNumber = form.getFieldValue('accountNumber');
+    const version = form.getFieldValue('version');
     const expireTime = func.format(form.getFieldValue('expireTime'));
     this.setState({ settingLoading: true });
     const keys = this.getSelectKeys();
-    setting({ ids: keys.join(','), accountNumber, expireTime }).then(resp => {
+    setting({ ids: keys.join(','), accountNumber, expireTime,version }).then(resp => {
       if (resp.success) {
         const { dispatch } = this.props;
         const { params } = this.state;
@@ -192,7 +205,7 @@ class Tenant extends PureComponent {
 
     const { getFieldDecorator } = form;
 
-    const { settingVisible, settingLoading, datasourceVisible, datasourceLoading } = this.state;
+    const { settingVisible, settingLoading, datasourceVisible, datasourceLoading,versionList } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -222,6 +235,31 @@ class Tenant extends PureComponent {
       {
         title: '联系电话',
         dataIndex: 'contactNumber',
+      },
+      {
+        title: '版本',
+        dataIndex: 'version',
+        render: (res) => {
+          let version='';
+          let color='';
+          if(res === '1'){
+            version = "试用"
+            color='red'
+          }
+          if(res === '2'){
+            version = "标准"
+            color="green"
+          }
+          if(res === '3'){
+            version = "企业"
+            color="green"
+          }
+          return(
+            <Tag color={color}>
+              {version}
+            </Tag>
+          )
+        },
       },
       {
         title: '账号额度',
@@ -266,6 +304,7 @@ class Tenant extends PureComponent {
         />
         <Modal
           title="租户授权配置"
+          maskClosable={false}
           width={400}
           visible={settingVisible}
           onOk={this.handleSetting}
@@ -287,11 +326,23 @@ class Tenant extends PureComponent {
                   />
                 )}
               </FormItem>
+              <FormItem {...formItemLayout} label="授权版本">
+                {getFieldDecorator('version')(
+                  <Select placeholder="请选择授权版本">
+                    {versionList.map(d => (
+                      <Select.Option key={d.id} value={d.id}>
+                        {d.version}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                )}
+              </FormItem>
             </Card>
           </Form>
         </Modal>
         <Modal
           title="租户数据源配置"
+          maskClosable={false}
           width={400}
           visible={datasourceVisible}
           onOk={this.handleDatasource}

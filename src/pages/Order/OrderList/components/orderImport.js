@@ -157,6 +157,7 @@ class OrderImport extends PureComponent {
       <>
         <Modal
           title="订单导入"
+          maskClosable={false}
           width={500}
           visible={OrderImportVisible}
           confirmLoading={confirmLoading}

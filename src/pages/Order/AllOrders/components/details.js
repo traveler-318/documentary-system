@@ -119,6 +119,7 @@ class Details extends PureComponent {
         <Modal
           title="详情"
           visible={detailsVisible}
+          maskClosable={false}
           width={560}
           onCancel={handleCancelDetails}
           footer={[

@@ -176,6 +176,7 @@ class Attach extends PureComponent {
         <Modal
           title="附件上传"
           width={500}
+          maskClosable={false}
           visible={visible}
           onOk={this.cancelModal}
           onCancel={this.cancelModal}

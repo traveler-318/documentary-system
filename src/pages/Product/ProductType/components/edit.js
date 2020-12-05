@@ -133,6 +133,7 @@ class ProductTypeEdit extends PureComponent {
         <Modal
           title="修改"
           visible={handleEditVisible}
+          maskClosable={false}
           width={500}
           onCancel={handleCancelEdit}
           footer={[

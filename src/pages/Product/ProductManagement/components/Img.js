@@ -68,6 +68,7 @@ class Background extends PureComponent {
       <div>
         <Modal
           title="预览图片"
+          maskClosable={false}
           visible={handleImgDetailsVisible}
           width={550}
           onCancel={handleCancelImgDetails}

@@ -407,6 +407,7 @@ class Export extends PureComponent {
         <Modal
           title="数据导出"
           visible={exportVisible}
+          maskClosable={false}
           width={760}
           onCancel={()=>this.handleCancel()}
           footer={[
@@ -477,6 +478,7 @@ class Export extends PureComponent {
         <Modal
           title="安全验证"
           visible={exportFileVisible}
+          maskClosable={false}
           width={360}
           onCancel={this.handleCancelExportFile}
           footer={[

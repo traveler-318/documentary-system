@@ -209,6 +209,7 @@ class TopMenu extends PureComponent {
         />
         <Modal
           title="权限配置"
+          maskClosable={false}
           width={380}
           visible={visible}
           confirmLoading={confirmLoading}

@@ -346,12 +346,12 @@ class Survey extends PureComponent {
           )}
         </div>
         <div className={styles.tabText}
-          style={{
-            position:"fixed",
-            bottom:0,
-            left:offsetLeftDistance-24,
-            right:"44px"
-          }}
+          // style={{
+          //   position:"fixed",
+          //   bottom:0,
+          //   left:offsetLeftDistance-24,
+          //   right:"44px"
+          // }}
         >
           <TextArea
             rows={2}

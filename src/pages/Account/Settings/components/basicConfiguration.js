@@ -215,44 +215,6 @@ class BaseView extends Component {
                   ],
                 })(<Input />)}
               </FormItem>
-              <FormItem {...formItemLayout} label={'网关域名'}>
-                {getFieldDecorator('serverAddress', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入网关域名',
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label={'短信签名'}>
-                {getFieldDecorator('smsSignature')(
-                  <Input />
-                )}
-              </FormItem>
-              <FormItem {...formItemLayout} label={'备注'}>
-                {getFieldDecorator('note')(
-                  <TextArea rows={4} />
-                )}
-              </FormItem>
-              </Col>
-
-              {/* ------------------------------------------ */}
-
-              <Col span={12} style={{marginTop:151}}>
-                <FormItem {...formItemLayout} label={'帐号启用'}>
-                  {getFieldDecorator('status')(
-                    <Radio.Group>
-                      <Radio key={1} value={1}>启用</Radio>
-                      <Radio key={0} value={0}>禁用</Radio>
-                    </Radio.Group>
-                  )}
-                </FormItem>
-                <FormItem style={{display:"none"}}>
-                  {getFieldDecorator('id')(
-                    <Input />
-                  )}
-                </FormItem>
               </Col>
           </Row>
         </div>

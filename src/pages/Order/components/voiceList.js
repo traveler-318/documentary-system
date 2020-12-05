@@ -156,6 +156,7 @@ class Voice extends PureComponent {
         <Modal
           title="语音"
           visible={VoiceVisible}
+          maskClosable={false}
           width={1100}
           onCancel={handleCancelVoice}
           footer={[

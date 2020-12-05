@@ -136,6 +136,7 @@ class Logistics extends PureComponent {
         <Modal
           title="物流"
           visible={logisticsVisible}
+          maskClosable={false}
           width={560}
           onCancel={handleCancelLogistics}
           footer={[

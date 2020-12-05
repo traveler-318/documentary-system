@@ -36,7 +36,7 @@ import styles from './index.less';
 import Export from '../components/export'
 import TransferCustomers from './components/TransferCustomers'
 import LogisticsConfig from './components/LogisticsConfig'
-import Details from './components/details'
+import PopupDetails from '../components/popupDetails'
 import { getAdditionalinformationStatus } from '../../../services/newServices/logistics';
 import Journal from '../components/journal';
 import SMS from '../components/smsList'
@@ -288,7 +288,7 @@ class AllOrdersList extends PureComponent {
           render: (text,row) => {
               return(
                   <div>
-                    <a onClick={()=>this.handleEdit(row)}>详情</a>
+                    <a onClick={()=>this.handleDetails(row)}>详情</a>
                     <Divider type="vertical" />
                     {
                       row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
@@ -330,14 +330,6 @@ class AllOrdersList extends PureComponent {
 
   // ============ 初始化数据 ===============
   componentWillMount() {
-    // this.getDataList();
-    // this.getSalesmanList();
-
-    if(getQueryString1('type') === "details" && localStorage.salesmanOrderParams){
-      this.setState({
-        params: JSON.parse(localStorage.salesmanOrderParams)
-      })
-    }
 
     // 获取分组数据
     getSalesmangroup({
@@ -487,8 +479,6 @@ class AllOrdersList extends PureComponent {
     payload.payPanyId = payload.productType ? payload.productType[0] : payload.payPanyId ? payload.payPanyId : null;
     payload.productTypeId = payload.productType ? payload.productType[1] : payload.productTypeId ? payload.productTypeId  : null;
     payload.productId = payload.productType ? payload.productType[2] : payload.productId ? payload.productId  : null;
-
-    localStorage.setItem("salesmanOrderParams",JSON.stringify(payload));
 
     delete payload.dateRange;
     delete payload.productType;
@@ -1791,7 +1781,7 @@ class AllOrdersList extends PureComponent {
         </div>
         {/* 详情 */}
         {detailsVisible?(
-          <Details
+          <PopupDetails
             detailsVisible={detailsVisible}
             handleCancelDetails={this.handleCancelDetails}
           />
@@ -1881,6 +1871,7 @@ class AllOrdersList extends PureComponent {
         <Modal
           title="修改状态"
           visible={confirmTagVisible}
+          maskClosable={false}
           width={560}
           onCancel={this.handleCancelConfirmTag}
           footer={[

@@ -262,6 +262,7 @@ class FlowModel extends PureComponent {
           visible={designVisible}
           onOk={this.handleDesignCancel}
           onCancel={this.handleDesignCancel}
+          maskClosable={false}
         >
           <iframe
             src={src}
@@ -283,6 +284,7 @@ class FlowModel extends PureComponent {
           onOk={this.handleDeploy}
           confirmLoading={deployLoading}
           onCancel={this.handleDeployCancel}
+          maskClosable={false}
         >
           <Form style={{ marginTop: 8 }}>
             <Card className={styles.card} bordered={false}>

@@ -24,6 +24,7 @@ import AfterSalesConfiguration from './components/afterSalesConfiguration';
 import FunctionConfiguration from './components/functionConfiguration';
 import ReturnConfiguration from './components/returnConfiguration';
 import SecurityConfiguration from './components/securityConfiguration';
+import VersionInformation from './components/versionInformation';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -33,11 +34,12 @@ const { TabPane } = Tabs;
 //   {name:"二级",key:2},
 // ]
 const topTabPane = [
-  {name:"基本配置",key:'1'},
-  {name:"安全配置",key:'2'},
-  {name:"功能配置",key:'3'},
-  {name:"售后配置",key:'4'},
-  {name:"退货配置",key:'5'},
+  {name:"个人配置",key:'1'},
+  // {name:"版本信息",key:'6'},
+  // {name:"安全配置",key:'2'},
+  // {name:"功能配置",key:'3'},
+  // {name:"售后配置",key:'4'},
+  // {name:"退货配置",key:'5'},
 ]
 
 
@@ -146,6 +148,13 @@ class BaseView extends Component {
                       {
                         TabsKey === "5" ? (
                           <Empty 
+                            style={{margin:"40px 8px"}}
+                          />
+                        ) :""
+                      }
+                      {
+                        TabsKey === "6" ? (
+                          <VersionInformation 
                             style={{margin:"40px 8px"}}
                           />
                         ) :""
