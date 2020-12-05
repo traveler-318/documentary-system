@@ -243,11 +243,7 @@ class Export extends PureComponent {
       responseType: "blob"
     }).then(res => {
       console.log(res)
-<<<<<<< HEAD
-      if(res.status === 200){
-=======
       if(!res.data.code){
->>>>>>> dev
         let data = res.data;
         let fileReader = new FileReader();
         fileReader.readAsText(data, 'utf-8');
