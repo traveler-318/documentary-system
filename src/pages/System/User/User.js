@@ -131,7 +131,9 @@ class User extends PureComponent {
           message.error(response.msg || '修改失败');
         }
       },
-      onCancel() {},
+      onCancel() {
+        _this.setState({ confirmLoading:false });
+      },
     });
   }
   // 复制密码
