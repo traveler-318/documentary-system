@@ -396,6 +396,8 @@ class AllOrdersList extends PureComponent {
       this.setState({
         salesmanList:res.data.records
       })
+      const { form } = this.props;
+      form.setFieldsValue({salesman:"全部"});
     })
   }
 
