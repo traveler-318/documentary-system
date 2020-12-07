@@ -162,7 +162,7 @@ class Export extends PureComponent {
     const userName=getCookie("userName");
     getVCode(userName,tenantId,2).then(res=>{
     //   console.log(res)
-      if(res.code === 200){
+      if(res.code=== 200){
         this.setState({
           smsType:false,
           retransmission: true,
@@ -170,7 +170,7 @@ class Export extends PureComponent {
         })
         this.setTimer();
       }else {
-        message.error(res.msg);
+        message.error(res.mas);
       }
     })
   }
