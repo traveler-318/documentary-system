@@ -70,9 +70,8 @@ class Logistics extends PureComponent {
           visible={bindingQRCodeVisible}
           width={360}
           onCancel={handleCancelBindingQRCode}
-          footer={[
-
-          ]}
+          maskClosable={false}
+          footer={null}
         >
           <div>
             <span style={{color:"#E6A23C",display: "inline-block",textAlign: "center",width:"100%"}}>微信二维码将在{countDownTimer}秒后失效</span>

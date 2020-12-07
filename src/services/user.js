@@ -104,6 +104,10 @@ export async function getUserInfo() {
   return request('/api/blade-user/info');
 }
 
+export async function getTenantInfo() {
+  return request('/api/blade-system/tenant/tenantInfo');
+}
+
 export async function getSMSBalance() {
   return request('/api/blade-user/userMoneyInfo');
 }
@@ -163,4 +167,26 @@ export async function registerUpdate(params) {
     body: params,
   });
 }
+
+// 绑定
+export async function binding(params) {
+  return request('/api/blade-user/weChatBinding/'+params, {
+    method: 'GET',
+  });
+}
+
+// 解绑
+export async function unbundling(userAccount,openId) {
+  return request('/api/blade-user/unWeChatBind/'+userAccount+"/"+openId, {
+    method: 'GET',
+  });
+}
+
+// 测试
+export async function testOpenid(openId) {
+  return request('/api/agent/salesman/sendTest/'+openId, {
+    method: 'GET',
+  });
+}
+
 

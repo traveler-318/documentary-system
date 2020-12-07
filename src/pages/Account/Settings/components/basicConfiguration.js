@@ -12,14 +12,17 @@ import {
   Row,
   Col,
   Select,
+  Divider,
+  Modal
 } from 'antd';
-import { getUserInfo, updateInfo } from '../../../../services/user';
+import { getUserInfo, updateInfo, unbundling, binding, testOpenid } from '../../../../services/user';
 import { getToken } from '../../../../utils/authority';
-
+import BindingQRCode from './bindingQRCode'
 import styles from './index.less';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
+let timers = null;
 // const GRADE = [
 //   {name:"一级",key:1},
 //   {name:"二级",key:2},
@@ -30,6 +33,9 @@ class BaseView extends Component {
     userId: '',
     avatar: '',
     loading: false,
+    countDownTimer: 30,
+    bindingQRCode: false,
+    imgUrl:"",
   };
 
   componentDidMount() {
@@ -46,7 +52,12 @@ class BaseView extends Component {
           obj[key] = userInfo[key];
           form.setFieldsValue(obj);
         });
-        this.setState({ userId: userInfo.id, avatar: userInfo.avatar });
+        this.setState({ 
+          userId: userInfo.id, 
+          avatar: userInfo.avatar, 
+          openid: userInfo.openid,
+          userAccount: userInfo.account
+         });
       } else {
         message.error(resp.msg || '获取数据失败');
       }
@@ -106,12 +117,101 @@ class BaseView extends Component {
     callback('请输入正整数!');
   }
 
+  validatePhone = (rule, value, callback) => {
+    if (!(/^[\d+]{6,13}$/.test(value))) {
+      callback(new Error('请输入正确的手机号格式'));
+    }else{
+      callback();
+    }
+  }
+
+  handleBinding = (type) =>{
+    if(type === "0"){
+      Modal.confirm({
+        title: '提示',
+        content: `是否确认解绑?`,
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk: () => {
+          const {openid, userAccount} = this.state;
+          unbundling(userAccount,openid).then(response=>{
+            if(response.code != 200){
+              return message.error(response.msg)
+            }
+            message.success(response.msg)
+            this.setBaseInfo();
+          }).catch(res=>{
+          })
+        },
+        onCancel() {
+          
+        },
+      });
+    }else{
+      // 绑定
+      binding(this.state.userId).then(response=>{
+        console.log(response)
+        if(response.code != 200){
+          return message.error(response.msg)
+        }
+        this.setState({
+          bindingQRCode:true,
+          imgUrl:"https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+response.data
+        })
+
+        this.countDown();
+      }).catch(res=>{
+      })
+    }
+  }
+
+  countDown = () => {
+    timers = setTimeout(()=>{
+      let {countDownTimer} = this.state;
+      countDownTimer = countDownTimer-1
+      this.setState({
+        countDownTimer:countDownTimer,
+      },()=>{
+        if(this.state.countDownTimer <= 0 || !this.state.bindingQRCode){
+          this.setBaseInfo();
+          this.setState({
+            countDownTimer:30,
+            bindingQRCode:false,
+          })
+          clearTimeout(timers)
+        }else{
+          this.countDown();
+        }
+      })
+    },1000)
+  };
+
+  handleCancelQRCode = () => {
+    this.setState({
+      bindingQRCode:false,
+    })
+  }
+
+  handleTest(){
+    if(this.state.openid === ""){
+      return message.error('请点击绑定按钮进行二维码绑定操作!如已绑定请点击刷新页面后点击测试消息发送!')
+    }
+    testOpenid(this.state.openid).then(response=>{
+      if(response.code === 200){
+        message.success(response.msg)
+      }else{
+        message.error(response.msg)
+      }
+    })
+  };
+
   render() {
     const {
       form: { getFieldDecorator },
     } = this.props;
 
-    const { avatar, loading } = this.state;
+    const { avatar, loading, bindingQRCode, countDownTimer, imgUrl, openid } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -144,100 +244,82 @@ class BaseView extends Component {
         <div className={styles.basicConfiguration}>
           <Row gutter={24}>
               <Col span={12}>
-              <FormItem
-                {...formItemLayout}
-                label={"头像"}
-              >
-                {getFieldDecorator('avatar', {
-                  // rules: [
-                  //   {
-                  //     required: true,
-                  //     message: "请上传头像",
-                  //   },
-                  // ],
-                })(
-                  <Upload
-                    name="file"
-                    listType="picture-card"
-                    className="avatar-uploader"
-                    showUploadList={false}
-                    beforeUpload={this.beforeUpload}
-                    onChange={this.handleChange}
-                    {...uploadProp}
-                  >
-                    {avatar ? (
-                      <img src={avatar} alt="avatar" style={{ width: '100%' }} />
-                    ) : (
-                        uploadButton
-                      )}
-                  </Upload>
-                )}
-              </FormItem>
-              <FormItem
-                {...formItemLayout}
-                label={"姓名"}
-              >
-                {getFieldDecorator('name', {
-                  rules: [
-                    {
-                      required: true,
-                      message: "请输入您的姓名!",
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label={"联系电话"}>
-                {getFieldDecorator('phone', {
-                  rules: [
-                    {
-                      required: true,
-                      message: "请输入您的联系电话!",
-                    },
-                  ],
-                })(<Input disabled />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label={"电子邮箱"}>
-                {getFieldDecorator('email', {
-                  rules: [
-                    {
-                      required: true,
-                      message: "请输入您的电子邮箱!",
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label={'网关域名'}>
-                {getFieldDecorator('serverAddress', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入网关域名',
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem {...formItemLayout} label={'短信签名'}>
-                {getFieldDecorator('smsSignature')(
-                  <Input />
-                )}
-              </FormItem>
-              <FormItem {...formItemLayout} label={'备注'}>
-                {getFieldDecorator('note')(
-                  <TextArea rows={4} />
-                )}
-              </FormItem>
-              </Col>
-
-              {/* ------------------------------------------ */}
-
-              <Col span={12} style={{marginTop:151}}>
-                <FormItem {...formItemLayout} label={'帐号启用'}>
-                  {getFieldDecorator('status')(
-                    <Radio.Group>
-                      <Radio key={1} value={1}>启用</Radio>
-                      <Radio key={0} value={0}>禁用</Radio>
-                    </Radio.Group>
+                <FormItem
+                  {...formItemLayout}
+                  label={"头像"}
+                >
+                  {getFieldDecorator('avatar', {
+                    // rules: [
+                    //   {
+                    //     required: true,
+                    //     message: "请上传头像",
+                    //   },
+                    // ],
+                  })(
+                    <Upload
+                      name="file"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      showUploadList={false}
+                      beforeUpload={this.beforeUpload}
+                      onChange={this.handleChange}
+                      {...uploadProp}
+                    >
+                      {avatar ? (
+                        <img src={avatar} alt="avatar" style={{ width: '100%' }} />
+                      ) : (
+                          uploadButton
+                        )}
+                    </Upload>
                   )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={"姓名"}
+                >
+                  {getFieldDecorator('name', {
+                    rules: [
+                      {
+                        required: true,
+                        message: "请输入您的姓名!",
+                      },
+                    ],
+                  })(<Input />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label={"联系电话"}>
+                  {getFieldDecorator('phone', {
+                    rules: [
+                      { required: true, validator: this.validatePhone },
+                    ],
+                  })(<Input />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label={"电子邮箱"}>
+                  {getFieldDecorator('email', {
+                    rules: [
+                      {
+                        required: true,
+                        message: "请输入您的电子邮箱!",
+                      },
+                    ],
+                  })(<Input />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label={"微信绑定"}>
+                  
+                  {(openid && openid != '' && openid != null) ? 
+                    (<>
+                      <a onClick={()=>this.handleBinding('0')}>解绑</a>
+                      <Divider type="vertical" />
+                    </>):""
+                  }
+                  {(openid === '' || openid === null || !openid) ? 
+                    (<>
+                      <a onClick={()=>this.handleBinding('1')}>绑定</a>
+                      <Divider type="vertical" />
+                    </>):""
+                  }
+                  {(openid && openid != '' && openid != null) ? 
+                    (<a onClick={()=>this.handleTest()}>测试</a>):""
+                  }
                 </FormItem>
                 <FormItem style={{display:"none"}}>
                   {getFieldDecorator('id')(
@@ -246,6 +328,17 @@ class BaseView extends Component {
                 </FormItem>
               </Col>
           </Row>
+          {
+            bindingQRCode?(
+              <BindingQRCode
+                bindingQRCode={bindingQRCode}
+                countDownTimer={countDownTimer}
+                imgUrl={imgUrl}
+                handleCancelQRCode={this.handleCancelQRCode}
+              />
+            ):""
+          }
+          
         </div>
     );
   }

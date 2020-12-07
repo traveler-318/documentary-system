@@ -131,7 +131,9 @@ class User extends PureComponent {
           message.error(response.msg || '修改失败');
         }
       },
-      onCancel() {},
+      onCancel() {
+        _this.setState({ confirmLoading:false });
+      },
     });
   }
   // 复制密码
@@ -528,6 +530,7 @@ class User extends PureComponent {
         </Row>
         <Modal
           title="修改密码"
+          maskClosable={false}
           visible={passwordVisible}
           width={350}
           onOk={this.changePassword}
@@ -557,6 +560,7 @@ class User extends PureComponent {
         </Modal>
         <Modal
           title="权限配置"
+          maskClosable={false}
           width={350}
           visible={visible}
           confirmLoading={confirmLoading}
@@ -571,6 +575,7 @@ class User extends PureComponent {
         </Modal>
         <Modal
           title="用户数据导入"
+          maskClosable={false}
           width={500}
           visible={excelVisible}
           confirmLoading={confirmLoading}

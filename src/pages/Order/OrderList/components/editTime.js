@@ -90,6 +90,7 @@ class EditTime extends PureComponent {
         <Modal
           title="提醒时间"
           visible={editTimeVisible}
+          maskClosable={false}
           width={500}
           onCancel={()=>handleEditTimeBack("")}
           footer={[

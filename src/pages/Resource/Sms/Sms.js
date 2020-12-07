@@ -229,6 +229,7 @@ class Sms extends PureComponent {
         />
         <Modal
           title="短信发送调试"
+          maskClosable={false}
           width={500}
           visible={debugVisible}
           onOk={this.handleDebug}

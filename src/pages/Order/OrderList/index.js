@@ -391,6 +391,8 @@ class AllOrdersList extends PureComponent {
       this.setState({
         salesmanList:res.data.records
       })
+      const { form } = this.props;
+      form.setFieldsValue({salesman:"全部"});
     })
   }
 
@@ -1751,6 +1753,7 @@ class AllOrdersList extends PureComponent {
         <Modal
           title="提示"
           visible={LogisticsAlertVisible}
+          maskClosable={false}
           width={560}
           onCancel={this.handleLogisticsAlert}
           footer={[
@@ -1775,6 +1778,7 @@ class AllOrdersList extends PureComponent {
         <Modal
           title="修改状态"
           visible={confirmTagVisible}
+          maskClosable={false}
           width={560}
           onCancel={this.handleCancelConfirmTag}
           footer={[

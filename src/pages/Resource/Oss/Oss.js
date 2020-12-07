@@ -268,6 +268,7 @@ class Oss extends PureComponent {
         />
         <Modal
           title="对象存储调试"
+          maskClosable={false}
           width={500}
           visible={debugVisible}
           onOk={this.handleDebug}

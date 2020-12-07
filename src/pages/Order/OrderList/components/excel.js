@@ -96,6 +96,7 @@ class Export extends PureComponent {
           title="用户数据导入"
           width={500}
           visible={excelVisible}
+          maskClosable={false}
           confirmLoading={confirmLoading}
           onCancel={handleExcelCancel}
           footer={[

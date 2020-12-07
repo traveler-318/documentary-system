@@ -117,6 +117,7 @@ class SMS extends PureComponent {
           visible={SMSVisible}
           width={800}
           onCancel={handleCancelSMS}
+          maskClosable={false}
           footer={[
             <Button key="back" onClick={handleCancelSMS}>
               取消

@@ -86,18 +86,24 @@ class OrderImport extends PureComponent {
         console.log(this.state.fileList,"values");
         values.file = this.state.fileList[0];
         values.createTime=this.state.createTime;
-
-        importOrder(values).then(res=>{
+        if(values.file){
+          importOrder(values).then(res=>{
+            this.setState({
+              loading:false,
+            })
+            if(res.code === 200){
+              message.success(res.msg)
+              this.props.handleOrderImportCancel();
+            }else{
+              message.error(res.msg)
+            }
+          })
+        }else {
           this.setState({
             loading:false,
           })
-          if(res.code === 200){
-            message.success(res.msg)
-            this.props.handleOrderImportCancel();
-          }else{
-            message.error(res.msg)
-          }
-        })
+          message.error("请上传需要导入的订单模板")
+        }
       }else{
         this.setState({
           loading:false,
@@ -177,6 +183,7 @@ class OrderImport extends PureComponent {
           visible={OrderImportVisible}
           confirmLoading={confirmLoading}
           onCancel={handleOrderImportCancel}
+          maskClosable={false}
           loading={loading}
           onOk = {()=>{
             if(loading){
@@ -198,7 +205,6 @@ class OrderImport extends PureComponent {
               <Dragger
                 {...propss}
                 onChange={this.onUpload}
-
               >
                 <p className="ant-upload-drag-icon">
                   <Icon type="inbox" />
@@ -215,6 +221,12 @@ class OrderImport extends PureComponent {
                 <Form.Item {...formItemLayout1} label="订单类型">
                   {getFieldDecorator('orderType', {
                     initialValue: null,
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择订单类型',
+                      },
+                    ],
                   })(
                     <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
                       {ORDERTYPPE.map(item=>{

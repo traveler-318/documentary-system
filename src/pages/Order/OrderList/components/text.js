@@ -132,6 +132,7 @@ class Text extends PureComponent {
       <>
         <Modal
           title="文本导入"
+          maskClosable={false}
           width={600}
           visible={textVisible}
           onCancel={handleTextCancel}

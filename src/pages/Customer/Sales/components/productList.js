@@ -235,6 +235,7 @@ class ProductList extends PureComponent {
           visible={handleAggregateCodeVisible}
           width={450}
           onCancel={handleCancelAggregateCode}
+          maskClosable={false}
           footer={null}
         >
           <Table
@@ -247,6 +248,7 @@ class ProductList extends PureComponent {
         <Modal
           title="聚合码"
           visible={groupAddVisible}
+          maskClosable={false}
           width={300}
           onCancel={this.handleCancelGroupAdd}
           footer={null}
@@ -263,6 +265,7 @@ class ProductList extends PureComponent {
           <Modal
           title="预览"
           visible={previewVisible}
+          maskClosable={false}
           width={423}
           onCancel={this.handleCancelPreview}
           footer={null}

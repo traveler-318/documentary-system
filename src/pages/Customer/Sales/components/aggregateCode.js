@@ -132,6 +132,7 @@ class Logistics extends PureComponent {
           visible={handleAggregateCodeVisible}
           width={360}
           onCancel={handleCancelAggregateCode}
+          maskClosable={false}
           footer={[
             <Button key="back" onClick={handleCancelAggregateCode}>
               取消
@@ -156,11 +157,10 @@ class Logistics extends PureComponent {
         <Modal
           title="聚合码"
           visible={groupAddVisible}
+          maskClosable={false}
           width={300}
           onCancel={this.handleCancelGroupAdd}
-          footer={[
-
-          ]}
+          footer={null}
         >
           <div>
             <QRCode

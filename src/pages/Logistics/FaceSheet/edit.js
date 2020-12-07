@@ -40,7 +40,6 @@ class FaceSheetEdit extends PureComponent {
     e.preventDefault();
     const {  form } = this.props;
     const {data} = this.state;
-    //debugger
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
       if (!err) {

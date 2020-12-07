@@ -140,6 +140,7 @@ class Logistics extends PureComponent {
           visible={ModifyGroupVisible}
           width={550}
           onCancel={handleCancelModifyGroup}
+          maskClosable={false}
           footer={[
             <Button key="back" onClick={handleCancelModifyGroup}>
               取消

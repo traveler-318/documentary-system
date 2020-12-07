@@ -65,6 +65,7 @@ class SMSrecord extends PureComponent {
       <div>
         <Modal
           title="详情"
+          maskClosable={false}
           visible={handleEditVisible}
           width={600}
           onCancel={handleCancelEdit}

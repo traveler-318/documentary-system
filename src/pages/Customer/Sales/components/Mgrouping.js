@@ -180,9 +180,8 @@ class Logistics extends PureComponent {
           visible={handleGroupingVisible}
           width={550}
           onCancel={handleCancelGrouping}
-          footer={[
-
-          ]}
+          maskClosable={false}
+          footer={null}
         >
           <div style={{height:'50px'}}>
             <Button style={{float: "right"}} type="primary" onClick={this.groupAdd}>
@@ -196,6 +195,7 @@ class Logistics extends PureComponent {
           visible={groupAddVisible}
           width={550}
           onCancel={this.handleCancelGroupAdd}
+          maskClosable={false}
           footer={[
             <Button key="back" onClick={this.handleCancelGroupAdd}>
               取消

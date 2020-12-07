@@ -275,6 +275,7 @@ class FlowModel extends PureComponent {
           visible={imageVisible}
           onOk={this.handleImageCancel}
           onCancel={this.handleImageCancel}
+          maskClosable={false}
         >
           <img
             src={`/api/blade-flow/process/resource-view?processDefinitionId=${processId}`}
@@ -287,6 +288,7 @@ class FlowModel extends PureComponent {
           visible={stateVisible}
           onOk={this.handleChangeState}
           onCancel={this.handleStateCancel}
+          maskClosable={false}
         >
           <Form style={{ marginTop: 8 }}>
             <Card className={styles.card} bordered={false}>

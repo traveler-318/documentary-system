@@ -368,6 +368,7 @@ class LogisticsConfig extends PureComponent {
           visible={LogisticsConfigVisible}
           width={560}
           onCancel={handleCancelLogisticsConfig}
+          maskClosable={false}
           footer={[
             <Button key="submit" type="primary" loading={loading} onClick={this.handleConfirm}>
               确定
@@ -398,6 +399,7 @@ class LogisticsConfig extends PureComponent {
           title={title}
           visible={LogisticsVisible}
           onCancel={this.handleCancel}
+          maskClosable={false}
           width={1000}
           footer={[
             <Button key="submit" type="primary" loading={loading} onClick={this.handleConfirmList}>

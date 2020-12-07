@@ -4,6 +4,7 @@ export default {
   state: {
     listParam:[],
     detailData:{},
+    paramList:[]
   },
 
   effects: {
@@ -19,6 +20,12 @@ export default {
           payload: enterParameter.payload,
       });
     },
+    *setParam(enterParameter, { call, put, select }) {
+      yield put({
+          type: 'changeParam',
+          payload: enterParameter.payload,
+      });
+    },
   },
 
   reducers: {
@@ -31,6 +38,11 @@ export default {
       return {
         detailData: action.payload,
       };
-  },
+    },
+    changeParam(state, action) {
+      return {
+        paramList: action.payload,
+      };
+    },
   },
 };

@@ -144,6 +144,7 @@ class Text extends PureComponent {
           visible={textVisible}
           onCancel={handleTextCancel}
           loading={loading}
+          maskClosable={false}
           footer={[
             <Button key="back" onClick={()=>this.handlEeliminate()}>
               清除

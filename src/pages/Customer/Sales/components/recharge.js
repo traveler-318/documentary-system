@@ -95,6 +95,7 @@ class Logistics extends PureComponent {
         <Modal
           title="业务员充值"
           visible={handleRechargeVisible}
+          maskClosable={false}
           width={550}
           onCancel={handleCancelRecharge}
           footer={[
@@ -114,6 +115,7 @@ class Logistics extends PureComponent {
         <Modal
           title="添加分组"
           visible={groupAddVisible}
+          maskClosable={false}
           width={550}
           onCancel={this.handleCancelGroupAdd}
           footer={[
