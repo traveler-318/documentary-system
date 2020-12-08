@@ -106,7 +106,7 @@ class SenderAdd extends PureComponent {
   }
 
   validatePhone = (rule, value, callback) => {
-    if (!(/^1[3456789]\d{9}$/.test(value))) {
+    if (!(/^[\d+]{6,13}$/.test(value))) {
       callback(new Error('请输入正确的手机号格式'));
     }else{
       callback();

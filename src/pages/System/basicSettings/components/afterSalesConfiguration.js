@@ -107,6 +107,14 @@ class BaseView extends Component {
     callback('请输入正整数!');
   }
 
+  validatePhone = (rule, value, callback) => {
+    if (!(/^[\d+]{6,13}$/.test(value))) {
+      callback(new Error('请输入正确的手机号格式'));
+    }else{
+      callback();
+    }
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -156,7 +164,11 @@ class BaseView extends Component {
                 })(<Input />)}
               </FormItem>
               <FormItem {...formItemLayout} label={'投诉电话'}>
-                {getFieldDecorator('aftersalesPhone')(
+                {getFieldDecorator('aftersalesPhone',{
+                  rules: [
+                    { validator: this.validatePhone },
+                  ],
+                })(
                   <Input />
                 )}
                 <Tooltip title={'用户下单时悬浮按钮上的投诉电话'}>
