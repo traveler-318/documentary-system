@@ -14,7 +14,7 @@
     }
     .ant-btn{
       border-color: #00D1B2 !important;
-      color: #00D1B2 !important;
+      //color: #00D1B2 !important;
     }
   }
   // :global{
@@ -53,6 +53,8 @@
   }
 
   .resultSuccess{
+    width: 800px;
+    height: 580px;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -63,10 +65,18 @@
         background: #fff;
         border-radius: 4px;
         box-shadow: 1px 0px 8px 0px #0000004f;
-        padding: 26px 32px;
+        padding: 26px 0;
       }
       .anticon svg{
-        color: #52b7b4 !important;
+        color: #00D1B2 !important;
+      }
+    }
+    .ant-result-extra > * {
+      margin-right: 0;
+    }
+    .img{
+      span{
+        display: inline-block;
       }
     }
     

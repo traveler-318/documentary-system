@@ -246,6 +246,17 @@ class SMSrecord extends PureComponent {
         dataIndex: 'createTime',
         width: 160,
         ellipsis: true,
+        render: (res) => {
+          return(
+            <div>
+              {
+                res === '' ?
+                  (res)
+                  :(moment(res).format('YYYY-MM-DD HH:mm:ss'))
+              }
+            </div>
+          )
+        },
       },
       
       {
