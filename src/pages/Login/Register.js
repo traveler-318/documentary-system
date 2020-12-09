@@ -172,6 +172,7 @@ class Register extends Component {
         if(!isSendCode){
           return message.error("请先发送短信验证码");
         }
+        values.sourceType=this.props.match.params.id
         console.log(values,"values");
         registerUser(values).then(res=>{
           if(res.code === 200){
@@ -466,40 +467,33 @@ class Register extends Component {
             </Link> */}
           </FormItem>
         </Form>
-        <div className={styles.resultSuccess}>
-          <Result
-            status="success"
-            title="注册成功"
-            subTitle="客户经理将在1个工作日内电话联系您, 请您注意接听电话"
-            extra={[
-              <p style={{color:"red",borderTop:"1px dashed #C3C3C3",paddingTop:"30px"}}>获取产品更多资料请加微信咨询</p>,
-              <div className={styles.img}>
+
+        {
+          resultSuccessTYpe?(
+            <div className={styles.resultSuccess}>
+              <Result
+                status="success"
+                title="注册成功"
+                subTitle="客户经理将在1个工作日内电话联系您, 请您注意接听电话"
+                extra={[
+                  <p style={{color:"red",borderTop:"1px dashed #C3C3C3",paddingTop:"30px"}}>获取产品更多资料请加微信咨询</p>,
+                  <div className={styles.img}>
                 <span style={{marginRight:"30px"}}>
                   <img alt="logo" src={loginLogo1} style={{width:'150px',border:" 1px solid #C3C3C3"}} />
                   <p style={{marginTop: "10px"}}>微信1：大猫</p>
                 </span>
-                <span>
+                    <span>
                   <img alt="logo" src={loginLogo} style={{width:'150px',border:"1px solid #C3C3C3"}} />
                   <p style={{marginTop: "10px"}}>微信2：徐银行</p>
                 </span>
-              </div>,
-              <p>咨询电话：15160078582</p>,
-            ]}
-          />
+                  </div>,
+                  <p>咨询电话：15160078582</p>,
+                ]}
+              />
 
-        </div>
-        {/*{*/}
-          {/*resultSuccessTYpe?(*/}
-            {/*<div className={styles.resultSuccess}>*/}
-              {/*<Result*/}
-                  {/*status="success"*/}
-                  {/*title="注册成功"*/}
-                  {/*subTitle="客户经理将在1个工作日内电话联系您, 请您注意接听电话"*/}
-                {/*/>*/}
-              {/*<p>微信扫码获取产品介绍和资料</p>*/}
-            {/*</div>*/}
-          {/*):""*/}
-        {/*}*/}
+            </div>
+          ):""
+        }
       </div>
     );
   }
