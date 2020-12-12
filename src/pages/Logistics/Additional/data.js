@@ -39,8 +39,8 @@ export const EXPRESSTYPE = [
     value:"特惠专配"
   },
   {
-    key:"电商标准快",
-    value:"电商标准快"
+    key:"电商标快",
+    value:"电商标快"
   }
 ]
 export const SONSHEET = [
