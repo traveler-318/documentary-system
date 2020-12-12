@@ -170,7 +170,7 @@ class Export extends PureComponent {
         })
         this.setTimer();
       }else {
-        message.error(res.mas);
+        message.error(res.msg);
       }
     })
   }
