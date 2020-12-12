@@ -115,7 +115,7 @@ class GoodsAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back="/logistics/authority" action={action}>
+      <Panel title="新增" back="/logistics/additional" action={action}>
         <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" bordered={false}>
             <Row gutter={24}>
