@@ -27,7 +27,8 @@ import {
   updateData,
   salesmanList,
   productTreelist,
-  batchLogisticsSubscription
+  batchLogisticsSubscription,
+  updateConfirmTag
 } from '../../../services/newServices/order';
 
 // getList as getSalesmanLists,
@@ -326,7 +327,9 @@ class AllOrdersList extends PureComponent {
         },
       ],
       confirmTagVisible:false,
+      updateConfirmTagVisible:false,
       currentList:{},
+      confirmTagList:{},
       radioChecked:null,
       _listArr:[]
     };
@@ -711,7 +714,7 @@ class AllOrdersList extends PureComponent {
     }
   }
 
-  //手动切换状态
+  // 手动切换状态
   changeConfirmTag = (row) => {
     this.setState({
       confirmTagVisible:true,
@@ -722,6 +725,22 @@ class AllOrdersList extends PureComponent {
   handleCancelConfirmTag = () => {
     this.setState({
       confirmTagVisible:false,
+      radioChecked:''
+    })
+  }
+
+  // 对错误订单的状态进行变更操作
+  changeUpdateConfirmTag = (row) => {
+    console.log(row)
+    this.setState({
+      updateConfirmTagVisible:true,
+      confirmTagList:row
+    })
+  }
+
+  handleCancelUpdateConfirmTag = () => {
+    this.setState({
+      updateConfirmTagVisible:false,
       radioChecked:''
     })
   }
@@ -771,6 +790,47 @@ class AllOrdersList extends PureComponent {
     });
 
     
+  }
+
+  handleSubmitUpdateConfirmTag = (e) => {
+    const { radioChecked, confirmTagList } = this.state;
+    console.log(confirmTagList)
+    if(!radioChecked){
+      return message.error("请选择需要更改的状态");
+    }
+    Modal.confirm({
+      title: '提醒',
+      content: "此次操作无法再次变更,确认操作!",
+      okText: '确定',
+      okType: 'primary',
+      cancelText: '取消',
+      keyboard:false,
+      onOk:() => {
+        return new Promise((resolve, reject) => {
+          updateConfirmTag({
+            id:confirmTagList[0].id,
+            confirmTag:radioChecked
+          }).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              this.setState({
+                updateConfirmTagVisible:false
+              });
+              this.getDataList();
+              resolve();
+            }else{
+              message.error(res.msg);
+              reject();
+            }
+          })
+
+        }).catch(() => console.log('Oops errors!'));
+
+      },
+      onCancel() {},
+    });
+
+
   }
 
   // =========关闭物流弹窗========
@@ -936,6 +996,23 @@ class AllOrdersList extends PureComponent {
     }
 
     this.handleShowLogistics(selectedRows)
+  }
+
+  // 订单修改
+  bulkModification = () => {
+    const {selectedRows} = this.state;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+    if(selectedRows.length > 1){
+      return message.info('只能选择一条数据');
+    }
+    console.log(selectedRows)
+    if(selectedRows[0].confirmTag === "6" || selectedRows[0].confirmTag === "7" || selectedRows[0].confirmTag === "8" || selectedRows[0].confirmTag === "9"){
+      this.changeUpdateConfirmTag(selectedRows)
+    }else {
+      message.info('当前订单状态不适用变更操作');
+    }
   }
 
 
@@ -1124,6 +1201,10 @@ class AllOrdersList extends PureComponent {
               导入<Icon type="down" />
             </Button>
           </Dropdown>
+          <Button
+            icon="pushpin"
+            onClick={this.bulkModification}
+          >状态变更</Button>
         </>):""}
 
         {/* <Button icon="upload">导出</Button> */}
@@ -1681,6 +1762,7 @@ class AllOrdersList extends PureComponent {
       selectedRowKeys,
       noDepositVisible,
       confirmTagVisible,
+      updateConfirmTagVisible,
       textVisible,
       currentList,
       excelVisible,
@@ -1932,6 +2014,45 @@ class AllOrdersList extends PureComponent {
               </Form>
         </Modal>) :""
           }
+
+
+        <Modal
+          title="修改状态"
+          visible={updateConfirmTagVisible}
+          maskClosable={false}
+          width={560}
+          onCancel={this.handleCancelUpdateConfirmTag}
+          footer={[
+            <Button key="back" onClick={this.handleCancelUpdateConfirmTag}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" onClick={()=>this.handleSubmitUpdateConfirmTag()}>
+              确定
+            </Button>,
+          ]}
+        >
+          <Form>
+            <FormItem {...formAllItemLayout} label="订单状态">
+              {currentList.confirmTag === '10' ? (
+                <Radio.Group onChange={this.onChangeRadio}>
+                  <Radio value={6}>跟进中</Radio>
+                  <Radio value={7}>已激活</Radio>
+                  <Radio value={8}>已退回</Radio>
+                </Radio.Group>
+              ) : (
+                <Radio.Group onChange={this.onChangeRadio}>
+                  <Radio value={6}>跟进中</Radio>
+                  <Radio value={7}>已激活</Radio>
+                  <Radio value={8}>已退回</Radio>
+                  <Radio value={9}>已取消</Radio>
+                </Radio.Group>
+              )}
+            </FormItem>
+            <FormItem {...formAllItemLayout} label="修改原因">
+              <TextArea rows={2} disabled />
+            </FormItem>
+          </Form>
+        </Modal>
       </Panel>
     );
   }
