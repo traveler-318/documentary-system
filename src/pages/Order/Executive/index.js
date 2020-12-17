@@ -2038,6 +2038,7 @@ class AllOrdersList extends PureComponent {
           title="修改状态"
           visible={updateConfirmTagVisible}
           maskClosable={false}
+          destroyOnClose
           width={560}
           onCancel={this.handleCancelUpdateConfirmTag}
           footer={[
