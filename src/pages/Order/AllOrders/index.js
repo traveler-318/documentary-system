@@ -1201,10 +1201,10 @@ class AllOrdersList extends PureComponent {
               导入<Icon type="down" />
             </Button>
           </Dropdown>
-          <Button
-            icon="pushpin"
-            onClick={this.bulkModification}
-          >状态变更</Button>
+          {/*<Button*/}
+            {/*icon="pushpin"*/}
+            {/*onClick={this.bulkModification}*/}
+          {/*>状态变更</Button>*/}
         </>):""}
 
         {/* <Button icon="upload">导出</Button> */}
