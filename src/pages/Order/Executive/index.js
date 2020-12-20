@@ -65,6 +65,7 @@ import Journal from '../components/journal';
 import SMS from '../components/smsList';
 import VoiceList from '../components/voiceList';
 import OrderImport from '../components/orderImport';
+import SearchButton from '../components/button';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -356,6 +357,7 @@ class AllOrdersList extends PureComponent {
 
     this.getTreeList();
     this.currenttree();
+
   }
 
   getTreeList = () => {
@@ -363,21 +365,6 @@ class AllOrdersList extends PureComponent {
       this.setState({productList:res.data})
     })
   }
-
-  // 销售默认全部列表
-  // getSalesman = () => {
-  //   salesmanList({size:100,current:1}).then(res=>{
-  //     const list={
-  //       userName:"全部",
-  //       userAccount:""
-  //     };
-  //     res.data.records.unshift(list);
-  //     this.setState({
-  //       salesmanList:res.data.records
-  //     })
-  //   })
-  // }
-
   // 组织列表
   currenttree = () => {
     getCurrenttree().then(res=>{
@@ -386,7 +373,6 @@ class AllOrdersList extends PureComponent {
       })
     })
   }
-
   getDataList = () => {
     const {params} = this.state;
     this.setState({
@@ -401,7 +387,6 @@ class AllOrdersList extends PureComponent {
       })
     })
   }
-
   // 根据组织获取对应的业务员数据
   getSalesmanList = (value = "all_all") => {
     getCurrentsalesman(value).then(res=>{
@@ -413,7 +398,6 @@ class AllOrdersList extends PureComponent {
       }
     })
   }
-
   // 选择组织
   changeGroup = (value) => {
     if(value){
@@ -426,7 +410,6 @@ class AllOrdersList extends PureComponent {
       });
     }
   }
-
   // ============ 查询 ===============
   handleSearch = params => {
     console.log(params,"查询参数")
@@ -483,7 +466,6 @@ class AllOrdersList extends PureComponent {
       this.getDataList();
     })
   };
-
   // ============ 查询表单 ===============
   renderSearchForm = onReset => {
     const {
@@ -612,15 +594,12 @@ class AllOrdersList extends PureComponent {
       </div>
     );
   };
-
-
   // ====== 首次打印提示弹框 ======
   handleLogisticsAlert =() =>{
     this.setState({
       LogisticsAlertVisible:false
     })
   }
-
   // =========首次打印===========
   first = () => {
     const {selectedRows} = this.state;
@@ -659,9 +638,7 @@ class AllOrdersList extends PureComponent {
     }
 
   }
-
   // =========重复打印=============
-
   repeat = () =>{
     const {selectedRows} = this.state;
     const { dispatch } = this.props;
@@ -731,7 +708,6 @@ class AllOrdersList extends PureComponent {
       }
     }
   }
-
   //手动切换状态
   changeConfirmTag = (row) => {
     this.setState({
@@ -739,14 +715,12 @@ class AllOrdersList extends PureComponent {
       currentList:row
     })
   }
-
   handleCancelConfirmTag = () => {
     this.setState({
       confirmTagVisible:false,
       radioChecked:''
     })
   }
-
   // 对错误订单的状态进行变更操作
   changeUpdateConfirmTag = (row) => {
     console.log(row)
@@ -755,20 +729,17 @@ class AllOrdersList extends PureComponent {
       confirmTagList:row
     })
   }
-
   handleCancelUpdateConfirmTag = () => {
     this.setState({
       updateConfirmTagVisible:false,
       radioChecked:''
     })
   }
-
   onChangeRadio = (e) => {
     this.setState({
       radioChecked: e.target.value
     })
   }
-
   handleSubmitConfirmTag = (e) => {
     const { radioChecked, currentList } = this.state;
     if(!radioChecked){
@@ -809,7 +780,6 @@ class AllOrdersList extends PureComponent {
 
     
   }
-
   handleSubmitUpdateConfirmTag = (e) => {
     const { radioChecked, confirmTagList } = this.state;
     console.log(confirmTagList)
@@ -850,14 +820,12 @@ class AllOrdersList extends PureComponent {
 
 
   }
-
   // =========关闭物流弹窗========
   handleCancelLogisticsConfig = () => {
     this.setState({
       LogisticsConfigVisible:false
     })
   }
-
   // 批量审核
   batchAudit = () => {
     const {selectedRows,tabKey} = this.state;
@@ -929,7 +897,6 @@ class AllOrdersList extends PureComponent {
 
     
   }
-
   toExamines = (confirmTag) => {
     const {selectedRows} = this.state;
     let type = false, _data = [];
@@ -964,8 +931,6 @@ class AllOrdersList extends PureComponent {
       setAudit(_data,confirmTag)
     }
   }
-
-
   setAudit = (_data,confirmTag) => {
     toExamine({
       confirmTag,
@@ -980,7 +945,6 @@ class AllOrdersList extends PureComponent {
       }
     })
   }
-
   // 导出
   exportFile = () => {
     const {params}=this.state;
@@ -998,14 +962,11 @@ class AllOrdersList extends PureComponent {
       exportVisible:true
     })
   }
-
   handleCancelExport = () =>{
     this.setState({
       exportVisible:false
     })
   }
-
-
   // 批量发货
   bulkDelivery = () => {
     const {selectedRows} = this.state;
@@ -1015,7 +976,6 @@ class AllOrdersList extends PureComponent {
 
     this.handleShowLogistics(selectedRows)
   }
-
   // 订单修改
   bulkModification = () => {
     const {selectedRows} = this.state;
@@ -1031,8 +991,6 @@ class AllOrdersList extends PureComponent {
       message.info('当前订单状态不适用变更操作');
     }
   }
-
-
   // 批量订阅
   bulkSubscription = () => {
     const {selectedRows,_listArr} = this.state;
@@ -1115,166 +1073,60 @@ class AllOrdersList extends PureComponent {
     });
   }
 
-  // 测试
 
+  btnButtonBack = (code) => {
+    console.log(code,"codecodecode")
+    if(code === "SN-import"){
+      this.handleExcelImport()
+    }else if(code === "text-import"){
+      this.handleTextImport()
+    }else if(code === "order-import"){
+      this.handleOrderImport()
+    }else if(code === "add"){
+      router.push(`/order/executive/add`);
+    }else if(code === "examine"){
+      // 审核
+      this.batchAudit()
+    }else if(code === "synchronization"){
+      // 免押同步
+      this.importData()
+    }else if(code === "deliver-goods"){
+      // 发货
+      this.bulkDelivery()
+    }else if(code === "bell"){
+      // 提醒
+      this.batchReminders()
+    }else if(code === "subscribe"){
+      // 批量订阅
+      this.bulkSubscription()
+    }else if(code === "export"){
+      // 导出
+      this.exportFile()
+    }
+
+    else if(code === "transfer"){
+      // 转移客户
+      this.handleShowTransfer()
+    }
+    else if(code === "repeat-printing"){
+      // 重复打印
+      this.repeat()
+    }
+    else if(code === "first-printing"){
+      // 首次打印
+      this.first()
+    }
+  }
   // 左侧操作按钮
   renderLeftButton = (tabKey) => {
+    console.log(tabKey,"tabKey")
     return (<>
-      {/* 待审核 */}
-        {tabKey === '0'?(
-        <>
-          <Button type="primary" icon="plus" onClick={()=>{
-            router.push(`/order/executive/add`);
-          }}>添加</Button>
-          <Button
-            icon="menu-unfold"
-            onClick={this.batchAudit}
-          >审核</Button>
-          <Button
-            icon="download"
-            onClick={this.importData}
-          >免押同步</Button>
-        </>
-        ):tabKey === '1'?(
-        <>
-          <Button
-            icon="menu-unfold"
-            type="primary"
-            onClick={this.batchAudit}
-          >审核</Button>
-          </>
-        ):tabKey === '2'?(
-          <>
-          {/* 已审核 */}
-            <Button
-              icon="appstore"
-              type="primary"
-              onClick={this.bulkDelivery}
-            >发货</Button>
-          </>
-        ):""}
-
-        {/* 已发货 */}
-      {tabKey === '3'?(<>
-        <Button
-          icon="tags"
-          onClick={this.bulkSubscription}
-        >批量订阅</Button></>):""}
-
-        {/* 在途中什么都没有 */}
-
-       {/* 已签收 */}
-       {tabKey === '5'?(<>
-        <Button
-          icon="bell"
-          type="primary"
-          onClick={this.batchReminders}
-        >提醒</Button></>):""}
-        {/* 跟进中 */}
-        {tabKey === '6'?(<>
-        <Button
-          icon="bell"
-          type="primary"
-          onClick={this.batchReminders}
-        >提醒</Button></>):""}
-        {/* 已激活什么都没有 */}
-        {/* 已退回什么都没有 */}
-        {/* 已取消什么都没有 */}
-        {/* 已过期什么都没有 */}
-
-        {/* 除了全部，其他状态都有导出按钮 */}
-          {tabKey != 'null'?(<Button
-              icon="upload"
-              type={(tabKey === "0" || tabKey === "1" || tabKey === "2" || tabKey === "5" || tabKey === "6") ? "" : "primary"}
-              onClick={this.exportFile}
-            >导出</Button>):""
-          }
-
-        {/* 全部 */}
-        {tabKey === 'null'?(<>
-          <Button type="primary" icon="plus" onClick={()=>{
-            router.push(`/order/executive/add`);
-          }}>添加</Button>
-{/*
-          <Button
-            icon="menu-unfold"
-            onClick={this.batchAudit}
-          >审核</Button>
-*/}
-          <Button
-            icon="appstore"
-            onClick={this.bulkDelivery}
-          >发货</Button>
-          <Button
-            icon="bell"
-            onClick={this.batchReminders}
-          >提醒</Button>
-          <Dropdown overlay={this.moreMenu()}>
-            <Button>
-              更多 <Icon type="down" />
-            </Button>
-          </Dropdown>
-          <Dropdown overlay={this.ImporMenu()}>
-            <Button>
-              导入<Icon type="down" />
-            </Button>
-          </Dropdown>
-          {/*<Button*/}
-            {/*icon="pushpin"*/}
-            {/*onClick={this.bulkModification}*/}
-          {/*>状态变更</Button>*/}
-        </>):""}
-
-        {/* <Button icon="upload">导出</Button> */}
-        {/* <Button icon="loading-3-quarters" onClick={this.handleShowTransfer}>转移客户</Button> */}
-
-      </>)
+      <SearchButton
+        btnButtonBack={this.btnButtonBack}
+        tabKey={tabKey}
+      />
+    </>)
   };
-  moreMenu = () => (
-    <Menu onClick={this.handleMenuClick}>
-      <Menu.Item key="3" onClick={this.exportFile}>
-        <Icon type="upload" />
-        导出
-      </Menu.Item>
-      <Menu.Item key="4"  onClick={this.handleShowTransfer}>
-        <Icon type="loading-3-quarters" />
-        转移客户
-      </Menu.Item>
-      {/* <Menu.Item key="5">
-        <Icon type="highlight" />
-        批量编辑
-      </Menu.Item> */}
-       <SubMenu key="sub1" title="批量物流下单">
-        <Menu.Item key="6" onClick={this.repeat}>
-          重复打印
-        </Menu.Item>
-        <Menu.Item key="7" onClick={this.first}>
-          首次打印
-        </Menu.Item>
-      </SubMenu>
-    </Menu>
-  );
-
-  ImporMenu = () => (
-    <Menu onClick={this.handleMenuClick}>
-      <Menu.Item key="1" onClick={this.handleExcelImport}>
-        <Icon type="upload" />
-        SN激活导入
-      </Menu.Item>
-      <Menu.Item key="2" onClick={this.handleTextImport}>
-        <Icon type="upload" />
-        文本导入
-      </Menu.Item>
-      <Menu.Item key="2" onClick={this.handleOrderImport}>
-        <Icon type="upload" />
-        订单导入
-      </Menu.Item>
-    </Menu>
-  );
-
-  handleMenuClick = (menuRow) => {
-    const {selectedRows} = this.state;
-  }
 
   // 删除
   handleDelect = (row) => {
