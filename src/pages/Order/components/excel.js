@@ -3,11 +3,11 @@ import { Modal, Checkbox, Form, Input, Icon, Row, Col, Button, DatePicker, messa
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
-
+import axios from 'axios'
 import { exportSNCodeTemplate } from '../../../services/newServices/order';
 import { getAccessToken, getToken } from '../../../utils/authority';
-
-
+import { tenantMode, clientId, clientSecret } from '../../../defaultSettings';
+import { exportData,currentTime } from './data.js';
 const FormItem = Form.Item;
 const { Dragger } = Upload;
 
@@ -50,9 +50,52 @@ class Export extends PureComponent {
   };
 
   handleTemplate = () => {
-    console.log(`http://121.37.251.134:9010/order/order/exportSNCodeTemplate`)
-    window.open(`http://121.37.251.134:9010/order/order/exportSNCodeTemplate`);
+    // console.log(`http://121.37.251.134:9010/order/order/exportSNCodeTemplate`)
+    // window.open(`http://121.37.251.134:9010/order/order/exportSNCodeTemplate`);
+    axios({
+      method: "get",
+      url:`/api/order/order/exportSNCodeTemplate`,
+      // data:param,
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Authorization": `Basic ${Base64.encode(`${clientId}:${clientSecret}`)}`,
+        "Blade-Auth": getToken(),
+        "token": getToken(),
+      },
+      // 设置responseType对象格式为blob
+      responseType: "blob"
+    }).then(res => {
+      console.log(res)
+      if(!res.data.code){
+        let data = res.data;
+        let fileReader = new FileReader();
+        fileReader.readAsText(data, 'utf-8');
+        let _this = this
+        fileReader.onload = function() {
+          try {
+            let jsonData = JSON.parse(this.result);  // 说明是普通对象数据，后台转换失败
+            message.error(jsonData.data);
+          }catch(err){
+            _this.downLoadBlobFile(res)
+          }
+        };
+      }else {
+        message.error("导出失败");
+      }
+    })
   };
+
+   // 下载方法
+   downLoadBlobFile = (res) =>{
+    var elink = document.createElement('a');
+    elink.download = '订单数据SN码模板.xlsx';
+    elink.style.display = 'none';
+    var blob = new Blob([res.data]);
+    elink.href = URL.createObjectURL(blob);
+    document.body.appendChild(elink);
+    elink.click();
+    document.body.removeChild(elink);
+  }
 
   onSwitchChange = checked => {
     this.setState({
