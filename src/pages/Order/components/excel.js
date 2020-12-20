@@ -50,9 +50,9 @@ class Export extends PureComponent {
   };
 
   handleTemplate = () => {
-    console.log(`http://121.37.251.134:9010/order/order/exportSNCodeTemplate?Blade-Auth=${getAccessToken()}`)
-    window.href = `http://121.37.251.134:9010/order/order/exportSNCodeTemplate?Blade-Auth=${getAccessToken()}`
-    // window.open(``);
+    // console.log(`http://121.37.251.134:9010/order/order/exportSNCodeTemplate?Blade-Auth=${getAccessToken()}`)
+    // window.href = `http://121.37.251.134:9010/order/order/exportSNCodeTemplate?Blade-Auth=${getAccessToken()}`
+    window.open(`http://121.37.251.134:9010/order/order/exportSNCodeTemplate?Blade-Auth=${getAccessToken()}`);
   };
 
   onSwitchChange = checked => {
