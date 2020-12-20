@@ -168,7 +168,7 @@ class SearchButton extends PureComponent {
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
-                }else if(tabKey === 'null' && (item.code === "add" || item.code === "deliver-goods" || item.code === "bell" || item.code === 'Import')){
+                }else if(tabKey === 'null' && (item.code === "add" || item.code === "deliver-goods" || item.code === "bell" || item.code === 'Import' || item.code === 'status-change')){
                     // 全部
                     if(item.code === 'Import'){
                         return (

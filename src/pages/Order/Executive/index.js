@@ -1116,6 +1116,11 @@ class AllOrdersList extends PureComponent {
       // 首次打印
       this.first()
     }
+    else if(code === "status-change"){
+      // 状态变更
+      this.bulkModification()
+    }
+    
   }
   // 左侧操作按钮
   renderLeftButton = (tabKey) => {
