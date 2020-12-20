@@ -83,7 +83,10 @@ class LogisticsConfiguration extends PureComponent {
       listID:[],
       handlePrintingClick:false,
       localPrintStatus:'',
-      payamount:0
+      payamount:0,
+      payPanyId:null,
+      productTypeId:null,
+      productId :null,
     };
   }
 
@@ -142,7 +145,10 @@ class LogisticsConfiguration extends PureComponent {
       console.log(_data,"_data_data_data")
       this.setState({
         detail:{..._data},
-        payamount:_data.payAmount
+        payamount:_data.payAmount,
+        payPanyId:_data.payPanyId || '0',
+        productTypeId:_data.productTypeId || '0',
+        productId:_data.productId || '0',
       },()=>{
         const { form } = this.props;
         form.setFieldsValue({ productCoding: _data.productCoding,logisticsNumber: _data.logisticsNumber});
@@ -341,7 +347,7 @@ class LogisticsConfiguration extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail } = this.state;
+    const { detail,payPanyId, productTypeId, productId,  } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if(!values.logisticsCompany){
         values.logisticsCompany=null
@@ -349,6 +355,9 @@ class LogisticsConfiguration extends PureComponent {
       if(!values.logisticsNumber){
         values.logisticsNumber=null
       }
+      values.payPanyId = payPanyId;
+      values.productTypeId = productTypeId;
+      values.productId = productId;
 
       if (!err) {
         this.saveData(values)
@@ -358,7 +367,7 @@ class LogisticsConfiguration extends PureComponent {
   // 保存并打印
   handlePrinting = (e) => {
     const { form } = this.props;
-    const { detail,localPrintStatus, currentIndex } = this.state;
+    const { detail,localPrintStatus, currentIndex ,payPanyId, productTypeId, productId, } = this.state;
     if(!detail.taskId){
        form.validateFieldsAndScroll((err, values) => {
          if(!values.logisticsCompany){
@@ -367,6 +376,9 @@ class LogisticsConfiguration extends PureComponent {
          if(!values.logisticsNumber){
            values.logisticsNumber=null
          }
+         values.payPanyId = payPanyId;
+         values.productTypeId = productTypeId;
+         values.productId = productId;
 
          if (!err) {
           console.log("先保存数据")
@@ -626,7 +638,10 @@ class LogisticsConfiguration extends PureComponent {
                       onChange={(value, selectedOptions)=>{
                         console.log(value, selectedOptions,"产品分类改变")
                         this.setState({
-                          payamount:selectedOptions[2].payamount
+                          payamount:selectedOptions[2].payamount,
+                          payPanyId:selectedOptions[0].id,
+                          productTypeId:selectedOptions[1].id,
+                          productId :selectedOptions[2].id,
                         })
                       }}
                     ></Cascader>

@@ -347,7 +347,7 @@ class LogisticsConfiguration extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail } = this.state;
+    const { detail,payPanyId, productTypeId, productId, } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if(!values.logisticsCompany){
         values.logisticsCompany=null
@@ -355,18 +355,18 @@ class LogisticsConfiguration extends PureComponent {
       if(!values.logisticsNumber){
         values.logisticsNumber=null
       }
-
-      console.log(values)
-
-      // if (!err) {
-      //   this.saveData(values)
-      // }
+      values.payPanyId = payPanyId;
+      values.productTypeId = productTypeId;
+      values.productId = productId;
+      if (!err) {
+        this.saveData(values)
+      }
     });
   };
   // 保存并打印
   handlePrinting = (e) => {
     const { form } = this.props;
-    const { detail,localPrintStatus , currentIndex} = this.state;
+    const { detail,localPrintStatus , currentIndex,payPanyId, productTypeId, productId, } = this.state;
     if(!detail.taskId){
        form.validateFieldsAndScroll((err, values) => {
          if(!values.logisticsCompany){
