@@ -70,8 +70,8 @@ class OrderImport extends PureComponent {
   };
 
   handleTemplate = () => {
-    // window.href = `http://121.37.251.134:9010/order/order/exportOrderTemplate?Blade-Auth=${getAccessToken()}`
-    window.open(`http://121.37.251.134:9010/order/order/exportOrderTemplate?Blade-Auth=${getAccessToken()}`);
+    window.href = `http://121.37.251.134:9010/order/order/exportOrderTemplate`
+    // window.open(`http://121.37.251.134:9010/order/order/exportOrderTemplate?Blade-Auth=${getAccessToken()}`);
   };
 
   onSwitchChange = checked => {
