@@ -105,8 +105,6 @@ class OrdersEdit extends PureComponent {
     }else if(window.location.hash.indexOf("executive") != -1){
       backUrl = "/order/executive/list?type=details"
     }
-
-    
   }
 
   getTreeList = () => {
@@ -210,6 +208,7 @@ class OrdersEdit extends PureComponent {
         values.productTypeId = productTypeId; 
         values.productId = productId;
       }
+
       if (!err) {
         const params = {
           ...values
@@ -423,10 +422,6 @@ class OrdersEdit extends PureComponent {
         span: 16,
       },
     };
-    console.log(!detail.logisticsStatus === true,"123123")
-    console.log(detail)
-    
-
     return (
       <Panel title="详情" back={backUrl}>
         <Form style={{ marginTop: 8 }}>
