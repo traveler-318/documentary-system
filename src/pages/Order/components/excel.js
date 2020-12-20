@@ -50,7 +50,7 @@ class Export extends PureComponent {
   };
 
   handleTemplate = () => {
-    window.open(`/api/order/order/exportSNCodeTemplate?Blade-Auth=${getAccessToken()}`);
+    window.href = 'http://121.37.251.134:9010/api/order/order/exportSNCodeTemplate?Blade-Auth=${getAccessToken()}'
   };
 
   onSwitchChange = checked => {
