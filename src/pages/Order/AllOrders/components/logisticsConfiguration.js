@@ -361,9 +361,9 @@ class LogisticsConfiguration extends PureComponent {
       values.productId = productId;
 
       console.log(values)
-      // if (!err) {
-      //   this.saveData(values)
-      // }
+      if (!err) {
+        this.saveData(values)
+      }
     });
   };
   // 保存并打印
