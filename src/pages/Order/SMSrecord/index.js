@@ -182,7 +182,7 @@ class SMSrecord extends PureComponent {
         render: (res) => {
           return(
             <>
-              {res === '0' ?<span>未完成</span>:<span>已完成</span>}
+              {res === '0' ?<span style={{color:"red"}}>未完成</span>:<span>已完成</span>}
             </>
           )
         },

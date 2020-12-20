@@ -28,17 +28,22 @@ const { SubMenu } = Menu;
 class SearchButton extends PureComponent {
 
   constructor(props) {
+   
     super(props);
     this.state = {
-        buttons:getButton('executive'),
+        buttons:[],
     };
   }
 
-//   componentWillMount() {
+  componentWillMount() {
+    
+    this.setState({
+        buttons:getButton(this.props.code)
+    })
 
-//     console.log(actionButtons,"获取按钮")
+    console.log(this.props.code,"获取按钮code")
 
-//   }
+  }
 
   handleClick = (code) => {
       this.props.btnButtonBack(code)
