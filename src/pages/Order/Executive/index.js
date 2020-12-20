@@ -1834,6 +1834,10 @@ class AllOrdersList extends PureComponent {
                         item.key === '4' ||
                         item.key === '5' ||
                         item.key === '6' ||
+                        item.key === '7' ||
+                        item.key === '8' ||
+                        item.key === '9' ||
+                        item.key === '10' ||
                         item.key === null
                       )) ? (
                     <Badge count={countSice} overflowCount={999}>

@@ -176,6 +176,18 @@ class SMSrecord extends PureComponent {
         },
       },
       {
+        title: '申请状态',
+        dataIndex: 'orderMarks',
+        width: 150,
+        render: (res) => {
+          return(
+            <>
+              {res === '0' ?<span>未完成</span>:<span>已完成</span>}
+            </>
+          )
+        },
+      },
+      {
         title: '发送类型',
         dataIndex: 'smsCategory',
         width: 200,
