@@ -298,6 +298,7 @@ class User extends PureComponent {
   };
 
   handleTemplate = () => {
+    console.log(`http://121.37.251.134:9010/blade-user/export-template?Blade-Auth=${getAccessToken()}`)
     window.href = `http://121.37.251.134:9010/blade-user/export-template?Blade-Auth=${getAccessToken()}`
   };
 
