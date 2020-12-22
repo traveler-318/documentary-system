@@ -41,15 +41,15 @@ class BaseView extends Component {
     getTenantInfo().then(resp => {
       console.log(resp)
       if (resp.code === 200) {
-        if(resp.data.version === '1'){
+        if(resp.data.version === '0'){
           resp.data.versionColor = 'red';
           resp.data.version = '试用';
         }
-        if(resp.data.version === '2'){
+        if(resp.data.version === '1'){
           resp.data.versionColor = 'green';
           resp.data.version = '标准';
         }
-        if(resp.data.version === '3'){
+        if(resp.data.version === '2'){
           resp.data.versionColor = 'green';
           resp.data.version = '企业';
         }

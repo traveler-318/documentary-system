@@ -176,7 +176,7 @@ class SMSrecord extends PureComponent {
         },
       },
       {
-        title: '申请状态',
+        title: '申订单请状态',
         dataIndex: 'orderMarks',
         width: 150,
         render: (res) => {
