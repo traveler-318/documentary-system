@@ -242,15 +242,15 @@ class Tenant extends PureComponent {
         render: (res) => {
           let version='';
           let color='';
-          if(res === '1'){
+          if(res === '0'){
             version = "试用"
             color='red'
           }
-          if(res === '2'){
+          if(res === '1'){
             version = "标准"
             color="green"
           }
-          if(res === '3'){
+          if(res === '2'){
             version = "企业"
             color="green"
           }
