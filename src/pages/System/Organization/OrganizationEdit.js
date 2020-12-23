@@ -48,7 +48,7 @@ class OrganizationEdit extends PureComponent {
     const parentId = form.getFieldValue('parentId');
     if(parentId){
       if (id === parentId.toString()) {
-        message.warn('上级机构不能选择自身!');
+        message.warn('上级组织不能选择自身!');
         return;
       }
     }
@@ -113,27 +113,27 @@ class OrganizationEdit extends PureComponent {
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="机构名称">
+                <FormItem {...formItemLayout} label="组织名称">
                   {getFieldDecorator('deptName', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入机构名称',
+                        message: '请输入组织名称',
                       },
                     ],
                     initialValue: detail.deptName,
-                  })(<Input placeholder="请输入机构名称" />)}
+                  })(<Input placeholder="请输入组织名称" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="上级机构">
+                <FormItem {...formItemLayout} label="上级组织">
                   {getFieldDecorator('parentId', {
                     initialValue: detail.parentId === '0' ? detail.id : detail.parentId,
                   })(
                     <TreeSelect
                       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                       treeData={_tree}
-                      placeholder="请选择上级机构"
+                      placeholder="请选择上级组织"
                       allowClear
                       showSearch
                       treeNodeFilterProp="title"
@@ -145,17 +145,17 @@ class OrganizationEdit extends PureComponent {
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} className={styles.inputItem} label="机构类型">
+                <FormItem {...formItemLayout} className={styles.inputItem} label="组织类型">
                   {getFieldDecorator('deptCategory', {
                     rules: [
                       {
                         required: true,
-                        message: '请选择机构类型',
+                        message: '请选择组织类型',
                       },
                     ],
                     initialValue: String(detail.deptCategory),
                   })(
-                    <Select placeholder="请选择机构类型">
+                    <Select placeholder="请选择组织类型">
                       {category.map(d => (
                         <Select.Option key={d.dictKey} value={d.dictKey}>
                           {d.dictValue}
@@ -170,23 +170,23 @@ class OrganizationEdit extends PureComponent {
           <Card title="其他信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={20}>
-                <FormItem {...formAllItemLayout} className={styles.inputItem} label="机构排序">
+                <FormItem {...formAllItemLayout} className={styles.inputItem} label="组织排序">
                   {getFieldDecorator('sort', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入机构排序',
+                        message: '请输入组织排序',
                       },
                     ],
                     initialValue: detail.sort,
-                  })(<InputNumber placeholder="请输入机构排序" />)}
+                  })(<InputNumber placeholder="请输入组织排序" />)}
                 </FormItem>
               </Col>
               <Col span={20}>
-                <FormItem {...formAllItemLayout} label="机构备注">
+                <FormItem {...formAllItemLayout} label="组织备注">
                   {getFieldDecorator('remark', {
                     initialValue: detail.remark,
-                  })(<TextArea rows={4} placeholder="请输入机构备注" />)}
+                  })(<TextArea rows={4} placeholder="请输入组织备注" />)}
                 </FormItem>
               </Col>
             </Row>

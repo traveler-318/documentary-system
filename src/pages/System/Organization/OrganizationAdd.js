@@ -87,19 +87,19 @@ class OrganizationAdd extends PureComponent {
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="机构简称">
+                <FormItem {...formItemLayout} label="组织简称">
                   {getFieldDecorator('deptName', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入机构简称',
+                        message: '请输入组织简称',
                       },
                     ],
-                  })(<Input placeholder="请输入机构简称" />)}
+                  })(<Input placeholder="请输入组织简称" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="上级机构">
+                <FormItem {...formItemLayout} label="上级组织">
                   {getFieldDecorator('parentId', {
                     initialValue: detail.id,
                   })(
@@ -110,7 +110,7 @@ class OrganizationAdd extends PureComponent {
                       allowClear
                       showSearch
                       treeNodeFilterProp="title"
-                      placeholder="请选择上级机构"
+                      placeholder="请选择上级组织"
                     />
                   )}
                 </FormItem>
@@ -118,16 +118,16 @@ class OrganizationAdd extends PureComponent {
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} className={styles.inputItem} label="机构类型">
+                <FormItem {...formItemLayout} className={styles.inputItem} label="组织类型">
                   {getFieldDecorator('deptCategory', {
                     rules: [
                       {
                         required: true,
-                        message: '请选择机构类型',
+                        message: '请选择组织类型',
                       },
                     ],
                   })(
-                    <Select placeholder="请选择机构类型">
+                    <Select placeholder="请选择组织类型">
                       {category.map(d => (
                         <Select.Option key={d.dictKey} value={d.dictKey}>
                           {d.dictValue}
@@ -142,21 +142,21 @@ class OrganizationAdd extends PureComponent {
           <Card title="其他信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={20}>
-                <FormItem {...formAllItemLayout} className={styles.inputItem} label="机构排序">
+                <FormItem {...formAllItemLayout} className={styles.inputItem} label="组织排序">
                   {getFieldDecorator('sort', {
                     rules: [
                       {
                         required: true,
-                        message: '请输入机构排序',
+                        message: '请输入组织排序',
                       },
                     ],
                     initialValue: detail.nextSort,
-                  })(<InputNumber placeholder="请输入机构排序" />)}
+                  })(<InputNumber placeholder="请输入组织排序" />)}
                 </FormItem>
               </Col>
               <Col span={20}>
-                <FormItem {...formAllItemLayout} label="机构备注">
-                  {getFieldDecorator('remark')(<TextArea rows={4} placeholder="请输入机构备注" />)}
+                <FormItem {...formAllItemLayout} label="组织备注">
+                  {getFieldDecorator('remark')(<TextArea rows={4} placeholder="请输入组织备注" />)}
                 </FormItem>
               </Col>
             </Row>

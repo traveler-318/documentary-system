@@ -68,19 +68,19 @@ class OrganizationView extends PureComponent {
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="机构名称">
+                <FormItem {...formItemLayout} label="组织名称">
                   <span>{detail.deptName}</span>
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="上级机构">
+                <FormItem {...formItemLayout} label="上级组织">
                   <span>{detail.parentName}</span>
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="机构类型">
+                <FormItem {...formItemLayout} label="组织类型">
                   <span>{detail.deptCategoryName}</span>
                 </FormItem>
               </Col>
@@ -89,12 +89,12 @@ class OrganizationView extends PureComponent {
           <Card title="其他信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={20}>
-                <FormItem {...formAllItemLayout} label="机构排序">
+                <FormItem {...formAllItemLayout} label="组织排序">
                   <span>{detail.sort}</span>
                 </FormItem>
               </Col>
               <Col span={20}>
-                <FormItem {...formAllItemLayout} label="机构备注">
+                <FormItem {...formAllItemLayout} label="组织备注">
                   <span>{detail.remark}</span>
                 </FormItem>
               </Col>
