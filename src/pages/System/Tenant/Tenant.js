@@ -41,13 +41,13 @@ class Tenant extends PureComponent {
     params: {},
     versionList:[
       {
-        id:'1',
+        id:'0',
         version:'试用'
       },{
-        id:'2',
+        id:'1',
         version:'标准'
       },{
-        id:'3',
+        id:'2',
         version:'企业'
       }
     ]
