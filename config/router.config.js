@@ -365,7 +365,7 @@ export default [
             path: '/system/smsrecharge',
             routes: [
               { path: '/system/smsrecharge', redirect: '/system/smsrecharge/list' },
-              { path: '/system/smsrecharge/list', component: './System/SmsRecharge/SmsRecharge' },
+              { path: '/system/smsrecharge/list', component: './System/Recharge/index' },
             ],
           },
           {
