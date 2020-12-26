@@ -1,10 +1,24 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, message, Tooltip, Icon } from 'antd';
+import {
+  Form,
+  Input,
+  Card,
+  Row,
+  Col,
+  Button,
+  TreeSelect,
+  Select,
+  DatePicker,
+  message,
+  Tooltip,
+  Icon,
+  Modal,
+} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
-import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
+import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT, USER_UPDATE } from '../../../actions/user';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
 import { tenantMode } from '../../../defaultSettings';
@@ -33,14 +47,26 @@ class UserAdd extends PureComponent {
           message.warning('两次密码输入不一致');
         } else {
           console.log(values)
-          const params = {
-            ...values,
-            roleId: func.join(values.roleId),
-            deptId: values.deptId,
-            postId: func.join(values.postId),
-            birthday: func.format(values.birthday),
-          };
-          dispatch(USER_SUBMIT(params));
+          Modal.confirm({
+            title: '提醒',
+            content: "如果用户所属角色为销售人员，那么系统会自动扣减一个业务员余额，并自动新增一个业务员用户，确认是否新增人员！",
+            okText: '确定',
+            okType: 'primary',
+            cancelText: '取消',
+            keyboard:false,
+            onOk:() => {
+              const params = {
+                ...values,
+                roleId: func.join(values.roleId),
+                deptId: values.deptId,
+                postId: func.join(values.postId),
+                birthday: func.format(values.birthday),
+              };
+              dispatch(USER_SUBMIT(params));
+            },
+            onCancel() {},
+          });
+
         }
       }
     });

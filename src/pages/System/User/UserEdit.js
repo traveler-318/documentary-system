@@ -1,5 +1,19 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row, Col, Button, TreeSelect, DatePicker, Select, Tooltip, Icon } from 'antd';
+import {
+  Form,
+  Input,
+  Card,
+  Row,
+  Col,
+  Button,
+  TreeSelect,
+  DatePicker,
+  Select,
+  Tooltip,
+  Icon,
+  Modal,
+  message,
+} from 'antd';
 import moment from 'moment';
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
@@ -42,16 +56,27 @@ class UserEdit extends PureComponent {
     } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const params = {
-          id,
-          ...values,
-          roleId: func.join(values.roleId),
-          organizationId: values.organizationId.toString(),
-          deptId: func.join(values.deptId),
-          postId: func.join(values.postId),
-          birthday: func.format(values.birthday),
-        };
-        dispatch(USER_UPDATE(params));
+        Modal.confirm({
+          title: '提醒',
+          content: "如果用户所属角色为销售人员，那么系统会自动扣减一个业务员余额，并自动新增一个业务员用户，确认是否新增人员！",
+          okText: '确定',
+          okType: 'primary',
+          cancelText: '取消',
+          keyboard:false,
+          onOk:() => {
+            const params = {
+              id,
+              ...values,
+              roleId: func.join(values.roleId),
+              organizationId: values.organizationId.toString(),
+              deptId: func.join(values.deptId),
+              postId: func.join(values.postId),
+              birthday: func.format(values.birthday),
+            };
+            dispatch(USER_UPDATE(params));
+          },
+          onCancel() {},
+        });
       }
     });
   };

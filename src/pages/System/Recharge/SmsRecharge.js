@@ -6,6 +6,10 @@ import Panel from '../../../components/Panel';
 import styles from './index.less';
 import { subscription } from '../../../services/newServices/order';
 import BindingQRCode from './components/code';
+import RechargeRecord from './components/RechargeRecord';
+import SMS from './components/SMS';
+import Voice from './components/Voice';
+import Logistics from './components/Logistics';
 import { getUserInfo } from '../../../services/user';
 
 const FormItem = Form.Item;
@@ -168,13 +172,28 @@ class SmsRecharge extends PureComponent {
             </div>
           {/* </TabPane>
         </Tabs> */}
-{/*
-        <Tabs type="card" onChange={this.statusChange}>
-          <TabPane tab='充值记录'>
 
+        <Tabs type="card" onChange={this.statusChange}>
+          <TabPane tab='充值记录' key="1">
+            <RechargeRecord />
+          </TabPane>
+          <TabPane tab='消费报表' key="2">
+            2
+          </TabPane>
+          <TabPane tab='短信发送明细' key="3">
+            <SMS />
+          </TabPane>
+          <TabPane tab='语音发送明细' key="4">
+            <Voice />
+          </TabPane>
+          <TabPane tab='物流订阅' key="5">
+            <Logistics />
+          </TabPane>
+          <TabPane tab='打印免单' key="6">
+            6
           </TabPane>
         </Tabs>
-*/}
+
 
         {/* 二维码 */}
         {bindingQRCodeVisible?(

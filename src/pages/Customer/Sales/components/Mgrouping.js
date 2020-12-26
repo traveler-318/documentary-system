@@ -183,11 +183,16 @@ class Logistics extends PureComponent {
           maskClosable={false}
           footer={null}
         >
-          <div style={{height:'50px'}}>
-            <Button style={{float: "right"}} type="primary" onClick={this.groupAdd}>
-              添加
-            </Button>
-          </div>
+          {
+            data.length >= 1 ? "" :(
+              <div style={{height:'50px'}}>
+                <Button style={{float: "right"}} type="primary" onClick={this.groupAdd}>
+                  添加
+                </Button>
+              </div>
+            )
+          }
+
           <Table rowKey={(record, index) => `${index}`} dataSource={data} columns={columns} />
         </Modal>
         <Modal

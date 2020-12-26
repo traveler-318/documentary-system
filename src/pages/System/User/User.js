@@ -520,7 +520,7 @@ class User extends PureComponent {
               onSearch={this.handleSearch}
               onSelectRow={this.onSelectRow}
               renderSearchForm={this.renderSearchForm}
-              renderRightButton={this.renderRightButton}
+              // renderRightButton={this.renderRightButton}
               btnCallBack={this.handleBtnCallBack}
               loading={loading}
               data={data}
