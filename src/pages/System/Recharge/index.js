@@ -29,9 +29,9 @@ class Recharge extends PureComponent {
           <TabPane tab='短信充值' key="1" className={styles.tab} style={{paddingTop:"20px"}}>
             <SmsRecharge />
           </TabPane>
-          {/* <TabPane tab='业务员充值' key="2" className={styles.SalesmanRecharge} style={{paddingTop:"20px"}}>
+          <TabPane tab='业务员充值' key="2" className={styles.SalesmanRecharge} style={{paddingTop:"20px"}}>
             <SalesmanRecharge/>
-          </TabPane> */}
+          </TabPane>
         </Tabs>
       </Panel>
     );
