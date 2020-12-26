@@ -10,6 +10,7 @@ import RechargeRecord from './components/RechargeRecord';
 import SMS from './components/SMS';
 import Voice from './components/Voice';
 import Logistics from './components/Logistics';
+import Printing from './components/Printing';
 import { getUserInfo } from '../../../services/user';
 
 const FormItem = Form.Item;
@@ -189,8 +190,8 @@ class SmsRecharge extends PureComponent {
           <TabPane tab='物流订阅' key="5">
             <Logistics />
           </TabPane>
-          <TabPane tab='打印免单' key="6">
-            6
+          <TabPane tab='打印面单' key="6">
+            <Printing />
           </TabPane>
         </Tabs>
 

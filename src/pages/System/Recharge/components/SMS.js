@@ -1,14 +1,15 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Table, Form, Tabs, message, Input } from 'antd';
-import Panel from '../../../../components/Panel';
-import { getUserInfo } from '../../../../services/user';
+import { Table, Form, Tabs, message, Input, Col, Button, Radio, DatePicker } from 'antd';
 import moment from 'moment';
-import Grid from '../../../../components/Sword/Grid';
+import {smsList } from '../../../../services/newServices/recharge';
+import { formatMessage, FormattedMessage } from 'umi/locale';
+import styles from '../index.less';
+import { getCookie } from '../../../../utils/support';
 
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
-
+const { RangePicker } = DatePicker;
 @connect(({ post, loading }) => ({
   post,
   loading: loading.models.post,
@@ -19,25 +20,49 @@ class SMS extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      loading:false
+      loading:false,
+      params:{
+        size:10,
+        current:1
+      },
+      data:{}
     }
   }
 
-  componentDidMount() {
-    getUserInfo().then(resp => {
-      if (resp.code === 200) {
-        console.log(resp)
-        this.setState({ remainingMoney: resp.data.remainingMoney});
-      } else {
-        message.error(resp.msg || '获取数据失败');
-      }
+  componentWillMount() {
+    const {params}=this.state;
+    this.getSmsList(params)
+  }
+
+  getSmsList= (params) => {
+    this.setState({
+      loading:true
+    })
+    smsList(params).then(resp => {
+      console.log(resp)
+      this.setState({
+        data:{
+          list:resp.data.records,
+          pagination:{
+            current: resp.data.current,
+            pageSize: resp.data.size,
+            total: resp.data.total
+          }
+        },
+        loading: false
+      })
     });
   }
 
 
   // ============ 查询表单 ===============
   renderSearchForm = onReset => {
-
+    const { form } = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      console.log(values)
+      values.deptId = getCookie("dept_id");
+      this.getSmsList(values)
+    })
   };
 
   render() {
@@ -45,31 +70,25 @@ class SMS extends PureComponent {
     const {
       form,
     } = this.props;
+    const { getFieldDecorator } = form;
 
-    const {data,loading} = this.state;
+    const {data,loading,pagination} = this.state;
 
     const columns = [
       {
         title: '手机号',
-        dataIndex: 'phoneNumber',
+        dataIndex: 'userPhone',
         width: 150,
         ellipsis: true,
       },
       {
         title: '通知类型',
-        dataIndex: 'orderMarks',
+        dataIndex: 'smsCategory',
         width: 150,
-        render: (res) => {
-          return(
-            <>
-              {res === '0' ?<span style={{color:"red"}}>未完成</span>:<span>已完成</span>}
-            </>
-          )
-        },
       },
       {
         title: '订单号',
-        dataIndex: 'smsCategory',
+        dataIndex: 'outOrderNo',
         width: 200,
         ellipsis: true,
       },
@@ -92,11 +111,36 @@ class SMS extends PureComponent {
     ];
 
     return (
-      <div>
-        <Form.Item label="姓名">
-          <Input placeholder="请输入姓名" />
-        </Form.Item>
-        <Table columns={columns} dataSource={data} />
+      <div style={{margin:"20px"}} className={styles.sms}>
+        <div className={"default_search_form"}>
+          <Form.Item label="订单号">
+            {getFieldDecorator('outOrderNo',{
+            })(<Input placeholder="请输入订单号" />)}
+          </Form.Item>
+          <Form.Item label="手机号">
+            {getFieldDecorator('userPhone',{
+            })(<Input placeholder="请输入手机号" />)}
+          </Form.Item>
+          {/*<Form.Item label="发送时间">*/}
+            {/*{getFieldDecorator('sendTime', {*/}
+            {/*})(*/}
+              {/*<RangePicker showTime size={"default"} />*/}
+            {/*)}*/}
+          {/*</Form.Item>*/}
+          <div style={{ float: 'right' }}>
+            <Button type="primary" onClick={()=>{
+              this.renderSearchForm()
+            }}>
+              <FormattedMessage id="button.search.name" />
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={()=>{
+              onReset()
+            }}>
+              <FormattedMessage id="button.reset.name" />
+            </Button>
+          </div>
+        </div>
+        <Table columns={columns} loading={loading} dataSource={data.list} pagination={pagination} />
       </div>
 
     );

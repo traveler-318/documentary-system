@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Table, Form, Tabs, message, Input, Col, Button, Radio, DatePicker } from 'antd';
 import moment from 'moment';
-import {logisticsSubscriptList } from '../../../../services/newServices/recharge';
+import {logisticsPrintList } from '../../../../services/newServices/recharge';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import styles from '../index.less';
 import { getCookie } from '../../../../utils/support';
@@ -16,7 +16,7 @@ const { RangePicker } = DatePicker;
 }))
 @Form.create()
 
-class Logistics extends PureComponent {
+class Printing extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,14 +31,14 @@ class Logistics extends PureComponent {
 
   componentWillMount() {
     const {params}=this.state;
-    this.getLogisticsSubscriptList(params)
+    this.getLogisticsPrintList(params)
   }
 
-  getLogisticsSubscriptList= (params) => {
+  getLogisticsPrintList= (params) => {
     this.setState({
       loading:true
     })
-    logisticsSubscriptList(params).then(resp => {
+    logisticsPrintList(params).then(resp => {
       this.setState({
         data:{
           list:resp.data.records,
@@ -60,12 +60,12 @@ class Logistics extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       console.log(values)
       values.deptId = getCookie("dept_id");
-      this.getLogisticsSubscriptList(values)
+      this.getLogisticsPrintList(values)
     })
   };
 
   render() {
-    const code = 'Logistics';
+    const code = 'Printing';
     const {
       form,
     } = this.props;
@@ -146,4 +146,4 @@ class Logistics extends PureComponent {
 
   }
 }
-export default Logistics;
+export default Printing;
