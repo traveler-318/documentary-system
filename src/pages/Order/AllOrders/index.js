@@ -765,7 +765,7 @@ class AllOrdersList extends PureComponent {
       keyboard:false,
       onOk:() => {
         return new Promise((resolve, reject) => {
-          updateData({
+          updateConfirmTag({
             id:currentList.id,
             confirmTag:radioChecked,
             outOrderNo:currentList.outOrderNo
