@@ -104,6 +104,10 @@ export async function getUserInfo() {
   return request('/api/blade-user/info');
 }
 
+export async function getSalesmanInfo() {
+  return request('/api/merchants_property/property/detail');
+}
+
 export async function getTenantInfo() {
   return request('/api/blade-system/tenant/tenantInfo');
 }
