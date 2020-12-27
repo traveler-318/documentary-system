@@ -129,6 +129,7 @@ class SalesmanRecharge extends PureComponent {
         message.error("仅支持10的整数倍,请输入正确的数量")
       }
       
+      
     }
 
   };
