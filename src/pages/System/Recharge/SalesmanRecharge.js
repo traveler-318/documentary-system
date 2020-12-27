@@ -43,6 +43,11 @@ class SalesmanRecharge extends PureComponent {
   }
 
   componentDidMount() {
+    
+    this.getParam();
+  }
+
+  getParam = () => {
     getSalesmanInfo().then(resp => {
       if (resp.code === 200) {
         console.log(resp)
@@ -65,7 +70,6 @@ class SalesmanRecharge extends PureComponent {
         message.error(resp.msg || '获取数据失败');
       }
     });
-    
   }
 
   // ============ 提交 ===============
@@ -134,6 +138,7 @@ class SalesmanRecharge extends PureComponent {
     this.setState({
       bindingQRCodeVisible:false,
     })
+    this.getParam();
   }
 
   // ============ 查询表单 ===============
@@ -158,8 +163,8 @@ class SalesmanRecharge extends PureComponent {
     return (
       <div>
             <div style={{height:'120px',boxShadow: "0px 0px 10px 0px rgba(0,37,106,0.1)",padding:"20px",margin:'20px 20px',fontSize:"18px",background:"#fff",width:"80%",}}>
-              业务员余额：{currentQuota}个
-              {/*今天已发送<span style={{color:"#f50"}}>0</span>条短信，累计发送<span style={{color:"#f50"}}>0</span>条短信，剩余短信<span style={{color:"#f50"}}>0</span>条*/}
+              业务员余额：{currentQuota}个<br></br>
+              <span style={{fontSize:"14px"}}>收费标准：企业版客户50/人/年；标准版客户70/人/年</span>
             </div>
             <List grid={{ gutter: 24, column: 6 }}>
               {list.map(item=>{
