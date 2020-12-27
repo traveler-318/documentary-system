@@ -44,13 +44,6 @@ export async function updateData(params) {
   });
 }
 
-export async function updateConfirmTag(params) {
-  return request('/api/order/order/updateConfirmTag', {
-    method: 'POST',
-    body: params,
-  });
-}
-
 export async function orderFollowing(params) {
   return request('/api/order/order/orderFollowing', {
     method: 'POST',
@@ -100,6 +93,14 @@ export async function logisticsRemind(params) {
 }
 export async function logisticsSubscription(params) {
   return request('/api/order/order/update', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 状态变更
+export async function updateConfirmTag(params) {
+  return request('/api/order/order/updateConfirmTag', {
     method: 'POST',
     body: params,
   });

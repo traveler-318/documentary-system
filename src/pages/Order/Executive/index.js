@@ -740,6 +740,7 @@ class AllOrdersList extends PureComponent {
       radioChecked: e.target.value
     })
   }
+
   handleSubmitConfirmTag = (e) => {
     const { radioChecked, currentList } = this.state;
     if(!radioChecked){
@@ -754,7 +755,7 @@ class AllOrdersList extends PureComponent {
       keyboard:false,
       onOk:() => {
         return new Promise((resolve, reject) => {
-          updateData({
+          updateConfirmTag({
             id:currentList.id,
             confirmTag:radioChecked,
             outOrderNo:currentList.outOrderNo
@@ -780,6 +781,7 @@ class AllOrdersList extends PureComponent {
 
     
   }
+
   handleSubmitUpdateConfirmTag = (e) => {
     const { radioChecked, confirmTagList } = this.state;
     console.log(confirmTagList)
