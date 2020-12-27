@@ -38,7 +38,7 @@ class SalesmanRecharge extends PureComponent {
       bindingQRCodeVisible:false,
       bindingQRCode:'',
       money:'',
-      remainingMoney:''
+      currentQuota:''
     }
   }
 
@@ -46,7 +46,7 @@ class SalesmanRecharge extends PureComponent {
     getUserInfo().then(resp => {
       if (resp.code === 200) {
         console.log(resp)
-        this.setState({ remainingMoney: resp.data.remainingMoney});
+        this.setState({ currentQuota: resp.data.currentQuota});
       } else {
         message.error(resp.msg || '获取数据失败');
       }
@@ -154,7 +154,7 @@ class SalesmanRecharge extends PureComponent {
       bindingQRCodeVisible,
       bindingQRCode,
       money,
-      remainingMoney,
+      currentQuota,
       version,
       unitPrice
     }=this.state;
@@ -162,7 +162,7 @@ class SalesmanRecharge extends PureComponent {
     return (
       <div>
             <div style={{height:'120px',boxShadow: "0px 0px 10px 0px rgba(0,37,106,0.1)",padding:"20px",margin:'20px 20px',fontSize:"18px",background:"#fff",width:"80%",}}>
-              业务员余额：{remainingMoney}个
+              业务员余额：{currentQuota}个
               {/*今天已发送<span style={{color:"#f50"}}>0</span>条短信，累计发送<span style={{color:"#f50"}}>0</span>条短信，剩余短信<span style={{color:"#f50"}}>0</span>条*/}
             </div>
             <List grid={{ gutter: 24, column: 6 }}>

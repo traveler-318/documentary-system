@@ -94,6 +94,11 @@ class SmsRecharge extends PureComponent {
   onKeyDown = (e) => {
     const price=e.target.value
     if(e.keyCode === 13) {
+      var reg1=/^[1-9]\d*$/; // 验证正整数
+      if(Number(price) < 1  || !reg1.test(price)){
+        message.error('请输入不小于1的正整数');
+        return false
+      }
       if(e.target.value % 10 == 0){
         // message.error("充值功能正在维护!如有需要请联系负责人充值")
 
@@ -180,7 +185,7 @@ class SmsRecharge extends PureComponent {
             <RechargeRecord />
           </TabPane>
           <TabPane tab='消费报表' key="2">
-            <ConsumptionDetails />
+            {/*<ConsumptionDetails />*/}
           </TabPane>
           <TabPane tab='短信发送明细' key="3">
             <SMS />
