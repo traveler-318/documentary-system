@@ -6,7 +6,7 @@ import Panel from '../../../components/Panel';
 import styles from './index.less';
 import { subscription } from '../../../services/newServices/order';
 import BindingQRCode from './components/code';
-import { getUserInfo, getTenantInfo } from '../../../services/user';
+import { getSalesmanInfo } from '../../../services/user';
 
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
@@ -43,33 +43,30 @@ class SalesmanRecharge extends PureComponent {
   }
 
   componentDidMount() {
-    getUserInfo().then(resp => {
+    getSalesmanInfo().then(resp => {
       if (resp.code === 200) {
         console.log(resp)
-        this.setState({ currentQuota: resp.data.currentQuota});
+
+        // 0 = 试用  1标准  2企业
+        // 企业版的是50元/人
+        // 标准版的是70元/人
+
+        let _list = this.state.list.map(item=>{
+          item.price = item.number * (resp.data.systemLevel === 1 ? 70 : 50);
+          return item
+        })
+
+        this.setState({ 
+          currentQuota: resp.data.currentQuota,
+          version:resp.data.systemLevel,
+          unitPrice:resp.data.systemLevel === 1 ? '70' : '50',
+          list:_list
+        });
       } else {
         message.error(resp.msg || '获取数据失败');
       }
     });
-    getTenantInfo().then(resp => {
-      console.log(resp)
-      if (resp.code === 200) {
-        // 0 = 试用  1标准  2企业
-        // 企业版的是60元/人
-        // 标准版的是80元/人
-
-        let _list = this.state.list.map(item=>{
-          item.price = item.number * (resp.data.version === '1' ? 80 : 60);
-          return item
-        })
-
-        this.setState({
-          version:resp.data.version,
-          unitPrice:resp.data.version === '1' ? '80' : '60',
-          list:_list
-        });
-      }
-    });
+    
   }
 
   // ============ 提交 ===============
