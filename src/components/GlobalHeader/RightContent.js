@@ -10,6 +10,7 @@ import SelectLang from '../SelectLang';
 import styles from './index.less';
 
 import { getSMSBalance } from '../../services/user';
+import { getSalesmanInfo } from '../../services/user';
 
 export default class GlobalHeaderRight extends PureComponent {
 
@@ -17,6 +18,7 @@ export default class GlobalHeaderRight extends PureComponent {
     super(props);
     this.state = {
       remainingMoney:'',
+      currentQuota:'',
     };
   }
 
@@ -25,6 +27,14 @@ export default class GlobalHeaderRight extends PureComponent {
       console.log(resp,"resprespresp")
       if (resp.code === 200) {
         this.setState({ remainingMoney: resp.data});
+      } else {
+        message.error(resp.msg || '获取数据失败');
+      }
+    });
+    getSalesmanInfo().then(resp => {
+      console.log(resp,"resprespresp")
+      if (resp.code === 200) {
+        this.setState({ currentQuota: resp.data.currentQuota});
       } else {
         message.error(resp.msg || '获取数据失败');
       }
@@ -93,6 +103,13 @@ export default class GlobalHeaderRight extends PureComponent {
     )
   }
 
+  salesmanAmount = () => {
+    const {currentQuota}=this.state;
+    return(
+      <span>业务员余额：{currentQuota}个</span>
+    )
+  }
+
   render() {
     const {
       currentUser,
@@ -102,7 +119,10 @@ export default class GlobalHeaderRight extends PureComponent {
       onNoticeClear,
       theme,
     } = this.props;
-    const {remainingMoney}=this.state;
+    const {
+      remainingMoney,
+      currentQuota
+    }=this.state;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
         <Menu.Item key="userinfo">
@@ -132,6 +152,11 @@ export default class GlobalHeaderRight extends PureComponent {
     }
     return (
       <div className={className}>
+        <Tooltip
+          title={this.salesmanAmount}
+        >
+          <span style={{padding:"0 12px"}}><Icon type="user"  style={{marginRight:5}} />{currentQuota}个</span>
+        </Tooltip>
         <Tooltip
           title={this.payAmount}
         >
