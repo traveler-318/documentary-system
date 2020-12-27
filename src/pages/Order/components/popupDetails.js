@@ -7,7 +7,6 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import FormTitle from '../../../components/FormTitle';
 import styles from './edit.less';
-import { CITY } from '../../../utils/city';
 import { getQueryString } from '../../../utils/utils';
 import { getCookie } from '../../../utils/support';
 import {
@@ -26,6 +25,8 @@ import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import Survey from './Survey'
 import { setListData } from '../../../utils/publicMethod';
 import OrderListNew from './OrderListNew';
+import { getList as getSalesmanLists } from '../../../services/newServices/sales';
+import { getLazyTree } from '../../../services/region';
 import {
   LOGISTICSCOMPANY,
 } from './data.js';
@@ -63,7 +64,8 @@ class OrdersEdit extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productId:null,
-      detailsId:null
+      detailsId:null,
+      treeCascader:[]
     };
   }
 
@@ -90,9 +92,8 @@ class OrdersEdit extends PureComponent {
     },()=>{
       this.getTreeList();
       this.getEditDetails();
+      this.initCascader('00');
     });
-    
-    
 
     if(window.location.hash.indexOf("allOrders") != -1){
       backUrl = "/order/allOrders/list?type=details"
@@ -105,9 +106,63 @@ class OrdersEdit extends PureComponent {
     }else if(window.location.hash.indexOf("executive") != -1){
       backUrl = "/order/executive/list?type=details"
     }
-
-    
   }
+
+  initCascader = code => {
+    getLazyTree({ parentCode: code }).then(resp => {
+      if (resp.success) {
+        this.setState({
+          treeCascader: resp.data.map(item => {
+            return {
+              label: item.title,
+              value: item.value,
+              isLeaf: !item.hasChildren,
+            };
+          }),
+        },()=>{
+          const { treeCascader, detail } = this.state;
+          for(let i=0; i<treeCascader.length; i++){
+            if(treeCascader[i].value === detail.province){
+              this.loadData([treeCascader[i]],'defalut')
+            }
+          }
+        });
+      }
+    });
+  };
+
+  loadData = (selectedOptions,type) => {
+    const targetOption = selectedOptions[selectedOptions.length - 1];
+    targetOption.loading = true;
+
+    console.log(selectedOptions,targetOption,"123213")
+    getLazyTree({ parentCode: targetOption.value }).then(resp => {
+      if (resp.success) {
+        targetOption.loading = false;
+        targetOption.children = resp.data.map(item => {
+          return {
+            label: item.title,
+            value: item.value,
+            isLeaf: !item.hasChildren,
+          };
+        });
+        const { treeCascader } = this.state;
+        this.setState({
+          treeCascader: [...treeCascader],
+        },()=>{
+          if(type = "defalut"){
+            const { detail } = this.state;
+            for(let i=0; i<targetOption.children.length; i++){
+              if(targetOption.children[i].value === detail.city){
+                selectedOptions.push(targetOption.children[i])
+                this.loadData(selectedOptions)
+              }
+            }
+          }
+        });
+      }
+    });
+  };
 
   getTreeList = () => {
     productTreelist().then(res=>{
@@ -162,6 +217,8 @@ class OrdersEdit extends PureComponent {
       this.setState({
         orderDetail:list,
         orderListLength:list.length
+      },()=>{
+
       })
     })
   }
@@ -197,7 +254,7 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail,selectedOptions, payPanyId, productTypeId, productId, } = this.state;
+    const { detail,selectedOptions, payPanyId, productTypeId, productId, province, city, area } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       //ORDERSTATUS.map(item => {
       //  if(item.name === values.confirmTag){
@@ -218,6 +275,11 @@ class OrdersEdit extends PureComponent {
         values.productTypeId = productTypeId; 
         values.productId = productId;
       }
+
+      values.province = province
+      values.city = city
+      values.area = area
+
       if (!err) {
         const params = {
           ...values
@@ -299,16 +361,15 @@ class OrdersEdit extends PureComponent {
   }
 
   onChange = (value, selectedOptions) => {
+    console.log(value, selectedOptions,"变化")
     let text = ""
     for(let i=0; i<selectedOptions.length; i++){
       text += selectedOptions[i].label
     }
     this.setState({
-      cityparam:{
-        province:value[0],
-        city:value[1],
-        area:value[2],
-      },
+      province:value[0],
+      city:value[1],
+      area:value[2],
       selectedOptions:text
     })
   };
@@ -420,7 +481,8 @@ class OrdersEdit extends PureComponent {
       orderListLength,
       primary,
       primary1,
-      productList
+      productList,
+      treeCascader
     } = this.state;
 
     const formAllItemLayout = {
@@ -495,7 +557,8 @@ class OrdersEdit extends PureComponent {
                       })(
                         <Cascader
                           // defaultValue={[detail.province, detail.city, detail.area]}
-                          options={CITY}
+                          options={treeCascader}
+                          loadData={this.loadData}
                           disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2') ? edit : true}
                           onChange={this.onChange}
                         />

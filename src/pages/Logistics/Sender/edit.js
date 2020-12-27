@@ -8,7 +8,7 @@ import { getCookie } from '../../../utils/support';
 import { getDeliverySubmit } from '../../../services/newServices/logistics';
 import router from 'umi/router';
 import styles from '../../../layouts/Sword.less';
-import { CITY } from '../../../utils/city';
+import { getLazyTree } from '../../../services/region';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -23,6 +23,7 @@ class SenderEdit extends PureComponent {
     super(props);
     this.state = {
       data:[],
+      treeCascader:[]
     };
   }
 
@@ -32,8 +33,67 @@ class SenderEdit extends PureComponent {
     // 获取详情数据
     this.setState({
       data:globalParameters.detailData
+    },()=>{
+      this.initCascader('00');
     })
+    
   }
+
+  initCascader = code => {
+    getLazyTree({ parentCode: code }).then(resp => {
+      if (resp.success) {
+        this.setState({
+          treeCascader: resp.data.map(item => {
+            return {
+              label: item.title,
+              value: item.value,
+              isLeaf: !item.hasChildren,
+            };
+          }),
+        },()=>{
+          const { treeCascader, data } = this.state;
+          for(let i=0; i<treeCascader.length; i++){
+            if(treeCascader[i].value === JSON.parse(data.addrCoding)[0]){
+              this.loadData([treeCascader[i]],'defalut')
+            }
+          }
+        });
+      }
+    });
+  };
+
+  loadData = (selectedOptions,type) => {
+    const targetOption = selectedOptions[selectedOptions.length - 1];
+    targetOption.loading = true;
+
+    console.log(selectedOptions,targetOption,"123213")
+    getLazyTree({ parentCode: targetOption.value }).then(resp => {
+      if (resp.success) {
+        targetOption.loading = false;
+        targetOption.children = resp.data.map(item => {
+          return {
+            label: item.title,
+            value: item.value,
+            isLeaf: !item.hasChildren,
+          };
+        });
+        const { treeCascader } = this.state;
+        this.setState({
+          treeCascader: [...treeCascader],
+        },()=>{
+          if(type = "defalut"){
+            const { data } = this.state;
+            for(let i=0; i<targetOption.children.length; i++){
+              if(targetOption.children[i].value === JSON.parse(data.addrCoding)[1]){
+                selectedOptions.push(targetOption.children[i])
+                this.loadData(selectedOptions)
+              }
+            }
+          }
+        });
+      }
+    });
+  };
 // ============ 修改提交 ===============
 
   handleSubmit = e => {
@@ -89,7 +149,7 @@ class SenderEdit extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const {data} = this.state;
+    const {data,treeCascader} = this.state;
     console.log(data)
     const formItemLayout = {
       labelCol: {
@@ -148,8 +208,8 @@ class SenderEdit extends PureComponent {
                     initialValue: JSON.parse(data.addrCoding),
                   })(
                     <Cascader
-                      // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
-                      options={CITY}
+                      loadData={this.loadData}
+                      options={treeCascader}
                       onChange={this.onChange}
                     />
                   )}

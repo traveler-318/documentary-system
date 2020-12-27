@@ -3,11 +3,11 @@ import { Form, Input, Card, Row, Col, Button, Radio, Cascader, Select, DatePicke
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
-import { CITY } from '../../../utils/city';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
 
 import { getDeliverySave } from '../../../services/newServices/logistics';
+import { getLazyTree } from '../../../services/region';
 import router from 'umi/router';
 
 const FormItem = Form.Item;
@@ -22,13 +22,53 @@ class SenderAdd extends PureComponent {
       data:{
 
       },
-      cityparam:{}
+      cityparam:{},
+      treeCascader:[]
     };
   }
 
   componentWillMount() {
-
+    this.initCascader("00");
   }
+
+  initCascader = code => {
+    getLazyTree({ parentCode: code }).then(resp => {
+      if (resp.success) {
+        this.setState({
+          treeCascader: resp.data.map(item => {
+            return {
+              label: item.title,
+              value: item.value,
+              isLeaf: !item.hasChildren,
+            };
+          }),
+        });
+      }
+    });
+  };
+
+  loadData = selectedOptions => {
+    const targetOption = selectedOptions[selectedOptions.length - 1];
+    targetOption.loading = true;
+
+    console.log(selectedOptions,targetOption,"123213")
+    getLazyTree({ parentCode: targetOption.value }).then(resp => {
+      if (resp.success) {
+        targetOption.loading = false;
+        targetOption.children = resp.data.map(item => {
+          return {
+            label: item.title,
+            value: item.value,
+            isLeaf: !item.hasChildren,
+          };
+        });
+        const { treeCascader } = this.state;
+        this.setState({
+          treeCascader: [...treeCascader],
+        });
+      }
+    });
+  };
 
   // ============ 提交 ===============
 
@@ -87,7 +127,10 @@ class SenderAdd extends PureComponent {
       },
     };
 
-    const {data}=this.state
+    const {
+      data,
+      treeCascader
+    }=this.state
 
     const action = (
       <Button type="primary" onClick={this.handleSubmit}>
@@ -134,8 +177,8 @@ class SenderAdd extends PureComponent {
                     ],
                   })(
                     <Cascader
-                      // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
-                      options={CITY}
+                      loadData={this.loadData}
+                      options={treeCascader}
                       onChange={this.onChange}
                     />
                   )}

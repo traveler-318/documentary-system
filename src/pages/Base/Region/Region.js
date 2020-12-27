@@ -31,7 +31,7 @@ const { Dragger } = Upload;
 @Form.create()
 class Region extends PureComponent {
   state = {
-    topCode: '00',
+    topCode: '',
     treeData: [],
     treeCascader: [],
     excelVisible: false,

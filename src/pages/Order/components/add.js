@@ -11,10 +11,10 @@ import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user'
 import func from '../../../utils/Func';
 import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
-import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
 import { createData, getRegion, productTreelist } from '../../../services/newServices/order'
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
+import { getLazyTree } from '../../../services/region';
 import {
   LOGISTICSCOMPANY,
   paymentCompany,
@@ -47,6 +47,8 @@ class OrdersAdd extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productId:null,
+      topCode: '00',
+      treeCascader:[]
     };
   }
 
@@ -67,7 +69,47 @@ class OrdersAdd extends PureComponent {
     }else if(window.location.hash.indexOf("executive") != -1){
       backUrl = "/order/executive/list?type=details"
     }
+
+    this.initCascader("00")
   }
+  initCascader = code => {
+    getLazyTree({ parentCode: code }).then(resp => {
+      if (resp.success) {
+        this.setState({
+          treeCascader: resp.data.map(item => {
+            return {
+              label: item.title,
+              value: item.value,
+              isLeaf: !item.hasChildren,
+            };
+          }),
+        });
+      }
+    });
+  };
+
+  loadData = selectedOptions => {
+    const targetOption = selectedOptions[selectedOptions.length - 1];
+    targetOption.loading = true;
+
+    console.log(selectedOptions,targetOption,"123213")
+    getLazyTree({ parentCode: targetOption.value }).then(resp => {
+      if (resp.success) {
+        targetOption.loading = false;
+        targetOption.children = resp.data.map(item => {
+          return {
+            label: item.title,
+            value: item.value,
+            isLeaf: !item.hasChildren,
+          };
+        });
+        const { treeCascader } = this.state;
+        this.setState({
+          treeCascader: [...treeCascader],
+        });
+      }
+    });
+  };
 
   getTreeList = () => {
     productTreelist().then(res=>{
@@ -186,7 +228,8 @@ class OrdersAdd extends PureComponent {
     const {
       salesmanList,
       loading,
-      productList
+      productList,
+      treeCascader
     } = this.state;
 
     const formItemLayout = {
@@ -264,8 +307,8 @@ class OrdersAdd extends PureComponent {
                       ],
                     })(
                     <Cascader
-                      // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
-                      options={CITY}
+                      loadData={this.loadData}
+                      options={treeCascader}
                       onChange={this.onChange}
                     />
                   )}
