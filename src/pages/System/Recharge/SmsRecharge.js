@@ -10,6 +10,7 @@ import RechargeRecord from './components/RechargeRecord';
 import SMS from './components/SMS';
 import Voice from './components/Voice';
 import Logistics from './components/Logistics';
+import ConsumptionDetails from './components/ConsumptionDetails';
 import Printing from './components/Printing';
 import { getUserInfo } from '../../../services/user';
 
@@ -60,7 +61,7 @@ class SmsRecharge extends PureComponent {
   handleSubmit = (item) => {
     console.log(item)
     // message.error("充值功能正在维护!如有需要请联系负责人充值")
-    getUnWeChatBind().then(res=>{
+    getUnWeChatBind(1).then(res=>{
       console.log(res)
       if(res.code === 200){
         const url=res.data+"&money="+item.price;
@@ -96,7 +97,7 @@ class SmsRecharge extends PureComponent {
       if(e.target.value % 10 == 0){
         // message.error("充值功能正在维护!如有需要请联系负责人充值")
 
-        getUnWeChatBind().then(res=>{
+        getUnWeChatBind(1).then(res=>{
           if(res.code === 200){
             const url=res.data+"&money="+price;
             console.log(url)
@@ -179,7 +180,7 @@ class SmsRecharge extends PureComponent {
             <RechargeRecord />
           </TabPane>
           <TabPane tab='消费报表' key="2">
-            2
+            <ConsumptionDetails />
           </TabPane>
           <TabPane tab='短信发送明细' key="3">
             <SMS />

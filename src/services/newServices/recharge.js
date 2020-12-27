@@ -7,12 +7,19 @@ import request from '../../utils/request';
 
 
 // ============ 短信充值 ===============
-export async function getUnWeChatBind() {
-  return request(`/api/system/topup/amount`, {
-    method: 'GET',
+export async function getUnWeChatBind(type) {
+  return request("/api/system/topup/amount?type="+type, {
+    method: 'POST',
   });
 }
 
+// ============ 充值记录明细 ===============
+export async function topUpRecordList(params) {
+  return request(`/api/system/topup/topUpRecordList`, {
+    method: 'POST',
+    body: params,
+  });
+}
 // ============ 短信发送明细 ===============
 export async function smsList(params) {
   return request(`/api/sms_receipt/receipt/smsList`, {

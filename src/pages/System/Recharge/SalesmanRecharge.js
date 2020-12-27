@@ -76,7 +76,7 @@ class SalesmanRecharge extends PureComponent {
   handleSubmit = (item) => {
     console.log(item)
     // message.error("充值功能正在维护!如有需要请联系负责人充值")
-    getUnWeChatBind().then(res=>{
+    getUnWeChatBind(2).then(res=>{
       console.log(res)
       if(res.code === 200){
         const url=res.data+"&money="+item.price;
@@ -112,7 +112,7 @@ class SalesmanRecharge extends PureComponent {
       if(e.target.value % 10 == 0){
         // message.error("充值功能正在维护!如有需要请联系负责人充值")
 
-        getUnWeChatBind().then(res=>{
+        getUnWeChatBind(2).then(res=>{
           if(res.code === 200){
             const url=res.data+"&money="+price;
             console.log(url)

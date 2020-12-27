@@ -325,7 +325,7 @@ class AuthorityList extends PureComponent {
         <Button type="primary" onClick={this.handleRecharge}>充值</Button>
   */}
 
-        <Button type="primary" onClick={()=>{router.push(`/customer/sales/add`);}}>添加</Button>
+        {/*<Button type="primary" onClick={()=>{router.push(`/customer/sales/add`);}}>添加</Button>*/}
       </div>
     )
   };
@@ -356,22 +356,22 @@ class AuthorityList extends PureComponent {
         dataIndex: 'userName',
         width: 150,
       },
-      {
-        title: '分组',
-        dataIndex: 'groupId',
-        width: 150,
-        render: (res) => {
-          let name='';
-          for(let i=0; i<groupingList.length; i++){
-            if(groupingList[i].id === res){
-              name = groupingList[i].groupName
-            }
-          }
-          return(
-            name
-          )
-        },
-      },
+      // {
+      //   title: '分组',
+      //   dataIndex: 'groupId',
+      //   width: 150,
+      //   render: (res) => {
+      //     let name='';
+      //     for(let i=0; i<groupingList.length; i++){
+      //       if(groupingList[i].id === res){
+      //         name = groupingList[i].groupName
+      //       }
+      //     }
+      //     return(
+      //       name
+      //     )
+      //   },
+      // },
       {
         title: '手机号',
         dataIndex: 'userPhone',
