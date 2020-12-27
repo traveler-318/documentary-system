@@ -47,19 +47,18 @@ class SalesmanRecharge extends PureComponent {
       if (resp.code === 200) {
         console.log(resp)
 
-        // 0 = 试用  1标准  2企业
-        // 企业版的是50元/人
-        // 标准版的是70元/人
+        // 企业版的是50元/人  0
+        // 标准版的是70元/人  1
 
         let _list = this.state.list.map(item=>{
-          item.price = item.number * (resp.data.systemLevel === 1 ? 70 : 50);
+          item.price = item.number * (resp.data.systemLevel === 0 ? 70 : 50);
           return item
         })
 
         this.setState({ 
           currentQuota: resp.data.currentQuota,
           version:resp.data.systemLevel,
-          unitPrice:resp.data.systemLevel === 1 ? '70' : '50',
+          unitPrice:resp.data.systemLevel === 0 ? '70' : '50',
           list:_list
         });
       } else {
