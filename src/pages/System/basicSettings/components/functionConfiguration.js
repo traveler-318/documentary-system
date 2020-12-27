@@ -11,7 +11,7 @@ import {
   Radio,
   Row,
   Col,
-  Select,
+  Select, Tooltip,
 } from 'antd';
 import { getUserInfo, updateInfo } from '../../../../services/user';
 import { getToken } from '../../../../utils/authority';
@@ -152,6 +152,30 @@ class BaseView extends Component {
                   <Input />
                 )}
               </FormItem>
+                <FormItem {...formItemLayout} label={'过期天数'}>
+                  {getFieldDecorator('daysOverdue ', {
+                    rules: [{ validator: this.checkInteger }],
+                  })(
+                    <div style={{position:"relative"}}>
+                      <Input />
+                      <Tooltip
+                        title="用户在快递签收后，销售也有在跟进，超过*天的订单还未激活，就自动流转到已过期。"
+                      ><Icon type='question-circle-o' style={{position: 'absolute',right: '-23px',top: '14px'}} /></Tooltip>
+                    </div>
+                  )}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'转移天数'}>
+                  {getFieldDecorator('transferNumber ', {
+                    rules: [{ validator: this.checkInteger }],
+                  })(
+                    <div style={{position:"relative"}}>
+                      <Input />
+                      <Tooltip
+                        title="用户订单激活后，超过*天，订单就自动流转到待维护，等待后续继续跟进刷卡等其他状态。"
+                      ><Icon type='question-circle-o' style={{position: 'absolute',right: '-23px',top: '14px'}} /></Tooltip>
+                    </div>
+                  )}
+                </FormItem>
               <FormItem {...formItemLayout} label={'系统告警'}>
                   {getFieldDecorator('alarmStatus')(
                     <Radio.Group>

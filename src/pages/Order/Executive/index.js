@@ -1879,11 +1879,13 @@ class AllOrdersList extends PureComponent {
                   {currentList.confirmTag === '10' ? (
                     <Radio.Group onChange={this.onChangeRadio}>
                       <Radio value={7}>已激活</Radio>
+                      <Radio value={11}>退回中</Radio>
                       <Radio value={8}>已退回</Radio>
                     </Radio.Group>
                   ) : (
                     <Radio.Group onChange={this.onChangeRadio}>
                       <Radio value={7}>已激活</Radio>
+                      <Radio value={11}>退回中</Radio>
                       <Radio value={8}>已退回</Radio>
                       <Radio value={9}>已取消</Radio>
                     </Radio.Group>
@@ -1917,6 +1919,7 @@ class AllOrdersList extends PureComponent {
               {currentList.confirmTag === '10' ? (
                 <Radio.Group onChange={this.onChangeRadio}>
                   <Radio value={6}>跟进中</Radio>
+                  <Radio value={11}>退回中</Radio>
                   <Radio value={7}>已激活</Radio>
                   <Radio value={8}>已退回</Radio>
                 </Radio.Group>
@@ -1924,6 +1927,7 @@ class AllOrdersList extends PureComponent {
                 <Radio.Group onChange={this.onChangeRadio}>
                   <Radio value={6}>跟进中</Radio>
                   <Radio value={7}>已激活</Radio>
+                  <Radio value={11}>退回中</Radio>
                   <Radio value={8}>已退回</Radio>
                   <Radio value={9}>已取消</Radio>
                 </Radio.Group>
