@@ -181,7 +181,7 @@ class AllOrdersList extends PureComponent {
               )
             }else{
               return (
-                <div style={{cursor: 'pointer'}} onClick={()=>{this.changeConfirmTag(row)}}>
+                <div style={{cursor: 'pointer'}}>
                   <Tag color={this.getORDERSCOLOR(key)}>
                     {this.getORDERSTATUS(key)}
                   </Tag>
@@ -723,7 +723,6 @@ class AllOrdersList extends PureComponent {
   }
   // 对错误订单的状态进行变更操作
   changeUpdateConfirmTag = (row) => {
-    console.log(row)
     this.setState({
       updateConfirmTagVisible:true,
       confirmTagList:row
@@ -978,7 +977,24 @@ class AllOrdersList extends PureComponent {
 
     this.handleShowLogistics(selectedRows)
   }
-  // 订单修改
+
+  // 订单状态修改
+  OrderModification = () => {
+    const {selectedRows} = this.state;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+    if(selectedRows.length > 1){
+      return message.info('只能选择一条数据');
+    }
+    if(selectedRows[0].confirmTag === "0" || selectedRows[0].confirmTag === "7" ||selectedRows[0].confirmTag === "8" || selectedRows[0].confirmTag === "9"){
+      message.info('当前订单状态不适用变更操作');
+    }else {
+      this.changeConfirmTag(selectedRows)
+    }
+  }
+
+  // 对错误订单状态进行修改
   bulkModification = () => {
     const {selectedRows} = this.state;
     if(selectedRows.length <= 0){
@@ -1122,7 +1138,11 @@ class AllOrdersList extends PureComponent {
       // 状态变更
       this.bulkModification()
     }
-    
+    else if(code === "status-modification"){
+      // 状态修改
+      this.OrderModification()
+    }
+
   }
   // 左侧操作按钮
   renderLeftButton = (tabKey) => {

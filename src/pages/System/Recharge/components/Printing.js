@@ -25,6 +25,7 @@ class Printing extends PureComponent {
         size:10,
         current:1
       },
+      pagination:{},
       data:{}
     }
   }
@@ -42,11 +43,11 @@ class Printing extends PureComponent {
       this.setState({
         data:{
           list:resp.data.records,
-          pagination:{
-            current: resp.data.current,
-            pageSize: resp.data.size,
-            total: resp.data.total
-          }
+        },
+        pagination:{
+          current: resp.data.current,
+          pageSize: resp.data.size,
+          total: resp.data.total
         },
         loading: false
       })
@@ -62,6 +63,22 @@ class Printing extends PureComponent {
       values.deptId = getCookie("dept_id");
       this.getLogisticsPrintList(values)
     })
+  };
+
+  handleReset = () => {
+    this.props.form.resetFields();
+    this.renderSearchForm()
+  };
+
+  handleTableChange = (pagination) => {
+    const pager = { ...this.state.pagination };
+    pager.current = pagination.current;
+    this.setState({
+      pagination: pager,
+    });
+    const {params}=this.state;
+    params.current=pagination.current;
+    this.getLogisticsPrintList(params)
   };
 
   render() {
@@ -127,19 +144,15 @@ class Printing extends PureComponent {
           {/*)}*/}
           {/*</Form.Item>*/}
           <div style={{ float: 'right' }}>
-            <Button type="primary" onClick={()=>{
-              this.renderSearchForm()
-            }}>
+            <Button type="primary" onClick={()=>this.renderSearchForm()}>
               <FormattedMessage id="button.search.name" />
             </Button>
-            <Button style={{ marginLeft: 8 }} onClick={()=>{
-              onReset()
-            }}>
+            <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
               <FormattedMessage id="button.reset.name" />
             </Button>
           </div>
         </div>
-        <Table columns={columns} loading={loading} dataSource={data.list} pagination={pagination} />
+        <Table columns={columns} loading={loading} dataSource={data.list} pagination={pagination} onChange={this.handleTableChange} />
       </div>
 
     );

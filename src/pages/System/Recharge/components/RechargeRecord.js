@@ -25,7 +25,8 @@ class RechargeRecord extends PureComponent {
         size:10,
         current:1
       },
-      data:{}
+      data:{},
+      pagination:{}
     }
   }
 
@@ -42,11 +43,11 @@ class RechargeRecord extends PureComponent {
       this.setState({
         data:{
           list:resp.data.records,
-          pagination:{
-            current: resp.data.current,
-            pageSize: resp.data.size,
-            total: resp.data.total
-          }
+        },
+        pagination:{
+          current: resp.data.current,
+          pageSize: resp.data.size,
+          total: resp.data.total
         },
         loading: false
       })
@@ -57,6 +58,17 @@ class RechargeRecord extends PureComponent {
   // ============ 查询表单 ===============
   renderSearchForm = onReset => {
 
+  };
+
+  handleTableChange = (pagination) => {
+    const pager = { ...this.state.pagination };
+    pager.current = pagination.current;
+    this.setState({
+      pagination: pager,
+    });
+    const {params}=this.state;
+    params.current=pagination.current;
+    this.topUpRecordList(params)
   };
 
   render() {
@@ -126,7 +138,9 @@ class RechargeRecord extends PureComponent {
     ];
 
     return (
-      <Table columns={columns} dataSource={data.list} pagination={pagination} />
+      <div style={{margin:"20px"}}>
+        <Table columns={columns} dataSource={data.list} pagination={pagination} onChange={this.handleTableChange} />
+      </div>
     );
 
   }
