@@ -33,7 +33,7 @@ export default {
           message: response.error_description,
         });
       } else {
-        yield put({
+        yield put({ 
           type: 'changeLoginStatus',
           payload: {
             status: true,
@@ -42,6 +42,9 @@ export default {
           },
         });
         console.log(response,"response")
+        if(response.code){
+          return false;
+        }
         // 缓存全局使用数据
         // dept_id->部门id  跟当前人帐号挂钩
         setCookie("dept_id",response.dept_id)
