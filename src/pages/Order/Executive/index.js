@@ -171,7 +171,7 @@ class AllOrdersList extends PureComponent {
           width: 90,
           render: (key,row)=>{
             // 待审核、已激活、已取消、已退回-不可切换状态
-            if(key == '0' || key == '7' || key == '11' || key == '8' || key == '9'){
+            if(key == '0' || key == '7' || key == '8' || key == '9'){
               return (
                 <div>
                   <Tag color={this.getORDERSCOLOR(key)}>
@@ -987,7 +987,7 @@ class AllOrdersList extends PureComponent {
     if(selectedRows.length > 1){
       return message.info('只能选择一条数据');
     }
-    if(selectedRows[0].confirmTag === "6" || selectedRows[0].confirmTag === "7" || selectedRows[0].confirmTag === "8" || selectedRows[0].confirmTag === "9"){
+    if(selectedRows[0].confirmTag === "6" || selectedRows[0].confirmTag === "7" || selectedRows[0].confirmTag === "11" ||selectedRows[0].confirmTag === "8" || selectedRows[0].confirmTag === "9"){
       this.changeUpdateConfirmTag(selectedRows)
     }else {
       message.info('当前订单状态不适用变更操作');
