@@ -38,6 +38,6 @@ export function render(oldRender) {
     if (response && response.success) {
       authRoutes = response.data;
     }
-    oldRender();
+    oldRender(); 
   });
 }

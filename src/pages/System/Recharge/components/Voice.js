@@ -25,7 +25,8 @@ class SMS extends PureComponent {
         size:10,
         current:1
       },
-      data:{}
+      data:{},
+      pagination:{}
     }
   }
 
@@ -43,13 +44,13 @@ class SMS extends PureComponent {
       this.setState({
         data:{
           list:resp.data.records,
-          pagination:{
-            current: resp.data.current,
-            pageSize: resp.data.size,
-            total: resp.data.total
-          }
         },
-        loading: false
+        loading: false,
+        pagination:{
+          current: resp.data.current,
+          pageSize: resp.data.size,
+          total: resp.data.total
+        }
       })
     });
   }
@@ -62,6 +63,22 @@ class SMS extends PureComponent {
       values.deptId = getCookie("dept_id");
       this.getVoiceList(values)
     })
+  };
+
+  handleReset = () => {
+    this.props.form.resetFields();
+    this.renderSearchForm()
+  };
+
+  handleTableChange = (pagination) => {
+    const pager = { ...this.state.pagination };
+    pager.current = pagination.current;
+    this.setState({
+      pagination: pager,
+    });
+    const {params}=this.state;
+    params.current=pagination.current;
+    this.getVoiceList(params)
   };
 
 
@@ -171,19 +188,15 @@ class SMS extends PureComponent {
             })(<Input placeholder="请输入手机号" />)}
           </Form.Item>
           <div style={{ float: 'right' }}>
-            <Button type="primary" onClick={()=>{
-              this.renderSearchForm()
-            }}>
+            <Button type="primary" onClick={()=>this.renderSearchForm()}>
               <FormattedMessage id="button.search.name" />
             </Button>
-            <Button style={{ marginLeft: 8 }} onClick={()=>{
-              onReset()
-            }}>
+            <Button style={{ marginLeft: 8 }} onClick={this.handleReset}>
               <FormattedMessage id="button.reset.name" />
             </Button>
           </div>
         </div>
-        <Table columns={columns} loading={loading} dataSource={data.list} pagination={pagination} scroll={{ x: 1300 }} />
+        <Table columns={columns} loading={loading} dataSource={data.list} pagination={pagination} scroll={{ x: 1300 }} onChange={this.handleTableChange} />
       </div>
 
     );
