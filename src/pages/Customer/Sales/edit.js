@@ -189,7 +189,7 @@ class SenderAdd extends PureComponent {
                         message: '姓名不能为空',
                       },
                     ],
-                  })(<Input placeholder="请输入姓名" />)}
+                  })(<Input disabled placeholder="请输入姓名" />)}
                 </FormItem>
               </Col>
 
@@ -202,7 +202,7 @@ class SenderAdd extends PureComponent {
                     rules: [
                       { required: true, validator: this.validatePhone },
                     ],
-                  })(<Input placeholder="请输入手机号" />)}
+                  })(<Input disabled placeholder="请输入手机号" />)}
                 </FormItem>
               </Col>
 
