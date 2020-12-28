@@ -70,8 +70,8 @@ class RechargeRecord extends PureComponent {
     const columns = [
       {
         title: '充值时间',
-        dataIndex: 'payTime',
-        width: 200,
+        dataIndex: 'gmtPayment',
+        width:150,
         render: (res) => {
           return(
             <div>
@@ -86,20 +86,36 @@ class RechargeRecord extends PureComponent {
       },
       {
         title: '充值金额',
-        dataIndex: 'paymentAmount',
+        dataIndex: 'invoiceAmount',
         width: 150,
         ellipsis: true,
       },
       {
         title: '充值方式',
-        dataIndex: 'payWay',
+        dataIndex: 'topupType',
         width: 150,
       },
       {
         title: '支付帐号',
-        dataIndex: 'payAccount',
+        dataIndex: 'buyerLogonId',
         width: 200,
         ellipsis: true,
+      },
+      {
+        title: '下单时间',
+        dataIndex: 'gmtCreate',
+        width: 150,
+        render: (res) => {
+          return(
+            <div>
+              {
+                res === '' ?
+                  (res)
+                  :(moment(res).format('YYYY-MM-DD HH:mm:ss'))
+              }
+            </div>
+          )
+        },
       },
       // {
       //   title: '充值用户',

@@ -171,7 +171,7 @@ class AllOrdersList extends PureComponent {
           width: 90,
           render: (key,row)=>{
             // 待审核、已激活、已取消、已退回-不可切换状态
-            if(key == '0' || key == '7' || key == '8' || key == '9'){
+            if(key == '0' || key == '7' || key == '11' || key == '8' || key == '9'){
               return (
                 <div>
                   <Tag color={this.getORDERSCOLOR(key)}>
@@ -1342,6 +1342,7 @@ class AllOrdersList extends PureComponent {
     if(key === 5 || key === '5'){ text = "已签收" }
     if(key === 6 || key === '6'){ text = "跟进中" }
     if(key === 7 || key === '7'){ text = "已激活" }
+    if(key === 11 || key === '11'){ text = "退回中" }
     if(key === 8 || key === '8'){ text = "已退回" }
     if(key === 9 || key === '9'){ text = "已取消" }
     if(key === 10 || key === '10'){ text = "已过期" }
@@ -1358,6 +1359,7 @@ class AllOrdersList extends PureComponent {
     if(key === 5 || key === '5'){ text = "#F56C6C" }
     if(key === 6 || key === '6'){ text = "#F56C6C" }
     if(key === 7 || key === '7'){ text = "#67C23A" }
+    if(key === 11 || key === '11'){ text = "#909399" }
     if(key === 8 || key === '8'){ text = "#909399" }
     if(key === 9 || key === '9'){ text = "#909399" }
     if(key === 10 || key === '10'){ text = "#909399" }
