@@ -1839,7 +1839,6 @@ class AllOrdersList extends PureComponent {
                       <Radio value={7}>已激活</Radio>
                       <Radio value={8}>已退回</Radio>
                       <Radio value={9}>已取消</Radio>
-                      <Radio value={10}>已过期</Radio>
                       <Radio value={11}>退回中</Radio>
                     </Radio.Group>
                   ) : (
@@ -1848,7 +1847,6 @@ class AllOrdersList extends PureComponent {
                       <Radio value={7}>已激活</Radio>
                       <Radio value={8}>已退回</Radio>
                       <Radio value={9}>已取消</Radio>
-                      <Radio value={10}>已过期</Radio>
                       <Radio value={11}>退回中</Radio>
                     </Radio.Group>
                   )}
