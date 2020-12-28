@@ -343,7 +343,6 @@ class AllOrdersList extends PureComponent {
           },
         },
       ],
-      confirmTagVisible:false,
       updateConfirmTagVisible:false,
       currentList:{},
       confirmTagList:{},
@@ -708,19 +707,6 @@ class AllOrdersList extends PureComponent {
       }
     }
   }
-  //手动切换状态
-  changeConfirmTag = (row) => {
-    this.setState({
-      confirmTagVisible:true,
-      currentList:row
-    })
-  }
-  handleCancelConfirmTag = () => {
-    this.setState({
-      confirmTagVisible:false,
-      radioChecked:''
-    })
-  }
   // 对错误订单的状态进行变更操作
   changeUpdateConfirmTag = (row) => {
     this.setState({
@@ -738,47 +724,6 @@ class AllOrdersList extends PureComponent {
     this.setState({
       radioChecked: e.target.value
     })
-  }
-
-  handleSubmitConfirmTag = (e) => {
-    const { radioChecked, currentList } = this.state;
-    if(!radioChecked){
-      return message.error("请选择需要更改的状态");
-    }
-    Modal.confirm({
-      title: '提醒',
-      content: "此次操作无法再次变更,确认操作!",
-      okText: '确定',
-      okType: 'primary',
-      cancelText: '取消',
-      keyboard:false,
-      onOk:() => {
-        return new Promise((resolve, reject) => {
-          updateConfirmTag({
-            id:currentList.id,
-            confirmTag:radioChecked,
-            outOrderNo:currentList.outOrderNo
-          }).then(res=>{
-            if(res.code === 200){
-              message.success(res.msg);
-              this.setState({
-                confirmTagVisible:false
-              });
-              this.getDataList();
-              resolve();
-            }else{
-              message.error(res.msg);
-              reject();
-            }
-          })
-
-        }).catch(() => console.log('Oops errors!'));
-        
-      },
-      onCancel() {},
-    });
-
-    
   }
 
   handleSubmitUpdateConfirmTag = (e) => {
@@ -1664,7 +1609,6 @@ class AllOrdersList extends PureComponent {
       journalList,
       selectedRowKeys,
       noDepositVisible,
-      confirmTagVisible,
       updateConfirmTagVisible,
       textVisible,
       currentList,
@@ -1867,70 +1811,6 @@ class AllOrdersList extends PureComponent {
             })}
           </div>
         </Modal>
-          {
-            confirmTagVisible ? (
-        <Modal
-          title="修改状态"
-          visible={confirmTagVisible}
-          maskClosable={false}
-          width={560}
-          onCancel={this.handleCancelConfirmTag}
-          footer={[
-            <Button key="back" onClick={this.handleCancelConfirmTag}>
-              取消
-            </Button>,
-            <Button key="submit" type="primary" onClick={()=>this.handleSubmitConfirmTag()}>
-              确定
-            </Button>,
-          ]}
-        >
-          {/* 1、 已审核、已发货、在途中、已签收 跟进中 可以手动切换成已激活、已取消、已退回，
-          2、已激活、已取消、已退回这三种状态下不能手动切换状态
-          3、已过期  可以手动更改成已激活、已退回 */}
-          {/* {"name":"待审核",key:0},
-              {"name":"初审",key:1},
-              {"name":"已审核",key:2},
-              {"name":"已发货",key:3},
-              {"name":"在途中",key:4},
-              {"name":"已签收",key:5},
-              {"name":"跟进中",key:6},
-              {"name":"已激活",key:7},
-              {"name":"已退回",key:8},
-              {"name":"已取消",key:9},
-              {"name":"已过期",key:10},
-              {"name":"全部",key:null}, */}
-              
-              <Form>
-                <FormItem {...formAllItemLayout} label="订单状态">
-                  {currentList.confirmTag === '2' ||
-                  currentList.confirmTag === '3'||
-                  currentList.confirmTag === '4'||
-                  currentList.confirmTag === '5' ? (
-                    <Radio.Group onChange={this.onChangeRadio}>
-                      <Radio value={6}>跟进中</Radio>
-                      <Radio value={7}>已激活</Radio>
-                      <Radio value={8}>已退回</Radio>
-                      <Radio value={9}>已取消</Radio>
-                      <Radio value={10}>已过期</Radio>
-                      <Radio value={11}>退回中</Radio>
-                    </Radio.Group>
-                  ) : (
-                    <Radio.Group onChange={this.onChangeRadio}>
-                       <Radio value={6}>跟进中</Radio>
-                      <Radio value={7}>已激活</Radio>
-                      <Radio value={8}>已退回</Radio>
-                      <Radio value={9}>已取消</Radio>
-                      <Radio value={10}>已过期</Radio>
-                      <Radio value={11}>退回中</Radio>
-                    </Radio.Group>
-                  )}
-                </FormItem>
-                <FormItem {...formAllItemLayout} label="修改原因">
-                  <TextArea rows={2} disabled />
-                </FormItem>
-              </Form>
-        </Modal>) :""
-          }
 
         <Modal
           title="状态变更"
