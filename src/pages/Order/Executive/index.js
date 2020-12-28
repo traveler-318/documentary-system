@@ -990,7 +990,7 @@ class AllOrdersList extends PureComponent {
     if(selectedRows[0].confirmTag === "0" || selectedRows[0].confirmTag === "7" ||selectedRows[0].confirmTag === "8" || selectedRows[0].confirmTag === "9"){
       message.info('当前订单状态不适用变更操作');
     }else {
-      this.changeConfirmTag(selectedRows)
+
     }
   }
 
