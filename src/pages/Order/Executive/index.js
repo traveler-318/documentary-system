@@ -732,6 +732,7 @@ class AllOrdersList extends PureComponent {
     if(!radioChecked){
       return message.error("请选择需要更改的状态");
     }
+
     Modal.confirm({
       title: '提醒',
       content: "此次操作无法再次变更,确认操作!",
