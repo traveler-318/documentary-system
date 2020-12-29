@@ -423,16 +423,16 @@ class User extends PureComponent {
         dataIndex: 'email',
         width:160,
       },
-      {
-        title: '剩余金额',
-        dataIndex: 'remainingMoney',
-        width:100,
-      },
-      {
-        title: '业务员数量',
-        dataIndex: 'currentQuota',
-        width:100,
-      },
+      // {
+      //   title: '剩余金额',
+      //   dataIndex: 'remainingMoney',
+      //   width:100,
+      // },
+      // {
+      //   title: '业务员数量',
+      //   dataIndex: 'currentQuota',
+      //   width:100,
+      // },
       {
         title: '添加时间',
         dataIndex: 'createTime',

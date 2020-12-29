@@ -160,6 +160,7 @@ class LogisticsConfiguration extends PureComponent {
         // _data.productCoding = _data.productCoding || "";
       }
       this.setState({
+        disabledType:false,
         detail:{..._data},
         payamount:_data.payAmount,
         payPanyId:_data.payPanyId || '0',
@@ -404,7 +405,11 @@ class LogisticsConfiguration extends PureComponent {
             // 获取物流配置
             this.getDefaultData((res)=>{
               console.log(res,"获取物流配置成功");
-              
+
+              // 禁止编辑
+              this.setState({
+                disabledType:true
+              })
               res.senderItem.printAddr = res.senderItem.administrativeAreas +""+ res.senderItem.printAddr;
               // senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem
               let param = {
@@ -431,6 +436,7 @@ class LogisticsConfiguration extends PureComponent {
                   }
                 )
               // }
+
               if(localPrintStatus === 1){
                 param.localPrintStatus=1;
                 const { dispatch } = this.props;
@@ -443,12 +449,12 @@ class LogisticsConfiguration extends PureComponent {
                     this.getDetailsData(listID[currentIndex].id);
                   }else{
                     message.error(response.msg);
+                    this.setState({
+                      disabledType:false
+                    });
                   }
                 })
               }else {
-                this.setState({
-                  disabledType:true
-                })
                 param.localPrintStatus=0;
                 console.log(param)
                 logisticsPrintRequest(param).then(response=>{
@@ -479,6 +485,11 @@ class LogisticsConfiguration extends PureComponent {
         message.info(listID[currentIndex].userName+"客户的订单 距离首次时间超过2天 禁止打印！");
         return false
       }
+
+      // 禁止编辑
+      this.setState({
+        disabledType:true
+      })
       
       if(listID[currentIndex].logisticsPrintType === "1" || listID[currentIndex].logisticsPrintType === "2"){
           // 本地打印
@@ -491,12 +502,12 @@ class LogisticsConfiguration extends PureComponent {
               window.open(`#/order/allOrders/img`);
             }else{
               message.error(res.msg);
+              this.setState({
+                disabledType:false
+              });
             }
           })
       }else{
-        this.setState({
-          disabledType:true
-        })
         logisticsRepeatPrint([listID[currentIndex].taskId]).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
