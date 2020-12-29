@@ -4,15 +4,15 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 
-import Panel from '../../../../components/Panel';
-import FormDetailsTitle from '../../../../components/FormDetailsTitle';
-import styles from '../../../../layouts/Sword.less';
-import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../../actions/user';
-import { getUserInfo } from '../../../../services/user';
-import func from '../../../../utils/Func';
-import { tenantMode } from '../../../../defaultSettings';
-import { CITY } from '../../../../utils/city';
-import { getCookie } from '../../../../utils/support';
+import Panel from '../../../components/Panel';
+import FormDetailsTitle from '../../../components/FormDetailsTitle';
+import styles from '../../../layouts/Sword.less';
+import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
+import { getUserInfo } from '../../../services/user';
+import func from '../../../utils/Func';
+import { tenantMode } from '../../../defaultSettings';
+import { CITY } from '../../../utils/city';
+import { getCookie } from '../../../utils/support';
 
 
 
@@ -22,8 +22,10 @@ import {
   logisticsSubscription,
   getDetails,
   productTreelist,
-  logisticsPrintRequest
-} from '../../../../services/newServices/order'
+  logisticsPrintRequest,
+  localPrinting,
+  logisticsRepeatPrint,
+} from '../../../services/newServices/order'
 import {
   LOGISTICSCOMPANY,
   paymentCompany,
@@ -33,7 +35,7 @@ import {
   GENDER,
   ORDERTYPE,
   ORDERSOURCE
-} from '../data.js';
+} from './data.js';
 
 import {
   getList,
@@ -45,7 +47,7 @@ import {
   getGoodsList,
   // 附加信息
   getAdditionalList
-} from '../../../../services/newServices/logistics'
+} from '../../../services/newServices/logistics'
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -56,6 +58,8 @@ const tipsStyle = {
   marginBottom: '20px',
   color:'red'
 }
+
+let backUrl = "";
 
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -87,6 +91,7 @@ class LogisticsConfiguration extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productId :null,
+      disabledType:false
     };
   }
 
@@ -115,6 +120,18 @@ class LogisticsConfiguration extends PureComponent {
       }
     });
 
+    if(window.location.hash.indexOf("allOrders") != -1){
+      backUrl = "/order/allOrders/list?type=details"
+    }else if(window.location.hash.indexOf("salesmanOrder") != -1){
+      backUrl = "/order/salesmanOrder/list?type=details"
+    }else if(window.location.hash.indexOf("warehouseOrder") != -1){
+      backUrl = "/order/warehouseOrder/list?type=details"
+    }else if(window.location.hash.indexOf("afterSaleOrder") != -1){
+      backUrl = "/order/afterSaleOrder/list?type=details"
+    }else if(window.location.hash.indexOf("executive") != -1){
+      backUrl = "/order/executive/list?type=details"
+    }
+
   }
 
   getDetailsData = (id,type) => {
@@ -142,7 +159,6 @@ class LogisticsConfiguration extends PureComponent {
         }
         // _data.productCoding = _data.productCoding || "";
       }
-      console.log(_data,"_data_data_data")
       this.setState({
         detail:{..._data},
         payamount:_data.payAmount,
@@ -317,7 +333,6 @@ class LogisticsConfiguration extends PureComponent {
   }
 
   saveData = (values,callBack) => {
-    console.log(callBack,"123")
     const { detail, payamount } = this.state;
     console.log(detail,"detail")
     sessionStorage.logisticsConfigurationValues = JSON.stringify(values);
@@ -348,11 +363,19 @@ class LogisticsConfiguration extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail,payPanyId, productTypeId, productId, } = this.state;
+    const { detail, payPanyId, productTypeId, productId, } = this.state;
     form.validateFieldsAndScroll((err, values) => {
+      if(!values.logisticsCompany){
+        values.logisticsCompany=null
+      }
+      if(!values.logisticsNumber){
+        values.logisticsNumber=null
+      }
       values.payPanyId = payPanyId;
       values.productTypeId = productTypeId;
       values.productId = productId;
+
+      console.log(values)
       if (!err) {
         this.saveData(values)
       }
@@ -361,20 +384,27 @@ class LogisticsConfiguration extends PureComponent {
   // 保存并打印
   handlePrinting = (e) => {
     const { form } = this.props;
-    const { detail,localPrintStatus, currentIndex,payPanyId, productTypeId, productId,  } = this.state;
-    if(!detail.taskId){
+    const { detail,localPrintStatus, currentIndex, listID,payPanyId, productTypeId, productId, } = this.state;
+    if(!detail.taskId){ 
        form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
+         if(!values.logisticsCompany){
+           values.logisticsCompany=null
+         }
+         if(!values.logisticsNumber){
+           values.logisticsNumber=null
+         }
+         values.payPanyId = payPanyId;
+         values.productTypeId = productTypeId;
+         values.productId = productId;
+         if (!err) {
           console.log("先保存数据")
-          values.payPanyId = payPanyId;
-          values.productTypeId = productTypeId;
-          values.productId = productId;
+          
           // 先保存数据
           this.saveData(values,()=>{
             // 获取物流配置
             this.getDefaultData((res)=>{
               console.log(res,"获取物流配置成功");
-              const { listID } = this.state;
+              
               res.senderItem.printAddr = res.senderItem.administrativeAreas +""+ res.senderItem.printAddr;
               // senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem
               let param = {
@@ -416,6 +446,9 @@ class LogisticsConfiguration extends PureComponent {
                   }
                 })
               }else {
+                this.setState({
+                  disabledType:true
+                })
                 param.localPrintStatus=0;
                 console.log(param)
                 logisticsPrintRequest(param).then(response=>{
@@ -423,6 +456,9 @@ class LogisticsConfiguration extends PureComponent {
                     this.saveSuccess(response.msg);
                   }else{
                     message.error(response.msg);
+                    this.setState({
+                      disabledType:false
+                    });
                   }
                 })
               }
@@ -431,12 +467,49 @@ class LogisticsConfiguration extends PureComponent {
         }
       });
     }else{
-      message.error("你已经打印过了")
+      const tips=[];
+      const tips1=[];
+
+      // 当前时间戳
+      const timestamp = (new Date()).getTime();
+      const timeInterval = 24 * 60 * 60 * 1000 * 2;
+
+      const time = timestamp - (new Date(listID[currentIndex].taskCreateTime)).getTime();
+      if( time > timeInterval){
+        message.info(listID[currentIndex].userName+"客户的订单 距离首次时间超过2天 禁止打印！");
+        return false
+      }
+      
+      if(listID[currentIndex].logisticsPrintType === "1" || listID[currentIndex].logisticsPrintType === "2"){
+          // 本地打印
+          localPrinting({
+            id:listID[currentIndex].id,
+            logisticsPrintType:listID[currentIndex].logisticsPrintType
+          }).then(res=>{
+            if(res.code === 200){
+              sessionStorage.setItem('imgBase64', res.data)
+              window.open(`#/order/allOrders/img`);
+            }else{
+              message.error(res.msg);
+            }
+          })
+      }else{
+        this.setState({
+          disabledType:true
+        })
+        logisticsRepeatPrint([listID[currentIndex].taskId]).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+          }else {
+            message.error(res.msg);
+            this.setState({
+              disabledType:false
+            });
+          }
+        })
+      }
     }
   }
-
-  handleChange = value => {
-  };
 
   saveSuccess = (msg) => {
     const {currentIndex, listID} = this.state;
@@ -497,6 +570,7 @@ class LogisticsConfiguration extends PureComponent {
       currentIndex,
       listID,
       handlePrintingClick,
+      disabledType
     } = this.state;
 
     console.log(listID,"listID")
@@ -522,7 +596,7 @@ class LogisticsConfiguration extends PureComponent {
     console.log(detail,"detaildetaildetail")
 
     return (
-      <Panel title="发货配置" back="/order/allOrders">
+      <Panel title="发货配置" back={backUrl}>
         <div style={{background:"#fff",marginBottom:10,padding:"10px 10px 10px 20px"}}>
           <Button style={{marginRight:10}} type="primary" onClick={this.handleSubmit} loading={loading}>
             保存
@@ -588,6 +662,7 @@ class LogisticsConfiguration extends PureComponent {
                     ],
                   })(
                     <Cascader
+                      disabled={disabledType}
                       options={productList}
                       fieldNames={{ label: 'value'}}
                       onChange={(value, selectedOptions)=>{
@@ -612,7 +687,9 @@ class LogisticsConfiguration extends PureComponent {
                       },
                     ],
                   })(
-                  <Select placeholder={"请选择类型"}>
+                  <Select 
+                  disabled={disabledType}
+                  placeholder={"请选择类型"}>
                     {ORDERTYPE.map(item=>{
                       return (<Option value={item.key}>{item.name === "到付" ? "代收" : item.name}</Option>)
                     })}
@@ -630,6 +707,7 @@ class LogisticsConfiguration extends PureComponent {
                     ],
                   })(
                     <Input
+                      disabled={disabledType}
                       placeholder="请输入SN"
                       onPressEnter={this.handlePrinting}
                     />
@@ -645,7 +723,9 @@ class LogisticsConfiguration extends PureComponent {
                     //   },
                     // ],
                   })(
-                  <Select placeholder={"请选择物流公司"}>
+                  <Select 
+                    disabled={disabledType}
+                    placeholder={"请选择物流公司"}>
                     {Object.keys(LOGISTICSCOMPANY).map(key=>{
                       return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
                     })}
@@ -661,7 +741,9 @@ class LogisticsConfiguration extends PureComponent {
                     //     message: '请输入物流单号',
                     //   },
                     // ],
-                  })(<Input placeholder="请输入物流单号" />)}
+                  })(<Input 
+                    disabled={disabledType}
+                  placeholder="请输入物流单号" />)}
                 </FormItem>
               </Col>
               <Col span={12}>

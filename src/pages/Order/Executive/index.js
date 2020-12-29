@@ -732,6 +732,7 @@ class AllOrdersList extends PureComponent {
     if(!radioChecked){
       return message.error("请选择需要更改的状态");
     }
+
     Modal.confirm({
       title: '提醒',
       content: "此次操作无法再次变更,确认操作!",
@@ -1470,7 +1471,7 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setListId`,
       payload: data,
     });
-    router.push('/order/allOrders/logisticsConfiguration');
+    router.push('/order/executive/logisticsConfiguration');
 
   }
 
@@ -1839,7 +1840,6 @@ class AllOrdersList extends PureComponent {
                       <Radio value={7}>已激活</Radio>
                       <Radio value={8}>已退回</Radio>
                       <Radio value={9}>已取消</Radio>
-                      <Radio value={10}>已过期</Radio>
                       <Radio value={11}>退回中</Radio>
                     </Radio.Group>
                   ) : (
@@ -1848,7 +1848,6 @@ class AllOrdersList extends PureComponent {
                       <Radio value={7}>已激活</Radio>
                       <Radio value={8}>已退回</Radio>
                       <Radio value={9}>已取消</Radio>
-                      <Radio value={10}>已过期</Radio>
                       <Radio value={11}>退回中</Radio>
                     </Radio.Group>
                   )}
