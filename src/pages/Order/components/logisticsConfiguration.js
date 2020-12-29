@@ -386,6 +386,12 @@ class LogisticsConfiguration extends PureComponent {
   handlePrinting = (e) => {
     const { form } = this.props;
     const { detail,localPrintStatus, currentIndex, listID,payPanyId, productTypeId, productId, } = this.state;
+
+    if(detail.logisticsNumber){
+      message.info("当前已有物流信息不能执行打印操作");
+      return false;
+    }
+
     if(!detail.taskId){ 
        form.validateFieldsAndScroll((err, values) => {
          if(!values.logisticsCompany){
