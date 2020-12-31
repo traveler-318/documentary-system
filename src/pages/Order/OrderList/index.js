@@ -1440,7 +1440,7 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setListId`,
       payload: data,
     });
-    router.push('/order/allOrders/logisticsConfiguration');
+    router.push('/order/orderList/logisticsConfiguration');
 
     // this.setState({
     //   logisticsVisible:true

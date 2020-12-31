@@ -8,7 +8,7 @@ export const TEMPID =[
   {value:'申通快递',id:"0926b46c331444c68838a65c1d51be15"},
   {value:'顺丰速运',id:"47da0036ad9e4d99b7ca5cf56cd92ba2"},
   {value:'德邦',id:"39b4fe4306774d29b2c5a6898a91b04d"},
-  {value:'京东物流',id:"640677b0599442f2becf631c30699de7"},
+  {value:'京东物流',id:"b9a5b5e005f5461ba51f880e32685688"},
   // {value:'中通快递',id:"613da7bab296496a8a6e4907a8a3f0cc"},
   {value:'中通快递',id:"b2eb9a48046c49f098cbc91ccbb75b88"},
   {value:'天天快递',id:"cd378bc5ea0c47c4ae2497bc7e61c04d"},

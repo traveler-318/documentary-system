@@ -552,7 +552,7 @@ export default [
               { path: '/order/allOrders/list', component: './Order/AllOrders/index' },
               { path: '/order/allOrders/add', component: './Order/components/add' },
               { path: '/order/allOrders/edit/:id', component: './Order/components/edit' },
-              { path: '/order/allOrders/logisticsConfiguration', component: './Order/AllOrders/components/logisticsConfiguration' },
+              { path: '/order/allOrders/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
               { path: '/order/allOrders/img', component: './Order/components/img' },
             ],
           },
@@ -563,7 +563,7 @@ export default [
               { path: '/order/executive/list', component: './Order/Executive/index' },
               { path: '/order/executive/add', component: './Order/components/add' },
               { path: '/order/executive/edit/:id', component: './Order/components/edit' },
-              { path: '/order/executive/logisticsConfiguration', component: './Order/Executive/components/logisticsConfiguration' },
+              { path: '/order/executive/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
             ],
           },
           {
@@ -573,7 +573,7 @@ export default [
               { path: '/order/salesmanOrder/list', component: './Order/SalesmanOrder/index' },
               { path: '/order/salesmanOrder/add', component: './Order/components/add' },
               { path: '/order/salesmanOrder/edit/:id', component: './Order/components/edit' },
-              { path: '/order/salesmanOrder/logisticsConfiguration', component: './Order/SalesmanOrder/components/logisticsConfiguration' },
+              { path: '/order/salesmanOrder/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
             ],
           },
           {
@@ -583,7 +583,7 @@ export default [
               { path: '/order/warehouseOrder/list', component: './Order/WarehouseOrder/index' },
               { path: '/order/warehouseOrder/add', component: './Order/components/add' },
               { path: '/order/warehouseOrder/edit/:id', component: './Order/components/edit' },
-              { path: '/order/warehouseOrder/logisticsConfiguration', component: './Order/WarehouseOrder/components/logisticsConfiguration' },
+              { path: '/order/warehouseOrder/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
             ],
           },
           {
@@ -593,7 +593,7 @@ export default [
               { path: '/order/afterSaleOrder/list', component: './Order/AfterSaleOrder/index' },
               { path: '/order/afterSaleOrder/add', component: './Order/components/add' },
               { path: '/order/afterSaleOrder/edit/:id', component: './Order/components/edit' },
-              { path: '/order/afterSaleOrder/logisticsConfiguration', component: './Order/AfterSaleOrder/components/logisticsConfiguration' },
+              { path: '/order/afterSaleOrder/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
             ],
           },
           {
@@ -615,7 +615,7 @@ export default [
               { path: '/orders/orderList/list/:id', component: './Order/OrderList/index' },
               { path: '/orders/orderList/add', component: './Order/OrderList/add' },
               { path: '/orders/orderList/edit/:id', component: './Order/OrderList/edit' },
-              { path: '/orders/orderList/logisticsConfiguration', component: './Order/OrderList/components/logisticsConfiguration' },
+              { path: '/orders/orderList/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
               { path: '/orders/orderList/img', component: './Order/OrderList/img' },
             ],
           },

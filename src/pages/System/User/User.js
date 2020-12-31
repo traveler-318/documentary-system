@@ -423,16 +423,16 @@ class User extends PureComponent {
         dataIndex: 'email',
         width:160,
       },
-      {
-        title: '剩余金额',
-        dataIndex: 'remainingMoney',
-        width:100,
-      },
-      {
-        title: '业务员数量',
-        dataIndex: 'currentQuota',
-        width:100,
-      },
+      // {
+      //   title: '剩余金额',
+      //   dataIndex: 'remainingMoney',
+      //   width:100,
+      // },
+      // {
+      //   title: '业务员数量',
+      //   dataIndex: 'currentQuota',
+      //   width:100,
+      // },
       {
         title: '添加时间',
         dataIndex: 'createTime',
@@ -448,56 +448,56 @@ class User extends PureComponent {
           )
         },
       },
-      {
-        title: '告警开关',
-        dataIndex: 'alarmStatus',
-        width: 80,
-        render: (key, row) => {
-          return(
-            <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'alarmStatus')}} />
-          )
-        },
-      },
-      {
-        title: '二维码开关',
-        dataIndex: 'qrcodeStatus',
-        width: 100,
-        render: (key, row) => {
-          return(
-            <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'qrcodeStatus')}} />
-          )
-        },
-      },
-      {
-        title: '物流查询开关',
-        dataIndex: 'logisticsStatus',
-        width: 110,
-        render: (key, row) => {
-          return(
-            <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'logisticsStatus')}} />
-          )
-        },
-      },
-      {
-        title: '短信二维码开关',
-        dataIndex: 'smsStatus',
-        width: 120,
-        render: (key, row) => {
-          return(
-            <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'smsStatus')}} />
-          )
-        },
-      },
-      {
-        title: '发货提醒开关',
-        dataIndex: 'shipmentRemindStatus',
-        width: 110,
-        render: (key, row) => {
-          return(
-            <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row, 'shipmentRemindStatus')}} />
-          )
-        },
-      },
+      // {
+      //   title: '告警开关',
+      //   dataIndex: 'alarmStatus',
+      //   width: 80,
+      //   render: (key, row) => {
+      //     return(
+      //       <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'alarmStatus')}} />
+      //     )
+      //   },
+      // },
+      // {
+      //   title: '二维码开关',
+      //   dataIndex: 'qrcodeStatus',
+      //   width: 100,
+      //   render: (key, row) => {
+      //     return(
+      //       <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'qrcodeStatus')}} />
+      //     )
+      //   },
+      // },
+      // {
+      //   title: '物流查询开关',
+      //   dataIndex: 'logisticsStatus',
+      //   width: 110,
+      //   render: (key, row) => {
+      //     return(
+      //       <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'logisticsStatus')}} />
+      //     )
+      //   },
+      // },
+      // {
+      //   title: '短信二维码开关',
+      //   dataIndex: 'smsStatus',
+      //   width: 120,
+      //   render: (key, row) => {
+      //     return(
+      //       <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'smsStatus')}} />
+      //     )
+      //   },
+      // },
+      // {
+      //   title: '发货提醒开关',
+      //   dataIndex: 'shipmentRemindStatus',
+      //   width: 110,
+      //   render: (key, row) => {
+      //     return(
+      //       <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row, 'shipmentRemindStatus')}} />
+      //     )
+      //   },
+      // },
     ];
 
 

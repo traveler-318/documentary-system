@@ -192,7 +192,6 @@ class SenderAdd extends PureComponent {
                   })(<Input disabled placeholder="请输入姓名" />)}
                 </FormItem>
               </Col>
-
             </Row>
             <Row gutter={24}>
             <Col span={10}>
