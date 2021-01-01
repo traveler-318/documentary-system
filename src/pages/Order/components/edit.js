@@ -208,7 +208,18 @@ class OrdersEdit extends PureComponent {
         values.productTypeId = productTypeId; 
         values.productId = productId;
       }
-
+      if (values.logisticsCompany === ''){
+        values.logisticsCompany=null
+      }
+      if (values.logisticsNumber === ''){
+        values.logisticsNumber=null
+      }
+      if (values.orderNote === ''){
+        values.orderNote=null
+      }
+      if (values.productCoding === ''){
+        values.productCoding=null
+      }
       if (!err) {
         const params = {
           ...values

@@ -806,11 +806,11 @@ class LogisticsConfiguration extends PureComponent {
                     </Radio.Group>
                   )}
                 </FormItem>
-                {/* <FormItem {...formAllItemLayout} label="备注信息">
+                 <FormItem {...formAllItemLayout} label="备注信息">
                   {getFieldDecorator('orderNote')(
                     <TextArea rows={4} />
                   )}
-                </FormItem> */}
+                </FormItem>
               </Col>
             </Row>
 

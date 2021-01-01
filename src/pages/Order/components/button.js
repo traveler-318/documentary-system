@@ -144,7 +144,7 @@ class SearchButton extends PureComponent {
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
-                }else if(tabKey === '2' && item.code === "deliver-goods"){
+                }else if(tabKey === '2' && (item.code === "deliver-goods" || item.code === "subscribe")){
                     // 已终审
                     return (
                         <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{

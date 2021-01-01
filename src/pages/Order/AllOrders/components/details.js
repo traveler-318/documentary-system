@@ -60,7 +60,6 @@ class Details extends PureComponent {
         values.id = detail.id
         values.smsConfirmation = sms_confirmation;
         values.tenantId = detail.tenantId;
-
         equipment(values).then(res=>{
           this.setState({loading:false });
           if(res.code === 200){
