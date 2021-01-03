@@ -20,6 +20,13 @@ export async function topUpRecordList(params) {
     body: params,
   });
 }
+// ============ 消费报表明细 ===============
+export async function statisticsformtaskList(params) {
+  return request(`/api/tracking_statistics_form_task/statisticsformtask/list`, {
+    method: 'POST',
+    body: params,
+  });
+}
 // ============ 短信发送明细 ===============
 export async function smsList(params) {
   return request(`/api/sms_receipt/receipt/smsList`, {
