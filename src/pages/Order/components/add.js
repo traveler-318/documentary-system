@@ -57,15 +57,15 @@ class OrdersAdd extends PureComponent {
     this.getTreeList();
 
     if(window.location.hash.indexOf("allOrders") != -1){
-      backUrl = "/order/allOrders/list?type=details"
+      backUrl = "/order/allOrders/list"
     }else if(window.location.hash.indexOf("salesmanOrder") != -1){
-      backUrl = "/order/salesmanOrder/list?type=details"
+      backUrl = "/order/salesmanOrder/list"
     }else if(window.location.hash.indexOf("warehouseOrder") != -1){
-      backUrl = "/order/warehouseOrder/list?type=details"
+      backUrl = "/order/warehouseOrder/list"
     }else if(window.location.hash.indexOf("afterSaleOrder") != -1){
-      backUrl = "/order/afterSaleOrder/list?type=details"
+      backUrl = "/order/afterSaleOrder/list"
     }else if(window.location.hash.indexOf("executive") != -1){
-      backUrl = "/order/executive/list?type=details"
+      backUrl = "/order/executive/list"
     }
   }
 
@@ -129,7 +129,7 @@ class OrdersAdd extends PureComponent {
         createData(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
-            router.push('/order/allOrders');
+            router.push(backUrl);
           }
         })
       }
@@ -214,7 +214,7 @@ class OrdersAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back={backUrl} action={action}>
+      <Panel title="新增" back={`${backUrl}?type=details`} action={action}>
         <Form style={{ marginTop: 8 }}>
           <div></div>
           <Card title="创建客户" className={styles.card} bordered={false}>
