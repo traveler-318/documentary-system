@@ -325,6 +325,12 @@ class OrdersEdit extends PureComponent {
     })
   };
 
+  RadioChange = e => {
+    this.setState({
+      value: e.target.value,
+    });
+  };
+
   clickEdit = () => {
     this.setState({
       edit:false,
@@ -608,12 +614,20 @@ class OrdersEdit extends PureComponent {
                         </Select>
                       )}
                     </FormItem>
-                    <FormItem {...formAllItemLayout} label="物流单号"  className={styles.salesman}>
+                    <FormItem {...formAllItemLayout} label="物流单号">
                       {getFieldDecorator('logisticsNumber', {
                         initialValue: detail.logisticsNumber,
                       })(<Input
                         disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
                         placeholder="请输入物流单号" />)}
+                    </FormItem>
+                    <FormItem {...formAllItemLayout} label="开启提醒"  className={styles.salesman}>
+                      {getFieldDecorator('voiceStatus', {
+                        initialValue: parseInt(detail.voiceStatus),
+                      })(<Radio.Group  onChange={this.RadioChange} value={this.state.value}>
+                        <Radio disabled={edit} value={1}>是</Radio>
+                        <Radio disabled={edit} value={0}>否</Radio>
+                      </Radio.Group>)}
                     </FormItem>
 
                     <FormDetailsTitle title="其他信息" />

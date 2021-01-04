@@ -105,6 +105,13 @@ export async function updateConfirmTag(params) {
     body: params,
   });
 }
+// 逾期开关
+export async function updateVoiceStatus(params) {
+  return request('/api/order/order/updateVoiceStatus', {
+    method: 'POST',
+    body: params,
+  });
+}
 // /order/order/logisticsSubscription
 
 // 首次打印

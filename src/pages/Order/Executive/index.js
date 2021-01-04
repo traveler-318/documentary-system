@@ -47,7 +47,8 @@ import {
   batchLogisticsSubscription,
   getCurrenttree,
   getCurrentsalesman,
-  updateConfirmTag
+  updateConfirmTag,
+  updateVoiceStatus
 } from '../../../services/newServices/order';
 
 // getList as getSalesmanLists,
@@ -344,6 +345,7 @@ class AllOrdersList extends PureComponent {
         },
       ],
       updateConfirmTagVisible:false,
+      voiceStatusVisible:false,
       currentList:{},
       confirmTagList:{},
       _listArr:[],
@@ -920,7 +922,6 @@ class AllOrdersList extends PureComponent {
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
-
     this.handleShowLogistics(selectedRows)
   }
 
@@ -940,6 +941,79 @@ class AllOrdersList extends PureComponent {
       this.changeUpdateConfirmTag(selectedRows);
     }
   }
+
+  // 逾期提醒
+  overdueClick = () => {
+    const {selectedRows} = this.state;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+    this.voiceStatusConfirmTag(selectedRows);
+  }
+
+  // 逾期开关
+  voiceStatusConfirmTag = (row) => {
+    this.setState({
+      voiceStatusVisible:true
+    })
+  }
+
+  handleCancelvoiceStatus = () => {
+    this.setState({
+      voiceStatusVisible:false,
+      radioChecked:''
+    })
+  }
+
+  // 逾期开关修改提交
+  handleSubmitVoiceStatus= () => {
+    const {selectedRows,radioChecked} = this.state;
+
+    console.log(selectedRows)
+    console.log(radioChecked)
+    if(radioChecked === '' || radioChecked === undefined){
+      return message.error("请选择需要更改的状态");
+    }
+    let list=[];
+    selectedRows.map( item =>{
+      list.push({
+        id:item.id,
+        voiceStatus: radioChecked
+      })
+    })
+    console.log(list)
+
+    Modal.confirm({
+      title: '提醒',
+      content: "此次操作无法再次变更,确认操作!",
+      okText: '确定',
+      okType: 'primary',
+      cancelText: '取消',
+      keyboard:false,
+      onOk:() => {
+        return new Promise((resolve, reject) => {
+          updateVoiceStatus(list).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              this.setState({
+                voiceStatusVisible:false
+              });
+              this.getDataList();
+              resolve();
+            }else{
+              message.error(res.msg);
+              reject();
+            }
+          })
+
+        }).catch(() => console.log('Oops errors!'));
+
+      },
+      onCancel() {},
+    });
+  }
+
+
   // 批量订阅
   bulkSubscription = () => {
     const {selectedRows,_listArr} = this.state;
@@ -1051,8 +1125,10 @@ class AllOrdersList extends PureComponent {
     }else if(code === "export"){
       // 导出
       this.exportFile()
+    }else if(code === "overdue"){
+      // 逾期开关
+      this.overdueClick()
     }
-
     else if(code === "transfer"){
       // 转移客户
       this.handleShowTransfer()
@@ -1590,6 +1666,7 @@ class AllOrdersList extends PureComponent {
       selectedRowKeys,
       noDepositVisible,
       updateConfirmTagVisible,
+      voiceStatusVisible,
       textVisible,
       currentList,
       excelVisible,
@@ -1833,6 +1910,32 @@ class AllOrdersList extends PureComponent {
             </FormItem>
             <FormItem {...formAllItemLayout} label="修改原因">
               <TextArea rows={2} disabled />
+            </FormItem>
+          </Form>
+        </Modal>
+
+        <Modal
+          title="逾期开关"
+          visible={voiceStatusVisible}
+          maskClosable={false}
+          destroyOnClose
+          width={400}
+          onCancel={this.handleCancelvoiceStatus}
+          footer={[
+            <Button key="back" onClick={this.handleCancelvoiceStatus}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" onClick={()=>this.handleSubmitVoiceStatus()}>
+              确定
+            </Button>,
+          ]}
+        >
+          <Form>
+            <FormItem {...formAllItemLayout} label="开启提醒">
+              <Radio.Group onChange={this.onChangeRadio}>
+                <Radio value={1}>是</Radio>
+                <Radio value={0}>否</Radio>
+              </Radio.Group>
             </FormItem>
           </Form>
         </Modal>
