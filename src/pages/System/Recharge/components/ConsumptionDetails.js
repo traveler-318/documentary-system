@@ -23,24 +23,12 @@ class ConsumptionDetails extends PureComponent {
       loading:false,
       params:{
         size:10,
-        current:1
+        current:1,
+        formType:1
       },
-      data:[
-        {
-          "titme":"2021-01-03",
-          "smsSendSum":[
-            {"code":1,"name":"系统导出数据操作"},
-            {"code":1,"name":"跟单系统注册"}
-          ],
-          code:"124312",
-          alert:"1321",
-          "voiceSum":"1",
-          "subscriptSum":"2",
-          "printSum":"3",
-          "totalPrice":"4"
-        }
-      ],
-      pagination:{}
+      data:{},
+      pagination:{},
+      columns:[]
     }
   }
 
@@ -55,17 +43,18 @@ class ConsumptionDetails extends PureComponent {
     // })
     statisticsformtaskList(params).then(resp => {
       console.log(resp)
-      // this.setState({
-      //   data:{
-      //     list:resp.data.records,
-      //   },
-      //   pagination:{
-      //     current: resp.data.current,
-      //     pageSize: resp.data.size,
-      //     total: resp.data.total
-      //   },
-      //   loading: false
-      // })
+      let list=resp.data.records;
+
+      this.setState({
+        data:list,
+        pagination:{
+          current: resp.data.current,
+          pageSize: resp.data.size,
+          total: resp.data.total
+        },
+        loading: false
+      })
+
     });
   }
 
@@ -102,13 +91,11 @@ class ConsumptionDetails extends PureComponent {
 
     let data = [
       {
-        "titme":"2021-01-03",
+        "statisticsTime":"2021-01-03",
         "smsSendSum":[
-          {"code":1,"name":"系统导出数据操作"},
-          {"code":3,"name":"跟单系统注册"}
+          {"count":1,"smsCategory":"系统导出数据操作"},
+          {"count":1,"smsCategory":"跟单系统注册"}
         ],
-        code:"124312",
-        alert:"1321",
         "voiceSum":"1",
         "subscriptSum":"2",
         "printSum":"3",
@@ -118,7 +105,7 @@ class ConsumptionDetails extends PureComponent {
     const columns = [
       {
         title: '统计日期',
-        dataIndex: 'titme',
+        dataIndex: 'statisticsTime',
         width: 150,
         ellipsis: true,
       },
@@ -159,35 +146,28 @@ class ConsumptionDetails extends PureComponent {
         children:[
           {
             title:'物流订阅',
-            dataIndex: 'sendTime',
+            dataIndex: '',
             width: 150,
           },{
             title:'打印面单',
-            dataIndex: 'sendTime',
+            dataIndex: '',
             width: 150,
           },
         ]
       },
     ];
 
-
     data.map(item=>{
-
       let children =[] ;
-
       item.smsSendSum.map((items,index)=>{
         children.push({
-          title:items.name,
-          dataIndex: 'code' +index
+          title:items.smsCategory,
+          dataIndex: 'count' +index
         })
-        item['code'+index] = items.code
+        item['count'+index] = items.count
       })
-
       columns[1].children = children
-
     })
-
-    console.log(data)
 
     return (
       <div style={{margin:"20px"}} className={styles.sms}>

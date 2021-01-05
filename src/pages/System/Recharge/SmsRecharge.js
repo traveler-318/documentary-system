@@ -185,7 +185,7 @@ class SmsRecharge extends PureComponent {
             <RechargeRecord />
           </TabPane>
           <TabPane tab='消费报表' key="2">
-            {/*<ConsumptionDetails />*/}
+            <ConsumptionDetails />
           </TabPane>
           <TabPane tab='短信发送明细' key="3">
             <SMS />
@@ -193,10 +193,10 @@ class SmsRecharge extends PureComponent {
           <TabPane tab='语音发送明细' key="4">
             <Voice />
           </TabPane>
-          <TabPane tab='物流订阅' key="5">
+          <TabPane tab='物流订阅明细' key="5">
             <Logistics />
           </TabPane>
-          <TabPane tab='打印面单' key="6">
+          <TabPane tab='打印面单明细' key="6">
             <Printing />
           </TabPane>
         </Tabs>
