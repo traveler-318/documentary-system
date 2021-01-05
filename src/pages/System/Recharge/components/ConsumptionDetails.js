@@ -28,7 +28,7 @@ class ConsumptionDetails extends PureComponent {
       },
       data:{},
       pagination:{},
-      columns:[]
+      value:1
     }
   }
 
@@ -38,15 +38,15 @@ class ConsumptionDetails extends PureComponent {
   }
 
   getStatisticsformtaskList= (params) => {
-    // this.setState({
-    //   loading:true
-    // })
+    this.setState({
+      loading:true
+    })
     statisticsformtaskList(params).then(resp => {
       console.log(resp)
-      let list=resp.data.records;
-
       this.setState({
-        data:list,
+        data:{
+          list:resp.data.records
+        },
         pagination:{
           current: resp.data.current,
           pageSize: resp.data.size,
@@ -62,9 +62,10 @@ class ConsumptionDetails extends PureComponent {
   // ============ 查询表单 ===============
   renderSearchForm = onReset => {
     const { form } = this.props;
+    const {value}=this.state;
     form.validateFieldsAndScroll((err, values) => {
-      console.log(values)
       values.deptId = getCookie("dept_id");
+      values.formType = value;
       this.getStatisticsformtaskList(values)
     })
   };
@@ -80,6 +81,12 @@ class ConsumptionDetails extends PureComponent {
     this.getStatisticsformtaskList(params)
   };
 
+  RadioChange = e => {
+    this.setState({
+      value: e.target.value,
+    });
+  };
+
   render() {
     const code = 'ConsumptionDetails';
     const {
@@ -87,58 +94,61 @@ class ConsumptionDetails extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const {loading,pagination} = this.state;
+    const {loading,pagination,data,value} = this.state;
 
-    let data = [
-      {
-        "statisticsTime":"2021-01-03",
-        "smsSendSum":[
-          {"count":1,"smsCategory":"系统导出数据操作"},
-          {"count":1,"smsCategory":"跟单系统注册"}
-        ],
-        "voiceSum":"1",
-        "subscriptSum":"2",
-        "printSum":"3",
-        "totalPrice":"4"
-      }
-    ]
     const columns = [
       {
         title: '统计日期',
         dataIndex: 'statisticsTime',
-        width: 150,
+        width: 120,
         ellipsis: true,
       },
       {
         title: '短信发送总量',
-        // children:[
-        //   {
-        //     title:'验证码',
-        //     dataIndex: 'smsCategory',
-        //     width: 100,
-        //   },{
-        //     title:'下单提醒',
-        //     dataIndex: 'smsCategory',
-        //     width: 100,
-        //   },{
-        //     title:'发货提醒',
-        //     dataIndex: 'smsCategory',
-        //     width: 100,
-        //   },{
-        //     title:'签收提醒',
-        //     dataIndex: 'smsCategory',
-        //     width: 100,
-        //   },{
-        //     title:'激活提醒',
-        //     dataIndex: 'smsCategory',
-        //     width: 100,
-        //   },
-        // ]
+        children:[
+          {
+            title:'首页短信领取',
+            dataIndex: 'homePageSms',
+            width: 120,
+          },{
+            title:'跟单宝系统注册',
+            dataIndex: 'gdSysRegister',
+            width: 130,
+          },{
+            title:'系统导出数据',
+            dataIndex: 'sysExport',
+            width: 120,
+          },{
+            title:'免费通道下单',
+            dataIndex: 'freeChannelOrderSuccess',
+            width: 120,
+          },{
+            title:'免押宝数据同步',
+            dataIndex: 'mianyaSysDataSync',
+            width: 130,
+          },{
+            title:'物流通知',
+            dataIndex: 'logisticsNotice',
+            width: 120,
+          },{
+            title:'逾期提醒',
+            dataIndex: 'lateRemind',
+            width: 120,
+          },{
+            title:'逾期定时提醒',
+            dataIndex: 'lateRemindOfTask',
+            width: 120,
+          },{
+            title:'签收发送',
+            dataIndex: 'signAutoSend',
+            width: 120,
+          },
+        ]
       },
       {
         title: '语音总量',
         dataIndex: 'voiceSum',
-        width: 200,
+        width: 100,
         ellipsis: true,
       },
       {
@@ -146,60 +156,38 @@ class ConsumptionDetails extends PureComponent {
         children:[
           {
             title:'物流订阅',
-            dataIndex: '',
-            width: 150,
+            dataIndex: 'subscriptSum',
+            width: 120,
           },{
             title:'打印面单',
-            dataIndex: '',
-            width: 150,
+            dataIndex: 'printSum',
+            width: 120,
           },
         ]
       },
-    ];
+      {
+        title: '消费金额',
+        dataIndex: 'totalPrice',
+        width: 100,
+        ellipsis: true,
+      },
 
-    data.map(item=>{
-      let children =[] ;
-      item.smsSendSum.map((items,index)=>{
-        children.push({
-          title:items.smsCategory,
-          dataIndex: 'count' +index
-        })
-        item['count'+index] = items.count
-      })
-      columns[1].children = children
-    })
+    ];
 
     return (
       <div style={{margin:"20px"}} className={styles.sms}>
         <div className={"default_search_form"}>
-          <Form.Item label="订单号">
-            {getFieldDecorator('outOrderNo',{
-            })(<Input placeholder="请输入订单号" />)}
+          <Form.Item label="时间">
+            <Radio.Group onChange={this.RadioChange} value={value}>
+              <Radio value={0}>按日</Radio>
+              <Radio value={1}>按月</Radio>
+            </Radio.Group>
           </Form.Item>
-          <Form.Item label="手机号">
-            {getFieldDecorator('userPhone',{
-            })(<Input placeholder="请输入手机号" />)}
-          </Form.Item>
-          {/*<Form.Item label="发送时间">*/}
-            {/*{getFieldDecorator('sendTime', {*/}
-            {/*})(*/}
-              {/*<RangePicker showTime size={"default"} />*/}
-            {/*)}*/}
-          {/*</Form.Item>*/}
-          <div style={{ float: 'right' }}>
-            <Button type="primary" onClick={()=>{
-              this.renderSearchForm()
-            }}>
-              <FormattedMessage id="button.search.name" />
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={()=>{
-              onReset()
-            }}>
-              <FormattedMessage id="button.reset.name" />
-            </Button>
-          </div>
+          <Button type="primary" onClick={()=>this.renderSearchForm()}>
+            <FormattedMessage id="button.search.name" />
+          </Button>
         </div>
-        <Table columns={columns} loading={loading} dataSource={data} pagination={pagination} onChange={this.handleTableChange}/>
+        <Table columns={columns} loading={loading} dataSource={data.list} pagination={pagination} onChange={this.handleTableChange} scroll={{ x: 1600}} />
       </div>
 
     );
