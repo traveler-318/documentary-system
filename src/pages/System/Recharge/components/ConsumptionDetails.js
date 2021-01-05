@@ -127,6 +127,10 @@ class ConsumptionDetails extends PureComponent {
             dataIndex: 'mianyaSysDataSync',
             width: 130,
           },{
+            title:'余额不足提醒',
+            dataIndex: 'remainingMoneyNotOfTask',
+            width: 130,
+          },{
             title:'物流通知',
             dataIndex: 'logisticsNotice',
             width: 120,
