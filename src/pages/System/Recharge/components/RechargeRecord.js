@@ -97,7 +97,7 @@ class RechargeRecord extends PureComponent {
         },
       },
       {
-        title: '充值金额',
+        title: '充值金额（元）',
         dataIndex: 'invoiceAmount',
         width: 150,
         ellipsis: true,

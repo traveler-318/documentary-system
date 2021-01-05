@@ -170,7 +170,7 @@ class ConsumptionDetails extends PureComponent {
         ]
       },
       {
-        title: '消费金额',
+        title: '消费金额(元)',
         dataIndex: 'totalPrice',
         width: 100,
         ellipsis: true,
