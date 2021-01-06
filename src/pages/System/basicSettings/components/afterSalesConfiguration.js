@@ -153,16 +153,16 @@ class BaseView extends Component {
         <div className={styles.basicConfiguration}>
           <Row gutter={24}>
               <Col span={12}>
-              <FormItem {...formItemLayout} label={'提示内容'}>
-                {getFieldDecorator('promptContent', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入提示内容',
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
+              {/*<FormItem {...formItemLayout} label={'提示内容'}>*/}
+                {/*{getFieldDecorator('promptContent', {*/}
+                  {/*rules: [*/}
+                    {/*{*/}
+                      {/*required: true,*/}
+                      {/*message: '请输入提示内容',*/}
+                    {/*},*/}
+                  {/*],*/}
+                {/*})(<Input />)}*/}
+              {/*</FormItem>*/}
               <FormItem {...formItemLayout} label={'投诉电话'}>
                 {getFieldDecorator('aftersalesPhone',{
                   rules: [

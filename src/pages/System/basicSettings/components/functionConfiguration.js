@@ -138,20 +138,18 @@ class BaseView extends Component {
         <div className="ant-upload-text">上传头像</div>
       </div>
     );
-    
 
     return (
         <div className={styles.basicConfiguration}>
           <Row gutter={24}>
               <Col span={12}>
-              
-              <FormItem {...formItemLayout} label={'有效期天数'}>
-                {getFieldDecorator('periodValidity', {
-                  rules: [{ validator: this.checkInteger }],
-                })(
-                  <Input />
-                )}
-              </FormItem>
+              {/*<FormItem {...formItemLayout} label={'有效期天数'}>*/}
+                {/*{getFieldDecorator('periodValidity', {*/}
+                  {/*rules: [{ validator: this.checkInteger }],*/}
+                {/*})(*/}
+                  {/*<Input />*/}
+                {/*)}*/}
+              {/*</FormItem>*/}
                 <FormItem {...formItemLayout} label={'过期天数'}>
                   {getFieldDecorator('daysOverdue ', {
                     rules: [{ validator: this.checkInteger }],
