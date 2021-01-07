@@ -13,7 +13,7 @@ import {
   Col,
   Select, Tooltip,
 } from 'antd';
-import { getUserInfo, updateInfo } from '../../../../services/user';
+import { getUserInfo, updateInfo ,propertyUpdate,getSalesmanInfo} from '../../../../services/user';
 import { getToken } from '../../../../utils/authority';
 
 import styles from './index.less';
@@ -26,14 +26,19 @@ const { TextArea } = Input;
 // ]
 @Form.create()
 class BaseView extends Component {
-  state = {
-    userId: '',
-    avatar: '',
-    loading: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      userId: '',
+      avatar: '',
+      loading: false,
+      details: {}
+    };
+  }
 
   componentWillMount() {
     this.setBaseInfo();
+
   }
 
   setBaseInfo = () => {
@@ -41,15 +46,28 @@ class BaseView extends Component {
     getUserInfo().then(resp => {
       if (resp.success) {
         const userInfo = resp.data;
-        Object.keys(form.getFieldsValue()).forEach(key => {
-          const obj = {};
-          obj[key] = userInfo[key];
-          form.setFieldsValue(obj);
-        });
         this.setState({ userId: userInfo.id, avatar: userInfo.avatar });
+        this.salesmanInfo(userInfo);
       } else {
         message.error(resp.msg || '获取数据失败');
       }
+    });
+  };
+
+  salesmanInfo = (userInfo) => {
+    getSalesmanInfo().then(resp => {
+      console.log(resp)
+      const { form } = this.props;
+
+      const _data = {...userInfo,...resp.data}
+      Object.keys(form.getFieldsValue()).forEach(key => {
+        const obj = {};
+        obj[key] = _data[key];
+        form.setFieldsValue(obj);
+      });
+      this.setState({
+        details:resp.data
+      })
     });
   };
 
@@ -81,6 +99,18 @@ class BaseView extends Component {
     const { userId, avatar } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        const property={
+          id: userId,
+          daysOverdue:values.daysOverdue,
+          transferNumber:values.transferNumber,
+        }
+        propertyUpdate(property).then(resp => {
+          if (resp.success) {
+            // message.success(resp.msg);
+          } else {
+            // message.error(resp.msg || '提交失败');
+          }
+        });
         const params = {
           id: userId,
           ...values,
@@ -111,7 +141,9 @@ class BaseView extends Component {
       form: { getFieldDecorator },
     } = this.props;
 
-    const { avatar, loading } = this.state;
+    const { avatar, loading ,details} = this.state;
+
+    console.log(details.daysOverdue)
 
     const formItemLayout = {
       labelCol: {
@@ -151,28 +183,24 @@ class BaseView extends Component {
                 {/*)}*/}
               {/*</FormItem>*/}
                 <FormItem {...formItemLayout} label={'过期天数'}>
-                  {getFieldDecorator('daysOverdue ', {
+                  {getFieldDecorator('daysOverdue', {
+                    // initialValue: details.daysOverdue,
                     rules: [{ validator: this.checkInteger }],
-                  })(
-                    <div style={{position:"relative"}}>
-                      <Input />
-                      <Tooltip
-                        title="用户在快递签收后，销售也有在跟进，超过*天的订单还未激活，就自动流转到已过期。"
-                      ><Icon type='question-circle-o' style={{position: 'absolute',right: '-23px',top: '14px'}} /></Tooltip>
-                    </div>
-                  )}
+                  })(<Input placeholder="0:不开启,大于0启动任务扫描 " />)}
+                  <Tooltip
+                    title="用户在快递签收后，销售也有在跟进，超过*天的订单还未激活，就自动流转到已过期。"
+                  ><Icon type='question-circle-o' style={{position: 'absolute',right: '-23px',top: '3px'}} /></Tooltip>
                 </FormItem>
-                <FormItem {...formItemLayout} label={'转移天数'}>
-                  {getFieldDecorator('transferNumber ', {
+                <FormItem {...formItemLayout} label={'维护天数'}>
+                  {getFieldDecorator('transferNumber', {
+                    initialValue: details.transferNumber,
                     rules: [{ validator: this.checkInteger }],
                   })(
-                    <div style={{position:"relative"}}>
-                      <Input />
-                      <Tooltip
-                        title="用户订单激活后，超过*天，订单就自动流转到待维护，等待后续继续跟进刷卡等其他状态。"
-                      ><Icon type='question-circle-o' style={{position: 'absolute',right: '-23px',top: '14px'}} /></Tooltip>
-                    </div>
+                    <Input placeholder="0:不开启,大于0启动任务扫描 " />
                   )}
+                  <Tooltip
+                    title="用户订单激活后，超过*天，订单就自动流转到待维护，等待后续继续跟进刷卡等其他状态。"
+                  ><Icon type='question-circle-o' style={{position: 'absolute',right: '-23px',top: '3px'}} /></Tooltip>
                 </FormItem>
               <FormItem {...formItemLayout} label={'系统告警'}>
                   {getFieldDecorator('alarmStatus')(
@@ -235,6 +263,11 @@ class BaseView extends Component {
               <Col span={12} style={{marginTop:151}}>
               <FormItem style={{display:"none"}}>
                   {getFieldDecorator('id')(
+                    <Input />
+                  )}
+                </FormItem>
+                <FormItem style={{display:"none"}}>
+                  {getFieldDecorator('deptId')(
                     <Input />
                   )}
                 </FormItem>

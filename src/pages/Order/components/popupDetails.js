@@ -305,6 +305,27 @@ class OrdersEdit extends PureComponent {
     });
   };
 
+  voiceSubmit = (key) =>{
+    const { detail } = this.state;
+    const params={
+      voiceStatus:key,
+      id :detail.id
+    }
+    updateData(params).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg);
+        this.setState({
+          edit:true,
+          primary:"primary",
+          primary1:''
+        })
+        this.getEditDetails()
+      }else {
+        message.error(res.msg);
+      }
+    })
+  };
+
   handleChange = value => {
   };
 
@@ -649,10 +670,10 @@ class OrdersEdit extends PureComponent {
                 <div className={styles.titleBtn}>
                   {detail.voiceStatus === "1" ? (
                     <Tooltip title="激活自动提醒开关">
-                      <Button icon="bell" style={{ float:"right",border:'0',boxShadow:'none'}}></Button>
+                      <Button icon="bell" onClick={()=>this.voiceSubmit(0)} style={{ float:"right",border:'0',boxShadow:'none'}}></Button>
                     </Tooltip>
                   ) :(
-                    <Button style={{ float:"right",border:'0',boxShadow:'none'}}>
+                    <Button style={{ float:"right",border:'0',boxShadow:'none'}} onClick={()=>this.voiceSubmit(1)}>
                       <Tooltip title="激活自动提醒开关">
                         <img src={bellShut} style={{float:"right"}} />
                       </Tooltip>

@@ -16,7 +16,7 @@ import {
   Empty
 } from 'antd';
 import Panel from '../../../components/Panel';
-import { getUserInfo, updateInfo } from '../../../services/user';
+import { getUserInfo, propertyUpdate, updateInfo } from '../../../services/user';
 import { getToken } from '../../../utils/authority';
 
 import BasicConfiguration from './components/basicConfiguration';
@@ -63,7 +63,8 @@ class BaseView extends Component {
 
   handleSubmit = () => {
     const {TabsKey} = this.state;
-    if(TabsKey === "1" || TabsKey === "3" || TabsKey === "4"){
+    console.log(TabsKey)
+    if(TabsKey === "1" || TabsKey === "4"){
       this.BasicView.validateFieldsAndScroll((err, values) => {
         if (!err) {
           console.log(values,"values")
@@ -79,6 +80,33 @@ class BaseView extends Component {
           });
         }
       });
+    }else if(TabsKey === "3"){
+      this.BasicView.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          const property ={
+            daysOverdue:values.daysOverdue,
+            transferNumber:values.transferNumber,
+            deptId:values.deptId
+          }
+          propertyUpdate(property).then(resp => {
+            if (resp.success) {
+              // message.success(resp.msg);
+            } else {
+              // message.error(resp.msg || '提交失败');
+            }
+          });
+          const params = {
+            ...values,
+          };
+          updateInfo(params).then(resp => {
+            if (resp.success) {
+              message.success(resp.msg);
+            } else {
+              message.error(resp.msg || '提交失败');
+            }
+          });
+        }
+      })
     }
   }
 

@@ -95,6 +95,12 @@ export async function updateInfo(params) {
     body: params,
   });
 }
+export async function propertyUpdate(params) {
+  return request('/api/merchants_property/property/update', {
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function detail(params) {
   return request(`/api/blade-user/detail?${stringify(params)}`);
