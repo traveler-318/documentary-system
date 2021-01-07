@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row,Modal, Col, Button, Icon , Select, message, Tabs, Cascader, Radio,Timeline,} from 'antd';
+import { Form, Input, Card, Row,Modal, Col, Button, Icon , Select, message, Tabs, Cascader, Radio,Timeline,Tooltip} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -29,6 +29,9 @@ import OrderListNew from './OrderListNew';
 import {
   LOGISTICSCOMPANY,
 } from './data.js';
+import bell from '../../../assets/bell.svg'
+import bellShut from '../../../assets/bellShut.svg'
+import loginchahua from '../../../assets/loginchahua.png';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -481,8 +484,6 @@ class OrdersEdit extends PureComponent {
                 <div className={styles.editList} style={{ padding: '20px' }}>
                   <FormDetailsTitle title="订单信息" style={{ margin:'0'}} />
                   <Form span={24}>
-
-
                     <FormItem {...formAllItemLayout} label="客户姓名">
                       {getFieldDecorator('userName', {
                         rules: [
@@ -614,21 +615,21 @@ class OrdersEdit extends PureComponent {
                         </Select>
                       )}
                     </FormItem>
-                    <FormItem {...formAllItemLayout} label="物流单号">
+                    <FormItem {...formAllItemLayout} label="物流单号" className={styles.salesman}>
                       {getFieldDecorator('logisticsNumber', {
                         initialValue: detail.logisticsNumber,
                       })(<Input
                         disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
                         placeholder="请输入物流单号" />)}
                     </FormItem>
-                    <FormItem {...formAllItemLayout} label="开启提醒"  className={styles.salesman}>
-                      {getFieldDecorator('voiceStatus', {
-                        initialValue: parseInt(detail.voiceStatus),
-                      })(<Radio.Group  onChange={this.RadioChange} value={this.state.value}>
-                        <Radio disabled={edit} value={1}>是</Radio>
-                        <Radio disabled={edit} value={0}>否</Radio>
-                      </Radio.Group>)}
-                    </FormItem>
+                    {/*<FormItem {...formAllItemLayout} label="开启提醒"  className={styles.salesman}>*/}
+                      {/*{getFieldDecorator('voiceStatus', {*/}
+                        {/*initialValue: parseInt(detail.voiceStatus),*/}
+                      {/*})(<Radio.Group  onChange={this.RadioChange} value={this.state.value}>*/}
+                        {/*<Radio disabled={edit} value={1}>是</Radio>*/}
+                        {/*<Radio disabled={edit} value={0}>否</Radio>*/}
+                      {/*</Radio.Group>)}*/}
+                    {/*</FormItem>*/}
 
                     <FormDetailsTitle title="其他信息" />
                     <FormItem {...formAllItemLayout} label="微信号">
@@ -646,6 +647,18 @@ class OrdersEdit extends PureComponent {
               </Col>
               <Col span={16} style={{ padding: 0 }} className={styles.rightContent}>
                 <div className={styles.titleBtn}>
+                  {detail.voiceStatus === "1" ? (
+                    <Tooltip title="激活自动提醒开关">
+                      <Button icon="bell" style={{ float:"right",border:'0',boxShadow:'none'}}></Button>
+                    </Tooltip>
+                  ) :(
+                    <Button style={{ float:"right",border:'0',boxShadow:'none'}}>
+                      <Tooltip title="激活自动提醒开关">
+                        <img src={bellShut} style={{float:"right"}} />
+                      </Tooltip>
+                    </Button>
+                  )}
+
                   {/* <Button icon="plus">工单</Button>
                   <Button  icon="plus">产品</Button>
                   <Button  icon="plus">地址</Button> */}
