@@ -154,6 +154,15 @@ class AllOrdersList extends PureComponent {
           title: '姓名',
           dataIndex: 'userName',
           width: 100,
+          render: (key,row)=>{
+            console.log(key)
+            const name=key
+            return (
+              <div>
+                {name}
+              </div>
+            )
+          }
         },
         {
           title: '手机号',
