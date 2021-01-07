@@ -173,6 +173,13 @@ class SearchButton extends PureComponent {
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
+                }else if(tabKey === '10' && item.code === 'Claim'){
+                    // 已过期
+                    return (
+                        <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{
+                            this.handleClick(item.code)
+                        }}>{item.name}</Button>
+                    )
                 }else if(tabKey === 'null' && (item.code === "add" || item.code === "deliver-goods" || item.code === "bell" || item.code === 'Import' || item.code === 'overdue' || item.code === 'status-change')){
                     // 全部
                     if(item.code === 'Import'){
@@ -194,7 +201,6 @@ class SearchButton extends PureComponent {
                 {/* 已激活什么都没有 */}
                 {/* 已退回什么都没有 */}
                 {/* 已取消什么都没有 */}
-                {/* 已过期什么都没有 */}
                 if(item.code === 'export'){
                     return (
                         <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{

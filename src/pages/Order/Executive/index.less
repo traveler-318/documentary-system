@@ -44,6 +44,30 @@
     border-left: 3px solid #52b7b4;
 }
 
+.userName{
+  position: relative;
+  text-align: center;
+  p{
+    width: 53px;
+    height: 53px;
+    position: absolute;
+    top: -40px;
+    left: -35px;
+    background: red;
+    transform: rotate(45deg);
+    span{
+      position: absolute;
+      bottom: 17px;
+      display: block;
+      text-align: center;
+      font-size: 12px;
+      transform: rotate(-90deg);
+      right: -4px;
+      color: #fff;
+    }
+  }
+}
+
 .tabs{
     vertical-align: top;
     height: 40px;
@@ -109,6 +133,9 @@
     }
     .ant-badge-count{
       background: #52b7b4 !important;
+    }
+    .ant-table-row-cell-break-word{
+      overflow: hidden;
     }
   }
 }
