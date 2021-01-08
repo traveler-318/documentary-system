@@ -162,10 +162,12 @@ class ProductList extends PureComponent {
     const url = codeUrl+globalParameters.detailData.userAccount+"_"+row.id+"_"+row.price;
     console.log(url)
     // this.props.handleCancelAggregateCode()
-    this.setState({
-      previewVisible:true,
-      qrUrl:url,
-    })
+
+    window.open(url)
+    // this.setState({
+    //   previewVisible:true,
+    //   qrUrl:url,
+    // })
   }
 
   handleCancelPreview = () => {
