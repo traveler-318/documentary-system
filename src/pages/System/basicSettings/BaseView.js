@@ -83,6 +83,13 @@ class BaseView extends Component {
     }else if(TabsKey === "3"){
       this.BasicView.validateFieldsAndScroll((err, values) => {
         if (!err) {
+
+          if(values.daysOverdue < 20){
+            return message.error('此时间段距离签收时间比较短,用户激活时间比较紧迫,建议时间调整为 20-60天')
+          }
+          if(values.transferNumber < 30){
+            return message.error('此时间段距离签收时间比较短,用户进入下一个客户周期,建议时间调整为 30-90天')
+          }
           const property ={
             daysOverdue:values.daysOverdue,
             transferNumber:values.transferNumber,
