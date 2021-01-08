@@ -163,6 +163,7 @@ class ProductList extends PureComponent {
     console.log(url)
     // this.props.handleCancelAggregateCode()
 
+    
     window.open(url)
     // this.setState({
     //   previewVisible:true,
