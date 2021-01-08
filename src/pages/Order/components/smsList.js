@@ -115,7 +115,7 @@ class SMS extends PureComponent {
         <Modal
           title="短信"
           visible={SMSVisible}
-          width={800}
+          width={850}
           onCancel={handleCancelSMS}
           maskClosable={false}
           footer={[
