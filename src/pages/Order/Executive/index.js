@@ -153,7 +153,7 @@ class AllOrdersList extends PureComponent {
         {
           title: '姓名',
           dataIndex: 'userName',
-          width: 100,
+          width: 80,
           render: (key,row)=>{
             return (
               <div className={styles.userName}>
@@ -168,18 +168,18 @@ class AllOrdersList extends PureComponent {
         {
           title: '手机号',
           dataIndex: 'userPhone',
-          width: 120,
+          width: 100,
         },
         {
           title: '收货地址',
           dataIndex: 'userAddress',
-          width: 200,
+          width: 160,
           ellipsis: true,
         },
         {
           title: '订单状态',
           dataIndex: 'confirmTag',
-          width: 90,
+          width: 80,
           render: (key,row)=>{
             // 待审核、已激活、已取消、已退回-不可切换状态
             if(key == '0' || key == '7' || key == '8' || key == '9'){
@@ -242,6 +242,11 @@ class AllOrdersList extends PureComponent {
           }
         },
         {
+          title: '订单金额',
+          dataIndex: 'payAmount',
+          width: 80,
+        },
+        {
           title: '产品分类',
           dataIndex: 'productType',
           width: 130,
@@ -249,24 +254,18 @@ class AllOrdersList extends PureComponent {
         {
           title: '产品型号',
           dataIndex: 'productName',
-          width: 160,
+          width: 100,
         },
         {
           title: 'SN',
           dataIndex: 'productCoding',
-          width: 200,
+          width: 100,
           ellipsis: true,
         },
         {
-          title: '订单金额',
-          dataIndex: 'payAmount',
-          width: 150,
-        },
-        
-        {
           title: '订单类型',
           dataIndex: 'orderType',
-          width: 100,
+          width: 80,
           render: (key)=>{
             return (
               <div>{this.getORDERTYPE(key)} </div>
@@ -276,7 +275,7 @@ class AllOrdersList extends PureComponent {
         {
           title: '订单来源',
           dataIndex: 'orderSource',
-          width: 100,
+          width: 80,
           render: (key)=>{
             return (
               <div>{this.getORDERSOURCE(key)} </div>
@@ -286,7 +285,7 @@ class AllOrdersList extends PureComponent {
         {
           title: '销售',
           dataIndex: 'salesman',
-          width: 100,
+          width: 80,
         },
         {
           title: '快递公司',
@@ -311,7 +310,7 @@ class AllOrdersList extends PureComponent {
         {
           title: '下单时间',
           dataIndex: 'createTime',
-          width: 170,
+          width: 150,
         },
         {
           title: '操作',
