@@ -226,7 +226,7 @@ class AllOrdersList extends PureComponent {
         {
           title: 'SN',
           dataIndex: 'productCoding',
-          width: 100,
+          width: 180,
           ellipsis: true,
         },
         {
