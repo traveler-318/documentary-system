@@ -45,11 +45,16 @@ const checkStatus = response => {
   throw error;
 };
 
-const checkServerCode = response => {
+const checkServerCode = (response,options) => {
+  if(!options.isShowTips){
+    return response;
+  }
   if (response.code >= 200 && response.code < 300) {
     return response;
   }
   if (response.code === 400) {
+    console.log(url,"response")
+
     notification.error({
       message: response.msg || codeMessage[response.code],
     });
@@ -100,8 +105,10 @@ const cachedSave = (response, hashcode) => {
  */
 export default function request(url, option) {
   const options = {
+    isShowTips:true,
     ...option,
   };
+
   /**
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
@@ -197,7 +204,7 @@ export default function request(url, option) {
       }
       return response.json();
     })
-    .then(checkServerCode)
+    .then(response => checkServerCode(response, options))
     .catch(e => {
       const status = e.name;
       if (status === 401) {

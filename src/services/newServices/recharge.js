@@ -59,3 +59,11 @@ export async function logisticsSubscriptList(params) {
 
 
 
+// ============ 充值状态 ===============
+export async function topUpState(params) {
+  return request(`/api/system/topup/topUpState`, {
+    method: 'POST',
+    body: params,
+    isShowTips:false
+  });
+}
