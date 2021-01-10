@@ -73,9 +73,9 @@ class Logistics extends PureComponent {
       if(res.code === 400){
         message.info(res.msg)
       }else if(res.code === 200){
-        message.info('充值成功');
         this.success();
         setTimeout(()=>{
+          Modal.destroyAll();
           this.props.handleCancelBindingQRCode();
         },3000)
       }
@@ -108,6 +108,10 @@ class Logistics extends PureComponent {
   success = () => {
     Modal.success({
       content: '充值成功',
+      okText: "确定",
+      onOk:()=>{
+        this.props.handleCancelBindingQRCode();
+      }
     });
   }
 
@@ -117,7 +121,7 @@ class Logistics extends PureComponent {
   };
 
   render() {
-    const {
+    let {
       form: { getFieldDecorator },
       bindingQRCodeVisible,
       bindingQRCode,
@@ -126,7 +130,8 @@ class Logistics extends PureComponent {
     } = this.props;
     // const {countDownTimer,qrUrl} = this.state;
 
-
+    bindingQRCode = `${bindingQRCode}&money=1`;
+    console.log(bindingQRCode,"bindingQRCode")
     // confirmTag
     return (
       <div>
