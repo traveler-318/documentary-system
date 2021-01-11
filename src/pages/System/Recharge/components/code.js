@@ -71,7 +71,15 @@ class Logistics extends PureComponent {
     currentTimes ++;
     topUpState(this.getQueryString1("uuid")).then((res)=>{
       if(res.code === 400){
-        message.info(res.msg)
+        message.info(res.msg);
+        if(currentTimes < total){
+          type = setTimeout(()=>{
+            this.getPaymentStatus();
+            clearTimeout(type);
+          },3000)
+        }else{
+          this.props.handleCancelBindingQRCode();
+        }
       }else if(res.code === 200){
         this.success();
         setTimeout(()=>{
@@ -85,6 +93,8 @@ class Logistics extends PureComponent {
             this.getPaymentStatus();
             clearTimeout(type);
           },3000)
+        }else{
+          this.props.handleCancelBindingQRCode();
         }
       }
     })
