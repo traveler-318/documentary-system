@@ -82,7 +82,7 @@ class Logistics extends PureComponent {
             this.state.type = setTimeout(()=>{
               this.getPaymentStatus();
               clearTimeout(this.state.type);
-            },3000)
+            },5000)
           }else{
             this.props.handleCancelBindingQRCode();
           }
@@ -91,14 +91,14 @@ class Logistics extends PureComponent {
           setTimeout(()=>{
             Modal.destroyAll();
             this.props.handleCancelBindingQRCode();
-          },6000)
+          },5000)
         }
         else if(res.code === 410){
           if(this.state.currentTimes < this.state.total){
             this.state.type = setTimeout(()=>{
               this.getPaymentStatus();
               clearTimeout(this.state.type);
-            },3000)
+            },5000)
           }else{
             this.props.handleCancelBindingQRCode();
           }
