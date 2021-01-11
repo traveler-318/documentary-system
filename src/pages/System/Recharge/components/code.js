@@ -16,11 +16,11 @@ import { topUpState } from '../../../../services/newServices/recharge';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
-let timer = null;
-let type = null;
+// let timer = null;
+// let type = null;
 
-let currentTimes = 0;
-let total = 10;
+// let currentTimes = 0;
+// let total = 10;
 
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -34,13 +34,16 @@ class Logistics extends PureComponent {
       data:{},
       countDown:10,
       polling:3,
-
+      timer:null,
+      type:null,
+      currentTimes:0,
+      total:10,
     };
   }
 
   componentWillMount() {
     const {bindingQRCode} = this.props;
-    console.log(bindingQRCode)
+    console.log(bindingQRCode,this.state.currentTimes,"currentTimes")
     
     this.startCountdown();
 
@@ -49,11 +52,11 @@ class Logistics extends PureComponent {
   startCountdown = () => {
     let {countDown} = this.state;
 
-    timer = setTimeout(()=>{
+    this.state.timer = setTimeout(()=>{
       countDown = countDown-1;
       console.log(countDown,"countDown")
       if(countDown === 0){
-        clearTimeout(timer);
+        clearTimeout(this.state.timer);
         // 开始轮询调用支付状态接口
         this.getPaymentStatus();
       }else{
@@ -68,35 +71,39 @@ class Logistics extends PureComponent {
 
   getPaymentStatus = () => {
     console.log(this.getQueryString1("uuid"))
-    currentTimes ++;
-    topUpState(this.getQueryString1("uuid")).then((res)=>{
-      if(res.code === 400){
-        message.info(res.msg);
-        if(currentTimes < total){
-          type = setTimeout(()=>{
-            this.getPaymentStatus();
-            clearTimeout(type);
-          },3000)
-        }else{
-          this.props.handleCancelBindingQRCode();
+    let {currentTimes} = this.state;
+    this.setState({
+      currentTimes:currentTimes +1
+    },()=>{
+      topUpState(this.getQueryString1("uuid")).then((res)=>{
+        if(res.code === 400){
+          message.info(res.msg);
+          if(this.state.currentTimes < this.state.total){
+            this.state.type = setTimeout(()=>{
+              this.getPaymentStatus();
+              clearTimeout(this.state.type);
+            },3000)
+          }else{
+            this.props.handleCancelBindingQRCode();
+          }
+        }else if(res.code === 200){
+          this.success();
+          setTimeout(()=>{
+            Modal.destroyAll();
+            this.props.handleCancelBindingQRCode();
+          },6000)
         }
-      }else if(res.code === 200){
-        this.success();
-        setTimeout(()=>{
-          Modal.destroyAll();
-          this.props.handleCancelBindingQRCode();
-        },3000)
-      }
-      else if(res.code === 410){
-        if(currentTimes < total){
-          type = setTimeout(()=>{
-            this.getPaymentStatus();
-            clearTimeout(type);
-          },3000)
-        }else{
-          this.props.handleCancelBindingQRCode();
+        else if(res.code === 410){
+          if(this.state.currentTimes < this.state.total){
+            this.state.type = setTimeout(()=>{
+              this.getPaymentStatus();
+              clearTimeout(this.state.type);
+            },3000)
+          }else{
+            this.props.handleCancelBindingQRCode();
+          }
         }
-      }
+      })
     })
   }
 
