@@ -85,6 +85,8 @@ class Logistics extends PureComponent {
             this.getPaymentStatus();
             clearTimeout(type);
           },3000)
+        }else{
+          this.props.handleCancelBindingQRCode();
         }
       }
     })
