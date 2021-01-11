@@ -113,7 +113,7 @@ export default function request(url, option) {
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
    */
-  const fingerprint = "";
+  let fingerprint = "";
   if(url === '/api/system/topup/topUpState'){
     fingerprint = url + (options.body ? options.body : '');
   }else{
