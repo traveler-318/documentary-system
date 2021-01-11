@@ -47,6 +47,11 @@ class SmsRecharge extends PureComponent {
   }
 
   componentDidMount() {
+    this.getParam();
+    
+  }
+
+  getParam = () => {
     getUserInfo().then(resp => {
       if (resp.code === 200) {
         console.log(resp)
@@ -127,7 +132,9 @@ class SmsRecharge extends PureComponent {
   handleCancelBindingQRCode = () => {
     this.setState({
       bindingQRCodeVisible:false,
-    })
+    });
+
+    this.getParam();
   }
 
   // ============ 查询表单 ===============

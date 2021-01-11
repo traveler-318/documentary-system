@@ -113,7 +113,9 @@ export default function request(url, option) {
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
    */
-  const fingerprint = url + (options.body ? JSON.stringify(options.body) : '');
+
+  let fingerprint = url + (options.body ? JSON.stringify(options.body) : '');
+  
   const hashcode = hash
     .sha256()
     .update(fingerprint)
@@ -161,7 +163,12 @@ export default function request(url, option) {
         'Content-Type': 'application/json;charset=utf-8',
         ...newOptions.headers,
       };
-      newOptions.body = JSON.stringify(newOptions.body);
+      
+
+      if(url != '/api/system/topup/topUpState'){
+        newOptions.body = JSON.stringify(newOptions.body);
+      }
+
     } else if (newOptions.body instanceof RequestForm) {
       newOptions.headers = {
         Accept: 'application/json',
