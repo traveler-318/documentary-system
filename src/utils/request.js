@@ -113,7 +113,13 @@ export default function request(url, option) {
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
    */
-  const fingerprint = url + (options.body ? JSON.stringify(options.body) : '');
+  const fingerprint = "";
+  if(url === '/api/system/topup/topUpState'){
+    fingerprint = url + (options.body ? options.body : '');
+  }else{
+    fingerprint = url + (options.body ? JSON.stringify(options.body) : '');
+  }
+  
   const hashcode = hash
     .sha256()
     .update(fingerprint)
