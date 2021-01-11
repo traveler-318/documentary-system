@@ -139,9 +139,6 @@ class Logistics extends PureComponent {
       money
     } = this.props;
     // const {countDownTimer,qrUrl} = this.state;
-
-    bindingQRCode = `${bindingQRCode}&money=1`;
-    console.log(bindingQRCode,"bindingQRCode")
     // confirmTag
     return (
       <div>
