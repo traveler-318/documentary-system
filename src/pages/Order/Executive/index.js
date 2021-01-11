@@ -11,6 +11,7 @@ import {
   DatePicker,
   Divider,
   Dropdown,
+  Tree,
   Menu,
   Icon,
   Modal,
@@ -72,8 +73,10 @@ const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 const { SubMenu } = Menu;
 const { TextArea } = Input;
+const { TreeNode } = Tree;
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+
 
 let modal;
 
@@ -149,210 +152,22 @@ class AllOrdersList extends PureComponent {
       tips:[],
       salesmangroup:[],
       countSice:0,
-      columns:[
+      plainOptions:[
         {
-          title: '姓名',
-          dataIndex: 'userName',
-          width: 80,
-          render: (key,row)=>{
-            return (
-              <div className={styles.userName}>
-                {
-                  row.expireClaim === '1' ? (<p><span>过期</span></p>):""
-                }
-                <span>{key}</span>
-              </div>
-            )
-          }
-        },
-        {
-          title: '手机号',
-          dataIndex: 'userPhone',
-          width: 100,
-        },
-        {
-          title: '收货地址',
-          dataIndex: 'userAddress',
-          width: 160,
-          ellipsis: true,
-        },
-        {
-          title: '订单状态',
-          dataIndex: 'confirmTag',
-          width: 80,
-          render: (key,row)=>{
-            // 待审核、已激活、已取消、已退回-不可切换状态
-            if(key == '0' || key == '7' || key == '8' || key == '9'){
-              return (
-                <div>
-                  <Tag color={this.getORDERSCOLOR(key)}>
-                    {this.getORDERSTATUS(key)}
-                  </Tag>
-                </div>
-              )
-            }else{
-              return (
-                <div style={{cursor: 'pointer'}}>
-                  <Tag color={this.getORDERSCOLOR(key)}>
-                    {this.getORDERSTATUS(key)}
-                  </Tag>
-                </div>
-              )
-            }
-          }
-        },
-        {
-          title: '订单状态(免押宝)',
-          dataIndex: 'mianyaStatus',
-          width: 130,
-          render: (key,row)=>{
-            let type=''
-            if (key === 0) {
-              type ='未授权';
-            } else if(key === 1){
-              type ='已授权';
-            }else if(key === 2){
-              type ='解冻';
-            }else if(key === 3){
-              type ='扣款';
-            }
-            return (
-              type
-            )
-          }
-        },
-        {
-          title: '机器状态(免押宝) ',
-          dataIndex: 'machineStatus',
-          width: 130,
-          render: (key,row)=>{
-            let type=''
-            if (key === 0) {
-              type ='未激活';
-            } else if(key === 1){
-              type ='已激活';
-            }else if(key === 2){
-              type ='已退回';
-            }else if(key === 3){
-              type ='被投诉';
-            }
-            return (
-              type
-            )
-          }
-        },
-        {
-          title: '订单金额',
-          dataIndex: 'payAmount',
-          width: 80,
-        },
-        {
-          title: '产品分类',
-          dataIndex: 'productType',
-          width: 130,
-        },
-        {
-          title: '产品型号',
-          dataIndex: 'productName',
-          width: 100,
-        },
-        {
-          title: 'SN',
-          dataIndex: 'productCoding',
-          width: 180,
-          ellipsis: true,
-        },
-        {
-          title: '订单类型',
-          dataIndex: 'orderType',
-          width: 80,
-          render: (key)=>{
-            return (
-              <div>{this.getORDERTYPE(key)} </div>
-            )
-          }
-        },
-        {
-          title: '订单来源',
-          dataIndex: 'orderSource',
-          width: 80,
-          render: (key)=>{
-            return (
-              <div>{this.getORDERSOURCE(key)} </div>
-            )
-          }
-        },
-        {
-          title: '销售',
-          dataIndex: 'salesman',
-          width: 80,
-        },
-        {
-          title: '快递公司',
-          dataIndex: 'logisticsCompany',
-          width: 130,
-        },
-        {
-          title: '快递单号',
-          dataIndex: 'logisticsNumber',
-          width: 150,
-        },
-        {
-          title: '物流状态',
-          dataIndex: 'logisticsStatus',
-          width: 100,
-          render: (key)=>{
-            return (
-              <div>{this.getLogisticsStatusValue(key)} </div>
-            )
-          }
-        },
-        {
-          title: '下单时间',
-          dataIndex: 'createTime',
-          width: 150,
-        },
-        {
-          title: '操作',
-          key: 'operation',
-          fixed: 'right',
-          width: 250,
-          render: (text,row) => {
-              return(
-                  <div>
-                    <a onClick={()=>this.handleDetails(row)}>详情</a>
-                    <Divider type="vertical" />
-                    {
-                      row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
-                    }
-                    <a onClick={()=>this.handleJournal(row)}>日志</a>
-                    <Divider type="vertical" />
-                    <a onClick={()=>this.handleSMS(row)}>短信</a>
-                    <Divider type="vertical" />
-                    <a onClick={()=>this.handleVoice(row)}>语音</a>
-
-                    {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
-
-                      {/* <a>跟进</a>
-                      <Divider type="vertical" />
-                      <a onClick={()=>this.handleEdit(row)}>编辑</a>
-                      <Divider type="vertical" />
-                      <a>置顶</a>
-                      <Divider type="vertical" />
-                      <a>归档</a>
-                      <Divider type="vertical" /> */}
-
-                      {/* <Divider type="vertical" /> */}
-                      {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
-                      {/* <Divider type="vertical" />
-                      <a >短信</a> */}
-                      {/* <Divider type="vertical" /> */}
-                      {/* <a onClick={()=>this.handleReminds([row])}>提醒</a> */}
-                  </div>
-              )
-          },
+          title:"名字",
+          key:"bt1"
+        },{
+          title:"电话",
+          key:"bt2"
+        },{
+          title:"地址",
+          key:"bt3"
+        },{
+          title:"机器状态(免押宝)",
+          key:"bt4"
         },
       ],
+      checkedOptions:["bt1", "bt3", "bt5"],
       updateConfirmTagVisible:false,
       voiceStatusVisible:false,
       confirmTagList:[],
@@ -1029,7 +844,6 @@ class AllOrdersList extends PureComponent {
         voiceStatus: radioChecked
       })
     })
-    console.log(list)
 
     Modal.confirm({
       title: '提醒',
@@ -1677,10 +1491,54 @@ class AllOrdersList extends PureComponent {
     });
   }
 
+  handleReset = clearFilters => {
+    clearFilters();
+  };
+
   components = {
     header: {
       cell: ResizeableTitle,
     },
+  };
+
+  onDrop = info => {
+    const dropKey = info.node.props.eventKey;
+    const dragKey = info.dragNode.props.eventKey;
+    const dropPos = info.node.props.pos.split("-");
+    const dropPosition =
+      info.dropPosition - Number(dropPos[dropPos.length - 1]);
+    if (dropPosition === 1 || dropPosition == -1) {
+      const loop = (data, key, callback) => {
+        data.forEach((item, index, arr) => {
+          if (item.key === key) {
+            return callback(item, index, arr);
+          }
+          if (item.children) {
+            return loop(item.children, key, callback);
+          }
+        });
+      };
+      const data = [...this.state.plainOptions];
+      let dragObj;
+      loop(data, dragKey, (item, index, arr) => {
+        arr.splice(index, 1);
+        dragObj = item;
+      });
+      let ar;
+      let i;
+      loop(data, dropKey, (item, index, arr) => {
+        ar = arr;
+        i = index;
+      });
+      if (dropPosition === -1) {
+        ar.splice(i, 0, dragObj);
+      } else {
+        ar.splice(i + 1, 0, dragObj);
+      }
+      this.setState({
+        plainOptions: data
+      });
+    }
   };
 
   render() {
@@ -1698,6 +1556,11 @@ class AllOrdersList extends PureComponent {
         span: 20,
       },
     };
+
+    const loop = data =>
+      data.map((item, index) => {
+        return <TreeNode key={item.key} title={item.title} />;
+      });
 
     const {
       data,
@@ -1726,16 +1589,258 @@ class AllOrdersList extends PureComponent {
       LogisticsAlertVisible,
       tips,
       countSice,
+      plainOptions,
+      checkedOptions,
       params
     } = this.state;
 
-    const columns = this.state.columns.map((col, index) => ({
-      ...col,
-      onHeaderCell: column => ({
-        width: column.width,
-        onResize: this.handleResize(index),
-      }),
-    }));
+    const columns=[
+      {
+        title: '姓名',
+        dataIndex: 'userName',
+        width: 80,
+        render: (key,row)=>{
+          return (
+          <div className={styles.userName}>
+          {
+            row.expireClaim === '1' ? (<p><span>过期</span></p>):""
+          }
+          <span>{key}</span>
+          </div>
+          )
+        }
+      },
+      {
+        title: '手机号',
+        dataIndex: 'userPhone',
+        width: 100,
+      },
+      {
+        title: '收货地址',
+        dataIndex: 'userAddress',
+        width: 160,
+        ellipsis: true,
+      },
+      {
+        title: '订单状态',
+        dataIndex: 'confirmTag',
+        width: 80,
+        render: (key,row)=>{
+          // 待审核、已激活、已取消、已退回-不可切换状态
+          if(key == '0' || key == '7' || key == '8' || key == '9'){
+          return (
+          <div>
+          <Tag color={this.getORDERSCOLOR(key)}>
+          {this.getORDERSTATUS(key)}
+          </Tag>
+          </div>
+          )
+        }else{
+        return (
+        <div style={{cursor: 'pointer'}}>
+        <Tag color={this.getORDERSCOLOR(key)}>
+        {this.getORDERSTATUS(key)}
+        </Tag>
+        </div>
+        )
+      }
+  }
+  },
+    {
+      title: '订单状态(免押宝)',
+        dataIndex: 'mianyaStatus',
+      width: 130,
+      render: (key,row)=>{
+      let type=''
+      if (key === 0) {
+        type ='未授权';
+      } else if(key === 1){
+        type ='已授权';
+      }else if(key === 2){
+        type ='解冻';
+      }else if(key === 3){
+        type ='扣款';
+      }
+      return (
+        type
+      )
+    }
+    },
+    {
+      title: '机器状态(免押宝) ',
+        dataIndex: 'machineStatus',
+      width: 130,
+      render: (key,row)=>{
+      let type=''
+      if (key === 0) {
+        type ='未激活';
+      } else if(key === 1){
+        type ='已激活';
+      }else if(key === 2){
+        type ='已退回';
+      }else if(key === 3){
+        type ='被投诉';
+      }
+      return (
+        type
+      )
+    }
+    },
+    {
+      title: '订单金额',
+        dataIndex: 'payAmount',
+      width: 80,
+    },
+    {
+      title: '产品分类',
+        dataIndex: 'productType',
+      width: 130,
+    },
+    {
+      title: '产品型号',
+        dataIndex: 'productName',
+      width: 100,
+    },
+    {
+      title: 'SN',
+        dataIndex: 'productCoding',
+      width: 180,
+      ellipsis: true,
+    },
+    {
+      title: '订单类型',
+        dataIndex: 'orderType',
+      width: 80,
+      render: (key)=>{
+      return (
+        <div>{this.getORDERTYPE(key)} </div>
+      )
+    }
+    },
+    {
+      title: '订单来源',
+        dataIndex: 'orderSource',
+      width: 80,
+      render: (key)=>{
+      return (
+        <div>{this.getORDERSOURCE(key)} </div>
+      )
+    }
+    },
+    {
+      title: '销售',
+        dataIndex: 'salesman',
+      width: 80,
+    },
+    {
+      title: '快递公司',
+        dataIndex: 'logisticsCompany',
+      width: 130,
+    },
+    {
+      title: '快递单号',
+        dataIndex: 'logisticsNumber',
+      width: 150,
+    },
+    {
+      title: '物流状态',
+        dataIndex: 'logisticsStatus',
+      width: 100,
+      render: (key)=>{
+      return (
+        <div>{this.getLogisticsStatusValue(key)} </div>
+      )
+    }
+    },
+    {
+      title: '下单时间',
+        dataIndex: 'createTime',
+      width: 150,
+    },
+    {
+      title: '操作',
+        key: 'operation',
+      fixed: 'right',
+      width: 250,
+      filterDropdown: ({ confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Tree
+          checkable
+          draggable
+          blockNode
+          selectable={false}
+          onCheck={this.onCheck}
+          checkedKeys={checkedOptions}
+          onDrop={this.onDrop.bind(this)}
+        >
+          {loop(plainOptions)}
+        </Tree>
+        <div>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => this.handleSearch(confirm)}
+            style={{ width: "60px", marginRight: "10px" }}
+          >
+            确定
+          </Button>
+          <Button
+            size="small"
+            onClick={() => this.handleReset(clearFilters)}
+            style={{ width: "60px" }}
+          >
+            取消
+          </Button>
+        </div>
+      </div>
+    ),
+      filterIcon: filtered => (
+      <Icon type="setting" theme="filled" />
+    ),
+      render: (text,row) => {
+      return(
+        <div>
+          <a onClick={()=>this.handleDetails(row)}>详情</a>
+          <Divider type="vertical" />
+          {
+            row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
+          }
+          <a onClick={()=>this.handleJournal(row)}>日志</a>
+          <Divider type="vertical" />
+          <a onClick={()=>this.handleSMS(row)}>短信</a>
+          <Divider type="vertical" />
+          <a onClick={()=>this.handleVoice(row)}>语音</a>
+
+          {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
+
+          {/* <a>跟进</a>
+                      <Divider type="vertical" />
+                      <a onClick={()=>this.handleEdit(row)}>编辑</a>
+                      <Divider type="vertical" />
+                      <a>置顶</a>
+                      <Divider type="vertical" />
+                      <a>归档</a>
+                      <Divider type="vertical" /> */}
+
+          {/* <Divider type="vertical" /> */}
+          {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
+          {/* <Divider type="vertical" />
+                      <a >短信</a> */}
+          {/* <Divider type="vertical" /> */}
+          {/* <a onClick={()=>this.handleReminds([row])}>提醒</a> */}
+        </div>
+      )
+    },
+    },
+  ]
+
+    // const columns = this.state.columns.map((col, index) => ({
+    //   ...col,
+    //   onHeaderCell: column => ({
+    //     width: column.width,
+    //     onResize: this.handleResize(index),
+    //   }),
+    // }));
 
     const TabPanes = () => (
       <div className={styles.tabs}>
