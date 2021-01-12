@@ -1507,7 +1507,7 @@ class AllOrdersList extends PureComponent {
     const dropPos = info.node.props.pos.split("-");
     const dropPosition =
       info.dropPosition - Number(dropPos[dropPos.length - 1]);
-    if (dropPosition === 1 || dropPosition == -1) {
+    if (dropPosition === 1 || dropPosition === -1) {
       const loop = (data, key, callback) => {
         data.forEach((item, index, arr) => {
           if (item.key === key) {
@@ -1629,11 +1629,11 @@ class AllOrdersList extends PureComponent {
           // 待审核、已激活、已取消、已退回-不可切换状态
           if(key == '0' || key == '7' || key == '8' || key == '9'){
           return (
-          <div>
-          <Tag color={this.getORDERSCOLOR(key)}>
-          {this.getORDERSTATUS(key)}
-          </Tag>
-          </div>
+            <div>
+              <Tag color={this.getORDERSCOLOR(key)}>
+                {this.getORDERSTATUS(key)}
+              </Tag>
+            </div>
           )
         }else{
         return (
