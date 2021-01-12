@@ -66,18 +66,22 @@ class ConsumptionDetails extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
       values.formType = value;
+      values.current = 1;
+      values.size = 10;
       this.getStatisticsformtaskList(values)
     })
   };
 
   handleTableChange = (pagination) => {
     const pager = { ...this.state.pagination };
+    const {value}=this.state;
     pager.current = pagination.current;
     this.setState({
       pagination: pager,
     });
     const {params}=this.state;
     params.current=pagination.current;
+    params.formType = value;
     this.getStatisticsformtaskList(params)
   };
 
