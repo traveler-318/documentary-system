@@ -71,6 +71,7 @@ import SMS from '../components/smsList';
 import VoiceList from '../components/voiceList';
 import OrderImport from '../components/orderImport';
 import SearchButton from '../components/button';
+import { getCookie } from '../../../utils/support';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -160,6 +161,7 @@ class AllOrdersList extends PureComponent {
       editPlainOptions: '', // 当前选择的字段列表，未保存
       editCheckedOptions: '', // 当前已选择字段，未保存
       isClickHandleSearch:'',// 设置字段后在未保存的情况下点击空白区域字段重置
+      columns:[],
       updateConfirmTagVisible:false,
       voiceStatusVisible:false,
       confirmTagList:[],
@@ -175,40 +177,11 @@ class AllOrdersList extends PureComponent {
     this.currenttree();
     this.getOrderMenuHead();
     this.getOrderMenuTemplate();
-
   }
 
   getTreeList = () => {
     productTreelist().then(res=>{
       this.setState({productList:res.data})
-    })
-  }
-
-  // 菜单列表头获取
-  getOrderMenuHead = () => {
-    orderMenuHead().then(res=>{
-      console.log(res)
-      const list=res.data.menuJson;
-      const checked=[];
-      list.map(item => {
-        checked.push(item.dataIndex)
-      })
-      this.setState({
-        checkedOptions:checked,
-        editCheckedOptions:checked
-      })
-    })
-  }
-
-  getOrderMenuTemplate = () => {
-    orderMenuTemplate().then(res=>{
-      res.data.menuJson.map(item => {
-        item.key=item.dataIndex
-      })
-      this.setState({
-        plainOptions:res.data.menuJson,
-        editPlainOptions:res.data.menuJson
-      })
     })
   }
 
@@ -1546,7 +1519,24 @@ class AllOrdersList extends PureComponent {
         }
       })
     })
-    console.log(arr)
+    const params={
+      menuJson:arr,
+      menuType:0,
+      deptId:getCookie("dept_id")
+    }
+    console.log(params)
+    updateOrderHead(params).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg)
+        this.getOrderMenuHead();
+        this.setState({
+          isClickHandleSearch: true,
+        },() => {
+            confirm();
+          }
+        )
+      }
+    })
 
     // this.setState(
     //   {
@@ -1576,8 +1566,6 @@ class AllOrdersList extends PureComponent {
   };
 
   onDrop = info => {
-    const {checkedOptions}=this.state;
-    console.log(checkedOptions)
     const dropKey = info.node.props.eventKey;
     const dragKey = info.dragNode.props.eventKey;
     const dropPos = info.node.props.pos.split("-");
@@ -1617,6 +1605,143 @@ class AllOrdersList extends PureComponent {
     }
   };
 
+
+  // 菜单列表头获取
+  getOrderMenuHead = () => {
+    orderMenuHead().then(res=>{
+      console.log(res)
+      const list=res.data.menuJson;
+      const checked=[];
+
+      list.map(item => {
+        // 姓名
+        if(item.dataIndex === "userName"){
+          item.render=(key,row)=>{
+            return (
+              <div className={styles.userName}>
+                {
+                  row.expireClaim === '1' ? (<p><span>过期</span></p>):""
+                }
+                <span>{key}</span>
+              </div>
+            )
+          }
+        }
+        // 订单状态
+        if(item.dataIndex === "confirmTag"){
+          item.render=(key,row)=>{
+            // 待审核、已激活、已取消、已退回-不可切换状态
+            if(key == '0' || key == '7' || key == '8' || key == '9'){
+              return (
+                <div>
+                  <Tag color={this.getORDERSCOLOR(key)}>
+                    {this.getORDERSTATUS(key)}
+                  </Tag>
+                </div>
+              )
+            }else{
+              return (
+                <div style={{cursor: 'pointer'}}>
+                  <Tag color={this.getORDERSCOLOR(key)}>
+                    {this.getORDERSTATUS(key)}
+                  </Tag>
+                </div>
+              )
+            }
+          }
+        }
+        // 订单状态(免押宝)
+        if(item.dataIndex === "mianyaStatus"){
+          item.render=(key,row)=>{
+            let type=''
+            if (key === 0) {
+              type ='未授权';
+            } else if(key === 1){
+              type ='已授权';
+            }else if(key === 2){
+              type ='解冻';
+            }else if(key === 3){
+              type ='扣款';
+            }
+            return (
+              type
+            )
+          }
+        }
+        // 机器状态(免押宝)
+        if(item.dataIndex === "machineStatus"){
+          item.render=(key,row)=>{
+            let type=''
+            if (key === 0) {
+              type ='未激活';
+            } else if(key === 1){
+              type ='已激活';
+            }else if(key === 2){
+              type ='已退回';
+            }else if(key === 3){
+              type ='被投诉';
+            }
+            return (
+              type
+            )
+          }
+        }
+        // 订单类型
+        if(item.dataIndex === "orderType"){
+          item.render=(key)=>{
+            return (
+              <div>{this.getORDERTYPE(key)} </div>
+            )
+          }
+        }
+        // 订单来源
+        if(item.dataIndex === "orderSource"){
+          item.render=(key)=> {
+            return (
+              <div>{this.getORDERSOURCE(key)} </div>
+            )
+          }
+        }
+        // 物流状态
+        if(item.dataIndex === "logisticsStatus"){
+          item.render=(key)=>{
+            return (
+              <div>{this.getLogisticsStatusValue(key)} </div>
+            )
+          }
+        }
+        // SN
+        if(item.dataIndex === "productCoding"){
+          item.ellipsis=true
+        }
+        // 收货地址
+        if(item.dataIndex === "userAddress"){
+          item.ellipsis=true
+        }
+
+
+        checked.push(item.dataIndex)
+      })
+      this.setState({
+        checkedOptions:checked,
+        columns:list,
+        editCheckedOptions:checked
+      })
+    })
+  }
+
+  getOrderMenuTemplate = () => {
+    orderMenuTemplate().then(res=>{
+      res.data.menuJson.map(item => {
+        item.key=item.dataIndex
+      })
+      this.setState({
+        plainOptions:res.data.menuJson,
+        editPlainOptions:res.data.menuJson
+      })
+    })
+  }
+
   render() {
     const code = 'allOrdersList';
 
@@ -1632,11 +1757,6 @@ class AllOrdersList extends PureComponent {
         span: 20,
       },
     };
-
-    const loop = data =>
-      data.map((item, index) => {
-        return <TreeNode key={item.key} title={item.title} />;
-      });
 
     const {
       data,
@@ -1667,10 +1787,101 @@ class AllOrdersList extends PureComponent {
       countSice,
       plainOptions,
       checkedOptions,
+      columns,
       params
     } = this.state;
 
-    const columns=[
+    console.log(columns)
+
+    const loop = data =>
+      data.map((item, index) => {
+        return <TreeNode key={item.key} title={item.title} />;
+      });
+
+    const list=[];
+    columns.map((item, index) => {
+      list.push(item)
+    });
+    list.push(
+      {
+        title: '操作',
+        key: 'operation',
+        fixed: 'right',
+        width: 250,
+        filterDropdown: ({ confirm, clearFilters }) => (
+          <div style={{ padding: 8 }}>
+            <Tree
+              checkable
+              draggable
+              blockNode
+              selectable={false}
+              onCheck={this.onCheck}
+              checkedKeys={checkedOptions}
+              onDrop={this.onDrop.bind(this)}
+            >
+              {loop(plainOptions)}
+            </Tree>
+            <div>
+              <Button
+                type="primary"
+                size="small"
+                onClick={() => this.handleSubmit(confirm)}
+                style={{ width: "60px", marginRight: "10px" }}
+              >
+                确定
+              </Button>
+              <Button
+                size="small"
+                onClick={() => this.handleReset(clearFilters)}
+                style={{ width: "60px" }}
+              >
+                取消
+              </Button>
+            </div>
+          </div>
+        ),
+        filterIcon: filtered => <Icon type="setting" theme="filled" />,
+        onFilterDropdownVisibleChange: this.onFilterDropdownVisibleChange.bind(
+          this
+        ),
+        render: (text,row) => {
+          return(
+            <div>
+              <a onClick={()=>this.handleDetails(row)}>详情</a>
+              <Divider type="vertical" />
+              {
+                row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
+              }
+              <a onClick={()=>this.handleJournal(row)}>日志</a>
+              <Divider type="vertical" />
+              <a onClick={()=>this.handleSMS(row)}>短信</a>
+              <Divider type="vertical" />
+              <a onClick={()=>this.handleVoice(row)}>语音</a>
+
+              {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
+
+              {/* <a>跟进</a>
+                      <Divider type="vertical" />
+                      <a onClick={()=>this.handleEdit(row)}>编辑</a>
+                      <Divider type="vertical" />
+                      <a>置顶</a>
+                      <Divider type="vertical" />
+                      <a>归档</a>
+                      <Divider type="vertical" /> */}
+
+              {/* <Divider type="vertical" /> */}
+              {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
+              {/* <Divider type="vertical" />
+                      <a >短信</a> */}
+              {/* <Divider type="vertical" /> */}
+              {/* <a onClick={()=>this.handleReminds([row])}>提醒</a> */}
+            </div>
+          )
+        },
+      }
+    )
+
+    const column=[
       {
         title: '姓名',
         dataIndex: 'userName',
@@ -1704,24 +1915,24 @@ class AllOrdersList extends PureComponent {
         render: (key,row)=>{
           // 待审核、已激活、已取消、已退回-不可切换状态
           if(key == '0' || key == '7' || key == '8' || key == '9'){
-          return (
-            <div>
-              <Tag color={this.getORDERSCOLOR(key)}>
-                {this.getORDERSTATUS(key)}
-              </Tag>
-            </div>
-          )
-        }else{
-        return (
-        <div style={{cursor: 'pointer'}}>
-        <Tag color={this.getORDERSCOLOR(key)}>
-        {this.getORDERSTATUS(key)}
-        </Tag>
-        </div>
-        )
-      }
-  }
-  },
+            return (
+              <div>
+                <Tag color={this.getORDERSCOLOR(key)}>
+                  {this.getORDERSTATUS(key)}
+                </Tag>
+              </div>
+            )
+          }else{
+              return (
+                <div style={{cursor: 'pointer'}}>
+                  <Tag color={this.getORDERSCOLOR(key)}>
+                  {this.getORDERSTATUS(key)}
+                  </Tag>
+                </div>
+              )
+          }
+        }
+    },
     {
       title: '订单状态(免押宝)',
         dataIndex: 'mianyaStatus',
@@ -1978,7 +2189,7 @@ class AllOrdersList extends PureComponent {
             renderSearchForm={this.renderSearchForm}
             loading={loading}
             data={data}
-            columns={columns}
+            columns={list}
             scroll={{ x: 1000 }}
             renderLeftButton={()=>this.renderLeftButton(tabKey)}
             // renderRightButton={this.renderRightButton}
