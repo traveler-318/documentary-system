@@ -49,7 +49,10 @@ import {
   getCurrenttree,
   getCurrentsalesman,
   updateConfirmTag,
-  updateVoiceStatus
+  updateVoiceStatus,
+  orderMenuHead,
+  orderMenuTemplate,
+  updateOrderHead
 } from '../../../services/newServices/order';
 
 // getList as getSalesmanLists,
@@ -152,22 +155,11 @@ class AllOrdersList extends PureComponent {
       tips:[],
       salesmangroup:[],
       countSice:0,
-      plainOptions:[
-        {
-          title:"名字",
-          key:"bt1"
-        },{
-          title:"电话",
-          key:"bt2"
-        },{
-          title:"地址",
-          key:"bt3"
-        },{
-          title:"机器状态(免押宝)",
-          key:"bt4"
-        },
-      ],
-      checkedOptions:["bt1", "bt3", "bt5"],
+      plainOptions:[],
+      checkedOptions:[],
+      editPlainOptions: '', // 当前选择的字段列表，未保存
+      editCheckedOptions: '', // 当前已选择字段，未保存
+      isClickHandleSearch:'',// 设置字段后在未保存的情况下点击空白区域字段重置
       updateConfirmTagVisible:false,
       voiceStatusVisible:false,
       confirmTagList:[],
@@ -181,6 +173,8 @@ class AllOrdersList extends PureComponent {
 
     this.getTreeList();
     this.currenttree();
+    this.getOrderMenuHead();
+    this.getOrderMenuTemplate();
 
   }
 
@@ -189,6 +183,35 @@ class AllOrdersList extends PureComponent {
       this.setState({productList:res.data})
     })
   }
+
+  // 菜单列表头获取
+  getOrderMenuHead = () => {
+    orderMenuHead().then(res=>{
+      console.log(res)
+      const list=res.data.menuJson;
+      const checked=[];
+      list.map(item => {
+        checked.push(item.dataIndex)
+      })
+      this.setState({
+        checkedOptions:checked,
+        editCheckedOptions:checked
+      })
+    })
+  }
+
+  getOrderMenuTemplate = () => {
+    orderMenuTemplate().then(res=>{
+      res.data.menuJson.map(item => {
+        item.key=item.dataIndex
+      })
+      this.setState({
+        plainOptions:res.data.menuJson,
+        editPlainOptions:res.data.menuJson
+      })
+    })
+  }
+
   // 组织列表
   currenttree = () => {
     getCurrenttree().then(res=>{
@@ -1491,8 +1514,59 @@ class AllOrdersList extends PureComponent {
     });
   }
 
+  onCheck = (checkedKeys) => {
+    console.log(checkedKeys)
+    this.setState({
+      checkedOptions: checkedKeys
+    });
+  };
+
+  onFilterDropdownVisibleChange = (visible, type) => {
+    const {isClickHandleSearch,editPlainOptions,editCheckedOptions}=this.state
+    if (visible && !isClickHandleSearch) {
+      this.setState({
+        isClickHandleSearch: false
+      });
+    } else {
+      this.setState({
+        plainOptions: editPlainOptions,
+        checkedOptions: editCheckedOptions
+      });
+    }
+  };
+
+  handleSubmit = confirm => {
+    // 确定 保存用户设置的字段排序和需要显示的字段key
+    const { plainOptions, checkedOptions } = this.state;
+    const arr=[];
+    checkedOptions.map(item=>{
+      plainOptions.map(plain=>{
+        if(item === plain.key){
+          arr.push(plain)
+        }
+      })
+    })
+    console.log(arr)
+
+    // this.setState(
+    //   {
+    //     isClickHandleSearch: true,
+    //     editPlainOptions: plainOptions,
+    //     editCheckedOptions: checkedOptions
+    //   },
+    //   () => {
+    //     confirm();
+    //   }
+    // );
+  };
+
   handleReset = clearFilters => {
+    // 用户点击取消按钮，重置字段
     clearFilters();
+    this.setState({
+      plainOptions: this.state.editPlainOptions,
+      checkedOptions: this.state.editCheckedOptions
+    });
   };
 
   components = {
@@ -1502,6 +1576,8 @@ class AllOrdersList extends PureComponent {
   };
 
   onDrop = info => {
+    const {checkedOptions}=this.state;
+    console.log(checkedOptions)
     const dropKey = info.node.props.eventKey;
     const dragKey = info.dragNode.props.eventKey;
     const dropPos = info.node.props.pos.split("-");
@@ -1779,7 +1855,7 @@ class AllOrdersList extends PureComponent {
           <Button
             type="primary"
             size="small"
-            onClick={() => this.handleSearch(confirm)}
+            onClick={() => this.handleSubmit(confirm)}
             style={{ width: "60px", marginRight: "10px" }}
           >
             确定
@@ -1794,9 +1870,10 @@ class AllOrdersList extends PureComponent {
         </div>
       </div>
     ),
-      filterIcon: filtered => (
-      <Icon type="setting" theme="filled" />
-    ),
+      filterIcon: filtered => <Icon type="setting" theme="filled" />,
+      onFilterDropdownVisibleChange: this.onFilterDropdownVisibleChange.bind(
+        this
+      ),
       render: (text,row) => {
       return(
         <div>

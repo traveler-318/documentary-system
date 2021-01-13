@@ -292,6 +292,26 @@ export async function importText(params) {
   });
 }
 
+// 获取订单菜单列表头
+export async function orderMenuHead() {
+  return request("/api/menu_config/menulistconfig/orderMenuHead",{
+    method: 'POST',
+  });
+}
+// 菜单列表头总模板
+export async function orderMenuTemplate() {
+  return request("/api/menu_config/menulistconfig/orderMenuTemplate",{
+    method: 'POST',
+  });
+}
+// 订单菜单列表头修改
+export async function updateOrderHead(params) {
+  return request("/api/menu_config/menulistconfig/updateOrderHead",{
+    method: 'POST',
+    body: params,
+  });
+}
+
 
 // 订单导入
 export async function importOrder(params) {
