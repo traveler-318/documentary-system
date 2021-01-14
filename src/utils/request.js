@@ -26,6 +26,7 @@ const codeMessage = {
 };
 
 const checkStatus = response => {
+  console.log(response)
   if (
     (response.status >= 200 && response.status < 300) ||
     // 针对于要显示后端返回自定义详细信息的status, 配置跳过
@@ -46,15 +47,13 @@ const checkStatus = response => {
 };
 
 const checkServerCode = (response,options) => {
-  if(!options.isShowTips){
+  if(options.isShowTips){
     return response;
   }
   if (response.code >= 200 && response.code < 300) {
     return response;
   }
   if (response.code === 400) {
-    console.log(url,"response")
-
     notification.error({
       message: response.msg || codeMessage[response.code],
     });
@@ -83,6 +82,7 @@ const cachedSave = (response, hashcode) => {
    * Does not support data other than json, Cache only json
    */
   const contentType = response.headers.get('Content-Type');
+  console.log(contentType)
   if (contentType && contentType.match(/application\/json/i)) {
     // All data is saved as text
     response
@@ -105,7 +105,6 @@ const cachedSave = (response, hashcode) => {
  */
 export default function request(url, option) {
   const options = {
-    isShowTips:true,
     ...option,
   };
 

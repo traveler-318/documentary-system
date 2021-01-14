@@ -1488,7 +1488,6 @@ class AllOrdersList extends PureComponent {
   }
 
   onCheck = (checkedKeys) => {
-    console.log(checkedKeys)
     this.setState({
       checkedOptions: checkedKeys
     });
@@ -1511,20 +1510,23 @@ class AllOrdersList extends PureComponent {
   handleSubmit = confirm => {
     // 确定 保存用户设置的字段排序和需要显示的字段key
     const { plainOptions, checkedOptions } = this.state;
+    console.log(plainOptions)
+    console.log(checkedOptions)
     const arr=[];
-    checkedOptions.map(item=>{
-      plainOptions.map(plain=>{
-        if(item === plain.key){
-          arr.push(plain)
+
+    plainOptions.map(item=>{
+      // checkedOptions.map(items=>{
+        if(checkedOptions.indexOf(item.key) != -1){
+          arr.push(item)
         }
-      })
+      // })
     })
+
     const params={
       menuJson:arr,
       menuType:0,
       deptId:getCookie("dept_id")
     }
-    console.log(params)
     updateOrderHead(params).then(res=>{
       if(res.code === 200){
         message.success(res.msg)
@@ -1608,125 +1610,127 @@ class AllOrdersList extends PureComponent {
 
   // 菜单列表头获取
   getOrderMenuHead = () => {
-    orderMenuHead().then(res=>{
-      console.log(res)
-      const list=res.data.menuJson;
-      const checked=[];
+    orderMenuHead().then(resp=>{
+      console.log(resp)
+      if(resp.code === 200){
+        const list=resp.data.menuJson;
+        const checked=[];
 
-      list.map(item => {
-        // 姓名
-        if(item.dataIndex === "userName"){
-          item.render=(key,row)=>{
-            return (
-              <div className={styles.userName}>
-                {
-                  row.expireClaim === '1' ? (<p><span>过期</span></p>):""
-                }
-                <span>{key}</span>
-              </div>
-            )
-          }
-        }
-        // 订单状态
-        if(item.dataIndex === "confirmTag"){
-          item.render=(key,row)=>{
-            // 待审核、已激活、已取消、已退回-不可切换状态
-            if(key == '0' || key == '7' || key == '8' || key == '9'){
+        list.map(item => {
+          // 姓名
+          if(item.dataIndex === "userName"){
+            item.render=(key,row)=>{
               return (
-                <div>
-                  <Tag color={this.getORDERSCOLOR(key)}>
-                    {this.getORDERSTATUS(key)}
-                  </Tag>
-                </div>
-              )
-            }else{
-              return (
-                <div style={{cursor: 'pointer'}}>
-                  <Tag color={this.getORDERSCOLOR(key)}>
-                    {this.getORDERSTATUS(key)}
-                  </Tag>
+                <div className={styles.userName}>
+                  {
+                    row.expireClaim === '1' ? (<p><span>过期</span></p>):""
+                  }
+                  <span>{key}</span>
                 </div>
               )
             }
           }
-        }
-        // 订单状态(免押宝)
-        if(item.dataIndex === "mianyaStatus"){
-          item.render=(key,row)=>{
-            let type=''
-            if (key === 0) {
-              type ='未授权';
-            } else if(key === 1){
-              type ='已授权';
-            }else if(key === 2){
-              type ='解冻';
-            }else if(key === 3){
-              type ='扣款';
+          // 订单状态
+          if(item.dataIndex === "confirmTag"){
+            item.render=(key,row)=>{
+              // 待审核、已激活、已取消、已退回-不可切换状态
+              if(key == '0' || key == '7' || key == '8' || key == '9'){
+                return (
+                  <div>
+                    <Tag color={this.getORDERSCOLOR(key)}>
+                      {this.getORDERSTATUS(key)}
+                    </Tag>
+                  </div>
+                )
+              }else{
+                return (
+                  <div style={{cursor: 'pointer'}}>
+                    <Tag color={this.getORDERSCOLOR(key)}>
+                      {this.getORDERSTATUS(key)}
+                    </Tag>
+                  </div>
+                )
+              }
             }
-            return (
-              type
-            )
           }
-        }
-        // 机器状态(免押宝)
-        if(item.dataIndex === "machineStatus"){
-          item.render=(key,row)=>{
-            let type=''
-            if (key === 0) {
-              type ='未激活';
-            } else if(key === 1){
-              type ='已激活';
-            }else if(key === 2){
-              type ='已退回';
-            }else if(key === 3){
-              type ='被投诉';
+          // 订单状态(免押宝)
+          if(item.dataIndex === "mianyaStatus"){
+            item.render=(key,row)=>{
+              let type=''
+              if (key === 0) {
+                type ='未授权';
+              } else if(key === 1){
+                type ='已授权';
+              }else if(key === 2){
+                type ='解冻';
+              }else if(key === 3){
+                type ='扣款';
+              }
+              return (
+                type
+              )
             }
-            return (
-              type
-            )
           }
-        }
-        // 订单类型
-        if(item.dataIndex === "orderType"){
-          item.render=(key)=>{
-            return (
-              <div>{this.getORDERTYPE(key)} </div>
-            )
+          // 机器状态(免押宝)
+          if(item.dataIndex === "machineStatus"){
+            item.render=(key,row)=>{
+              let type=''
+              if (key === 0) {
+                type ='未激活';
+              } else if(key === 1){
+                type ='已激活';
+              }else if(key === 2){
+                type ='已退回';
+              }else if(key === 3){
+                type ='被投诉';
+              }
+              return (
+                type
+              )
+            }
           }
-        }
-        // 订单来源
-        if(item.dataIndex === "orderSource"){
-          item.render=(key)=> {
-            return (
-              <div>{this.getORDERSOURCE(key)} </div>
-            )
+          // 订单类型
+          if(item.dataIndex === "orderType"){
+            item.render=(key)=>{
+              return (
+                <div>{this.getORDERTYPE(key)} </div>
+              )
+            }
           }
-        }
-        // 物流状态
-        if(item.dataIndex === "logisticsStatus"){
-          item.render=(key)=>{
-            return (
-              <div>{this.getLogisticsStatusValue(key)} </div>
-            )
+          // 订单来源
+          if(item.dataIndex === "orderSource"){
+            item.render=(key)=> {
+              return (
+                <div>{this.getORDERSOURCE(key)} </div>
+              )
+            }
           }
-        }
-        // SN
-        if(item.dataIndex === "productCoding"){
-          item.ellipsis=true
-        }
-        // 收货地址
-        if(item.dataIndex === "userAddress"){
-          item.ellipsis=true
-        }
-
-
-        checked.push(item.dataIndex)
-      })
-      this.setState({
-        checkedOptions:checked,
-        columns:list,
-        editCheckedOptions:checked
-      })
+          // 物流状态
+          if(item.dataIndex === "logisticsStatus"){
+            item.render=(key)=>{
+              return (
+                <div>{this.getLogisticsStatusValue(key)} </div>
+              )
+            }
+          }
+          // SN
+          if(item.dataIndex === "productCoding"){
+            item.ellipsis=true
+          }
+          // 收货地址
+          if(item.dataIndex === "userAddress"){
+            item.ellipsis=true
+          }
+          checked.push(item.dataIndex)
+        })
+        this.setState({
+          checkedOptions:checked,
+          columns:list,
+          editCheckedOptions:checked
+        })
+      }else {
+        message.error(resp.msg)
+      }
     })
   }
 
@@ -1836,6 +1840,20 @@ class AllOrdersList extends PureComponent {
                 style={{ width: "60px" }}
               >
                 取消
+              </Button>
+              <Button
+                size="small"
+                onClick={() => this.handleReset(clearFilters)}
+                style={{ width: "60px" }}
+              >
+                全选
+              </Button>
+              <Button
+                size="small"
+                onClick={() => this.handleReset(clearFilters)}
+                style={{ width: "60px" }}
+              >
+                清除
               </Button>
             </div>
           </div>
