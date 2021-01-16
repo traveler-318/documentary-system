@@ -1803,7 +1803,7 @@ class AllOrdersList extends PureComponent {
 
     const loop = data =>
       data.map((item, index) => {
-        return <TreeNode key={item.key} title={item.title} icon={<Icon type="menu" style={{
+        return <TreeNode key={item.key} title={item.title} icon={<Icon className={styles.icon} type="menu" style={{
           position:'absolute',
           right:'10px',
           marginTop:'px'}}/>} />;
