@@ -1791,9 +1791,9 @@ class AllOrdersList extends PureComponent {
             position: 'absolute',
             // display:"none",
             right: '10px',
-            marginTop: 'px'}}
-          type="menu" />}
-          title={item.title}
+            marginTop: '3px'}}
+          type="menu" />} 
+          title={item.title} 
           />;
       });
 
