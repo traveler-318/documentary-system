@@ -1537,34 +1537,13 @@ class AllOrdersList extends PureComponent {
     })
   };
 
-  handleCancel = clearFilters => {
+  handleReset = clearFilters => {
     // 用户点击取消按钮，重置字段
     clearFilters();
     this.setState({
       plainOptions: this.state.editPlainOptions,
       checkedOptions: this.state.editCheckedOptions
     });
-  };
-
-  handleReset = confirm => {
-    const { plainOptions } = this.state;
-    const params={
-      menuJson:plainOptions,
-      menuType:0,
-      deptId:getCookie("dept_id")
-    }
-    updateOrderHead(params).then(res=>{
-      if(res.code === 200){
-        message.success(res.msg)
-        this.getOrderMenuHead();
-        this.setState({
-            isClickHandleSearch: true,
-          },() => {
-            confirm();
-          }
-        )
-      }
-    })
   };
 
   components = {
@@ -1803,10 +1782,19 @@ class AllOrdersList extends PureComponent {
 
     const loop = data =>
       data.map((item, index) => {
-        return <TreeNode key={item.key} title={item.title} icon={<Icon className={styles.icon} type="menu" style={{
-          position:'absolute',
-          right:'10px',
-          marginTop:'px'}}/>} />;
+        return <TreeNode
+        className={styles.TreeNode}
+          key={item.key}
+          icon={<Icon
+            className={styles.TreeNodeIcon}
+            style={{
+            position: 'absolute',
+            // display:"none",
+            right: '10px',
+            marginTop: 'px'}}
+          type="menu" />}
+          title={item.title}
+          />;
       });
 
     const list=[];
@@ -1826,10 +1814,10 @@ class AllOrdersList extends PureComponent {
               draggable
               blockNode
               selectable={false}
-              showIcon={true}
               onCheck={this.onCheck}
               checkedKeys={checkedOptions}
               onDrop={this.onDrop.bind(this)}
+              showIcon={true}
             >
               {loop(plainOptions)}
             </Tree>
