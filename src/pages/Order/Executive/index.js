@@ -1537,13 +1537,34 @@ class AllOrdersList extends PureComponent {
     })
   };
 
-  handleReset = clearFilters => {
+  handleCancel = clearFilters => {
     // 用户点击取消按钮，重置字段
     clearFilters();
     this.setState({
       plainOptions: this.state.editPlainOptions,
       checkedOptions: this.state.editCheckedOptions
     });
+  };
+  handleReset = confirm => {
+    // 确定 保存用户设置的字段排序和需要显示的字段key
+    const { plainOptions } = this.state;
+    const params={
+      menuJson:plainOptions,
+      menuType:0,
+      deptId:getCookie("dept_id")
+    }
+    updateOrderHead(params).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg)
+        this.getOrderMenuHead();
+        this.setState({
+            isClickHandleSearch: true,
+          },() => {
+            confirm();
+          }
+        )
+      }
+    })
   };
 
   components = {
