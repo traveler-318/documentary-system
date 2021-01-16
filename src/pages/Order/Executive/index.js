@@ -1510,16 +1510,12 @@ class AllOrdersList extends PureComponent {
   handleSubmit = confirm => {
     // 确定 保存用户设置的字段排序和需要显示的字段key
     const { plainOptions, checkedOptions } = this.state;
-    console.log(plainOptions)
-    console.log(checkedOptions)
     const arr=[];
 
     plainOptions.map(item=>{
-      // checkedOptions.map(items=>{
         if(checkedOptions.indexOf(item.key) != -1){
           arr.push(item)
         }
-      // })
     })
 
     const params={
@@ -1539,26 +1535,36 @@ class AllOrdersList extends PureComponent {
         )
       }
     })
-
-    // this.setState(
-    //   {
-    //     isClickHandleSearch: true,
-    //     editPlainOptions: plainOptions,
-    //     editCheckedOptions: checkedOptions
-    //   },
-    //   () => {
-    //     confirm();
-    //   }
-    // );
   };
 
-  handleReset = clearFilters => {
+  handleCancel = clearFilters => {
     // 用户点击取消按钮，重置字段
     clearFilters();
     this.setState({
       plainOptions: this.state.editPlainOptions,
       checkedOptions: this.state.editCheckedOptions
     });
+  };
+
+  handleReset = confirm => {
+    const { plainOptions } = this.state;
+    const params={
+      menuJson:plainOptions,
+      menuType:0,
+      deptId:getCookie("dept_id")
+    }
+    updateOrderHead(params).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg)
+        this.getOrderMenuHead();
+        this.setState({
+            isClickHandleSearch: true,
+          },() => {
+            confirm();
+          }
+        )
+      }
+    })
   };
 
   components = {
@@ -1795,11 +1801,12 @@ class AllOrdersList extends PureComponent {
       params
     } = this.state;
 
-    console.log(columns)
-
     const loop = data =>
       data.map((item, index) => {
-        return <TreeNode key={item.key} title={item.title} />;
+        return <TreeNode key={item.key} title={item.title} icon={<Icon type="menu" style={{
+          position:'absolute',
+          right:'10px',
+          marginTop:'px'}}/>} />;
       });
 
     const list=[];
@@ -1819,6 +1826,7 @@ class AllOrdersList extends PureComponent {
               draggable
               blockNode
               selectable={false}
+              showIcon={true}
               onCheck={this.onCheck}
               checkedKeys={checkedOptions}
               onDrop={this.onDrop.bind(this)}
@@ -1836,24 +1844,17 @@ class AllOrdersList extends PureComponent {
               </Button>
               <Button
                 size="small"
-                onClick={() => this.handleReset(clearFilters)}
-                style={{ width: "60px" }}
+                onClick={() => this.handleCancel(clearFilters)}
+                style={{ width: "60px", marginRight: "10px" }}
               >
                 取消
               </Button>
               <Button
                 size="small"
                 onClick={() => this.handleReset(clearFilters)}
-                style={{ width: "60px" }}
+                style={{ width: "60px", marginRight: "10px" }}
               >
-                全选
-              </Button>
-              <Button
-                size="small"
-                onClick={() => this.handleReset(clearFilters)}
-                style={{ width: "60px" }}
-              >
-                清除
+                重置
               </Button>
             </div>
           </div>
