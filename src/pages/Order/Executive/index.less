@@ -11,6 +11,9 @@
         }
     }
 }
+.TreeNodeIcon{
+    display: none;
+}
 // 可伸缩列表样式
 :global{
       .react-resizable {
@@ -27,7 +30,22 @@
         cursor: col-resize;
         z-index: 1;
       }
+
+      .ant-tree li:hover{
+        .anticon{
+          display: block;
+        }
+        // .TreeNodeIcon{
+        //   display: none;
+        // }
+      }
 }
+
+// .ant-tree li .ant-tree-node-content-wrapper:hover{
+//   .TreeNodeIcon{
+//     display: none;
+//   }
+// }
 
 
 
