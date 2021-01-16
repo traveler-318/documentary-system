@@ -46,7 +46,7 @@ const checkStatus = response => {
 };
 
 const checkServerCode = (response,options) => {
-  if(!options.isShowTips){
+  if(options.isShowTips){
     return response;
   }
   if (response.code >= 200 && response.code < 300) {
@@ -105,7 +105,7 @@ const cachedSave = (response, hashcode) => {
  */
 export default function request(url, option) {
   const options = {
-    isShowTips:true,
+    isShowTips:false,
     ...option,
   };
 
