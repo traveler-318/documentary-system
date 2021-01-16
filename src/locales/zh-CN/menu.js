@@ -6,7 +6,7 @@ export default {
   'menu.order.afterSaleOrder': '售后订单',
   'menu.order.smsrecord': '短信记录',
   'menu.order.mySubordinates': '我的下属',
-  'menu.order.executive': '下属订单',
+  'menu.order.executive': '团队订单',
 
   'menu.orders': '订单管理',
   'menu.orders.orderList': '全部订单',

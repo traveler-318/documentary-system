@@ -26,7 +26,6 @@ const codeMessage = {
 };
 
 const checkStatus = response => {
-  console.log(response)
   if (
     (response.status >= 200 && response.status < 300) ||
     // 针对于要显示后端返回自定义详细信息的status, 配置跳过
@@ -82,7 +81,6 @@ const cachedSave = (response, hashcode) => {
    * Does not support data other than json, Cache only json
    */
   const contentType = response.headers.get('Content-Type');
-  console.log(contentType)
   if (contentType && contentType.match(/application\/json/i)) {
     // All data is saved as text
     response

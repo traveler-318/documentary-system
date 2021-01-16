@@ -10,7 +10,7 @@ export const TEMPID =[
   {value:'德邦',id:"39b4fe4306774d29b2c5a6898a91b04d"},
   {value:'京东物流',id:"b9a5b5e005f5461ba51f880e32685688"},
   // {value:'中通快递',id:"613da7bab296496a8a6e4907a8a3f0cc"},
-  {value:'中通快递',id:"b2eb9a48046c49f098cbc91ccbb75b88"},
+  {value:'中通快递',id:"b895a293163d43728fac5c492b0b4f7b"},
   {value:'天天快递',id:"cd378bc5ea0c47c4ae2497bc7e61c04d"},
   {value:'百世快递',id:"26cc76b429fe4ca5bd760a8309bab5c5"},
   {value:'圆通速递',id:"c2099bf164534b028079309f9b89d48e"},
