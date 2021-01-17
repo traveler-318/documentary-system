@@ -66,19 +66,21 @@ class SmsRecharge extends PureComponent {
   handleSubmit = (item) => {
     console.log(item)
     // message.error("充值功能正在维护!如有需要请联系负责人充值")
-    getUnWeChatBind(1).then(res=>{
-      console.log(res)
-      if(res.code === 200){
-        const url=res.data+"&money="+item.price;
-        this.setState({
-          bindingQRCode:url,
-          bindingQRCodeVisible:true,
-          money:item.price
-        })
-      }else {
-        message.error(res.msg)
-      }
-    })
+    // getUnWeChatBind(1,1).then(res=>{
+    //   console.log(res)
+    const url="http://121.37.251.134:9010/system/topup/amount?type=1&money="+item.price
+      // if(res.code === 200){
+        window.open(url,"_blank");
+      //   // const url=res.data+"&money="+item.price;
+      //   // this.setState({
+      //   //   bindingQRCode:url,
+      //   //   bindingQRCodeVisible:true,
+      //   //   money:item.price
+      //   // })
+      // }else {
+      //   message.error(res.msg)
+      // }
+    // })
   };
 
   onChange = (e) => {
@@ -107,19 +109,24 @@ class SmsRecharge extends PureComponent {
       if(e.target.value % 10 == 0){
         // message.error("充值功能正在维护!如有需要请联系负责人充值")
 
-        getUnWeChatBind(1).then(res=>{
-          if(res.code === 200){
-            const url=res.data+"&money="+price;
-            console.log(url)
-            this.setState({
-              bindingQRCode:url,
-              bindingQRCodeVisible:true,
-              money:price
-            })
-          }else {
-            message.error(res.msg)
-          }
-        })
+        const url="http://121.37.251.134:9010/system/topup/amount?type=1&money="+Number(price)
+        // if(res.code === 200){
+        window.open(url,"_blank");
+
+        // getUnWeChatBind(1,Number(price)).then(res=>{
+        //   if(res.code === 200){
+        //     window.open(res.data,"_blank");
+        //     const url=res.data+"&money="+price;
+        //     console.log(url)
+        //     this.setState({
+        //       bindingQRCode:url,
+        //       bindingQRCodeVisible:true,
+        //       money:price
+        //     })
+        //   }else {
+        //     message.error(res.msg)
+        //   }
+        // })
       }else{
         message.error("仅支持10的整数倍,请输入正确的数量")
       }

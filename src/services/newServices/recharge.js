@@ -7,8 +7,8 @@ import request from '../../utils/request';
 
 
 // ============ 短信充值 ===============
-export async function getUnWeChatBind(type) {
-  return request("/api/system/topup/amount?type="+type, {
+export async function getUnWeChatBind(type,money) {
+  return request("/api/system/topup/amount?type="+type+"&money="+money, {
     method: 'POST',
   });
 }

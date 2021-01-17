@@ -39,6 +39,7 @@ class Tenant extends PureComponent {
     datasourceLoading: false,
     selectedRows: [],
     params: {},
+    details:{},
     versionList:[
       {
         id:'0',
@@ -75,11 +76,27 @@ class Tenant extends PureComponent {
   // ============ 授权配置 ===============
   setting = () => {
     const keys = this.getSelectKeys();
+    const { selectedRows } = this.state;
     if (keys.length === 0) {
       message.warn('请先选择一条数据!');
       return;
     }
-    this.setState({ settingVisible: true });
+    if (keys.length > 1) {
+      message.warn('只能选择一条数据!');
+      return;
+    }
+    console.log(selectedRows)
+
+    const details={
+      expireTime:selectedRows[0].expireTime,
+      accountNumber:selectedRows[0].accountNumber,
+      version:selectedRows[0].version,
+
+    }
+    this.setState({
+      settingVisible: true,
+      details:details
+    });
   };
 
   handleSettingCancel = () => {
@@ -91,12 +108,16 @@ class Tenant extends PureComponent {
 
   handleSetting = () => {
     const { form } = this.props;
-    const accountNumber = form.getFieldValue('accountNumber');
+    let accountNumber = form.getFieldValue('accountNumber');
     const version = form.getFieldValue('version');
     const expireTime = func.format(form.getFieldValue('expireTime'));
     this.setState({ settingLoading: true });
     const keys = this.getSelectKeys();
-    setting({ ids: keys.join(','), accountNumber, expireTime,version }).then(resp => {
+    console.log(keys[0])
+    if(accountNumber === '不限制'){
+      accountNumber = -1
+    }
+    setting({ ids: keys[0], accountNumber, expireTime,version }).then(resp => {
       if (resp.success) {
         const { dispatch } = this.props;
         const { params } = this.state;
@@ -205,7 +226,7 @@ class Tenant extends PureComponent {
 
     const { getFieldDecorator } = form;
 
-    const { settingVisible, settingLoading, datasourceVisible, datasourceLoading,versionList } = this.state;
+    const { settingVisible, settingLoading, datasourceVisible, datasourceLoading,versionList,details } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -314,10 +335,14 @@ class Tenant extends PureComponent {
           <Form style={{ marginTop: 8 }}>
             <Card className={styles.card} bordered={false}>
               <FormItem {...formItemLayout} className={styles.inputItem} label="账号额度">
-                {getFieldDecorator('accountNumber')(<InputNumber placeholder="请输入账号额度" />)}
+                {getFieldDecorator('accountNumber', {
+                  initialValue: details.accountNumber === -1 ? ("不限制"):(details.accountNumber),
+                })(<InputNumber placeholder="请输入账号额度" />)}
               </FormItem>
               <FormItem {...formItemLayout} label="过期时间">
-                {getFieldDecorator('expireTime')(
+                {getFieldDecorator('expireTime', {
+                  initialValue: moment(details.expireTime,"YYYY-MM-DD HH:mm:ss"),
+                })(
                   <DatePicker
                     style={{ width: '100%' }}
                     format="YYYY-MM-DD HH:mm:ss"
@@ -327,7 +352,9 @@ class Tenant extends PureComponent {
                 )}
               </FormItem>
               <FormItem {...formItemLayout} label="授权版本">
-                {getFieldDecorator('version')(
+                {getFieldDecorator('version', {
+                  initialValue: details.version,
+                })(
                   <Select placeholder="请选择授权版本">
                     {versionList.map(d => (
                       <Select.Option key={d.id} value={d.id}>
