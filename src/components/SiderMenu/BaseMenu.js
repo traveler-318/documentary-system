@@ -99,7 +99,7 @@ export default class BaseMenu extends PureComponent {
     const { location, isMobile, onCollapse } = this.props;
     return (
       <Link
-        to={itemPath}
+        to={`${itemPath}?_K=${Date.parse(new Date())}`}
         target={target}
         replace={itemPath === location.pathname}
         onClick={
