@@ -880,6 +880,7 @@ class AllOrdersList extends PureComponent {
     }
     const listArr=[];
     if(_listArr.length > 0){
+      let text = ""
       for(let i=0; i<selectedRows.length; i++){
         const idSame=true;
         for(let j=0; j<_listArr.length; j++){
@@ -887,6 +888,19 @@ class AllOrdersList extends PureComponent {
             idSame=false;
           }
         }
+        let  type = false
+
+        for(let key in LOGISTICSCOMPANY){
+          if(LOGISTICSCOMPANY[key] === selectedRows[i].logisticsCompany){
+            selectedRows[i].logisticsType = key;
+            type = true
+          }
+        }
+        if(!type){
+          text += `${selectedRows[i].userName}(${selectedRows[i].userPhone})订单物流信息有误，请修改物流信息\n`
+        }
+
+        console.log(text)
         if(idSame){
           const item={};
           if(selectedRows[i].logisticsCompany && selectedRows[i].logisticsNumber && !selectedRows[i].logisticsStatus){
@@ -906,8 +920,35 @@ class AllOrdersList extends PureComponent {
           }
         }
       }
+      if(text != ""){
+        Modal.confirm({
+          title: '提示',
+          content: text,
+          okText: '确定',
+          width:'550px',
+          okType: 'danger',
+          cancelText: '取消',
+          keyboard:false,
+          onOk() {},
+          onCancel() {},
+        });
+      }
     }else {
+      let text = ""
       for(let i=0; i<selectedRows.length; i++){
+
+        let  type = false
+
+        for(let key in LOGISTICSCOMPANY){
+          if(LOGISTICSCOMPANY[key] === selectedRows[i].logisticsCompany){
+            selectedRows[i].logisticsType = key;
+            type = true
+          }
+        }
+        if(!type){
+          text += `${selectedRows[i].userName}(${selectedRows[i].userPhone})订单物流信息有误，请修改物流信息\n`
+        }
+
         const item={};
         if(selectedRows[i].logisticsCompany && selectedRows[i].logisticsNumber && !selectedRows[i].logisticsStatus){
           item.confirmTag=selectedRows[i].confirmTag;
@@ -925,11 +966,23 @@ class AllOrdersList extends PureComponent {
           listArr.push(item)
         }
       }
+      if(text != ""){
+        Modal.confirm({
+          title: '提示',
+          content: text,
+          okText: '确定',
+          width:'550px',
+          okType: 'danger',
+          cancelText: '取消',
+          keyboard:false,
+          onOk() {},
+          onCancel() {},
+        });
+      }
     }
     this.setState({
       _listArr:listArr
     })
-    console.log(listArr)
     const _this=this;
     Modal.confirm({
       title: '提示',
@@ -1178,28 +1231,43 @@ class AllOrdersList extends PureComponent {
             type = key
           }
         }
-        const params={
-          deptId:row.deptId,
-          id:row.id,
-          logisticsCompany:row.logisticsCompany,
-          logisticsNumber:row.logisticsNumber,
-          logisticsType: type,
-          outOrderNo: row.outOrderNo,
-          productCoding: row.productCoding,
-          productName: row.productName,
-          shipmentRemind: true,
-          tenantId: row.tenantId,
-          userPhone: row.userPhone,
-          confirmTag: row.confirmTag,
-        }
-        subscription(params).then(res=>{
-          if(res.code === 200){
-            message.success(res.msg);
-            list()
-          }else{
-            message.error(res.msg);
+        if(type !=""){
+          const params={
+            deptId:row.deptId,
+            id:row.id,
+            logisticsCompany:row.logisticsCompany,
+            logisticsNumber:row.logisticsNumber,
+            logisticsType: type,
+            outOrderNo: row.outOrderNo,
+            productCoding: row.productCoding,
+            productName: row.productName,
+            shipmentRemind: true,
+            tenantId: row.tenantId,
+            userPhone: row.userPhone,
+            confirmTag: row.confirmTag,
           }
-        })
+          subscription(params).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              list()
+            }else{
+              message.error(res.msg);
+            }
+          })
+        }else {
+          Modal.confirm({
+            title: '提示',
+            content: `${row.userName}(${row.userPhone})订单物流信息有误，请修改物流信息\n`,
+            okText: '确定',
+            width:'550px',
+            okType: 'danger',
+            cancelText: '取消',
+            keyboard:false,
+            onOk() {},
+            onCancel() {},
+          });
+        }
+
       },
       onCancel() {},
     });

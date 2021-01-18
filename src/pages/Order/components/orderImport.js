@@ -292,12 +292,12 @@ class OrderImport extends PureComponent {
             </Row>
             <Form.Item {...formItemLayout} label="销售">
               {getFieldDecorator('salesman', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请选择销售',
-                  },
-                ],
+                // rules: [
+                //   {
+                //     required: true,
+                //     message: '请选择销售',
+                //   },
+                // ],
               })(
                 <Select placeholder={"请选择销售"} style={{ width: 120 }}>
                   {salesmanList.map((item,index)=>{
@@ -322,7 +322,7 @@ class OrderImport extends PureComponent {
                 点击下载
               </Button>
             </Form.Item>
-            <div style={{color:"red",paddingLeft:'33px'}}>*注意：当你选择了订单金额、创建时间，将会覆盖导入文件中的数据内容</div>
+            <div style={{color:"red",paddingLeft:'33px'}}>*注意：所以数据将以模板中提供为准，请注意检查</div>
           </Form>
           </Spin>
         </Modal>
