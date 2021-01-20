@@ -21,10 +21,11 @@ export default {
     *fetchList({ payload }, { call, put }) {
       const response = yield call(list, payload);
       if (response.success) {
+        console.log(response.data,"response.data")
         yield put({
           type: 'saveList',
           payload: {
-            list: response.data,
+            list: response.data.records,
             pagination: false,
           },
         });

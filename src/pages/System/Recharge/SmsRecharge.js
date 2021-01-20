@@ -69,7 +69,7 @@ class SmsRecharge extends PureComponent {
     getUnWeChatBind(1,item.price).then(res=>{
       console.log(res)
       if(res.code === 200){
-        const url="https://web.gendanbao.com.cn/api/system/topup/amount"+res.data
+        const url="http://web.gendanbao.com.cn:9010/system/topup/amount"+res.data
         // const url="http://47.102.204.79:9010/system/topup/amount"+res.data
         window.open(url,"_blank");
         // const url=res.data+"&money="+item.price;
@@ -114,7 +114,7 @@ class SmsRecharge extends PureComponent {
           console.log(res)
           if(res.code === 200){
             // const url="http://121.37.251.134:9010/system/topup/amount"+res.data
-            const url="https://web.gendanbao.com.cn/api/system/topup/amount"+res.data
+            const url="http://web.gendanbao.com.cn:9010/system/topup/amount"+res.data;
 
             // const url="http://47.102.204.79:9010/system/topup/amount"+res.data
             window.open(url,"_blank");

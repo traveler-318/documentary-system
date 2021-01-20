@@ -364,7 +364,7 @@ export default [
           {
             path: '/system/smsrecharge',
             routes: [
-              { path: '/system/smsrecharge', redirect: '/system/smsrecharge/list' },
+              { path: '/system/smsrecharge', component: './System/Recharge/index' },
               { path: '/system/smsrecharge/list', component: './System/Recharge/index' },
             ],
           },
@@ -548,7 +548,7 @@ export default [
           {
             path: '/order/allOrders',
             routes: [
-              { path: '/order/allOrders', redirect: '/order/allOrders/list' },
+              { path: '/order/allOrders', component: './Order/AllOrders/index' },
               { path: '/order/allOrders/list', component: './Order/AllOrders/index' },
               { path: '/order/allOrders/add', component: './Order/components/add' },
               { path: '/order/allOrders/edit/:id', component: './Order/components/edit' },
@@ -559,7 +559,7 @@ export default [
           {
             path: '/order/executive',
             routes: [
-              { path: '/order/executive', redirect: '/order/executive/list' },
+              { path: '/order/executive', component: './Order/Executive/index' },
               { path: '/order/executive/list', component: './Order/Executive/index' },
               { path: '/order/executive/add', component: './Order/components/add' },
               { path: '/order/executive/edit/:id', component: './Order/components/edit' },
@@ -569,7 +569,7 @@ export default [
           {
             path: '/order/salesmanOrder',  //业务员订单
             routes: [
-              { path: '/order/salesmanOrder', redirect: '/order/SalesmanOrder/list' },
+              { path: '/order/salesmanOrder', component: './Order/SalesmanOrder/index' },
               { path: '/order/salesmanOrder/list', component: './Order/SalesmanOrder/index' },
               { path: '/order/salesmanOrder/add', component: './Order/components/add' },
               { path: '/order/salesmanOrder/edit/:id', component: './Order/components/edit' },
@@ -579,7 +579,7 @@ export default [
           {
             path: '/order/warehouseOrder',  //仓库订单
             routes: [
-              { path: '/order/warehouseOrder', redirect: '/order/WarehouseOrder/list' },
+              { path: '/order/warehouseOrder', component: './Order/WarehouseOrder/index' },
               { path: '/order/warehouseOrder/list', component: './Order/WarehouseOrder/index' },
               { path: '/order/warehouseOrder/add', component: './Order/components/add' },
               { path: '/order/warehouseOrder/edit/:id', component: './Order/components/edit' },
@@ -589,7 +589,7 @@ export default [
           {
             path: '/order/afterSaleOrder',  //售后订单
             routes: [
-              { path: '/order/afterSaleOrder', redirect: '/order/AfterSaleOrder/list' },
+              { path: '/order/afterSaleOrder', component: './Order/AfterSaleOrder/index' },
               { path: '/order/afterSaleOrder/list', component: './Order/AfterSaleOrder/index' },
               { path: '/order/afterSaleOrder/add', component: './Order/components/add' },
               { path: '/order/afterSaleOrder/edit/:id', component: './Order/components/edit' },
