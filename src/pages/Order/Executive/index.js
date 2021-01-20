@@ -120,7 +120,8 @@ class AllOrdersList extends PureComponent {
       loading:false,
       params:{
         size:10,
-        current:1
+        current:1,
+        orderBy:false
       },
       tabKey:sessionStorage.executiveOrderTabKey ? sessionStorage.executiveOrderTabKey : '0',
       selectedRows:[],
@@ -231,12 +232,13 @@ class AllOrdersList extends PureComponent {
     }
   }
   // ============ 查询 ===============
-  handleSearch = params => {
+  handleSearch = (params) => {
     console.log(params,"查询参数")
     const { dateRange } = params;
     const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
+      orderBy:false
     };
     if (dateRange) {
       payload = {
@@ -286,6 +288,12 @@ class AllOrdersList extends PureComponent {
       this.getDataList();
     })
   };
+
+  handleTableChange = (pagination, filters, sorter) => {
+    console.log("!!!!!!!!!!!!!!11")
+    console.log(sorter,"!!!!!!!!!!!!!!11")
+  };
+
   // ============ 查询表单 ===============
   renderSearchForm = onReset => {
     const {
@@ -1371,10 +1379,12 @@ class AllOrdersList extends PureComponent {
     sessionStorage.executiveOrderTabKey = key;
     let _params = {...this.state.params}
     _params.current = 1
+    _params.orderBy = false;
     this.setState({
       tabKey:key,
       params:_params
     },()=>{
+      this.getOrderMenuHead()
       this.handleSearch(this.state.params)
     })
   }
@@ -1684,6 +1694,8 @@ class AllOrdersList extends PureComponent {
 
   // 菜单列表头获取
   getOrderMenuHead = () => {
+    const {tabKey}=this.state;
+    console.log(tabKey)
     orderMenuHead().then(resp=>{
       console.log(resp)
       if(resp.code === 200){
@@ -1785,6 +1797,33 @@ class AllOrdersList extends PureComponent {
               return (
                 <div>{this.getLogisticsStatusValue(key)} </div>
               )
+            }
+          }
+          // 签收时间
+          if(tabKey === '5'){
+            // item.defaultSortOrder= 'descend'
+            if(item.dataIndex === "logisticsSigntime"){
+              item.sorter=true
+            }
+          }
+          // 最后跟进时间
+          if(tabKey === '6'){
+            // item.defaultSortOrder= 'descend'
+            if(item.dataIndex === "followTime"){
+              item.sorter= (a, b) =>{
+                // a.logisticsSigntime - b.logisticsSigntime
+                console.log(tabKey)
+              }
+            }
+          }
+          // 激活时间
+          if(tabKey === '7'){
+            // item.defaultSortOrder= 'descend'
+            if(item.dataIndex === "activationSigntime"){
+              item.sorter= (a, b) =>{
+                // a.logisticsSigntime - b.logisticsSigntime
+                console.log(tabKey)
+              }
             }
           }
           // SN
