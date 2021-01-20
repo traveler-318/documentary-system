@@ -132,6 +132,15 @@ class OrderImport extends PureComponent {
         console.log(this.state.fileList,"values");
         values.file = this.state.fileList[0];
         values.createTime=this.state.createTime;
+        if(!values.salesman){
+          values.salesman=null
+        }
+        if(!values.payAmount){
+          values.payAmount=null
+        }
+        if(!values.createTime){
+          values.createTime=null
+        }
         if(values.file){
           importOrder(values).then(res=>{
             this.setState({
@@ -322,7 +331,7 @@ class OrderImport extends PureComponent {
                 点击下载
               </Button>
             </Form.Item>
-            <div style={{color:"red",paddingLeft:'33px'}}>*注意：所以数据将以模板中提供为准，请注意检查</div>
+            <div style={{color:"red",paddingLeft:'33px'}}>*注意：以界面选择为准</div>
           </Form>
           </Spin>
         </Modal>
