@@ -2,20 +2,131 @@ import React, { PureComponent } from 'react';
 import { Card, Col, Collapse, Row, Divider, Tag } from 'antd';
 import styles from '../../layouts/Sword.less';
 import ThirdRegister from '../../components/ThirdRegister';
+import moment from 'moment'
 
 // eslint-disable-next-line import/extensions
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import home from '../../assets/home.svg';
-// import RealTimeInformation from '../../components/RealTimeInformation/index';
+
+import {ordersheetDetail} from '../../services/user'
+
+import orderBriefing from '../../assets/statistics/orderBriefing.svg';
  
 const { Panel } = Collapse;
 
+// const pending = pending
+// 待审核是待审核+已初审
+// //待审核条数
+// private int pending;
+// //已初审
+// private int thereview;
+
+// //已审核
+// private int approved;
+// //已发货
+// private int delivery;
+// //在途中
+// private int ontheway;
+// //已签收
+// private int receiving;
+// //跟进中
+// private int ongoing;
+// //已激活
+// private int activation;
+// //已退回
+// private int refund;
+// //已取消
+// private int cancel;
+// //已过期
+// private int overdue;
+// //退回中
+// private int intheback;
+// //总条数
+// private int totalnumber;
+
 class Workplace extends PureComponent {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      text:{
+        pending:'待审核',
+        approved:'已审核',
+        delivery:'已发货',
+        ontheway:'在途中',
+        receiving:'已签收',
+        ongoing:'跟进中',
+        activation:'已激活',
+        refund:'已退回',
+      },
+      _data:[]
+    }
+  }
+
+  componentWillMount() {
+    
+    let param = moment().format("YYYY-MM-DD").replace(/-/g,'')
+
+    console.log(param)
+    ordersheetDetail(param).then(res=>{
+      const {text} = this.state;
+      let data = JSON.parse(res.data);
+      let _data = []
+
+      data.pending = data.pending+data.thereview
+
+      for(let key in data){
+        if(key != "totalnumber" && key != "cancel" && key != "overdue" && key != "intheback" && key != "thereview"){
+          _data.push({
+            key,
+            num:data[key],
+            title:text[key],
+          })
+        }
+      }
+
+      this.setState({
+        _data:_data
+      })
+    })
+
+  }
+
   render() {
+
+    const {_data} = this.state
+
     return (
       <PageHeaderWrapper>
-        {/* <RealTimeInformation/> */}
-        <img src={home} style={{width:"100%"}} />
+        <div className={styles.order_data}>
+          <div className={styles.title}>
+            <img src={orderBriefing} />
+            订单简报
+          </div>
+          <Row gutter={24}>
+            {
+              _data.map(item=>{
+                return(
+                  <Col span={6}>
+                    <Card bordered={false} style={{ width: 250 }}>
+                      <div className={styles.left_icon}>
+                        <img src={require(`../../assets/statistics/${item.key}.svg`)} />
+                      </div>
+                      <div className={styles.right_content}>
+                        <p className={styles.fontSize12}>{item.title}（条）</p>
+                        <p className={styles.fontSize24}>{item.num}</p>
+                      </div>
+                    </Card>
+                  </Col>
+                )
+              })
+            }
+            
+          </Row>
+          
+        </div>
+
+        {/* <img src={home} style={{width:"100%"}} /> */}
         {/* <Card className={styles.card} bordered={false}>
           <Row gutter={24}>
             <Col span={24}>

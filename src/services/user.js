@@ -199,4 +199,9 @@ export async function testOpenid(openId) {
   });
 }
 
+export async function ordersheetDetail(time) {
+  return request('/apitracking/ordersheet/detail?statisticsTime='+time, {
+    method: 'GET',
+  });
+}
 
