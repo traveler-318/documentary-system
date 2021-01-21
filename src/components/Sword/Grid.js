@@ -66,6 +66,7 @@ export default class Grid extends PureComponent {
   };
 
   handleStandardTableChange = async (pagination, filters, sorter) => {
+
     if(sorter.order === "ascend"){
       await this.setState({
         current: pagination.current,
