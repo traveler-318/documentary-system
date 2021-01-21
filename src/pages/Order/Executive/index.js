@@ -1805,20 +1805,14 @@ class AllOrdersList extends PureComponent {
           if(tabKey === '6'){
             // item.defaultSortOrder= 'descend'
             if(item.dataIndex === "followTime"){
-              item.sorter= (a, b) =>{
-                // a.logisticsSigntime - b.logisticsSigntime
-                console.log(tabKey)
-              }
+              item.sorter=true
             }
           }
           // 激活时间
           if(tabKey === '7'){
             // item.defaultSortOrder= 'descend'
             if(item.dataIndex === "activationSigntime"){
-              item.sorter= (a, b) =>{
-                // a.logisticsSigntime - b.logisticsSigntime
-                console.log(tabKey)
-              }
+              item.sorter=true
             }
           }
           // SN
