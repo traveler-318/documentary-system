@@ -1,18 +1,21 @@
 import React, { PureComponent } from 'react';
-import { Card, Col, Collapse, Row, Divider, Tag } from 'antd';
+import { Card, Col, Collapse, Row, Divider, Tag, Select } from 'antd';
 import styles from '../../layouts/Sword.less';
 import ThirdRegister from '../../components/ThirdRegister';
 import moment from 'moment'
-
-// eslint-disable-next-line import/extensions
+import echarts from 'echarts'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import home from '../../assets/home.svg';
 
 import {ordersheetDetail} from '../../services/user'
 
 import orderBriefing from '../../assets/statistics/orderBriefing.svg';
- 
+import proportion from '../../assets/statistics/proportion.svg';
+import dataSumdmary from '../../assets/statistics/dataSumdmary.svg';
+
 const { Panel } = Collapse;
+
+
 
 // const pending = pending
 // 待审核是待审核+已初审
@@ -46,58 +49,192 @@ const { Panel } = Collapse;
 
 class Workplace extends PureComponent {
 
+  echarts_main = React.createRef()
+
   constructor(props){
     super(props);
     this.state = {
+  //  未激活
       text:{
-        pending:'待审核',
-        approved:'已审核',
-        delivery:'已发货',
-        ontheway:'在途中',
-        receiving:'已签收',
-        ongoing:'跟进中',
-        activation:'已激活',
-        refund:'已退回',
+        pending:{
+          title:'待审核',
+          color:"#73deb3"
+        },
+        approved:{
+          title:'已审核',
+          color:"#9254de"
+        },
+        delivery:{
+          title:'已发货',
+          color:"#40a9ff"
+        },
+        ontheway:{
+          title:'在途中',
+          color:"#f759ab"
+        },
+        receiving:{
+          title:'已签收',
+          color:"#eb7f65"
+        },
+        ongoing:{
+          title:'跟进中',
+          color:"#7585a2"
+        },
+        activation:{
+          title:'已激活',
+          color:"#73d13d"
+        },
+        refund:{
+          title:'已退回',
+          color:"#f7c739"
+        },
+        cancel:{
+          title:'已取消',
+        },
+        overdue:{
+          title:"已过期"
+        },
+        intheback:{
+          title:"退回中"
+        }
       },
-      _data:[]
+      _data:[],
+      pieData:[],
+      defaultTime: moment().format("YYYY-MM-DD").replace(/-/g,''),
+      timeFrame:[
+        {
+          name:"今天",
+          value:moment().format("YYYY-MM-DD").replace(/-/g,''),
+        },
+        {
+          name:"昨天",
+          value:moment().subtract('days', 1).format('YYYY-MM-DD').replace(/-/g,''),
+        }
+      ]
     }
   }
 
-  componentWillMount() {
-    
-    let param = moment().format("YYYY-MM-DD").replace(/-/g,'')
+  componentDidMount() {
 
-    console.log(param)
-    ordersheetDetail(param).then(res=>{
+  }
+
+  init = () => {
+    const myChart = echarts.init(document.getElementById('echarts_main'));
+
+    const { pieData } = this.state
+
+    const option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: '{b}({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'right',
+            top:80,
+            align:'left',
+            itemWidth:8,
+            itemHeight:8,
+        },
+        series: [
+            {
+                name: '订单简报',
+                type: 'pie',
+                radius: '65%',
+                center: ['45%', '45%'],
+                label:false,
+                data: pieData,
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
+    myChart.resize({ width: '600px', height: '400px' });
+  }
+
+  componentWillMount() {
+      this.getData();
+  }
+
+  getData = () =>{
+    const {defaultTime} = this.state;
+
+    ordersheetDetail(defaultTime).then(res=>{
       const {text} = this.state;
       let data = JSON.parse(res.data);
-      let _data = []
+      let _data = [], _pieData = [];
 
       data.pending = data.pending+data.thereview
 
-      for(let key in data){
+      for(let key in text){
         if(key != "totalnumber" && key != "cancel" && key != "overdue" && key != "intheback" && key != "thereview"){
           _data.push({
             key,
             num:data[key],
-            title:text[key],
+            title:text[key].title,
+          })
+        }
+        if(key != "totalnumber" && key != "cancel" && key != "overdue" && key != "intheback" && key != "thereview"){
+          _pieData.push({
+            key,
+            value: data[key],
+            name: text[key].title,
+            itemStyle: { color: text[key].color }
           })
         }
       }
 
       this.setState({
-        _data:_data
+        _data:_data,
+        pieData:_pieData
+      },()=>{
+        this.init()
       })
     })
 
   }
 
+  handleChange = (value) => {
+    this.setState({
+      defaultTime:value
+    },()=>{
+      this.getData();
+    })
+  }
+
   render() {
 
-    const {_data} = this.state
+    const {
+      _data,
+      timeFrame,
+      defaultTime
+    } = this.state
 
     return (
       <PageHeaderWrapper>
+        <Select
+          style={{
+            width:110,
+            marginBottom:20
+          }}
+          defaultValue={defaultTime}
+          onChange={this.handleChange}
+        >
+          {
+            timeFrame.map(item=>{
+              return(
+                <Option value={item.value}>{item.name}</Option>
+              )
+            })
+          }
+        </Select>
+
         <div className={styles.order_data}>
           <div className={styles.title}>
             <img src={orderBriefing} />
@@ -121,9 +258,34 @@ class Workplace extends PureComponent {
                 )
               })
             }
-            
           </Row>
-          
+        </div>
+
+
+        <div
+          style={{
+            display:'flex'
+          }}
+        >
+          <div className={styles.order_proportion}>
+            <div className={styles.title}>
+              <img src={proportion} />
+              订单比例
+            </div>
+            <div className={styles.echarts_box} ref={this.echarts_main} id="echarts_main">
+
+            </div>
+          </div>
+
+          <div className={styles.order_data_sumdmary}>
+            <div className={styles.title}>
+              <img src={dataSumdmary} />
+              数据汇总
+            </div>
+            <div className={styles.echarts_box} ref={this.echarts_main} id="echarts_main">
+
+            </div>
+          </div>
         </div>
 
         {/* <img src={home} style={{width:"100%"}} /> */}
