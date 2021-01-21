@@ -3,7 +3,7 @@ import { Card, Col, Collapse, Row, Divider, Tag, Select } from 'antd';
 import styles from '../../layouts/Sword.less';
 import ThirdRegister from '../../components/ThirdRegister';
 import moment from 'moment'
-import echarts from 'echarts'
+// import echarts from 'echarts'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import home from '../../assets/home.svg';
 
@@ -194,7 +194,7 @@ class Workplace extends PureComponent {
         _data:_data,
         pieData:_pieData
       },()=>{
-        this.init()
+        // this.init()
       })
     })
 
@@ -261,7 +261,7 @@ class Workplace extends PureComponent {
           </Row>
         </div>
 
-
+{/* 
         <div
           style={{
             display:'flex'
@@ -286,7 +286,7 @@ class Workplace extends PureComponent {
 
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* <img src={home} style={{width:"100%"}} /> */}
         {/* <Card className={styles.card} bordered={false}>
