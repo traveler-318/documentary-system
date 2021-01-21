@@ -238,7 +238,7 @@ class AllOrdersList extends PureComponent {
     const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
-      orderBy:false
+      // orderBy:false
     };
     if (dateRange) {
       payload = {
@@ -287,11 +287,6 @@ class AllOrdersList extends PureComponent {
     },()=>{
       this.getDataList();
     })
-  };
-
-  handleTableChange = (pagination, filters, sorter) => {
-    console.log("!!!!!!!!!!!!!!11")
-    console.log(sorter,"!!!!!!!!!!!!!!11")
   };
 
   // ============ 查询表单 ===============
