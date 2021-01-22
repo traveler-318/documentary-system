@@ -324,7 +324,7 @@ class Workplace extends PureComponent {
           </div>
         </div>
 
-        <img src={home} style={{width:"100%"}} />
+        {/* <img src={home} style={{width:"100%"}} /> */}
         {/* <Card className={styles.card} bordered={false}>
           <Row gutter={24}>
             <Col span={24}>
