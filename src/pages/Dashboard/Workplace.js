@@ -3,7 +3,10 @@ import { Card, Col, Collapse, Row, Divider, Tag, Select } from 'antd';
 import styles from '../../layouts/Sword.less';
 import ThirdRegister from '../../components/ThirdRegister';
 import moment from 'moment'
-// import echarts from 'echarts'
+import echarts from 'echarts'
+import router from 'umi/router';
+import classnames from 'classnames';
+
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import home from '../../assets/home.svg';
 
@@ -55,38 +58,46 @@ class Workplace extends PureComponent {
     super(props);
     this.state = {
   //  未激活
-      text:{
+      templateData:{
         pending:{
           title:'待审核',
-          color:"#73deb3"
+          color:"#40A9FF",
+          urlKey:'0'
         },
         approved:{
           title:'已审核',
-          color:"#9254de"
+          color:"#36CFC9",
+          urlKey:'1'
         },
         delivery:{
           title:'已发货',
-          color:"#40a9ff"
+          color:"#73D13D",
+          urlKey:'3'
         },
         ontheway:{
           title:'在途中',
-          color:"#f759ab"
+          color:"#FBD444",
+          urlKey:'4'
         },
         receiving:{
           title:'已签收',
-          color:"#eb7f65"
+          color:"#FF4D4F",
+          urlKey:'5'
         },
         ongoing:{
           title:'跟进中',
-          color:"#7585a2"
+          color:"#9254DE",
+          urlKey:'6'
         },
         activation:{
           title:'已激活',
-          color:"#73d13d"
+          color:"#2F54EB",
+          urlKey:'7'
         },
         refund:{
           title:'已退回',
-          color:"#f7c739"
+          color:"#FA8C16",
+          urlKey:'8'
         },
         cancel:{
           title:'已取消',
@@ -100,17 +111,18 @@ class Workplace extends PureComponent {
       },
       _data:[],
       pieData:[],
-      defaultTime: moment().format("YYYY-MM-DD").replace(/-/g,''),
+      defaultTime: 0,
       timeFrame:[
         {
           name:"今天",
-          value:moment().format("YYYY-MM-DD").replace(/-/g,''),
+          value:0,
         },
         {
           name:"昨天",
-          value:moment().subtract('days', 1).format('YYYY-MM-DD').replace(/-/g,''),
+          value:1,
         }
-      ]
+      ],
+      yesterdayData:{}
     }
   }
 
@@ -156,6 +168,14 @@ class Workplace extends PureComponent {
     };
     myChart.setOption(option);
     myChart.resize({ width: '600px', height: '400px' });
+    myChart.on("click", this.pieConsole);
+  }
+
+  pieConsole = (param) => {
+    console.log(param,"param")
+    const {templateData} = this.state;
+    sessionStorage.orderTabKey = templateData[param.data.key].urlKey;
+    router.push('/order/allOrders');
   }
 
   componentWillMount() {
@@ -164,38 +184,47 @@ class Workplace extends PureComponent {
 
   getData = () =>{
     const {defaultTime} = this.state;
-
-    ordersheetDetail(defaultTime).then(res=>{
-      const {text} = this.state;
+    // 获取今天的数据
+    ordersheetDetail(
+      moment().subtract('days', defaultTime).format('YYYY-MM-DD').replace(/-/g,'')
+    ).then(res=>{
+      const {templateData} = this.state;
       let data = JSON.parse(res.data);
       let _data = [], _pieData = [];
 
       data.pending = data.pending+data.thereview
 
-      for(let key in text){
+      for(let key in templateData){
         if(key != "totalnumber" && key != "cancel" && key != "overdue" && key != "intheback" && key != "thereview"){
           _data.push({
             key,
             num:data[key],
-            title:text[key].title,
+            title:templateData[key].title,
           })
         }
         if(key != "totalnumber" && key != "cancel" && key != "overdue" && key != "intheback" && key != "thereview"){
           _pieData.push({
             key,
             value: data[key],
-            name: text[key].title,
-            itemStyle: { color: text[key].color }
+            name: templateData[key].title,
+            itemStyle: { color: templateData[key].color }
           })
         }
       }
-
-      this.setState({
-        _data:_data,
-        pieData:_pieData
-      },()=>{
-        // this.init()
+      
+      // 获取昨天的数据
+      ordersheetDetail(
+        moment().subtract('days', defaultTime+1).format('YYYY-MM-DD').replace(/-/g,'')
+      ).then(res=>{
+        this.setState({
+          _data:_data,
+          pieData:_pieData,
+          yesterdayData:JSON.parse(res.data)
+        },()=>{
+          this.init()
+        })
       })
+      
     })
 
   }
@@ -213,9 +242,10 @@ class Workplace extends PureComponent {
     const {
       _data,
       timeFrame,
-      defaultTime
+      defaultTime,
+      yesterdayData
     } = this.state
-
+    console.log(yesterdayData,"yesterdayData")
     return (
       <PageHeaderWrapper>
         <Select
@@ -245,13 +275,19 @@ class Workplace extends PureComponent {
               _data.map(item=>{
                 return(
                   <Col span={6}>
-                    <Card bordered={false} style={{ width: 250 }}>
+                    <Card bordered={false}>
                       <div className={styles.left_icon}>
                         <img src={require(`../../assets/statistics/${item.key}.svg`)} />
                       </div>
                       <div className={styles.right_content}>
                         <p className={styles.fontSize12}>{item.title}（条）</p>
                         <p className={styles.fontSize24}>{item.num}</p>
+                      </div>
+                      <div className={classnames(styles.right_content_yesterday)}>
+                        <p className={classnames(styles.fontSize12,styles.yesterday_title)}>昨天</p>
+                        <p className={classnames(styles.fontSize10,styles.yesterday_num)}>
+                          {yesterdayData[item.key]}
+                        </p>
                       </div>
                     </Card>
                   </Col>
@@ -261,7 +297,7 @@ class Workplace extends PureComponent {
           </Row>
         </div>
 
-{/* 
+
         <div
           style={{
             display:'flex'
@@ -286,7 +322,7 @@ class Workplace extends PureComponent {
 
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* <img src={home} style={{width:"100%"}} /> */}
         {/* <Card className={styles.card} bordered={false}>
