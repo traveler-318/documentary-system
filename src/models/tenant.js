@@ -18,6 +18,7 @@ export default {
   },
   effects: {
     *fetchList({ payload }, { call, put }) {
+      // debugger
       const response = yield call(list, payload);
       if (response.success) {
         yield put({
