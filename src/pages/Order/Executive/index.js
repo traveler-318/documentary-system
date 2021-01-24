@@ -178,6 +178,7 @@ class AllOrdersList extends PureComponent {
     this.currenttree();
     this.getOrderMenuHead();
     this.getOrderMenuTemplate();
+
   }
 
   getTreeList = () => {
@@ -423,6 +424,9 @@ class AllOrdersList extends PureComponent {
       LogisticsAlertVisible:false
     })
   }
+
+
+
   // =========首次打印===========
   first = () => {
     const {selectedRows} = this.state;

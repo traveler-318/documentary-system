@@ -57,6 +57,14 @@ class Tenant extends PureComponent {
   // ============ 查询 ===============
   handleSearch = params => {
     const { dispatch } = this.props;
+    params={
+      contactNumber: params.contactNumber,
+      current: params.current,
+      size: params.size,
+      tenantId: params.tenantId,
+      tenantName: params.tenantName,
+    }
+
     dispatch(TENANT_LIST(params));
     dispatch(CODE_INIT());
     this.setState({ params });
@@ -214,7 +222,6 @@ class Tenant extends PureComponent {
 
   render() {
     const code = 'tenant';
-
     const {
       form,
       loading,
