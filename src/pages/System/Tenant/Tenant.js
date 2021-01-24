@@ -58,15 +58,11 @@ class Tenant extends PureComponent {
   handleSearch = params => {
     const { dispatch } = this.props;
     params={
-      accountNumber: params.accountNumber,
       contactNumber: params.contactNumber,
       current: params.current,
-      datasourceId: params.datasourceId,
-      orderBy: params.orderBy,
       size: params.size,
       tenantId: params.tenantId,
       tenantName: params.tenantName,
-      version: params.version,
     }
 
     dispatch(TENANT_LIST(params));
