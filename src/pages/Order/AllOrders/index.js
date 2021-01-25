@@ -46,6 +46,7 @@ import OrderImport from '../components/orderImport';
 import ImportData from '../components/ImportData';
 import Excel from '../components/excel';
 import Text from '../components/text';
+import { getUserInfo } from '../../../services/user';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;

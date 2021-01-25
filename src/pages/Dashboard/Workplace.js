@@ -1,18 +1,24 @@
 import React, { PureComponent } from 'react';
-import { Card, Col, Collapse, Row, Divider, Tag } from 'antd';
+import { Card, Col, Collapse, Row, Divider, Tag, Select } from 'antd';
 import styles from '../../layouts/Sword.less';
 import ThirdRegister from '../../components/ThirdRegister';
 import moment from 'moment'
+import echarts from 'echarts'
+import router from 'umi/router';
+import classnames from 'classnames';
 
-// eslint-disable-next-line import/extensions
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import home from '../../assets/home.svg';
 
 import {ordersheetDetail} from '../../services/user'
 
 import orderBriefing from '../../assets/statistics/orderBriefing.svg';
- 
+import proportion from '../../assets/statistics/proportion.svg';
+import dataSumdmary from '../../assets/statistics/dataSumdmary.svg';
+
 const { Panel } = Collapse;
+
+
 
 // const pending = pending
 // 待审核是待审核+已初审
@@ -46,58 +52,219 @@ const { Panel } = Collapse;
 
 class Workplace extends PureComponent {
 
+  echarts_main = React.createRef()
+
   constructor(props){
     super(props);
     this.state = {
-      text:{
-        pending:'待审核',
-        approved:'已审核',
-        delivery:'已发货',
-        ontheway:'在途中',
-        receiving:'已签收',
-        ongoing:'跟进中',
-        activation:'已激活',
-        refund:'已退回',
+  //  未激活
+      templateData:{
+        pending:{
+          title:'待审核',
+          color:"#40A9FF",
+          urlKey:'0'
+        },
+        approved:{
+          title:'已审核',
+          color:"#36CFC9",
+          urlKey:'1'
+        },
+        delivery:{
+          title:'已发货',
+          color:"#73D13D",
+          urlKey:'3'
+        },
+        ontheway:{
+          title:'在途中',
+          color:"#FBD444",
+          urlKey:'4'
+        },
+        receiving:{
+          title:'已签收',
+          color:"#FF4D4F",
+          urlKey:'5'
+        },
+        ongoing:{
+          title:'跟进中',
+          color:"#9254DE",
+          urlKey:'6'
+        },
+        activation:{
+          title:'已激活',
+          color:"#2F54EB",
+          urlKey:'7'
+        },
+        refund:{
+          title:'已退回',
+          color:"#FA8C16",
+          urlKey:'8'
+        },
+        cancel:{
+          title:'已取消',
+        },
+        overdue:{
+          title:"已过期"
+        },
+        intheback:{
+          title:"退回中"
+        }
       },
-      _data:[]
+      _data:[],
+      pieData:[],
+      defaultTime: 0,
+      timeFrame:[
+        {
+          name:"今天",
+          value:0,
+        },
+        {
+          name:"昨天",
+          value:1,
+        }
+      ],
+      yesterdayData:{}
     }
   }
 
-  componentWillMount() {
-    
-    let param = moment().format("YYYY-MM-DD").replace(/-/g,'')
+  componentDidMount() {
 
-    console.log(param)
-    ordersheetDetail(param).then(res=>{
-      const {text} = this.state;
+  }
+
+  init = () => {
+    const myChart = echarts.init(document.getElementById('echarts_main'));
+
+    const { pieData } = this.state
+
+    const option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: '{b}({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'right',
+            top:80,
+            align:'left',
+            itemWidth:8,
+            itemHeight:8,
+        },
+        series: [
+            {
+                name: '订单简报',
+                type: 'pie',
+                radius: '65%',
+                center: ['45%', '45%'],
+                label:false,
+                data: pieData,
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
+    myChart.resize({ width: '600px', height: '400px' });
+    myChart.on("click", this.pieConsole);
+  }
+
+  pieConsole = (param) => {
+    console.log(param,"param")
+    const {templateData} = this.state;
+    sessionStorage.orderTabKey = templateData[param.data.key].urlKey;
+    router.push('/order/allOrders');
+  }
+
+  componentWillMount() {
+      this.getData();
+  }
+
+  getData = () =>{
+    const {defaultTime} = this.state;
+    // 获取今天的数据
+    ordersheetDetail(
+      moment().subtract('days', defaultTime).format('YYYY-MM-DD').replace(/-/g,'')
+    ).then(res=>{
+      const {templateData} = this.state;
       let data = JSON.parse(res.data);
-      let _data = []
+      let _data = [], _pieData = [];
 
       data.pending = data.pending+data.thereview
 
-      for(let key in data){
+      for(let key in templateData){
         if(key != "totalnumber" && key != "cancel" && key != "overdue" && key != "intheback" && key != "thereview"){
           _data.push({
             key,
             num:data[key],
-            title:text[key],
+            title:templateData[key].title,
+          })
+        }
+        if(key != "totalnumber" && key != "cancel" && key != "overdue" && key != "intheback" && key != "thereview"){
+          _pieData.push({
+            key,
+            value: data[key],
+            name: templateData[key].title,
+            itemStyle: { color: templateData[key].color }
           })
         }
       }
-
-      this.setState({
-        _data:_data
+      
+      // 获取昨天的数据
+      ordersheetDetail(
+        moment().subtract('days', defaultTime+1).format('YYYY-MM-DD').replace(/-/g,'')
+      ).then(res=>{
+        this.setState({
+          _data:_data,
+          pieData:_pieData,
+          yesterdayData:JSON.parse(res.data)
+        },()=>{
+          this.init()
+        })
       })
+      
     })
 
   }
 
+  handleChange = (value) => {
+    this.setState({
+      defaultTime:value
+    },()=>{
+      this.getData();
+    })
+  }
+
   render() {
 
-    const {_data} = this.state
-
+    const {
+      _data,
+      timeFrame,
+      defaultTime,
+      yesterdayData
+    } = this.state
+    console.log(yesterdayData,"yesterdayData")
     return (
       <PageHeaderWrapper>
+        <Select
+          style={{
+            width:110,
+            marginBottom:20
+          }}
+          defaultValue={defaultTime}
+          onChange={this.handleChange}
+        >
+          {
+            timeFrame.map(item=>{
+              return(
+                <Option value={item.value}>{item.name}</Option>
+              )
+            })
+          }
+        </Select>
+
         <div className={styles.order_data}>
           <div className={styles.title}>
             <img src={orderBriefing} />
@@ -108,7 +275,7 @@ class Workplace extends PureComponent {
               _data.map(item=>{
                 return(
                   <Col span={6}>
-                    <Card bordered={false} style={{ width: 250 }}>
+                    <Card bordered={false}>
                       <div className={styles.left_icon}>
                         <img src={require(`../../assets/statistics/${item.key}.svg`)} />
                       </div>
@@ -116,14 +283,45 @@ class Workplace extends PureComponent {
                         <p className={styles.fontSize12}>{item.title}（条）</p>
                         <p className={styles.fontSize24}>{item.num}</p>
                       </div>
+                      <div className={classnames(styles.right_content_yesterday)}>
+                        <p className={classnames(styles.fontSize12,styles.yesterday_title)}>昨天</p>
+                        <p className={classnames(styles.fontSize10,styles.yesterday_num)}>
+                          {yesterdayData[item.key]}
+                        </p>
+                      </div>
                     </Card>
                   </Col>
                 )
               })
             }
-            
           </Row>
-          
+        </div>
+
+
+        <div
+          style={{
+            display:'flex'
+          }}
+        >
+          <div className={styles.order_proportion}>
+            <div className={styles.title}>
+              <img src={proportion} />
+              订单比例
+            </div>
+            <div className={styles.echarts_box} ref={this.echarts_main} id="echarts_main">
+
+            </div>
+          </div>
+
+          <div className={styles.order_data_sumdmary}>
+            <div className={styles.title}>
+              <img src={dataSumdmary} />
+              数据汇总
+            </div>
+            <div className={styles.echarts_box} ref={this.echarts_main} id="echarts_main">
+
+            </div>
+          </div>
         </div>
 
         {/* <img src={home} style={{width:"100%"}} /> */}

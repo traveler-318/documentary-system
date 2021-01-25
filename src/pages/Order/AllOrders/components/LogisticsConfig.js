@@ -14,6 +14,7 @@ import FaceSheet from '../Logistics/faceSheet'
 import Sender from '../Logistics/sender'
 import Goods from '../Logistics/goods'
 import Additional from '../Logistics/additional'
+import { getUserInfo } from '../../../../services/user';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -59,13 +60,23 @@ class LogisticsConfig extends PureComponent {
       goodsItem:'',
       goodsId:'',
       senderItem:'',
-      senderId:''
+      senderId:'',
+      localPrintStatus:''
     };
   }
 
   componentWillMount() {
     const { LogisticsConfigList } = this.props;
     this.getDEfalutData()
+
+    getUserInfo().then(resp => {
+      if (resp.success) {
+        const userInfo = resp.data;
+        this.setState({
+          localPrintStatus: userInfo.localPrintStatus
+        });
+      }
+    });
   }
 
   getDEfalutData = () => {
@@ -129,9 +140,8 @@ class LogisticsConfig extends PureComponent {
 
   handleConfirm = e => {
     e.preventDefault();
-    const { authorizationItem,faceSheetItem,senderItem,goodsItem,additionalItem,checked,checked1 } = this.state;
+    const { authorizationItem,faceSheetItem,senderItem,goodsItem,additionalItem,checked,checked1,localPrintStatus } = this.state;
     const { globalParameters } = this.props;
-
     if(authorizationItem === ''){
       message.success('请选择基础授权配置');
       return false
@@ -165,6 +175,11 @@ class LogisticsConfig extends PureComponent {
         shipmentRemind:checked1,
         ...authorizationItem
       };
+    if(localPrintStatus === 1){
+      params.localPrintStatus = 1
+    }else {
+      params.localPrintStatus = 3
+    }
 
     for(let i=0; i<globalParameters.detailData.length; i++){
       params.recMans.push(

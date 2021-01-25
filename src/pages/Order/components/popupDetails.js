@@ -238,8 +238,8 @@ class OrdersEdit extends PureComponent {
           ...values
         };
         const _this=this;
-        if(params.logisticsCompany !== detail.logisticsCompany || params.logisticsNumber !== detail.logisticsNumber){
-          if(detail.logisticsStatus){
+        if(params.logisticsCompany != detail.logisticsCompany || params.logisticsNumber != detail.logisticsNumber){
+          // if(detail.logisticsStatus){
             Modal.confirm({
               title: '提示',
               content: '当前订单物流已经订阅,此次变更会删掉订阅有关信息,确认是否清理物流从新保存',
@@ -271,21 +271,21 @@ class OrdersEdit extends PureComponent {
               },
               onCancel() {},
             });
-          }else {
-            updateData(params).then(res=>{
-              if(res.code === 200){
-                message.success(res.msg);
-                this.setState({
-                  edit:true,
-                  primary:"primary",
-                  primary1:''
-                })
-                this.getEditDetails()
-              }else {
-                message.error(res.msg);
-              }
-            })
-          }
+          // }else {
+          //   updateData(params).then(res=>{
+          //     if(res.code === 200){
+          //       message.success(res.msg);
+          //       this.setState({
+          //         edit:true,
+          //         primary:"primary",
+          //         primary1:''
+          //       })
+          //       this.getEditDetails()
+          //     }else {
+          //       message.error(res.msg);
+          //     }
+          //   })
+          // }
         }else {
           updateData(params).then(res=>{
             if(res.code === 200){
@@ -400,6 +400,7 @@ class OrdersEdit extends PureComponent {
     if(tips.length > 0 ){
       return false;
     }
+
     if(detail.logisticsPrintType === "1" || detail.logisticsPrintType === "2"){
       // 本地打印
       localPrinting({

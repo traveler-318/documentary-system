@@ -8,7 +8,7 @@ import styles from './index.less';
 import MenuContext from '@/layouts/MenuContext';
 
 const PageHeaderWrapper = ({ children, contentWidth, wrapperClassName, top, ...restProps }) => (
-  <div  className={wrapperClassName}>
+  <div style={{ overflow: 'hidden'}} className={wrapperClassName}>
     {top}
     <MenuContext.Consumer>
       {value => (

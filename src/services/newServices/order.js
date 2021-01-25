@@ -4,7 +4,7 @@ import request from '../../utils/request';
 import func from '../../utils/Func';
 
 export async function getList(params) {
-  return request(`/api/order/order/list`, {
+  return request(`/api/order/order/warehouslist`, {
     method: 'POST',
     body: params,
   });

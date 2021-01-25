@@ -178,6 +178,7 @@ class AllOrdersList extends PureComponent {
     this.currenttree();
     this.getOrderMenuHead();
     this.getOrderMenuTemplate();
+
   }
 
   getTreeList = () => {
@@ -238,7 +239,7 @@ class AllOrdersList extends PureComponent {
     const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
-      orderBy:false
+      // orderBy:false
     };
     if (dateRange) {
       payload = {
@@ -287,11 +288,6 @@ class AllOrdersList extends PureComponent {
     },()=>{
       this.getDataList();
     })
-  };
-
-  handleTableChange = (pagination, filters, sorter) => {
-    console.log("!!!!!!!!!!!!!!11")
-    console.log(sorter,"!!!!!!!!!!!!!!11")
   };
 
   // ============ 查询表单 ===============
@@ -428,6 +424,9 @@ class AllOrdersList extends PureComponent {
       LogisticsAlertVisible:false
     })
   }
+
+
+
   // =========首次打印===========
   first = () => {
     const {selectedRows} = this.state;
@@ -1810,20 +1809,14 @@ class AllOrdersList extends PureComponent {
           if(tabKey === '6'){
             // item.defaultSortOrder= 'descend'
             if(item.dataIndex === "followTime"){
-              item.sorter= (a, b) =>{
-                // a.logisticsSigntime - b.logisticsSigntime
-                console.log(tabKey)
-              }
+              item.sorter=true
             }
           }
           // 激活时间
           if(tabKey === '7'){
             // item.defaultSortOrder= 'descend'
             if(item.dataIndex === "activationSigntime"){
-              item.sorter= (a, b) =>{
-                // a.logisticsSigntime - b.logisticsSigntime
-                console.log(tabKey)
-              }
+              item.sorter=true
             }
           }
           // SN
