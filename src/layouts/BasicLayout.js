@@ -9,6 +9,7 @@ import logo from '../assets/logo.svg';
 import Footer from './Footer';
 import Header from './Header';
 import Context from './MenuContext';
+import PageTab from './PageTab'
 import SiderMenu from '@/components/SiderMenu';
 import getPageTitle from '@/utils/getPageTitle';
 import styles from './BasicLayout.less';
@@ -110,6 +111,7 @@ class BasicLayout extends React.Component {
     } = this.props;
 
     const isTop = PropsLayout === 'topmenu';
+    const istab = localStorage.getItem('isAntTap')
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
     const layout = (
       <Layout>
@@ -136,7 +138,10 @@ class BasicLayout extends React.Component {
             isMobile={isMobile}
             {...this.props}
           />
-          <Content className={styles.content} style={contentStyle}>
+          <Content className={[styles.content,istab == '1'?'':'word-style-hide']} style={contentStyle}>
+            <PageTab>{children}</PageTab>
+          </Content>
+          <Content className={[styles.content,istab == '2'?'':'word-style-hide']} style={contentStyle}>
             {children}
           </Content>
           {/* <Footer /> */}
