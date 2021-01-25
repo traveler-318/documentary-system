@@ -54,8 +54,7 @@ export default [
             path: '/account/center',
             component: './Account/Center/Center',
             routes: [
-              { path: '/account/center', redirect: '/account/center/articles' },
-              { path: '/account/center/articles', component: './Account/Center/Articles' },
+              { path: '/account/center', component: './Account/Center/Articles' },
               { path: '/account/center/applications', component: './Account/Center/Applications' },
               { path: '/account/center/projects', component: './Account/Center/Projects' },
             ],
@@ -64,8 +63,7 @@ export default [
             path: '/account/settings',
             //component: './Account/Settings/Info',
             routes: [
-              { path: '/account/settings', redirect: '/account/settings/base' },
-              { path: '/account/settings/base', component: './Account/Settings/BaseView' },
+              { path: '/account/settings', component: './Account/Settings/BaseView' },
               { path: '/account/settings/password', component: './Account/Settings/PasswordView' },
               //{ path: '/account/settings/security', component: './Account/Settings/SecurityView' },
               //{ path: '/account/settings/binding', component: './Account/Settings/BindingView' },
@@ -114,8 +112,7 @@ export default [
           {
             path: '/desk/notice',
             routes: [
-              { path: '/desk/notice', redirect: '/desk/notice/list' },
-              { path: '/desk/notice/list', component: './Desk/Notice/Notice' },
+              { path: '/desk/notice', component: './Desk/Notice/Notice' },
               { path: '/desk/notice/add', component: './Desk/Notice/NoticeAdd' },
               { path: '/desk/notice/edit/:id', component: './Desk/Notice/NoticeEdit' },
               { path: '/desk/notice/view/:id', component: './Desk/Notice/NoticeView' },
@@ -129,36 +126,31 @@ export default [
           {
             path: '/work/start',
             routes: [
-              { path: '/work/start', redirect: '/work/start/list' },
-              { path: '/work/start/list', component: './Work/WorkStart' },
+              { path: '/work/start', component: './Work/WorkStart' },
             ],
           },
           {
             path: '/work/claim',
             routes: [
-              { path: '/work/claim', redirect: '/work/claim/list' },
-              { path: '/work/claim/list', component: './Work/WorkClaim' },
+              { path: '/work/claim', component: './Work/WorkClaim' },
             ],
           },
           {
             path: '/work/todo',
             routes: [
-              { path: '/work/todo', redirect: '/work/todo/list' },
-              { path: '/work/todo/list', component: './Work/WorkTodo' },
+              { path: '/work/todo', component: './Work/WorkTodo' },
             ],
           },
           {
             path: '/work/send',
             routes: [
-              { path: '/work/send', redirect: '/work/send/list' },
-              { path: '/work/send/list', component: './Work/WorkSend' },
+              { path: '/work/send', component: './Work/WorkSend' },
             ],
           },
           {
             path: '/work/done',
             routes: [
-              { path: '/work/done', redirect: '/work/done/list' },
-              { path: '/work/done/list', component: './Work/WorkDone' },
+              { path: '/work/done', component: './Work/WorkDone' },
             ],
           },
           {
@@ -195,8 +187,7 @@ export default [
           {
             path: '/base/region',
             routes: [
-              { path: '/base/region', redirect: '/base/region/detail' },
-              { path: '/base/region/detail', component: './Base/Region/Region' },
+              { path: '/base/region', component: './Base/Region/Region' },
             ],
           },
         ],
@@ -207,8 +198,7 @@ export default [
           {
             path: '/authority/role',
             routes: [
-              { path: '/authority/role', redirect: '/authority/role/list' },
-              { path: '/authority/role/list', component: './Authority/Role/Role' },
+              { path: '/authority/role', component: './Authority/Role/Role' },
               { path: '/authority/role/add', component: './Authority/Role/RoleAdd' },
               { path: '/authority/role/add/:id', component: './Authority/Role/RoleAdd' },
               { path: '/authority/role/edit/:id', component: './Authority/Role/RoleEdit' },
@@ -218,15 +208,13 @@ export default [
           {
             path: '/authority/datascope',
             routes: [
-              { path: '/authority/datascope', redirect: '/authority/datascope/list' },
-              { path: '/authority/datascope/list', component: './Authority/DataScope/DataScope' },
+              { path: '/authority/datascope', component: './Authority/DataScope/DataScope' },
             ],
           },
           {
             path: '/authority/apiscope',
             routes: [
-              { path: '/authority/apiscope', redirect: '/authority/apiscope/list' },
-              { path: '/authority/apiscope/list', component: './Authority/ApiScope/ApiScope' },
+              { path: '/authority/apiscope', component: './Authority/ApiScope/ApiScope' },
             ],
           },
         ],
@@ -237,8 +225,7 @@ export default [
           {
             path: '/system/user',
             routes: [
-              { path: '/system/user', redirect: '/system/user/list' },
-              { path: '/system/user/list', component: './System/User/User' },
+              { path: '/system/user', component: './System/User/User' },
               { path: '/system/user/add', component: './System/User/UserAdd' },
               { path: '/system/user/add/:id', component: './System/User/UserAdd' },
               { path: '/system/user/edit/:id', component: './System/User/UserEdit' },
@@ -255,8 +242,7 @@ export default [
           {
             path: '/system/dict',
             routes: [
-              { path: '/system/dict', redirect: '/system/dict/list' },
-              { path: '/system/dict/list', component: './System/Dict/Dict' },
+              { path: '/system/dict', component: './System/Dict/Dict' },
               { path: '/system/dict/add', component: './System/Dict/DictAdd' },
               { path: '/system/dict/add/:id', component: './System/Dict/DictAdd' },
               { path: '/system/dict/edit/:id', component: './System/Dict/DictEdit' },
@@ -267,8 +253,7 @@ export default [
           {
             path: '/system/dictbiz',
             routes: [
-              { path: '/system/dictbiz', redirect: '/system/dictbiz/list' },
-              { path: '/system/dictbiz/list', component: './System/DictBiz/DictBiz' },
+              { path: '/system/dictbiz', component: './System/DictBiz/DictBiz' },
               { path: '/system/dictbiz/add', component: './System/DictBiz/DictBizAdd' },
               { path: '/system/dictbiz/add/:id', component: './System/DictBiz/DictBizAdd' },
               { path: '/system/dictbiz/edit/:id', component: './System/DictBiz/DictBizEdit' },
@@ -279,8 +264,7 @@ export default [
           {
             path: '/system/dept',
             routes: [
-              { path: '/system/dept', redirect: '/system/dept/list' },
-              { path: '/system/dept/list', component: './System/Dept/Dept' },
+              { path: '/system/dept', component: './System/Dept/Dept' },
               { path: '/system/dept/add', component: './System/Dept/DeptAdd' },
               { path: '/system/dept/add/:id', component: './System/Dept/DeptAdd' },
               { path: '/system/dept/edit/:id', component: './System/Dept/DeptEdit' },
@@ -290,8 +274,7 @@ export default [
           {
             path: '/system/organization',
             routes: [
-              { path: '/system/organization', redirect: '/system/Organization/list' },
-              { path: '/system/organization/list', component: './System/Organization/Organization' },
+              { path: '/system/organization', component: './System/Organization/Organization' },
               { path: '/system/organization/add', component: './System/Organization/OrganizationAdd' },
               { path: '/system/organization/add/:id', component: './System/Organization/OrganizationAdd' },
               { path: '/system/organization/edit/:id', component: './System/Organization/OrganizationEdit' },
@@ -301,8 +284,7 @@ export default [
           {
             path: '/system/post',
             routes: [
-              { path: '/system/post', redirect: '/system/post/list' },
-              { path: '/system/post/list', component: './System/Post/Post' },
+              { path: '/system/post', component: './System/Post/Post' },
               { path: '/system/post/add', component: './System/Post/PostAdd' },
               { path: '/system/post/add/:id', component: './System/Post/PostAdd' },
               { path: '/system/post/edit/:id', component: './System/Post/PostEdit' },
@@ -312,8 +294,7 @@ export default [
           {
             path: '/system/menu',
             routes: [
-              { path: '/system/menu', redirect: '/system/menu/list' },
-              { path: '/system/menu/list', component: './System/Menu/Menu' },
+              { path: '/system/menu', component: './System/Menu/Menu' },
               { path: '/system/menu/add', component: './System/Menu/MenuAdd' },
               { path: '/system/menu/add/:id', component: './System/Menu/MenuAdd' },
               { path: '/system/menu/edit/:id', component: './System/Menu/MenuEdit' },
@@ -323,8 +304,7 @@ export default [
           {
             path: '/system/topmenu',
             routes: [
-              { path: '/system/topmenu', redirect: '/system/topmenu/list' },
-              { path: '/system/topmenu/list', component: './System/TopMenu/TopMenu' },
+              { path: '/system/topmenu', component: './System/TopMenu/TopMenu' },
               { path: '/system/topmenu/add', component: './System/TopMenu/TopMenuAdd' },
               { path: '/system/topmenu/add/:id', component: './System/TopMenu/TopMenuAdd' },
               { path: '/system/topmenu/edit/:id', component: './System/TopMenu/TopMenuEdit' },
@@ -334,8 +314,7 @@ export default [
           {
             path: '/system/param',
             routes: [
-              { path: '/system/param', redirect: '/system/param/list' },
-              { path: '/system/param/list', component: './System/Param/Param' },
+              { path: '/system/param', component: './System/Param/Param' },
               { path: '/system/param/add', component: './System/Param/ParamAdd' },
               { path: '/system/param/edit/:id', component: './System/Param/ParamEdit' },
               { path: '/system/param/view/:id', component: './System/Param/ParamView' },
@@ -344,8 +323,7 @@ export default [
           {
             path: '/system/tenant',
             routes: [
-              { path: '/system/tenant', redirect: '/system/tenant/list' },
-              { path: '/system/tenant/list', component: './System/Tenant/Tenant' },
+              { path: '/system/tenant', component: './System/Tenant/Tenant' },
               { path: '/system/tenant/add', component: './System/Tenant/TenantAdd' },
               { path: '/system/tenant/edit/:id', component: './System/Tenant/TenantEdit' },
               { path: '/system/tenant/view/:id', component: './System/Tenant/TenantView' },
@@ -354,8 +332,7 @@ export default [
           {
             path: '/system/client',
             routes: [
-              { path: '/system/client', redirect: '/system/client/list' },
-              { path: '/system/client/list', component: './System/Client/Client' },
+              { path: '/system/client', component: './System/Client/Client' },
               { path: '/system/client/add', component: './System/Client/ClientAdd' },
               { path: '/system/client/edit/:id', component: './System/Client/ClientEdit' },
               { path: '/system/client/view/:id', component: './System/Client/ClientView' },
@@ -365,21 +342,18 @@ export default [
             path: '/system/smsrecharge',
             routes: [
               { path: '/system/smsrecharge', component: './System/Recharge/index' },
-              { path: '/system/smsrecharge/list', component: './System/Recharge/index' },
             ],
           },
           {
             path: '/system/registrationList',
             routes: [
-              { path: '/system/registrationList', redirect: '/system/registrationList/list' },
-              { path: '/system/registrationList/list', component: './System/registrationList/index' },
+              { path: '/system/registrationList', component: './System/registrationList/index' },
             ],
           },
           {
             path: '/system/timedTasks',
             routes: [
-              { path: '/system/timedTasks', redirect: '/system/timedTasks/list' },
-              { path: '/system/timedTasks/list', component: './System/timedTasks/index' },
+              { path: '/system/timedTasks', component: './System/timedTasks/index' },
               { path: '/system/timedTasks/add', component: './System/timedTasks/add' },
               { path: '/system/timedTasks/update', component: './System/timedTasks/update' },
             ],
@@ -395,24 +369,21 @@ export default [
               {
                 path: '/monitor/log/usual',
                 routes: [
-                  { path: '/monitor/log/usual', redirect: '/monitor/log/usual/list' },
-                  { path: '/monitor/log/usual/list', component: './Monitor/Log/LogUsual' },
+                  { path: '/monitor/log/usual', component: './Monitor/Log/LogUsual' },
                   { path: '/monitor/log/usual/view/:id', component: './Monitor/Log/LogUsualView' },
                 ],
               },
               {
                 path: '/monitor/log/api',
                 routes: [
-                  { path: '/monitor/log/api', redirect: '/monitor/log/api/list' },
-                  { path: '/monitor/log/api/list', component: './Monitor/Log/LogApi' },
+                  { path: '/monitor/log/api', component: './Monitor/Log/LogApi' },
                   { path: '/monitor/log/api/view/:id', component: './Monitor/Log/LogApiView' },
                 ],
               },
               {
                 path: '/monitor/log/error',
                 routes: [
-                  { path: '/monitor/log/error', redirect: '/monitor/log/error/list' },
-                  { path: '/monitor/log/error/list', component: './Monitor/Log/LogError' },
+                  { path: '/monitor/log/error', component: './Monitor/Log/LogError' },
                   { path: '/monitor/log/error/view/:id', component: './Monitor/Log/LogErrorView' },
                 ],
               },
@@ -426,8 +397,7 @@ export default [
           {
             path: '/tool/code',
             routes: [
-              { path: '/tool/code', redirect: '/tool/code/list' },
-              { path: '/tool/code/list', component: './System/Code/Code' },
+              { path: '/tool/code', component: './System/Code/Code' },
               { path: '/tool/code/add', component: './System/Code/CodeAdd' },
               { path: '/tool/code/add/:id', component: './System/Code/CodeAdd' },
               { path: '/tool/code/edit/:id', component: './System/Code/CodeEdit' },
@@ -437,8 +407,7 @@ export default [
           {
             path: '/tool/datasource',
             routes: [
-              { path: '/tool/datasource', redirect: '/tool/datasource/list' },
-              { path: '/tool/datasource/list', component: './System/DataSource/DataSource' },
+              { path: '/tool/datasource', component: './System/DataSource/DataSource' },
               { path: '/tool/datasource/add', component: './System/DataSource/DataSourceAdd' },
               { path: '/tool/datasource/add/:id', component: './System/DataSource/DataSourceAdd' },
               {
@@ -459,29 +428,25 @@ export default [
           {
             path: '/flow/model',
             routes: [
-              { path: '/flow/model', redirect: '/flow/model/list' },
-              { path: '/flow/model/list', component: './Flow/FlowModel' },
+              { path: '/flow/model', component: './Flow/FlowModel' },
             ],
           },
           {
             path: '/flow/deploy',
             routes: [
-              { path: '/flow/deploy', redirect: '/flow/deploy/upload' },
-              { path: '/flow/deploy/upload', component: './Flow/FlowDeploy' },
+              { path: '/flow/deploy', component: './Flow/FlowDeploy' },
             ],
           },
           {
             path: '/flow/manager',
             routes: [
-              { path: '/flow/manager', redirect: '/flow/manager/list' },
-              { path: '/flow/manager/list', component: './Flow/FlowManager' },
+              { path: '/flow/manager', component: './Flow/FlowManager' },
             ],
           },
           {
             path: '/flow/follow',
             routes: [
-              { path: '/flow/follow', redirect: '/flow/follow/list' },
-              { path: '/flow/follow/list', component: './Flow/FlowFollow' },
+              { path: '/flow/follow', component: './Flow/FlowFollow' },
             ],
           },
         ],
@@ -492,8 +457,7 @@ export default [
           {
             path: '/resource/oss',
             routes: [
-              { path: '/resource/oss', redirect: '/resource/oss/list' },
-              { path: '/resource/oss/list', component: './Resource/Oss/Oss' },
+              { path: '/resource/oss', component: './Resource/Oss/Oss' },
               { path: '/resource/oss/add', component: './Resource/Oss/OssAdd' },
               { path: '/resource/oss/edit/:id', component: './Resource/Oss/OssEdit' },
               { path: '/resource/oss/view/:id', component: './Resource/Oss/OssView' },
@@ -502,8 +466,8 @@ export default [
           {
             path: '/resource/sms',
             routes: [
-              { path: '/resource/sms', redirect: '/resource/sms/list' },
-              { path: '/resource/sms/list', component: './Resource/Sms/Sms' },
+              { path: '/resource/sms', component: './Resource/Sms/Sms' },
+              // { path: '/resource/sms/list', component: './Resource/Sms/Sms' },
               { path: '/resource/sms/add', component: './Resource/Sms/SmsAdd' },
               { path: '/resource/sms/edit/:id', component: './Resource/Sms/SmsEdit' },
               { path: '/resource/sms/view/:id', component: './Resource/Sms/SmsView' },
@@ -512,8 +476,8 @@ export default [
           {
             path: '/resource/attach',
             routes: [
-              { path: '/resource/attach', redirect: '/resource/attach/list' },
-              { path: '/resource/attach/list', component: './Resource/Attach/Attach' },
+              { path: '/resource/attach', component: './Resource/Attach/Attach' },
+              // { path: '/resource/attach/list', component: './Resource/Attach/Attach' },
             ],
           },
         ],
@@ -524,16 +488,16 @@ export default [
           {
             path: '/sale/afterSale',
             routes: [
-              { path: '/sale/afterSale', redirect: '/sale/afterSale/list' },
-              { path: '/sale/afterSale/list', component: './Sales/AfterSale/list' },
+              { path: '/sale/afterSale', component: './Sales/AfterSale/list' },
+              // { path: '/sale/afterSale/list', component: './Sales/AfterSale/list' },
               { path: '/sale/afterSale/add', component: './Sales/AfterSale/add' },
             ],
           },
           {
             path: '/tool/code',
             routes: [
-              { path: '/tool/code', redirect: '/tool/code/list' },
-              { path: '/tool/code/list', component: './System/Code/Code' },
+              { path: '/tool/code', component: './System/Code/Code' },
+              // { path: '/tool/code/list', component: './System/Code/Code' },
               { path: '/tool/code/add', component: './System/Code/CodeAdd' },
               { path: '/tool/code/add/:id', component: './System/Code/CodeAdd' },
               { path: '/tool/code/edit/:id', component: './System/Code/CodeEdit' },
@@ -549,7 +513,7 @@ export default [
             path: '/order/allOrders',
             routes: [
               { path: '/order/allOrders', component: './Order/AllOrders/index' },
-              { path: '/order/allOrders/list', component: './Order/AllOrders/index' },
+              // { path: '/order/allOrders/list', component: './Order/AllOrders/index' },
               { path: '/order/allOrders/add', component: './Order/components/add' },
               { path: '/order/allOrders/edit/:id', component: './Order/components/edit' },
               { path: '/order/allOrders/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
@@ -560,7 +524,7 @@ export default [
             path: '/order/executive',
             routes: [
               { path: '/order/executive', component: './Order/Executive/index' },
-              { path: '/order/executive/list', component: './Order/Executive/index' },
+              // { path: '/order/executive/list', component: './Order/Executive/index' },
               { path: '/order/executive/add', component: './Order/components/add' },
               { path: '/order/executive/edit/:id', component: './Order/components/edit' },
               { path: '/order/executive/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
@@ -570,7 +534,7 @@ export default [
             path: '/order/salesmanOrder',  //业务员订单
             routes: [
               { path: '/order/salesmanOrder', component: './Order/SalesmanOrder/index' },
-              { path: '/order/salesmanOrder/list', component: './Order/SalesmanOrder/index' },
+              // { path: '/order/salesmanOrder/list', component: './Order/SalesmanOrder/index' },
               { path: '/order/salesmanOrder/add', component: './Order/components/add' },
               { path: '/order/salesmanOrder/edit/:id', component: './Order/components/edit' },
               { path: '/order/salesmanOrder/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
@@ -580,7 +544,7 @@ export default [
             path: '/order/warehouseOrder',  //仓库订单
             routes: [
               { path: '/order/warehouseOrder', component: './Order/WarehouseOrder/index' },
-              { path: '/order/warehouseOrder/list', component: './Order/WarehouseOrder/index' },
+              // { path: '/order/warehouseOrder/list', component: './Order/WarehouseOrder/index' },
               { path: '/order/warehouseOrder/add', component: './Order/components/add' },
               { path: '/order/warehouseOrder/edit/:id', component: './Order/components/edit' },
               { path: '/order/warehouseOrder/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
@@ -590,7 +554,6 @@ export default [
             path: '/order/afterSaleOrder',  //售后订单
             routes: [
               { path: '/order/afterSaleOrder', component: './Order/AfterSaleOrder/index' },
-              { path: '/order/afterSaleOrder/list', component: './Order/AfterSaleOrder/index' },
               { path: '/order/afterSaleOrder/add', component: './Order/components/add' },
               { path: '/order/afterSaleOrder/edit/:id', component: './Order/components/edit' },
               { path: '/order/afterSaleOrder/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
@@ -599,8 +562,7 @@ export default [
           {
             path: '/order/smsrecord',
             routes: [
-              { path: '/order/smsrecord', redirect: '/Order/smsrecord/list' },
-              { path: '/order/smsrecord/list', component: './Order/SMSrecord/index' },
+              { path: '/order/smsrecord', component: './Order/SMSrecord/index' },
             ],
           },
         ],
@@ -611,8 +573,7 @@ export default [
           {
             path: '/orders/orderList/:id',
             routes: [
-              { path: '/orders/orderList/:id', redirect: '/orders/orderList/list' },
-              { path: '/orders/orderList/list/:id', component: './Order/OrderList/index' },
+              { path: '/orders/orderList/:id', component: './Order/OrderList/index' },
               { path: '/orders/orderList/add', component: './Order/OrderList/add' },
               { path: '/orders/orderList/edit/:id', component: './Order/OrderList/edit' },
               { path: '/orders/orderList/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
@@ -627,8 +588,7 @@ export default [
           {
             path: '/logistics/authority',
             routes: [
-              { path: '/logistics/authority', redirect: '/logistics/authority/list' },
-              { path: '/logistics/authority/list', component: './Logistics/Authority/index' },
+              { path: '/logistics/authority', component: './Logistics/Authority/index' },
               { path: '/logistics/authority/add', component: './Logistics/Authority/add' },
               { path: '/logistics/authority/edit', component: './Logistics/Authority/edit' },
             ],
@@ -636,8 +596,7 @@ export default [
           {
             path: '/logistics/faceSheet',
             routes: [
-              { path: '/logistics/faceSheet', redirect: '/logistics/faceSheet/list' },
-              { path: '/logistics/faceSheet/list', component: './Logistics/FaceSheet/index' },
+              { path: '/logistics/faceSheet', component: './Logistics/FaceSheet/index' },
               { path: '/logistics/faceSheet/add', component: './Logistics/FaceSheet/add' },
               { path: '/logistics/faceSheet/edit', component: './Logistics/FaceSheet/edit' },
             ],
@@ -645,8 +604,7 @@ export default [
           {
             path: '/logistics/sender',
             routes: [
-              { path: '/logistics/sender', redirect: '/logistics/sender/list' },
-              { path: '/logistics/sender/list', component: './Logistics/Sender/index' },
+              { path: '/logistics/sender', component: './Logistics/Sender/index' },
               { path: '/logistics/sender/add', component: './Logistics/Sender/add' },
               { path: '/logistics/sender/edit', component: './Logistics/Sender/edit' },
             ],
@@ -654,8 +612,7 @@ export default [
           {
             path: '/logistics/goods',
             routes: [
-              { path: '/logistics/goods', redirect: '/logistics/goods/list' },
-              { path: '/logistics/goods/list', component: './Logistics/Goods/index' },
+              { path: '/logistics/goods', component: './Logistics/Goods/index' },
               { path: '/logistics/goods/add', component: './Logistics/Goods/add' },
                { path: '/logistics/goods/edit', component: './Logistics/Goods/edit' },
             ],
@@ -663,8 +620,7 @@ export default [
           {
             path: '/logistics/additional',
             routes: [
-              { path: '/logistics/additional', redirect: '/logistics/additional/list' },
-              { path: '/logistics/additional/list', component: './Logistics/Additional/index' },
+              { path: '/logistics/additional', component: './Logistics/Additional/index' },
               { path: '/logistics/additional/add', component: './Logistics/Additional/add' },
               { path: '/logistics/additional/edit', component: './Logistics/Additional/edit' },
             ],
@@ -678,8 +634,7 @@ export default [
           {
             path: '/customer/sales',
             routes: [
-              { path: '/customer/sales', redirect: '/customer/sales/list' },
-              { path: '/customer/sales/list', component: './Customer/Sales/index' },
+              { path: '/customer/sales', component: './Customer/Sales/index' },
               { path: '/customer/sales/add', component: './Customer/Sales/add' },
               { path: '/customer/sales/edit', component: './Customer/Sales/edit' },
             ],
@@ -687,8 +642,7 @@ export default [
           {
             path: '/customer/afterSale',
             routes: [
-              { path: '/customer/afterSale', redirect: '/customer/afterSale/list' },
-              { path: '/customer/afterSale/list', component: './Customer/AfterSale/index' },
+              { path: '/customer/afterSale', component: './Customer/AfterSale/index' },
               { path: '/customer/afterSale/add', component: './Customer/AfterSale/add' },
               { path: '/customer/afterSale/edit', component: './Customer/AfterSale/edit' },
             ],
@@ -700,20 +654,17 @@ export default [
           {
             path: '/product/payBrand',
             routes: [
-              { path: '/product/payBrand', redirect: '/product/payBrand/list' },
-              { path: '/product/payBrand/list', component: './Product/PayBrand/index' },
+              { path: '/product/payBrand', component: './Product/PayBrand/index' },
             ],
           },{
             path: '/product/productType',
             routes: [
-              { path: '/product/productType', redirect: '/product/productType/list' },
-              { path: '/product/productType/list', component: './Product/ProductType/index' },
+              { path: '/product/productType', component: './Product/ProductType/index' },
             ],
           },{
             path: '/product/productManagement',
             routes: [
-              { path: '/product/productManagement', redirect: '/product/productManagement/list' },
-              { path: '/product/productManagement/list', component: './Product/ProductManagement/index' },
+              { path: '/product/productManagement', component: './Product/ProductManagement/index' },
             ],
           },
         ],
