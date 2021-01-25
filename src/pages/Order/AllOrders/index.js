@@ -598,6 +598,7 @@ class AllOrdersList extends PureComponent {
 
   // ====== 首次打印提示弹框 ======
   handleLogisticsAlert =() =>{
+    console.log("首次打印提示弹框")
     this.setState({
       LogisticsAlertVisible:false
     })
