@@ -13,7 +13,7 @@ import { setListData } from '../../../utils/publicMethod';
 import { getQueryString1 } from '../../../utils/utils';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY, LOGISTICSSTATUS } from './data.js';
 import {
-  getList,
+  getList1,
   deleteData,
   updateRemind,
   logisticsRepeatPrint,
@@ -404,7 +404,7 @@ class AllOrdersList extends PureComponent {
     this.setState({
       loading:true,
     })
-    getList(params).then(res=>{
+    getList1(params).then(res=>{
       this.setState({
         countSice:res.data.total,
         data:setListData(res.data),
