@@ -4,7 +4,7 @@ import { Button, Col, Form, Input, Badge, Row, Select, DatePicker, Divider, Drop
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import { Resizable } from 'react-resizable';
-
+// 测试未推送
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { ORDER_LIST } from '../../../actions/order';
@@ -598,6 +598,7 @@ class AllOrdersList extends PureComponent {
 
   // ====== 首次打印提示弹框 ======
   handleLogisticsAlert =() =>{
+    console.log("首次打印提示弹框")
     this.setState({
       LogisticsAlertVisible:false
     })
