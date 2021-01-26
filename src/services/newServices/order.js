@@ -10,6 +10,14 @@ export async function getList(params) {
   });
 }
 
+//销售订单列表和售后列表
+export async function getList1(params) {
+  return request(`/api/order/order/list`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 // 下属订单订单列表
 export async function getPermissions(params) {
   return request(`/api/order/permissions/list`, {
