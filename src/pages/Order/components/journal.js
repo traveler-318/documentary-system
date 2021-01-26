@@ -22,7 +22,7 @@ const { Dragger } = Upload;
   globalParameters,
 }))
 @Form.create()
-class Background extends PureComponent {
+class Journal extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -217,4 +217,4 @@ class Background extends PureComponent {
   }
 }
 
-export default Background;
+export default Journal;
