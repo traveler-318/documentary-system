@@ -112,7 +112,7 @@ class DraggableTabs extends Component {
 
     return (
       <DndProvider backend={HTML5Backend}>
-        <Tabs tabBarStyle={{marginRight:2}} renderTabBar={this.renderTabBar} {...this.props}>
+        <Tabs tabBarStyle={{marginRight:0}} renderTabBar={this.renderTabBar} {...this.props}>
           {orderTabs}
         </Tabs>
       </DndProvider>

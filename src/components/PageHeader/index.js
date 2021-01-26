@@ -27,7 +27,7 @@ export default class PageHeader extends PureComponent {
       tabBarExtraContent,
       loading = false,
       wide = false,
-      hiddenBreadcrumb = false,
+      hiddenBreadcrumb = localStorage.getItem('isAntTap')=='1' ? true:false,
     } = this.props;
 
     const clsString = classNames(styles.pageHeader, className);
@@ -38,7 +38,7 @@ export default class PageHeader extends PureComponent {
     if (tabActiveKey !== undefined) {
       activeKeyProps.activeKey = tabActiveKey;
     }
-    return (
+    return hiddenBreadcrumb ? null :(
       <div className={clsString}>
         <div className={wide ? styles.wide : ''}>
           <Skeleton

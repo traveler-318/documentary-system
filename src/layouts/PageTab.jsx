@@ -269,6 +269,7 @@ class App extends Component {
                           this.reflash(pane.key);
                         }}
                       >
+                        {pane.title == '首页' ? (<Icon type="home" />):(<Icon type="file" />)}
                         {pane.title}
                       </span>
                     </Tooltip>
@@ -278,7 +279,7 @@ class App extends Component {
                 closable={pages.length > 1}
                 style={{ background: 'transparent', paddingLeft: 0, paddingRight: 0 }}
               >
-                <div key={keys[pane.key]}>{pane.content}</div>
+                <div key={keys[pane.key]} className={pageTabStyle.content}>{pane.content}</div>
               </TabPane>
             );
           })}
