@@ -67,6 +67,7 @@ import ImportData from '../components/ImportData';
 import Excel from '../components/excel';
 import Text from '../components/text';
 import Journal from '../components/journal';
+import TimeConsuming from '../components/timeConsuming';
 import SMS from '../components/smsList';
 import VoiceList from '../components/voiceList';
 import OrderImport from '../components/orderImport';
@@ -140,6 +141,9 @@ class AllOrdersList extends PureComponent {
       // 短信弹窗
       SMSVisible:false,
       smsList:{},
+      // 耗时检测弹窗
+      timeConsumingVisible:false,
+      timeConsumingList:{},
       // 语音弹窗
       VoiceVisible:false,
       voice:{},
@@ -1065,6 +1069,9 @@ class AllOrdersList extends PureComponent {
     }else if(code === "Claim"){
       // 认领
       this.bulkClaim()
+    }else if(code === "timeConsuming"){
+      // 耗时检测
+      this.handleTimeConsuming()
     }
 
   }
@@ -1438,6 +1445,21 @@ class AllOrdersList extends PureComponent {
   handleCancelSMS = () => {
     this.setState({
       SMSVisible:false
+    })
+  }
+
+  // 打开耗时检测弹窗
+  handleTimeConsuming = () => {
+    const {selectedRows} = this.state;
+    this.setState({
+      timeConsumingVisible:true,
+      timeConsumingList:selectedRows
+    })
+  }
+  // 关闭耗时检测弹窗
+  handleCancelTimeConsuming = () => {
+    this.setState({
+      timeConsumingVisible:false
     })
   }
 
@@ -1879,6 +1901,8 @@ class AllOrdersList extends PureComponent {
       detailsVisible,
       journalVisible,
       SMSVisible,
+      timeConsumingVisible,
+      timeConsumingList,
       smsList,
       VoiceVisible,
       voice,
@@ -2353,6 +2377,7 @@ class AllOrdersList extends PureComponent {
             handleCancelSMS={this.handleCancelSMS}
           />
         ):""}
+
         {/* 语音列表弹框 */}
         {VoiceVisible?(
           <VoiceList
@@ -2415,6 +2440,16 @@ class AllOrdersList extends PureComponent {
           handleOrderImportCancel={this.handleOrderImportCancel}
           />
         ):""}
+
+        {/* 耗时检测弹框 */}
+        {timeConsumingVisible?(
+          <TimeConsuming
+            timeConsumingVisible={timeConsumingVisible}
+            timeConsumingList={timeConsumingList}
+            handleCancelTimeConsuming={this.handleCancelTimeConsuming}
+          />
+        ):""}
+
 
 
         <Modal

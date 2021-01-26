@@ -312,6 +312,14 @@ export async function updateOrderHead(params) {
   });
 }
 
+// 耗时检测
+export async function ordertimeinfotask(params) {
+  return request("/api/order_time/ordertimeinfotask/list",{
+    method: 'POST',
+    body: params,
+  });
+}
+
 
 // 订单导入
 export async function importOrder(params) {
