@@ -2446,6 +2446,7 @@ class AllOrdersList extends PureComponent {
           <TimeConsuming
             timeConsumingVisible={timeConsumingVisible}
             timeConsumingList={timeConsumingList}
+            handleDetails={this.handleDetails}
             handleCancelTimeConsuming={this.handleCancelTimeConsuming}
           />
         ):""}
