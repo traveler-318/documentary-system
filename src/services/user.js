@@ -222,7 +222,7 @@ export async function addLabel(params) {
     body: params,
   });
 }
-// 又不更新了生气
+// 又不更新了生气-----为什么
 // 修改维护标签
 export async function updateLabel(params) {
   params.labelType = 0;
