@@ -776,6 +776,9 @@ class AllOrdersList extends PureComponent {
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
+    if(selectedRows.length > 1){
+      return message.info('只能选择一条数据');
+    }
     let list=[];
     selectedRows.map( item =>{
       list.push({
@@ -792,7 +795,7 @@ class AllOrdersList extends PureComponent {
       keyboard:false,
       onOk:() => {
         return new Promise((resolve, reject) => {
-          updateConfirmTag(list).then(res=>{
+          updateConfirmTag({id:selectedRows[0].id,confirmTag:6}).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
               this.setState({
