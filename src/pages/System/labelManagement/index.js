@@ -29,7 +29,7 @@ const { TabPane } = Tabs;
 // ]
 const topTabPane = [
   {name:"维护标签",key:'1'},
-  // {name:"客户等级",key:'2'},
+  {name:"客户等级",key:'2'},
 ]
 
 

@@ -116,9 +116,6 @@ class EditableCell extends Component {
         })
       });
     }
-    
-
-    
   };
 
   renderCell = form => {
@@ -254,11 +251,19 @@ class EditableTable extends React.Component {
                 }
                 if(index+1 === this.state.dataSource.length){
                     return (
-                        <a onClick={this.handleAdd}>添加</a>
+                      <>
+                      <Popconfirm 
+                       title="确定删除吗?" 
+                       onConfirm={() => this.handleDelete(record.id)}
+                      >
+                           <a>删除</a>
+                       </Popconfirm>
+                       <a style={{marginLeft:5}} onClick={this.handleAdd}>添加</a>
+                    </>
                     )
                 }else{
                     return (
-                        <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.id)}>
+                        <Popconfirm title="确定删除吗?" onConfirm={() => this.handleDelete(record.id)}>
                             <a>删除</a>
                         </Popconfirm>
                     )
@@ -290,10 +295,9 @@ class EditableTable extends React.Component {
     }
 
     addLabellData = (param) =>{
+      param.labelType = 0;
       addLabel([param]).then(res=>{
-        if(res.code != 200){
-          this.getLabelList()
-        }
+        this.getLabelList()
       })
     }
 
@@ -368,6 +372,7 @@ class EditableTable extends React.Component {
             margin: '20px',
             float: 'left'
         }}>
+          {dataSource.length <=0 ? (<Button style={{marginBottom:10}} onClick={this.handleAdd}>新增标签</Button>):""}
             <Table
                 components={components}
                 rowClassName={() => 'editable-row'}

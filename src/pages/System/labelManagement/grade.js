@@ -17,7 +17,7 @@ import {
   Table, 
   Popconfirm,
 } from 'antd';
-import { getUserInfo, updateInfo,getTenantInfo } from '../../../services/user';
+import { getGrade, addGrade, removeGrade, updateGrade } from '../../../services/user';
 import { getToken } from '../../../utils/authority';
 
 import styles from './index.less';
@@ -86,16 +86,39 @@ class EditableCell extends Component {
     });
   };
 
-  save = e => {
-    const { record, handleSave } = this.props;
-    this.form.validateFields((error, values) => {
-      if (error && error[e.currentTarget.id]) {
-        return;
+  updateLabelDate = (param) => {
+    updateGrade(param).then(res=>{
+      if(res.code != 200){
+        this.props.handletLabelList()
       }
-      console.log(record,values,this.state.dataSource,"数据")
-    //   this.toggleEdit();
-      handleSave({ ...record, ...values });
-    });
+    })
+  }
+
+  save = (e,color,type) => {
+    if(type === 'color'){
+      let param = {
+        labelName:e.labelName,
+        id:e.id,
+        color
+      }
+      this.updateLabelDate(param)
+    }else{
+      const { record } = this.props;
+      this.form.validateFields((error, values) => {
+        if (error && error[e.currentTarget.id]) {
+          return;
+        }
+  
+        this.updateLabelDate({
+          id:record.id,
+          labelName:values.labelName,
+          color:record.color,
+        })
+      });
+    }
+    
+
+    
   };
 
   renderCell = form => {
@@ -103,8 +126,7 @@ class EditableCell extends Component {
     const { children, dataIndex, record, title } = this.props;
     const { editing, colorList } = this.state;
 
-console.log(children, dataIndex, record, title ,"record")
-    if(dataIndex === 'age'){
+    if(dataIndex === 'color'){
         return editing ? (
             <Form.Item style={{ margin: 0 }}>
               {form.getFieldDecorator(dataIndex, {
@@ -115,21 +137,12 @@ console.log(children, dataIndex, record, title ,"record")
                   },
                 ],
                 initialValue: record[dataIndex],
-                getValueFromEvent: (args)=>{
-                    console.log(args,"argsargsargs")
-                    
-                    setTimeout(()=>{
-                        this.save({
-                            currentTarget:{
-                                id:dataIndex
-                            }
-                        })
-                    },1000)
-                    return args
+                getValueFromEvent: (color)=>{
+                    console.log(color,"argsargsargs")
+                    this.save(record,color,'color')
+                    return color
                 }
-              })(<Select 
-                    // onChange={this.save}
-                >
+              })(<Select>
                   {
                     colorList.map(item=>{
                         return(
@@ -172,7 +185,7 @@ console.log(children, dataIndex, record, title ,"record")
                 initialValue: record[dataIndex],
               })(<Input 
                   ref={node => (this.input = node)} 
-                  onPressEnter={this.save} 
+                  // onPressEnter={this.save} 
                   onBlur={this.save}
               />)}
             </Form.Item>
@@ -221,13 +234,13 @@ class EditableTable extends React.Component {
       this.columns = [
         {
             title: '等级',
-            dataIndex: 'name',
+            dataIndex: 'labelName',
             width: '40%',
             editable: true,
         },
         {
             title: '颜色',
-            dataIndex: 'age',
+            dataIndex: 'color',
             width: '40%',
             editable: true,
         },
@@ -241,11 +254,20 @@ class EditableTable extends React.Component {
                 }
                 if(index+1 === this.state.dataSource.length){
                     return (
-                        <a onClick={this.handleAdd}>添加</a>
+                     <>
+                       <Popconfirm 
+                        title="确定删除吗?" 
+                        onConfirm={() => this.handleDelete(record.id)}
+                       >
+                            <a>删除</a>
+                        </Popconfirm>
+                        <a style={{marginLeft:5}} onClick={this.handleAdd}>添加</a>
+                     </>
+
                     )
                 }else{
                     return (
-                        <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
+                        <Popconfirm title="确定删除吗?" onConfirm={() => this.handleDelete(record.id)}>
                             <a>删除</a>
                         </Popconfirm>
                     )
@@ -255,38 +277,57 @@ class EditableTable extends React.Component {
       ];
   
       this.state = {
-        dataSource: [
-          {
-            key: '0',
-            name: 'Edward King 0',
-            age: '#36CFC9',
-            address: 'London, Park Lane no. 0',
-          },
-          {
-            key: '1',
-            name: 'Edward King 1',
-            age: '#36CFC9',
-            address: 'London, Park Lane no. 1',
-          },
-        ],
+        dataSource: [],
         count: 2,
       };
     }
 
-    componentWillMount(){}
+    componentWillMount(){
+      this.getLabelList()
+    }
+
+    getLabelList = () =>{
+      getGrade({
+        "current": 1,
+	      "size": 100,
+      }).then(res=>{
+        
+        this.setState({
+          dataSource:res.data.records
+        })
+      })
+    }
+
+    addLabellData = (param) =>{
+      param.labelType = 1;
+      addGrade([param]).then(res=>{
+        this.getLabelList()
+      })
+    }
+
+    removeLabelData = (id) =>{
+      removeGrade(id).then(res=>{
+        this.getLabelList()
+      })
+    }
   
-    handleDelete = key => {
-      const dataSource = [...this.state.dataSource];
-      this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+    handleDelete = id => {
+      // const dataSource = [...this.state.dataSource];
+      // this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+      this.removeLabelData(id)
     };
   
     handleAdd = () => {
       const { count, dataSource } = this.state;
       const newData = {
         key: count,
-        name: `标签 ${count}`,
-        age: '#40A9FF',
+        labelName: `等级 ${count}`,
+        color: '#40A9FF',
       };
+      this.addLabellData({
+        labelName: `等级 ${count}`,
+        color: '#40A9FF',
+      })
       this.setState({
         dataSource: [...dataSource, newData],
         count: count + 1,
@@ -325,6 +366,7 @@ class EditableTable extends React.Component {
             dataIndex: col.dataIndex,
             title: col.title,
             handleSave: this.handleSave,
+            handletLabelList: this.getLabelList
           }),
         };
       });
@@ -334,6 +376,7 @@ class EditableTable extends React.Component {
             margin: '20px',
             float: 'left'
         }}>
+            {dataSource.length <=0 ? (<Button style={{marginBottom:10}} onClick={this.handleAdd}>新增等级</Button>):""}
             <Table
                 components={components}
                 rowClassName={() => 'editable-row'}
