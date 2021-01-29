@@ -1450,12 +1450,16 @@ class AllOrdersList extends PureComponent {
 
   // 打开耗时检测弹窗
   handleTimeConsuming = () => {
-    const {selectedRows} = this.state;
+    const { selectedRows } = this.state;
+    if(selectedRows.length > 1){
+      return message.info('最多只能选择一条数据查看');
+    }
     this.setState({
       timeConsumingVisible:true,
       timeConsumingList:selectedRows
     })
   }
+
   // 关闭耗时检测弹窗
   handleCancelTimeConsuming = () => {
     this.setState({
