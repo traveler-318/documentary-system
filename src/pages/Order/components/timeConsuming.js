@@ -30,7 +30,7 @@ class timeConsuming extends PureComponent {
       data:[],
       pagination: {},
       params:{
-        size:1,
+        size:10,
         current:1,
       },
     };
@@ -40,20 +40,21 @@ class timeConsuming extends PureComponent {
   componentWillMount() {
     const {params}=this.state;
     const {timeConsumingList}=this.props;
+
+    if(timeConsumingList.length > 0){
+      params.outOrderNo = timeConsumingList[0].outOrderNo
+    }
     this.get0rdertimeinfotask(params)
   }
 
   get0rdertimeinfotask = (params,key) =>{
-    console.log(key)
     let p=''
     if(key){
-      p={...params,[key]:"123"}
+      p={...params,[key]:key}
     }else {
       p={...params}
     }
-
     ordertimeinfotask(p).then(res=>{
-      console.log(res)
       if(res.code === 200){
         this.setState({
           data:{
@@ -98,18 +99,6 @@ class timeConsuming extends PureComponent {
     }else {
       params.current = pagination.current;
     }
-    // if(sorter.columnKey === "followTimeConsuming"){
-    //   params.followTimeConsuming=null;
-    //
-    // }else if(sorter.columnKey === "followAgeing"){
-    //   params.followAgeing=null
-    //   params.current = 1
-    // }else if(sorter.columnKey === "activateTimeConsuming"){
-    //   params.activateTimeConsuming=null
-    //   params.current = 1
-    // }else {
-    //
-    // }
     this.get0rdertimeinfotask(params,columnKey)
   };
 
