@@ -205,3 +205,49 @@ export async function ordersheetDetail(time) {
   });
 }
 
+
+// 查询维护标签
+export async function getLabel(params) {
+  return request('/api/label_base_info/labelbaseinfo/list', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 新增维护标签
+export async function addLabel(params) {
+  return request('/api/label_base_info/labelbaseinfo/save', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 修改维护标签
+export async function updateLabel(params) {
+  return request('/api/label_base_info/labelbaseinfo/update', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 删除维护标签
+export async function removeLabel(params) {
+  return request('/api/label_base_info/labelbaseinfo/remove?ids='+params, {
+    method: 'POST',
+  });
+}
+
+
+// 查询客户等级
+export async function getGrade(time) {
+  return request('/api/tracking/ordersheet/detail?statisticsTime='+time, {
+    method: 'GET',
+  });
+}
+
+// 新增客户等级
+export async function addGrade(time) {
+  return request('/api/tracking/ordersheet/detail?statisticsTime='+time, {
+    method: 'GET',
+  });
+}
