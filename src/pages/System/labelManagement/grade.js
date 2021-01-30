@@ -16,6 +16,7 @@ import {
   Tag,
   Table, 
   Popconfirm,
+  Alert 
 } from 'antd';
 import { getGrade, addGrade, removeGrade, updateGrade } from '../../../services/user';
 import { getToken } from '../../../utils/authority';
@@ -376,6 +377,7 @@ class EditableTable extends React.Component {
             margin: '20px',
             float: 'left'
         }}>
+            <Alert message="此页面操作为实时更新，请谨慎操作！" type="warning" showIcon style={{marginBottom:10}}/>
             {dataSource.length <=0 ? (<Button style={{marginBottom:10}} onClick={this.handleAdd}>新增等级</Button>):""}
             <Table
                 components={components}
