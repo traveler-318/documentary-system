@@ -136,7 +136,7 @@ export default function request(url, option) {
       'Content-Type': 'text/plain',
     };
   }
-  console.log(url,"newOptionsnewOptionsnewOptions")
+  
   if(url != "/api/customer/contactcustomer/save"){
     // token鉴权
     const token = getToken();
@@ -197,7 +197,17 @@ export default function request(url, option) {
       sessionStorage.removeItem(`${hashcode}:timestamp`);
     }
   }
-  return fetch(url, newOptions)
+
+
+  let fetchUrl = "";
+
+  if(url.indexOf('?') === -1){
+    fetchUrl = `${url}?t=${Date.parse(new Date())}`
+  }else{
+    fetchUrl = `${url}&t=${Date.parse(new Date())}`
+  }
+
+  return fetch(fetchUrl, newOptions)
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))
     .then(response => {
