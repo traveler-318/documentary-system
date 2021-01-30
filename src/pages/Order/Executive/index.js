@@ -199,6 +199,7 @@ class AllOrdersList extends PureComponent {
       })
     })
   }
+
   getDataList = () => {
     const {params} = this.state;
     this.setState({
@@ -216,8 +217,11 @@ class AllOrdersList extends PureComponent {
   // 根据组织获取对应的业务员数据
   getSalesmanList = (value = "all_all") => {
     getCurrentsalesman(value).then(res=>{
+
+      console.log(res,"!!!!!!!!!!!!!!!")
+
       if(res.code === 200){
-        res.data.unshift('全部');
+        res.data.unshift({key:'全部',value:''});
         this.setState({
           salesmanList:res.data
         })
@@ -265,9 +269,11 @@ class AllOrdersList extends PureComponent {
     let text = "";
     if(payload.salesman === "全部" || payload.salesman === ""){
       for(let i=0; i<salesmanList.length; i++){
-        text +=salesmanList[i]+","
+        if(salesmanList[i].value){
+          text +=salesmanList[i].value+","
+        }
       }
-      payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"").substr(3);
+      payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"");
     }else{
       payload.salesman = payload.salesman
     }
@@ -361,7 +367,7 @@ class AllOrdersList extends PureComponent {
               })(
               <Select placeholder={"请选择销售"} style={{ width: 120 }}>
                 {salesmanList.map((item,index)=>{
-                  return (<Option key={index} value={item}>{item}</Option>)
+                  return (<Option key={index} value={item.value}>{item.key}</Option>)
                 })}
               </Select>
             )}
