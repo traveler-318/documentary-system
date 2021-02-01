@@ -283,9 +283,10 @@ class App extends Component {
                 closable={pages.length > 1}
                 style={{ background: 'transparent', paddingLeft: 0, paddingRight: 0 }}
               >
-                {activeKey === keys[pane.key] ? (
-                  <div key={keys[pane.key]} className={pageTabStyle.content}>{pane.content}</div>
-                ):''}
+                <div key={keys[pane.key]} className={pageTabStyle.content}>{pane.content}</div>
+                {/*{activeKey === keys[pane.key] ? (*/}
+                  {/*<div key={keys[pane.key]} className={pageTabStyle.content}>{pane.content}</div>*/}
+                {/*):''}*/}
               </TabPane>
             );
           })}
