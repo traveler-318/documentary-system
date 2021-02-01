@@ -188,43 +188,44 @@ class Workplace extends PureComponent {
     ordersheetDetail(
       moment().subtract('days', defaultTime).format('YYYY-MM-DD').replace(/-/g,'')
     ).then(res=>{
-      const {templateData} = this.state;
-      let data = JSON.parse(res.data);
-      let _data = [], _pieData = [];
+      if(res.code === 200){
+        const {templateData} = this.state;
+        let data = JSON.parse(res.data);
+        let _data = [], _pieData = [];
 
-      data.pending = data.pending+data.thereview
+        data.pending = data.pending+data.thereview
 
-      for(let key in templateData){
-        if(key != "totalnumber" && key != "cancel" && key != "overdue" && key != "intheback" && key != "thereview"){
-          _data.push({
-            key,
-            num:data[key],
-            title:templateData[key].title,
-          })
+        for(let key in templateData){
+          if(key != "totalnumber" && key != "cancel" && key != "overdue" && key != "intheback" && key != "thereview"){
+            _data.push({
+              key,
+              num:data[key],
+              title:templateData[key].title,
+            })
+          }
+          if(key != "totalnumber" && key != "cancel" && key != "overdue" && key != "intheback" && key != "thereview"){
+            _pieData.push({
+              key,
+              value: data[key],
+              name: templateData[key].title,
+              itemStyle: { color: templateData[key].color }
+            })
+          }
         }
-        if(key != "totalnumber" && key != "cancel" && key != "overdue" && key != "intheback" && key != "thereview"){
-          _pieData.push({
-            key,
-            value: data[key],
-            name: templateData[key].title,
-            itemStyle: { color: templateData[key].color }
+        
+        // 获取昨天的数据
+        ordersheetDetail(
+          moment().subtract('days', defaultTime+1).format('YYYY-MM-DD').replace(/-/g,'')
+        ).then(res=>{
+          this.setState({
+            _data:_data,
+            pieData:_pieData,
+            yesterdayData:JSON.parse(res.data)
+          },()=>{
+            this.init()
           })
-        }
-      }
-      
-      // 获取昨天的数据
-      ordersheetDetail(
-        moment().subtract('days', defaultTime+1).format('YYYY-MM-DD').replace(/-/g,'')
-      ).then(res=>{
-        this.setState({
-          _data:_data,
-          pieData:_pieData,
-          yesterdayData:JSON.parse(res.data)
-        },()=>{
-          this.init()
         })
-      })
-      
+      }
     })
 
   }
