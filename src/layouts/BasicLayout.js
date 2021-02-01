@@ -138,11 +138,10 @@ class BasicLayout extends React.Component {
             isMobile={isMobile}
             {...this.props}
           />
-          {istab === '1'?(
-            <Content className={[styles.tabContent,istab === '1'?'':'word-style-hide']} style={contentStyle}>
-              <PageTab>{children}</PageTab>
-            </Content>
-          ):(
+          <Content className={[styles.tabContent,istab === '1'?'':'word-style-hide']} style={contentStyle}>
+            <PageTab>{children}</PageTab>
+          </Content>
+          {istab === '1'?'':(
             <Content className={[styles.content,istab === '2'?'':'word-style-hide']} style={contentStyle}>
               {children}
             </Content>
