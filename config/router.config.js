@@ -537,6 +537,16 @@ export default [
             ],
           },
           {
+            path: '/order/safeguard',
+            routes: [
+              { path: '/order/safeguard', component: './Order/Safeguard/index' },
+              // { path: '/order/executive/list', component: './Order/Executive/index' },
+              { path: '/order/safeguard/add', component: './Order/components/add' },
+              { path: '/order/safeguard/edit/:id', component: './Order/components/edit' },
+              { path: '/order/safeguard/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
+            ],
+          },
+          {
             path: '/order/salesmanOrder',  //业务员订单
             routes: [
               { path: '/order/salesmanOrder', component: './Order/SalesmanOrder/index' },
@@ -631,7 +641,7 @@ export default [
               { path: '/logistics/additional/edit', component: './Logistics/Additional/edit' },
             ],
           },
-        
+
         ],
       },
       {
