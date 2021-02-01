@@ -375,7 +375,7 @@ class AllOrdersList extends PureComponent {
         salesmanList:res.data.records
       })
       const { form } = this.props;
-      form.setFieldsValue({salesman:"全部"});
+      form.setFieldsValue({salesman:["全部"]});
     })
   }
 
@@ -407,7 +407,7 @@ class AllOrdersList extends PureComponent {
           salesmanList:res.data
         })
         const { form } = this.props;
-        form.setFieldsValue({salesman:"全部"});
+        form.setFieldsValue({salesman:["全部"]});
       }
     })
   }
@@ -449,15 +449,18 @@ class AllOrdersList extends PureComponent {
       payload.orderSource = null;
     }
     let text = "";
-    if(payload.salesman === "全部" || payload.salesman === ""){
-      console.log(salesmanList)
-      for(let i=0; i<salesmanList.length; i++){
-        text +=salesmanList[i].userAccount+","
+    console.log(payload.salesman)
+    if(payload.salesman != undefined ){
+      if(payload.salesman[0] === "全部" || payload.salesman === ""){
+        for(let i=0; i<salesmanList.length; i++){
+          text +=salesmanList[i].userAccount+","
+        }
+        payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"");
+      }else{
+        payload.salesman = payload.salesman.toString()
       }
-      payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"");
-    }else{
-      payload.salesman = payload.salesman
     }
+
 
     payload = {
       ...payload,
@@ -532,11 +535,11 @@ class AllOrdersList extends PureComponent {
         <Form.Item label="销售">
           {getFieldDecorator('salesman', {
               })(
-              <Select placeholder={"请选择销售"} style={{ width: 200 }}>
-                {salesmanList.map((item,index)=>{
-                  return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
-                })}
-              </Select>
+            <Select mode="multiple" placeholder={"请选择销售"} style={{ width: 200 }}>
+              {salesmanList.map((item,index)=>{
+                return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
+              })}
+            </Select>
             )}
         </Form.Item>
         <Form.Item label="订单来源">
