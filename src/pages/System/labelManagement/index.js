@@ -41,7 +41,7 @@ class BaseView extends Component {
     super(props);
     // this.myRef = React.createRef();
     this.state = {
-      TabsKey:"7"
+      TabsKey:"1"
     };
   }
 
@@ -76,13 +76,12 @@ class BaseView extends Component {
                   return (
                     <TabPane tab={item.name} key={item.key}>
                       {
-                        item.key === "1" ? (
+                        TabsKey === "1" ? (
                             <Label/>
-                            
                         ) :""
                       }
                       {
-                        item.key === "2" ? (
+                        TabsKey === "2" ? (
                             <Grade/>
                         ) :""
                       }
