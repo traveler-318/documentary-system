@@ -317,9 +317,20 @@ class Workplace extends PureComponent {
             <div className={styles.title}>
               <img src={dataSumdmary} />
               数据汇总
+              <p style={{
+                color: '#9e9a9a',
+                fontSize: '12px'
+              }}>对于数据收集统计汇总</p>
             </div>
             <div className={styles.echarts_box} ref={this.echarts_main} id="echarts_main">
-
+              {/* <div>
+                <p>订单汇总</p>
+                <p>新增订单48个，已审核10个</p>
+              </div>
+              <div>
+                <p>跟进汇总</p>
+                <p>跟进订单48个，新增订单中未跟进10个</p>
+              </div> */}
             </div>
           </div>
         </div>

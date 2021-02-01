@@ -95,15 +95,15 @@ class OrdersEdit extends PureComponent {
     
 
     if(window.location.hash.indexOf("allOrders") != -1){
-      backUrl = "/order/allOrders/list?type=details"
+      backUrl = "/order/allOrders?type=details"
     }else if(window.location.hash.indexOf("salesmanOrder") != -1){
-      backUrl = "/order/salesmanOrder/list?type=details"
+      backUrl = "/order/salesmanOrder?type=details"
     }else if(window.location.hash.indexOf("warehouseOrder") != -1){
-      backUrl = "/order/warehouseOrder/list?type=details"
+      backUrl = "/order/warehouseOrder?type=details"
     }else if(window.location.hash.indexOf("afterSaleOrder") != -1){
-      backUrl = "/order/afterSaleOrder/list?type=details"
+      backUrl = "/order/afterSaleOrder?type=details"
     }else if(window.location.hash.indexOf("executive") != -1){
-      backUrl = "/order/executive/list?type=details"
+      backUrl = "/order/executive?type=details"
     }
   }
 

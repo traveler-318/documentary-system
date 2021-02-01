@@ -57,15 +57,15 @@ class OrdersAdd extends PureComponent {
     this.getTreeList();
 
     if(window.location.hash.indexOf("allOrders") != -1){
-      backUrl = "/order/allOrders/list"
+      backUrl = "/order/allOrders"
     }else if(window.location.hash.indexOf("salesmanOrder") != -1){
-      backUrl = "/order/salesmanOrder/list"
+      backUrl = "/order/salesmanOrder"
     }else if(window.location.hash.indexOf("warehouseOrder") != -1){
-      backUrl = "/order/warehouseOrder/list"
+      backUrl = "/order/warehouseOrder"
     }else if(window.location.hash.indexOf("afterSaleOrder") != -1){
-      backUrl = "/order/afterSaleOrder/list"
+      backUrl = "/order/afterSaleOrder"
     }else if(window.location.hash.indexOf("executive") != -1){
-      backUrl = "/order/executive/list"
+      backUrl = "/order/executive"
     }
   }
 
