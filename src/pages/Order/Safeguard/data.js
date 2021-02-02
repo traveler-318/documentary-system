@@ -9,7 +9,7 @@
 
 // 订单状态
 export const ORDERSTATUS = [
-    {"name":"待维护",key:'0'},
+    {"name":"待维护1",key:'0'},
     {"name":"阶段1",key:'1'},
     {"name":"阶段2",key:'2'},//已审核
     {"name":"阶段3",key:'3'},
