@@ -62,6 +62,7 @@ export default {
   // add for transfer to umi
   plugins,
   history: 'hash',
+  hash:true,
   define: {
     APP_TYPE: APP_TYPE || '',
   },
