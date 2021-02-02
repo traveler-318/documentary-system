@@ -335,19 +335,19 @@ class EditableTable extends React.Component {
       let param = {
         ...row,
         id:key,
-        labelType:0
+        labelType:1
       }
 
       if(key != 'xz'){
         this.updateLabelDate({
           ...row,
           id:key,
-          labelType:0
+          labelType:1
         });
       }else{
         this.addLabellData({
           ...row,
-          labelType:0
+          labelType:1
         })
       }
 
@@ -405,9 +405,8 @@ class EditableTable extends React.Component {
 
     return (
       <div style={{
-          width: '500px',
+          // width: '500px',
           margin: '20px',
-          float: 'left'
       }}>
         {data.length <=0 ? (<Button style={{marginBottom:10}} onClick={this.handleAdd}>新增等级</Button>):""}
         <EditableContext.Provider value={this.props.form}>

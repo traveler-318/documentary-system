@@ -273,3 +273,38 @@ export async function removeGrade(params) {
     method: 'POST',
   });
 }
+
+
+
+// 查询客户状态
+export async function getState(params) {
+  params.labelType = 2;
+  return request('/api/label_base_info/labelbaseinfo/list', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 新增客户状态
+export async function addState(params) {
+  return request('/api/label_base_info/labelbaseinfo/save', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 修改客户状态
+export async function updateState(params) {
+  params.labelType = 2;
+  return request('/api/label_base_info/labelbaseinfo/update', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+// 删除客户状态
+export async function removeState(params) {
+  return request('/api/label_base_info/labelbaseinfo/remove?ids='+params+'&labelType=1', {
+    method: 'POST',
+  });
+}

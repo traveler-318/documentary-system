@@ -19,6 +19,7 @@ import Panel from '../../../components/Panel';
 
 import Label from './label';
 import Grade from './grade';
+import State from './state';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -30,7 +31,7 @@ const { TabPane } = Tabs;
 const topTabPane = [
   {name:"维护标签",key:'1'},
   {name:"客户等级",key:'2'},
-  // {name:"客户状态",key:'3'},
+  {name:"客户状态",key:'3'},
 ]
 
 
@@ -88,7 +89,7 @@ class BaseView extends Component {
                       }
                       {
                         TabsKey === "3" ? (
-                            <Grade/>
+                            <State/>
                         ) :""
                       }
                     </TabPane>

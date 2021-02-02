@@ -396,15 +396,14 @@ class EditableTable extends React.Component {
 
     return (
       <div style={{
-          width: '500px',
+          // width: '500px',
           margin: '20px',
-          float: 'left'
       }}>
         {data.length <=0 ? (<Button style={{marginBottom:10}} onClick={this.handleAdd}>新增标签</Button>):""}
         <EditableContext.Provider value={this.props.form}>
           <Table
             components={components}
-            // bordered
+            bordered={false}
             size="small"
             dataSource={data}
             columns={columns}

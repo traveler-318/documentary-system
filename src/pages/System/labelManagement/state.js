@@ -18,7 +18,7 @@ import {
   Popconfirm,
   Alert
 } from 'antd';
-import { getGrade, addGrade, removeGrade, updateGrade } from '../../../services/user';
+import { getState, addState, removeState, updateState } from '../../../services/user';
 import { getToken } from '../../../utils/authority';
 
 import styles from './index.less';
@@ -191,7 +191,7 @@ class EditableTable extends React.Component {
     this.state = { data : [], editingKey: '' };
     this.columns = [
       {
-        title: '等级',
+        title: '状态',
         dataIndex: 'labelName',
         width: '45%',
         editable: true,
@@ -230,7 +230,7 @@ class EditableTable extends React.Component {
               <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)} style={{ marginRight: 8 }}>
                 修改
               </a>
-              <Popconfirm style={{ marginRight: 8 }} title="确定删除吗?" onConfirm={() => this.removeLabelData(record.key)}>
+              <Popconfirm style={{ marginRight: 8 }} title="确定删除吗?" onConfirm={() => this.removeStateData(record.key)}>
                 <a>删除</a>
               </Popconfirm>
               {
@@ -265,25 +265,25 @@ class EditableTable extends React.Component {
     });
   };
 
-  addLabellData = (param) =>{
-    param.labelType = 1;
-    addGrade([param]).then(res=>{
-      this.getLabelList()
+  addStateData = (param) =>{
+    param.labelType = 2;
+    addState([param]).then(res=>{
+      this.getStateList()
     })
   }
 
-  removeLabelData = (id) =>{
-    removeGrade(id).then(res=>{
-      this.getLabelList()
+  removeStateData = (id) =>{
+    removeState(id).then(res=>{
+      this.getStateList()
     })
   }
 
   componentWillMount(){
-    this.getLabelList()
+    this.getStateList()
   }
 
-  getLabelList = () =>{
-    getGrade({
+  getStateList = () =>{
+    getState({
       "current": 1,
       "size": 100,
     }).then(res=>{
@@ -311,13 +311,13 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: '' , data: _data});
   };
 
-  updateLabelDate = (param) => {
-    updateGrade(param).then(res=>{
+  updateStateDate = (param) => {
+    updateState(param).then(res=>{
       if(res.code != 200){
-        this.getLabelList();
+        this.getStateList();
         message.error(res.msg)
       }else{
-        this.getLabelList();
+        this.getStateList();
         message.success(res.msg)
       }
     })
@@ -335,19 +335,19 @@ class EditableTable extends React.Component {
       let param = {
         ...row,
         id:key,
-        labelType:0
+        labelType:2
       }
 
       if(key != 'xz'){
-        this.updateLabelDate({
+        this.updateStateDate({
           ...row,
           id:key,
-          labelType:0
+          labelType:2
         });
       }else{
-        this.addLabellData({
+        this.addStateData({
           ...row,
-          labelType:0
+          labelType:2
         })
       }
 
@@ -405,15 +405,14 @@ class EditableTable extends React.Component {
 
     return (
       <div style={{
-          width: '500px',
+          // width: '500px',
           margin: '20px',
-          float: 'left'
       }}>
-        {data.length <=0 ? (<Button style={{marginBottom:10}} onClick={this.handleAdd}>新增等级</Button>):""}
+        {data.length <=0 ? (<Button style={{marginBottom:10}} onClick={this.handleAdd}>新增状态</Button>):""}
         <EditableContext.Provider value={this.props.form}>
           <Table
             components={components}
-            // bordered
+            bordered={false}
             size="small"
             dataSource={data}
             columns={columns}
