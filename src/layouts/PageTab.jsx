@@ -147,6 +147,12 @@ class App extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.setState({
+      pages: [],
+    });
+  }
+
   reflash(key) {
     const { keys } = this.state;
     keys[key] = Date.now();
@@ -235,7 +241,7 @@ class App extends Component {
 
   render() {
     const { pages = [], activeKey, keys } = this.state;
-
+    const activeKey1 = sessionStorage.getItem('current-tab-activeKey');
     return (
       <div>
         <DraggableTabs
@@ -283,10 +289,10 @@ class App extends Component {
                 closable={pages.length > 1}
                 style={{ background: 'transparent', paddingLeft: 0, paddingRight: 0 }}
               >
-                <div key={keys[pane.key]} className={pageTabStyle.content}>{pane.content}</div>
-                {/*{activeKey === keys[pane.key] ? (*/}
-                  {/*<div key={keys[pane.key]} className={pageTabStyle.content}>{pane.content}</div>*/}
-                {/*):''}*/}
+                {/*<div key={keys[pane.key]} className={pageTabStyle.content}>{pane.content}</div>*/}
+                {activeKey1 === pane.key ? (
+                  <div key={keys[pane.key]} className={pageTabStyle.content}>{pane.content}</div>
+                ):''}
               </TabPane>
             );
           })}

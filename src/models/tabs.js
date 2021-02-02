@@ -26,6 +26,7 @@ const GlobalModel = {
       if (!paths.some(path => path === pathname)) {
         paths.push(pathname);
       }
+      sessionStorage.setItem('current-tab-activeKey',pathname)
       return { ...state, pathname, pageName, paths };
     },
   },
@@ -73,17 +74,17 @@ const GlobalModel = {
         //   menu[getName(config.routes, 'menu', pathname)[0]] || title || name || '新标签页';
         // const pageName = tabs['menu'+pathname.replace(/\//g,".").replace(/.list/g,"")] ;
         const pageName = tabs['menu'+pathname.replace(/\//g,".")] ;
-        console.log(pageName)
         if(!pageName) {
           localStorage.setItem('isAntTap','2')
           return false;
         }else{
           localStorage.setItem('isAntTap','1')
         }
-        setTimeout(() => {
+        // setTimeout(() => {
           dispatch({ type: 'setCurrentPath', payload: { pathname, pageName: title || pageName } });
+
           // dispatch({ type: 'addPath', payload: { pathname, pageName } });
-        }, 0);
+        // }, 0);
       });
     },
   },
