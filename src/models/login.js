@@ -79,7 +79,7 @@ export default {
             redirect = null;
           }
         }
-        yield put(routerRedux.replace('/'));
+        yield put(routerRedux.replace('/dashboard/workplace')); 
       }
     },
     *socialLogin({ payload }, { call, put }) {
