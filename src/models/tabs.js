@@ -1,7 +1,7 @@
 
 // import config from '../../config/config';
 import menu from '../locales/zh-CN/menu';
-import tabs from '../locales/zh-CN/tabs'
+// import tabs from '../locales/zh-CN/tabs'
 import { store } from '@/utils/utils';
 
 const { get } = store;
@@ -73,7 +73,7 @@ const GlobalModel = {
         // const pageName =
         //   menu[getName(config.routes, 'menu', pathname)[0]] || title || name || '新标签页';
         // const pageName = tabs['menu'+pathname.replace(/\//g,".").replace(/.list/g,"")] ;
-        const pageName = tabs['menu'+pathname.replace(/\//g,".")] ;
+        const pageName = menu['menu'+pathname.replace(/\//g,".")] ;
         if(!pageName) {
           localStorage.setItem('isAntTap','2')
           return false;
