@@ -166,7 +166,7 @@ class EditableCell extends Component {
                 rules: [
                   {
                     required: true,
-                    message: `请输入客户等级`,
+                    message: `请输入客户状态`,
                   },
                 ],
                 initialValue: record[dataIndex],
@@ -250,12 +250,12 @@ class EditableTable extends React.Component {
     const { data } = this.state;
     const newData = {
       // key: count,
-      labelName: `客户等级`,
+      labelName: `客户状态`,
       color: '#40A9FF',
       key:'xz'
     };
     // this.addLabellData({
-    //   labelName: `客户等级`,
+    //   labelName: `客户状态`,
     //   color: '#40A9FF',
     // })
     this.setState({
