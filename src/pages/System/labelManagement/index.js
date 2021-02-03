@@ -34,6 +34,7 @@ const topTabPane = [
   {name:"客户状态",key:'3'},
 ]
 
+// 发布客户状态
 
 @Form.create()
 class BaseView extends Component {
