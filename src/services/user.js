@@ -308,3 +308,20 @@ export async function removeState(params) {
     method: 'POST',
   });
 }
+
+
+
+export async function addData(params) {
+  return request('/api/label_base_info/labelbaseinfo/save', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+export async function updateData(params) {
+  return request('/api/label_base_info/labelbaseinfo/update', {
+    method: 'POST',
+    body: params,
+  });
+}
+

@@ -17,9 +17,9 @@ import {
 } from 'antd';
 import Panel from '../../../components/Panel';
 
-import Label from './label';
-import Grade from './grade';
-import State from './state';
+import Label from './labelList';
+import Grade from './gradeList';
+import State from './stateList';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
