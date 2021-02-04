@@ -206,111 +206,14 @@ export async function ordersheetDetail(time) {
 }
 
 
-// 查询维护标签
-export async function getLabel(params) {
-  params.labelType = 0;
-  return request('/api/label_base_info/labelbaseinfo/list', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-// 新增维护标签
-export async function addLabel(params) {
-  return request('/api/label_base_info/labelbaseinfo/save', {
-    method: 'POST',
-    body: params,
-  });
-}
-// 又不更新了生气-----为什么
-// 修改维护标签
-export async function updateLabel(params) {
-  params.labelType = 0;
-  return request('/api/label_base_info/labelbaseinfo/update', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-// 删除维护标签
-export async function removeLabel(params) {
-  return request('/api/label_base_info/labelbaseinfo/remove?ids='+params+'&labelType=0', {
+// 标签管理删除
+export async function removeLabel(params,type) {
+  return request('/api/label_base_info/labelbaseinfo/remove?ids='+params+'&labelType='+type, {
     method: 'POST',
   });
 }
 
-
-
-// 查询客户等级
-export async function getGrade(params) {
-  params.labelType = 1;
-  return request('/api/label_base_info/labelbaseinfo/list', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-// 新增客户等级
-export async function addGrade(params) {
-  return request('/api/label_base_info/labelbaseinfo/save', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-// 修改客户等级
-export async function updateGrade(params) {
-  params.labelType = 1;
-  return request('/api/label_base_info/labelbaseinfo/update', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-// 删除客户等级
-export async function removeGrade(params) {
-  return request('/api/label_base_info/labelbaseinfo/remove?ids='+params+'&labelType=1', {
-    method: 'POST',
-  });
-}
-
-
-
-// 查询客户状态
-export async function getState(params) {
-  params.labelType = 2;
-  return request('/api/label_base_info/labelbaseinfo/list', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-// 新增客户状态
-export async function addState(params) {
-  return request('/api/label_base_info/labelbaseinfo/save', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-// 修改客户状态
-export async function updateState(params) {
-  params.labelType = 2;
-  return request('/api/label_base_info/labelbaseinfo/update', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-// 删除客户状态
-export async function removeState(params) {
-  return request('/api/label_base_info/labelbaseinfo/remove?ids='+params+'&labelType=1', {
-    method: 'POST',
-  });
-}
-
-
-
+// 标签管理新增
 export async function addData(params) {
   return request('/api/label_base_info/labelbaseinfo/save', {
     method: 'POST',
@@ -318,6 +221,7 @@ export async function addData(params) {
   });
 }
 
+// 标签管理修改
 export async function updateData(params) {
   return request('/api/label_base_info/labelbaseinfo/update', {
     method: 'POST',
@@ -325,7 +229,7 @@ export async function updateData(params) {
   });
 }
 
-// 查询标签列表
+// 标签管理查询
 export async function getLabelList(params) {
   return request('/api/label_base_info/labelbaseinfo/list', {
     method: 'POST',

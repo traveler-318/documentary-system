@@ -86,7 +86,7 @@ class PayBrandList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        removeLabel(row.id).then(resp => {
+        removeLabel(row.id,0).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
             refresh()

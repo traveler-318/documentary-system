@@ -20,7 +20,7 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import { getLabelList, removeState, } from '../../../services/user';
+import { getLabelList, removeLabel, } from '../../../services/user';
 import Add from './components/add'
 import Edit from './components/edit'
 
@@ -86,7 +86,7 @@ class PayBrandList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        removeState(row.id).then(resp => {
+        removeLabel(row.id,2).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
             refresh()
