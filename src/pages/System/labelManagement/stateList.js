@@ -20,7 +20,7 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import { getState, removeState, } from '../../../services/user';
+import { getLabelList, removeState, } from '../../../services/user';
 import Add from './components/add'
 import Edit from './components/edit'
 
@@ -38,7 +38,8 @@ class PayBrandList extends PureComponent {
       selectedRowKeys:[],
       params:{
         size:100,
-        current:1
+        current:1,
+        labelType:2
       },
       handleAddVisible:false,
       handleEditVisible:false,
@@ -57,7 +58,7 @@ class PayBrandList extends PureComponent {
     this.setState({
       loading:true
     })
-    getState(params).then(res=>{
+    getLabelList(params).then(res=>{
       this.setState({
         loading:false
       })

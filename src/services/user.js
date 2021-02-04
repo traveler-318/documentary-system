@@ -325,3 +325,10 @@ export async function updateData(params) {
   });
 }
 
+// 查询标签列表
+export async function getLabelList(params) {
+  return request('/api/label_base_info/labelbaseinfo/list', {
+    method: 'POST',
+    body: params,
+  });
+}
