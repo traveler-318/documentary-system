@@ -1864,6 +1864,10 @@ class AllOrdersList extends PureComponent {
           if(item.dataIndex === "userAddress"){
             item.ellipsis=true
           }
+          // 销售
+          if(item.dataIndex === "salesman"){
+            item.ellipsis=true
+          }
           checked.push(item.dataIndex)
         })
         this.setState({

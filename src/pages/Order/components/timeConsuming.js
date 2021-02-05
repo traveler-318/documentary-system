@@ -146,9 +146,7 @@ class timeConsuming extends PureComponent {
         fixed: 'right',
         render: (text,row) => {
           return(
-            <div>
-              <a onClick={()=>handleDetails(row)}>详情</a>
-            </div>
+            <a onClick={()=>handleDetails(row)}>详情</a>
           )
         },
       }
@@ -159,7 +157,7 @@ class timeConsuming extends PureComponent {
         <Modal
           title="耗时检测"
           visible={timeConsumingVisible}
-          width={850}
+          width={900}
           onCancel={handleCancelTimeConsuming}
           maskClosable={false}
           footer={[
