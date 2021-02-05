@@ -541,7 +541,7 @@ export default [
             routes: [
               { path: '/order/safeguard', component: './Order/Safeguard/index' },
               // { path: '/order/executive/list', component: './Order/Executive/index' },
-              { path: '/order/safeguard/add', component: './Order/components/add' },
+              { path: '/order/safeguard/add', component: './Order/Safeguard/add' },
               { path: '/order/safeguard/edit/:id', component: './Order/components/edit' },
               { path: '/order/safeguard/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
             ],
@@ -663,6 +663,22 @@ export default [
               { path: '/customer/afterSale/edit', component: './Customer/AfterSale/edit' },
             ],
           },
+          {
+            path: '/customer/customer',
+            routes: [
+              { path: '/customer/customer', component: './Order/Customer/index' },
+              { path: '/customer/customer/add', component: './Order/Customer/add' },
+              { path: '/customer/customer/edit/:id', component: './Order/components/edit' },
+            ],
+          },
+          {
+            path: '/customer/publicClient',
+            routes: [
+              { path: '/customer/publicClient', component: './Order/Customer/index' },
+              { path: '/customer/publicClient/add', component: './Order/Customer/add' },
+              { path: '/customer/publicClient/edit/:id', component: './Order/components/edit' },
+            ],
+          }
         ],
       },{
         path: '/product',

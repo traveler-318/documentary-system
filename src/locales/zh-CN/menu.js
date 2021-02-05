@@ -25,6 +25,9 @@ export default {
   'menu.customer': '客服管理',
   'menu.customer.sales': '销售列表',
   'menu.customer.afterSale': '售后管理',
+  'menu.customer.customer': '客户管理',
+  'menu.customer.publicClient': '公海客户',
+
   'menu.product': '产品管理',
   'menu.product.payBrand': '支付品牌',
   'menu.product.productType': '产品类型',

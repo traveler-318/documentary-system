@@ -21,6 +21,7 @@ import {
   Tag,
   Cascader,
   TreeSelect,
+  Descriptions
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
@@ -62,6 +63,7 @@ import Export from '../components/export'
 // import TransferCustomers from './components/TransferCustomers'
 // import LogisticsConfig from './components/LogisticsConfig'
 import PopupDetails from '../components/popupDetails'
+import Transaction from './transaction'
 
 import ImportData from '../components/ImportData';
 import Excel from '../components/excel';
@@ -209,7 +211,15 @@ class AllOrdersList extends PureComponent {
     getPermissions(params).then(res=>{
       this.setState({
         countSice:res.data.total,
-        data:setListData(res.data),
+        data:{
+          list:[{}],
+          pagination:{
+            total:1,
+            current:1,
+            pageSize:1,
+          }
+        },
+        // data:setListData(res.data),
         loading:false,
         selectedRowKeys:[]
       })
@@ -893,7 +903,7 @@ class AllOrdersList extends PureComponent {
     if(_listArr.length > 0){
       let text = ""
       for(let i=0; i<selectedRows.length; i++){
-        const idSame=true;
+        let idSame=true;
         for(let j=0; j<_listArr.length; j++){
           if(selectedRows[i].id === _listArr[j].id){
             idSame=false;
@@ -1081,22 +1091,22 @@ class AllOrdersList extends PureComponent {
     return (
         <div>
             <Button type="primary" icon="plus" onClick={()=>{
-              router.push(`/order/allOrders/add`);
+              router.push(`/order/safeguard/add`);
             }}>添加</Button>
             <Button
               icon="menu-unfold"
               onClick={this.batchAudit}
             >流程变更</Button>
             <Button
-              icon="menu-unfold"
+              icon="message"
               onClick={this.batchAudit}
             >短信提醒</Button>
             <Button
-              icon="menu-unfold"
+              icon="upload"
               onClick={this.importData}
             >导入交易量</Button>
             <Button
-            icon="upload"
+            icon="download"
             type={(tabKey === "0" || tabKey === "1" || tabKey === "2" || tabKey === "5" || tabKey === "6") ? "" : "primary"}
             onClick={this.exportFile}
             >导出</Button>
@@ -2376,7 +2386,19 @@ class AllOrdersList extends PureComponent {
             <PopupDetails
               detailsVisible={detailsVisible}
               handleCancelDetails={this.handleCancelDetails}
-            />
+            >
+              <TabPane tab={`维护`} key="3">
+                <Descriptions column={2}>
+                  <Descriptions.Item label="商户名">Zhou Maomao</Descriptions.Item>
+                  <Descriptions.Item label="商户号">1810000000</Descriptions.Item>
+                  <Descriptions.Item label="激活时间">Hangzhou, Zhejiang</Descriptions.Item>
+                  <Descriptions.Item label="维护时间">empty</Descriptions.Item>
+                </Descriptions>
+              </TabPane>
+              <TabPane tab={`交易量`} key="4">
+                <Transaction/>
+              </TabPane>
+            </PopupDetails>
           ):""}
         </div>
         {/* 日志弹框 */}
