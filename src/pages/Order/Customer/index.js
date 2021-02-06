@@ -51,7 +51,7 @@ import {
 
 import styles from './index.less';
 import Export from './export'
-import PopupDetails from '../components/popupDetails'
+import PopupDetails from './popupDetails'
 
 import TransferCustomers from './components/TransferCustomers'
 import ImportData from '../components/ImportData';
@@ -728,10 +728,15 @@ class AllOrdersList extends PureComponent {
 
   // 打开详情弹窗
   handleDetails = (row) => {
+    const { clientLevels,clientStatus } = this.state;
     const { dispatch } = this.props;
     dispatch({
       type: `globalParameters/setDetailData`,
-      payload: row,
+      payload: {
+        detail:row,
+        clientLevels:clientLevels,
+        clientStatus:clientStatus
+      },
     });
     this.setState({
       detailsVisible:true
