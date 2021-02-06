@@ -62,3 +62,11 @@ export async function statusOrLevel(params) {
     body: params,
   });
 }
+
+//查询详情
+export async function getDetail(params) {
+  return request('/api/client_info/clientinfo/detail', {
+    method: 'POST',
+    body: params,
+  });
+}
