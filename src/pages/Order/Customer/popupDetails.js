@@ -5,8 +5,6 @@ import moment from 'moment';
 import styles from '../components/edit.less';
 import { CITY } from '../../../utils/city';
 import {
-  updateData,
-  getDetails,
   orderDetail,
   updateReminds,
   productTreelist,
@@ -14,7 +12,7 @@ import {
   localPrinting,
   logisticsRepeatPrint,
 } from '../../../services/newServices/order';
-import {getDetail} from '../../../services/order/customer';
+import {getDetail,updateData} from '../../../services/order/customer';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import Survey from '../components/Survey'
 import OrderListNew from '../components/OrderListNew';
@@ -23,6 +21,7 @@ import CustomerDetail from '@/pages/Order/Customer/components/detail';
 //   LOGISTICSCOMPANY,
 // } from './data.js';
 import bellShut from '../../../assets/bellShut.svg'
+import func from '@/utils/Func';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -71,10 +70,10 @@ class OrdersEdit extends PureComponent {
       this.getEditDetails();
     });
 
-    let _this = this;
-    setTimeout(()=>{
-      _this.getEditDetails();
-    },4000)
+    // let _this = this;
+    // setTimeout(()=>{
+    //   _this.getEditDetails();
+    // },4000)
   }
 
   getTreeList = () => {
@@ -162,105 +161,13 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail,selectedOptions, payPanyId, productTypeId, productId, } = this.state;
+    const { detail,selectedOptions} = this.state;
     form.validateFieldsAndScroll((err, values) => {
-      //ORDERSTATUS.map(item => {
-      //  if(item.name === values.confirmTag){
-      //    values.confirmTag = item.key
-      //  }
-      //})
-      // ORDERSOURCE.map(item => {
-      //   if(item.name === values.orderSource){
-      //     values.orderSource = item.key
-      //   }
-      // })
       values.id = detail.id;
-      values.userAddress=`${selectedOptions}${values.userAddress}`;
-      if(values.productType && values.productType != ""){
-        values.productName = values.productType[2];
-        values.productType = `${values.productType[0]}/${values.productType[1]}`;
-        values.payPanyId = payPanyId;
-        values.productTypeId = productTypeId;
-        values.productId = productId;
-      }
-
-      if (values.orderNote === ''){
-        values.orderNote=null
-      }
-      if (values.productCoding === ''){
-        values.productCoding=null
-      }
-
+      values.clientAddress = `${selectedOptions}${values.clientAddress}`;
+      values.nextFollowTime = func.format(values.nextFollowTime);
       if (!err) {
-        const _this=this;
-        if(values.logisticsCompany != detail.logisticsCompany || values.logisticsNumber != detail.logisticsNumber){
-          if (values.logisticsCompany === ''){
-            values.logisticsCompany=null
-          }
-          if (values.logisticsNumber === ''){
-            values.logisticsNumber=null
-          }
-          const params = {
-            ...values
-          };
-          // if(detail.logisticsStatus){
-            Modal.confirm({
-              title: '提示',
-              content: '当前订单物流已经订阅,此次变更会删掉订阅有关信息,确认是否清理物流从新保存',
-              okText: '确定',
-              okType: 'danger',
-              cancelText: '取消',
-              keyboard:false,
-              async onOk() {
-                const _data={
-                  id:detail.id,
-                  outOrderNo:detail.outOrderNo
-                }
-                deleteLogisticsSuber(_data).then(resp=>{
-                  console.log(resp)
-                  updateData(params).then(res=>{
-                    if(res.code === 200){
-                      message.success(res.msg);
-                      _this.setState({
-                        edit:true,
-                        primary:"primary",
-                        primary1:''
-                      })
-                      _this.getEditDetails()
-                    }else {
-                      message.error(res.msg);
-                    }
-                  })
-                })
-              },
-              onCancel() {},
-            });
-          // }else {
-          //   updateData(params).then(res=>{
-          //     if(res.code === 200){
-          //       message.success(res.msg);
-          //       this.setState({
-          //         edit:true,
-          //         primary:"primary",
-          //         primary1:''
-          //       })
-          //       this.getEditDetails()
-          //     }else {
-          //       message.error(res.msg);
-          //     }
-          //   })
-          // }
-        }else {
-          if (values.logisticsCompany === ''){
-            values.logisticsCompany=null
-          }
-          if (values.logisticsNumber === ''){
-            values.logisticsNumber=null
-          }
-          const params = {
-            ...values
-          };
-          updateData(params).then(res=>{
+          updateData(values).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
               this.setState({
@@ -273,7 +180,6 @@ class OrdersEdit extends PureComponent {
               message.error(res.msg);
             }
           })
-        }
       }
     });
   };
@@ -423,8 +329,9 @@ class OrdersEdit extends PureComponent {
   }
 
   render() {
+
     const {
-      form: { getFieldDecorator },
+      form: { getFieldDecorator }
     } = this.props;
 
     const {
@@ -467,7 +374,7 @@ class OrdersEdit extends PureComponent {
                   <Button icon="copy" onClick={this.repeat}>复打</Button>
                   {/* <Button  icon="folder">归档</Button> */}
                 </div>
-                <CustomerDetail detail={detail}  className={styles.editList} style={{ padding: '20px' }}/>
+                <CustomerDetail detail={detail} edit={edit} getFieldDecorator={getFieldDecorator} className={styles.editList} style={{ padding: '20px' }}/>
               </Col>
               <Col span={16} style={{ padding: 0 }} className={styles.rightContent}>
                 <div className={styles.titleBtn}>

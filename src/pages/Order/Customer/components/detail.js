@@ -26,14 +26,12 @@ const { TextArea } = Input;
 @connect(({ globalParameters}) => ({
   globalParameters,
 }))
-@Form.create()
 class CustomerDetail extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
       detail:{},
-      edit:true,
       data:{
         order:'10',
         followUp:'2',
@@ -71,7 +69,7 @@ class CustomerDetail extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { detail } = prevProps;
+    const { detail } = this.props;
     this.setState({
       detail:detail
     })
@@ -97,74 +95,6 @@ class CustomerDetail extends PureComponent {
     })
   };
 
-  // 复打
-  repeat = () => {
-    const {detail}=this.state;
-    // 当前时间戳
-    const timestamp = (new Date()).getTime();
-    const timeInterval = 24 * 60 * 60 * 1000 * 2;
-    const time = timestamp - (new Date(detail.taskCreateTime)).getTime();
-    this.setState({
-      repeatLoading:true
-    });
-    const  tips=[];
-    if(!detail.taskId){
-      tips.push(detail.userName)
-      Modal.confirm({
-        title: '提示',
-        content: detail.userName+"客户没有首次打印记录,不能进行重复打印!",
-        okText: '确定',
-        okType: 'danger',
-        cancelText: '取消',
-        onOk() {},
-        onCancel() {},
-      });
-    }else if( time > timeInterval){
-      tips.push(detail.userName)
-      Modal.confirm({
-        title: '提示',
-        content: detail.userName+"客户的订单 距离首次时间超过2天 禁止打印！",
-        okText: '确定',
-        okType: 'danger',
-        cancelText: '取消',
-        onOk() {},
-        onCancel() {},
-      });
-    }
-    if(tips.length > 0 ){
-      return false;
-    }
-
-    if(detail.logisticsPrintType === "1" || detail.logisticsPrintType === "2"){
-      // 本地打印
-      localPrinting({
-        id:detail.id,
-        logisticsPrintType:detail.logisticsPrintType
-      }).then(res=>{
-        this.setState({
-          repeatLoading:false
-        });
-        if(res.code === 200){
-          sessionStorage.setItem('imgBase64', res.data)
-          window.open(`#/order/allOrders/img`);
-        }else{
-          message.error(res.msg);
-        }
-      })
-    }else{
-      let param = [];
-      param.push(detail.taskId)
-      logisticsRepeatPrint(param).then(res=>{
-        this.setState({
-          repeatLoading:false
-        });
-        if(res.code === 200){
-          message.success(res.msg);
-        }
-      })
-    }
-  };
-
   getText = (key, type) => {
     let text = ""
     type.map(item=>{
@@ -185,18 +115,15 @@ class CustomerDetail extends PureComponent {
 
   render() {
     const {
-      form: { getFieldDecorator },
+      getFieldDecorator,
+      edit
     } = this.props;
 
     const {
       detail,
-      edit,
       clientStatus,
       clientLevels
     } = this.state;
-
-    console.log(detail);
-    console.log("================")
     const formAllItemLayout = {
       labelCol: {
         span: 8,
@@ -218,7 +145,7 @@ class CustomerDetail extends PureComponent {
                   },
                 ],
                 initialValue: detail.clientName,
-              })(<Input disabled={detail.confirmTag === '0' || detail.confirmTag === '1' || detail.confirmTag === '2' ? edit : true} placeholder="请输入客户姓名" />)}
+              })(<Input disabled={edit} placeholder="请输入客户姓名" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="手机号">
               {getFieldDecorator('clientPhone', {
@@ -226,7 +153,7 @@ class CustomerDetail extends PureComponent {
                   { required: true, validator: this.validatePhone },
                 ],
                 initialValue: detail.clientPhone,
-              })(<Input disabled={detail.confirmTag === '0' || detail.confirmTag === '1' || detail.confirmTag === '2' ? edit : true} placeholder="" />)}
+              })(<Input disabled={edit} placeholder="" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="下次跟进时间">
               {getFieldDecorator('nextFollowTime', {
@@ -247,7 +174,7 @@ class CustomerDetail extends PureComponent {
               })(
                 <Cascader
                   options={CITY}
-                  disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2') ? edit : true}
+                  disabled={edit}
                   onChange={this.onChange}
                 />
               )}
@@ -260,7 +187,7 @@ class CustomerDetail extends PureComponent {
                   },
                 ],
                 initialValue: detail.clientAddress,
-              })(<Input title={detail.clientAddress} disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2') ? edit : true} placeholder="请输入地址" />)}
+              })(<Input title={detail.clientAddress} disabled={edit} placeholder="请输入地址" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="客户级别">
               {getFieldDecorator('clientLevel', {
@@ -269,7 +196,7 @@ class CustomerDetail extends PureComponent {
                   { required: true, message: '请选择级别' },
                 ],
               })(
-                <Select>
+                <Select disabled={edit}>
                   {clientLevels.map(d => (
                     <Select.Option key={d.id} value={d.id+''}>
                       {d.labelName}
@@ -285,7 +212,7 @@ class CustomerDetail extends PureComponent {
                   { required: true, message: '请选择客户来源' },
                 ],
               })(
-                <Select>
+                <Select disabled={edit}>
                   {CLIENTTYPE.map(d => (
                     <Select.Option key={d.key} value={d.key+''}>
                       {d.val}
@@ -301,7 +228,7 @@ class CustomerDetail extends PureComponent {
                   { required: true, message: '请选择客户状态' },
                 ],
               })(
-                <Select>
+                <Select disabled={edit}>
                   {clientStatus.map(d => (
                     <Select.Option key={d.id} value={d.id+''}>
                       {d.labelName}
