@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Form, Input, Card, Row,Modal, Col, Button, Icon , Select, message, Tabs, Cascader, Radio,Timeline,Tooltip} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
-import styles from '../components/edit.less';
+import styles from '../../Order/components/edit.less';
 import { CITY } from '../../../utils/city';
 import {
   orderDetail,
@@ -14,9 +14,9 @@ import {
 } from '../../../services/newServices/order';
 import {getDetail,updateData} from '../../../services/order/customer';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
-import Survey from '../components/Survey'
-import OrderListNew from '../components/OrderListNew';
-import CustomerDetail from '@/pages/Order/Customer/components/detail';
+import Survey from '../../Order/components/Survey'
+import OrderListNew from '../../Order/components/OrderListNew';
+import CustomerDetail from '@/pages/Client/Customer/components/detail';
 // import {
 //   LOGISTICSCOMPANY,
 // } from './data.js';
@@ -392,13 +392,48 @@ class OrdersEdit extends PureComponent {
                 </div>
                 <div className={styles.tabContent} style={{marginRight:20,paddingTop:14}}>
                   <Tabs defaultActiveKey="1" onChange={this.callback}>
-                    <TabPane tab="概况" key="1">
+                    <TabPane tab="客户动态" key="1">
                       <Survey
                         detail={detail}
                         getEditDetails={this.getEditDetails}
                       />
                     </TabPane>
-                    <TabPane tab={`重复订单(${orderListLength})`} key="2">
+                    <TabPane tab={`订单(${orderListLength})`} key="2">
+                      <OrderListNew
+                        detail={detail}
+                        orderDetail={orderDetail}
+                        changeDetails={this.changeDetails}
+                      />
+                    </TabPane>
+                    <TabPane tab={`维护(${orderListLength})`} key="3">
+                      <OrderListNew
+                        detail={detail}
+                        orderDetail={orderDetail}
+                        changeDetails={this.changeDetails}
+                      />
+                    </TabPane>
+                    <TabPane tab={`联系人(${orderListLength})`} key="4">
+                      <OrderListNew
+                        detail={detail}
+                        orderDetail={orderDetail}
+                        changeDetails={this.changeDetails}
+                      />
+                    </TabPane>
+                    <TabPane tab={`工单(${orderListLength})`} key="5">
+                      <OrderListNew
+                        detail={detail}
+                        orderDetail={orderDetail}
+                        changeDetails={this.changeDetails}
+                      />
+                    </TabPane>
+                    <TabPane tab={`归属(${orderListLength})`} key="6">
+                      <OrderListNew
+                        detail={detail}
+                        orderDetail={orderDetail}
+                        changeDetails={this.changeDetails}
+                      />
+                    </TabPane>
+                    <TabPane tab={`日志`} key="7">
                       <OrderListNew
                         detail={detail}
                         orderDetail={orderDetail}

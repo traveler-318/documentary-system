@@ -1,4 +1,12 @@
 export default {
+  'menu.client': '客户管理',
+  'menu.client.allcustomer': '全部客户',
+  'menu.client.subordinate': '下属客户',
+  'menu.client.mycustomer': '我的客户',
+  'menu.client.allpublic': '全部公海',
+  'menu.client.subordinatepublic': '下属公海',
+  'menu.client.mypublic': '我的公海',
+
   'menu.order': '订单管理',
   'menu.order.allOrders': '全部订单',
   'menu.order.salesmanOrder': '销售订单',
@@ -25,8 +33,6 @@ export default {
   'menu.customer': '客服管理',
   'menu.customer.sales': '销售列表',
   'menu.customer.afterSale': '售后管理',
-  'menu.customer.customer': '客户管理',
-  'menu.customer.publicClient': '公海客户',
 
   'menu.product': '产品管理',
   'menu.product.payBrand': '支付品牌',

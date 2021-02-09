@@ -54,14 +54,14 @@ import Export from './export'
 import PopupDetails from './popupDetails'
 
 import TransferCustomers from './components/TransferCustomers'
-import ImportData from '../components/ImportData';
-import Excel from '../components/excel';
-import Text from '../components/text';
-import Journal from '../components/journal';
-import TimeConsuming from '../components/timeConsuming';
-import SMS from '../components/smsList';
-import VoiceList from '../components/voiceList';
-import OrderImport from '../components/orderImport';
+import ImportData from '../../Order/components/ImportData';
+import Excel from '../../Order/components/excel';
+import Text from '../../Order/components/text';
+import Journal from '../../Order/components/journal';
+import TimeConsuming from '../../Order/components/timeConsuming';
+import SMS from '../../Order/components/smsList';
+import VoiceList from '../../Order/components/voiceList';
+import OrderImport from '../../Order/components/orderImport';
 import { getCookie } from '../../../utils/support';
 import { getLabelList } from '@/services/user';
 import { CITY } from '@/utils/city';
@@ -599,7 +599,7 @@ class AllOrdersList extends PureComponent {
     return (
         <div>
             <Button type="primary" icon="plus" onClick={()=>{
-              router.push(`/customer/customer/add`);
+              router.push(`/client/customer/add/1`);
             }}>添加</Button>
             <Button
               icon="interaction"

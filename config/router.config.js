@@ -645,6 +645,43 @@ export default [
         ],
       },
       {
+        path: '/client',
+        routes: [
+          { path: '/client/allcustomer', component: './Client/Customer/index' },
+          { path: '/client/customer/add/:type', component: './Client/Customer/add' },
+          {
+            path: '/client/subordinate',
+            routes: [
+              { path: '/client/subordinate', component: './Client/Customer/index' }
+            ],
+          },
+          {
+            path: '/client/mycustomer',
+            routes: [
+              { path: '/client/mycustomer', component: './Client/Customer/index' }
+            ],
+          },
+          {
+            path: '/client/allpublic',
+            routes: [
+              { path: '/client/allpublic', component: './Client/Customer/index' }
+            ],
+          },
+          {
+            path: '/client/subordinatepublic',
+            routes: [
+              { path: '/client/allpublic', component: './Client/Customer/index' }
+            ],
+          },
+          {
+            path: '/client/mypublic',
+            routes: [
+              { path: '/client/allpublic', component: './Client/Customer/index' }
+            ],
+          }
+        ],
+      },
+      {
         path: '/customer',
         routes: [
           {
@@ -661,22 +698,6 @@ export default [
               { path: '/customer/afterSale', component: './Customer/AfterSale/index' },
               { path: '/customer/afterSale/add', component: './Customer/AfterSale/add' },
               { path: '/customer/afterSale/edit', component: './Customer/AfterSale/edit' },
-            ],
-          },
-          {
-            path: '/customer/customer',
-            routes: [
-              { path: '/customer/customer', component: './Order/Customer/index' },
-              { path: '/customer/customer/add', component: './Order/Customer/add' },
-              { path: '/customer/customer/edit/:id', component: './Order/components/edit' },
-            ],
-          },
-          {
-            path: '/customer/publicClient',
-            routes: [
-              { path: '/customer/publicClient', component: './Order/Customer/index' },
-              { path: '/customer/publicClient/add', component: './Order/Customer/add' },
-              { path: '/customer/publicClient/edit/:id', component: './Order/components/edit' },
             ],
           }
         ],

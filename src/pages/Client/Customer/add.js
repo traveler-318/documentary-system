@@ -10,18 +10,20 @@ import styles from '../../../layouts/Sword.less';
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
 import { getLabelList } from '../../../services/user';
+import SalesSelect from '@/pages/Client/Customer/components/salesSelect';
 import {
   createData
 }from '../../../services/order/customer';
 import {
-  CLIENTLEVEL,
   CLIENTTYPE,
 } from './data.js';
 import func from '@/utils/Func';
 
 const FormItem = Form.Item;
+const { TextArea } = Input;
 
-const backUrl = "/customer/customer";
+let backUrl = "/client/customer";
+
 
 @connect(({ user, loading }) => ({
   user,
@@ -45,6 +47,12 @@ class CustomerAdd extends PureComponent {
 
 
   componentWillMount() {
+    const type = this.props.match.params.type;
+    switch (type) {
+      case '1':backUrl = '/client/allcustomer';break;
+      default:backUrl = '/client/mycustomer';break;
+    }
+
     this.getLabels();
   }
 
@@ -143,12 +151,20 @@ class CustomerAdd extends PureComponent {
       loading,clientStatus,clientLevels
     } = this.state;
 
-    const formAllItemLayout = {
+    const formLeftItemLayout = {
       labelCol: {
-        span: 6,
+        span: 4,
       },
       wrapperCol: {
-        span: 18,
+        span: 20,
+      },
+    };
+    const formAllItemLayout = {
+      labelCol: {
+        span: 5,
+      },
+      wrapperCol: {
+        span: 19,
       },
     };
 
@@ -163,12 +179,12 @@ class CustomerAdd extends PureComponent {
         <Form style={{ marginTop: 8 }}>
           <div></div>
           <Card title="创建客户" className={styles.card} bordered={false}>
-            <FormTitle
-              title="基础信息"
-            />
             <Row gutter={24}>
               <Col span={12}>
-                <FormItem {...formAllItemLayout} label="姓名">
+                <FormTitle
+                  title="基础信息"
+                />
+                <FormItem {...formLeftItemLayout} label="姓名">
                   {getFieldDecorator('clientName', {
                     rules: [
                       {
@@ -178,63 +194,36 @@ class CustomerAdd extends PureComponent {
                     ],
                   })(<Input placeholder="请输入姓名" />)}
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="手机号">
+                <FormItem {...formLeftItemLayout} label="手机号">
                   {getFieldDecorator('clientPhone', {
                     rules: [
-                      { required: true, validator: this.validatePhone },
+                  { required: true, validator: this.validatePhone },
                     ],
                   })(<Input placeholder="请输入手机号" />)}
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="下次跟进时间">
-                  {getFieldDecorator('nextFollowTime', {
-                    rules: [
-                      { required: true, message: '请输入下次跟进时间' },
-                    ],
-                  })(<DatePicker
-                    style={{ width: '100%' }}
-                    format="YYYY-MM-DD HH:mm:ss"
-                  />)}
+                <FormItem {...formLeftItemLayout} label="手机号2">
+                  {getFieldDecorator('clientPhone')(<Input placeholder="请输入手机号2" />)}
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="省/市/区：">
-                  {getFieldDecorator('addrCoding', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '寄件人所在地区',
-                      },
-                    ],
-                  })(
+                <FormItem {...formLeftItemLayout} label="微信号">
+                  {getFieldDecorator('clientPhone')(<Input placeholder="请输入微信号" />)}
+                </FormItem>
+                <FormItem {...formLeftItemLayout} label="所在地区：">
+                  {getFieldDecorator('addrCoding')(
                     <Cascader
                       options={CITY}
                       onChange={this.onChange}
                     />
                   )}
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="地址">
-                  {getFieldDecorator('clientAddress', {
-                    rules: [
-                      { required: true, message: '请输入地址' },
-                    ],
-                  })(<Input placeholder="请输入地址" />)}
+                <FormItem {...formLeftItemLayout} label="详细地址">
+                  {getFieldDecorator('clientAddress')(<Input placeholder="请输入详细地址" />)}
                 </FormItem>
 
               </Col>
               <Col span={12}>
-                <FormItem {...formAllItemLayout} label="客户级别">
-                  {getFieldDecorator('clientLevel', {
-                    rules: [
-                      { required: true, message: '请选择级别' },
-                    ],
-                  })(
-                    <Select>
-                      {clientLevels.map(d => (
-                        <Select.Option key={d.id} value={d.id}>
-                          {d.labelName}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  )}
-                </FormItem>
+                <FormTitle
+                  title="客户信息"
+                />
                 <FormItem {...formAllItemLayout} label="客户来源">
                   {getFieldDecorator('clientType',{
                     rules: [
@@ -250,12 +239,19 @@ class CustomerAdd extends PureComponent {
                     </Select>
                   )}
                 </FormItem>
+                <FormItem {...formAllItemLayout} label="客户级别">
+                  {getFieldDecorator('clientLevel')(
+                    <Select>
+                      {clientLevels.map(d => (
+                        <Select.Option key={d.id} value={d.id}>
+                          {d.labelName}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  )}
+                </FormItem>
                 <FormItem {...formAllItemLayout} label="客户状态">
-                  {getFieldDecorator('clientStatus',{
-                    rules: [
-                      { required: true, message: '请选择客户状态' },
-                    ],
-                  })(
+                  {getFieldDecorator('clientStatus')(
                     <Select>
                       {clientStatus.map(d => (
                         <Select.Option key={d.id} value={d.id}>
@@ -265,9 +261,23 @@ class CustomerAdd extends PureComponent {
                     </Select>
                   )}
                 </FormItem>
-
+                <FormItem {...formAllItemLayout} label="归属销售">
+                  {getFieldDecorator('salesman',{
+                    rules: [
+                      { required: true, message: '请选择归属销售' },
+                    ],
+                  })(
+                    <SalesSelect/>
+                  )}
+                </FormItem>
+                <FormItem {...formAllItemLayout} label="下次跟进时间">
+                  {getFieldDecorator('nextFollowTime')(<DatePicker
+                    style={{ width: '100%' }}
+                    format="YYYY-MM-DD HH:mm:ss"
+                  />)}
+                </FormItem>
                 <FormItem {...formAllItemLayout} label="备注">
-                  {getFieldDecorator('note')(<Input placeholder="请输入备注" />)}
+                  {getFieldDecorator('note')(<TextArea rows={4} placeholder="请输入备注" />)}
                 </FormItem>
               </Col>
             </Row>
