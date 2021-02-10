@@ -262,7 +262,7 @@ class CustomerDetail extends PureComponent {
                 style={{ width: '100%' }}
               />)}
             </FormItem>
-            <FormItem {...formAllItemLayout} label="最后跟进时间">
+            <FormItem {...formAllItemLayout} label="最后跟进时间" className={styles.bottomBorder}>
               {getFieldDecorator('nextFollowTime', {
                 initialValue: moment(detail.nextFollowTime),
               })(<DatePicker

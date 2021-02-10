@@ -15,6 +15,7 @@ import {
 import {getDetail,updateData} from '../../../services/order/customer';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import Survey from '../../Order/components/Survey'
+import TabTrends from '@/pages/Client/Customer/components/tabTrends';
 import OrderListNew from '../../Order/components/OrderListNew';
 import CustomerDetail from '@/pages/Client/Customer/components/detail';
 // import {
@@ -377,23 +378,33 @@ class OrdersEdit extends PureComponent {
                 <CustomerDetail detail={detail} edit={edit} getFieldDecorator={getFieldDecorator} className={styles.editList} style={{ padding: '20px' }}/>
               </Col>
               <Col span={16} style={{ padding: 0 }} className={styles.rightContent}>
-                <div className={styles.titleBtn}>
-                  {detail.voiceStatus === "1" ? (
-                    <Tooltip title="激活自动提醒开关">
-                      <Button icon="bell" onClick={()=>this.voiceSubmit(0)} style={{ float:"right",border:'0',boxShadow:'none'}}></Button>
-                    </Tooltip>
-                  ) :(
-                    <Button style={{ float:"right",border:'0',boxShadow:'none'}} onClick={()=>this.voiceSubmit(1)}>
-                      <Tooltip title="激活自动提醒开关">
-                        <img src={bellShut} style={{float:"right"}} />
-                      </Tooltip>
-                    </Button>
-                  )}
-                </div>
+                <Row className={styles.titleBtn}>
+                  <Col span={16}>
+                    <Button icon="plus" onClick={()=>{message.info('开发中')}}>订单</Button>
+                    <Button icon="plus" onClick={()=>{message.info('开发中')}}>产品</Button>
+                    <Button icon="plus" onClick={()=>{message.info('开发中')}}>联系人</Button>
+                    <Button icon="plus" onClick={()=>{message.info('开发中')}}>工单</Button>
+                  </Col>
+                  <Col span={8}>
+                    <div>
+                      {detail.voiceStatus === "1" ? (
+                        <Tooltip title="激活自动提醒开关">
+                          <Button icon="bell" onClick={()=>this.voiceSubmit(0)} style={{ float:"right",border:'0',boxShadow:'none'}}></Button>
+                        </Tooltip>
+                      ) :(
+                        <Button style={{ float:"right",border:'0',boxShadow:'none'}} onClick={()=>this.voiceSubmit(1)}>
+                          <Tooltip title="激活自动提醒开关">
+                            <img src={bellShut} style={{float:"right"}} />
+                          </Tooltip>
+                        </Button>
+                      )}
+                    </div>
+                  </Col>
+                </Row>
                 <div className={styles.tabContent} style={{marginRight:20,paddingTop:14}}>
                   <Tabs defaultActiveKey="1" onChange={this.callback}>
                     <TabPane tab="客户动态" key="1">
-                      <Survey
+                      <TabTrends
                         detail={detail}
                         getEditDetails={this.getEditDetails}
                       />
