@@ -3,8 +3,8 @@ import request from '@/utils/request';
 import func from '@/utils/Func';
 
 // 客户模块列表
-export async function getDataInfo(params) {
-  return request(`/api/client_info/clientinfo/list`, {
+export async function getDataInfo(type,params) {
+  return request(`/api/client_info/clientinfo/`+type, {
     method: 'POST',
     body: params,
   });

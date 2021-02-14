@@ -26,6 +26,7 @@ import Grid from '../../../components/Sword/Grid';
 import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
 import { ORDERSTATUS, LOGISTICSCOMPANY} from './data.js';
+import { getCurrentUser } from '@/utils/authority';
 import {
   localPrinting,
   logisticsRepeatPrint,
@@ -172,16 +173,28 @@ class AllOrdersList extends PureComponent {
   // ============ 初始化数据 ===============
   componentWillMount() {
     let key = this.props.route.key;
+    let type = null;
+    const currentUser = getCurrentUser();
+    switch (key) {
+      case  'allcustomer': type = 'list';break;//'全部客户',
+      case  'subordinate': type = 'list';
+        // this.props.form.setFieldsValue({
+        //   salesman: currentUser.userId
+        // });
+        break; //'下属客户',
+      case  'mycustomer': type = 'myClient';break; //'我的客户',
+      case  'allpublic': type = 'allPool';break; //'全部公海',
+      case  'subordinatepublic': type = 'allPool';
+        // this.props.form.setFieldsValue({
+        //   salesman: currentUser.userId
+        // });
+        break; //'下属公海',
+      case  'mypublic': type = 'myPool';break; //'我的公海',
+    }
     this.setState({
-      routerKey:key
+      routerKey:key,
+      queryUrlKey:type,
     })
-    //   'allcustomer': '全部客户',
-    //   'subordinate': '下属客户',
-    //   'mycustomer': '我的客户',
-    //   'allpublic': '全部公海',
-    //   'subordinatepublic': '下属公海',
-    //   'mypublic': '我的公海',
-    console.log(key)
     this.getLabels();
     this.getTreeList();
     this.currenttree();
@@ -205,11 +218,11 @@ class AllOrdersList extends PureComponent {
   }
 
   getDataList = () => {
-    const {params} = this.state;
+    const {params,queryUrlKey} = this.state;
     this.setState({
       loading:true,
     })
-    getDataInfo(params).then(res=>{
+    getDataInfo(queryUrlKey,params).then(res=>{
       this.setState({
         countSice:res.data.total,
         data:setListData(res.data),
