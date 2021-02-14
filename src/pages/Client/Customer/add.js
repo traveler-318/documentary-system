@@ -202,10 +202,10 @@ class CustomerAdd extends PureComponent {
                   })(<Input placeholder="请输入手机号" />)}
                 </FormItem>
                 <FormItem {...formLeftItemLayout} label="手机号2">
-                  {getFieldDecorator('clientPhone')(<Input placeholder="请输入手机号2" />)}
+                  {getFieldDecorator('contactPhone')(<Input placeholder="请输入手机号2" />)}
                 </FormItem>
                 <FormItem {...formLeftItemLayout} label="微信号">
-                  {getFieldDecorator('clientPhone')(<Input placeholder="请输入微信号" />)}
+                  {getFieldDecorator('wechatId')(<Input placeholder="请输入微信号" />)}
                 </FormItem>
                 <FormItem {...formLeftItemLayout} label="所在地区：">
                   {getFieldDecorator('addrCoding')(

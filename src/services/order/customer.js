@@ -55,6 +55,14 @@ export async function putPool(params) {
   });
 }
 
+//领取客户
+export async function receive(params) {
+  return request('/api/client_info/clientinfo/receive', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 //更改 客户状态/客户级别
 export async function statusOrLevel(params) {
   return request('/api/client_info/clientinfo/statusOrLevel', {

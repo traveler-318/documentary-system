@@ -160,13 +160,13 @@ class CustomerDetail extends PureComponent {
               })(<Input disabled={edit} placeholder="" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="手机号2">
-              {getFieldDecorator('clientPhone', {
-                initialValue: detail.clientPhone,
+              {getFieldDecorator('contactPhone', {
+                initialValue: detail.contactPhone,
               })(<Input disabled={edit} placeholder="" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="微信号">
-              {getFieldDecorator('clientPhone', {
-                initialValue: detail.clientPhone,
+              {getFieldDecorator('wechatId', {
+                initialValue: detail.wechatId,
               })(<Input disabled={edit} placeholder="" />)}
             </FormItem>
 

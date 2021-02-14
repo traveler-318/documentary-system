@@ -46,7 +46,8 @@ import {
   getDataInfo,
   deleteData,
   statusOrLevel,
-  putPool
+  putPool,
+  receive
 }from '../../../services/order/customer';
 
 import styles from './index.less';
@@ -170,7 +171,17 @@ class AllOrdersList extends PureComponent {
 
   // ============ 初始化数据 ===============
   componentWillMount() {
-
+    let key = this.props.route.key;
+    this.setState({
+      routerKey:key
+    })
+    //   'allcustomer': '全部客户',
+    //   'subordinate': '下属客户',
+    //   'mycustomer': '我的客户',
+    //   'allpublic': '全部公海',
+    //   'subordinatepublic': '下属公海',
+    //   'mypublic': '我的公海',
+    console.log(key)
     this.getLabels();
     this.getTreeList();
     this.currenttree();
@@ -275,10 +286,18 @@ class AllOrdersList extends PureComponent {
   handleSearch = (params) => {
     console.log(params,"查询参数")
     const { salesmanList,cityparam } = this.state;
-    let payload = {
-      ...params,
-      ...cityparam
-    };
+
+    let payload = {};
+    if(params.cityparam){
+      payload = {
+        ...params,
+        ...cityparam
+      };
+    }else{
+      payload = {
+        ...params
+      };
+    }
 
     if(payload.createTime)payload.createTime = func.format(payload.createTime, dateFormat)
     if(payload.followTime)payload.followTime = func.format(payload.followTime, dateFormat)
@@ -305,7 +324,7 @@ class AllOrdersList extends PureComponent {
 
     delete payload.dateRange;
     delete payload.productType;
-    delete payload.area;
+    delete payload.cityparam;
 
     for(let key in payload){
       payload[key] = payload[key] === "" ? null : payload[key]
@@ -389,7 +408,7 @@ class AllOrdersList extends PureComponent {
           )}
         </Form.Item>
         <Form.Item label="省市区">
-          {getFieldDecorator('area', {
+          {getFieldDecorator('cityparam', {
           })(
             <Cascader style={{ width: 200 }}
               options={CITY}
@@ -512,6 +531,29 @@ class AllOrdersList extends PureComponent {
     })
 
   }
+  //领取
+  receive = () => {
+    const {selectedRows} = this.state;
+
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+
+    let ids = [];
+    selectedRows.map(item=>{
+      ids.push(item.id)
+    })
+
+    receive({
+      ids:ids.join(",")
+    }).then(res=>{
+      if (res.success) {
+        message.info(res.msg);
+        this.getDataList();
+      }
+    })
+
+  }
   // 导出
   exportFile = () => {
     const {params}=this.state;
@@ -596,6 +638,17 @@ class AllOrdersList extends PureComponent {
 
   // 左侧操作按钮
   renderLeftButton = (tabKey) => {
+    let {routerKey} = this.state;
+    let key = null;
+    switch (routerKey) {
+      case  'allcustomer': key = 1;break;//'全部客户',
+      case  'subordinate': key = 1;break; //'下属客户',
+      case  'mycustomer': key = 1;break; //'我的客户',
+      case  'allpublic': key = 2;break; //'全部公海',
+      case  'subordinatepublic': key = 2;break; //'下属公海',
+      case  'mypublic': key = 2;break; //'我的公海',
+    }
+
     return (
         <div>
             <Button type="primary" icon="plus" onClick={()=>{
@@ -605,10 +658,17 @@ class AllOrdersList extends PureComponent {
               icon="interaction"
               onClick={this.handleShowTransfer}
             >转移客户</Button>
-            <Button
-              icon="laptop"
-              onClick={this.putPool}
-            >放入公海</Button>
+           {key == 1?(
+             <Button
+               icon="laptop"
+               onClick={this.putPool}
+             >放入公海</Button>
+           ):(
+             <Button
+               icon="laptop"
+               onClick={this.receive}
+             >领取</Button>
+           )}
             <Button
               icon="highlight"
               onClick={this.bulkModification}
@@ -951,6 +1011,26 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  setCityVal = (row) =>{
+    let v = "";
+    CITY.map(c=>{
+        if(c.value == row.province){
+          v = c.label+'/';
+          c.children.map(p=>{
+            if(p.value == row.city) {
+              v += p.label+'/';
+              p.children.map(a=>{
+                if(a.value == row.area) {
+                  v += a.label;
+                }
+              })
+            }
+          })
+        }
+    })
+    return v
+  }
+
   render() {
     const code = 'allOrdersList';
 
@@ -1008,13 +1088,11 @@ class AllOrdersList extends PureComponent {
         width: 100,
       },
       {
-        title: '省市区',
+        title: '地区',
         dataIndex: 'province',
-        width: 180,
+        width: 130,
         render: (key,row)=>{
-            return (
-              key+"/"+row.city+"/"+row.area
-            )
+            return this.setCityVal(row)
         },
         sorter: (a, b) => a.province - b.province,
         sortDirections: ['descend', 'ascend'],
@@ -1022,7 +1100,7 @@ class AllOrdersList extends PureComponent {
       {
         title: '详情地址',
         dataIndex: 'clientAddress',
-        width: 100,
+        width: 160,
       },
       {
         title: '客户级别',
