@@ -385,21 +385,21 @@ class OrdersEdit extends PureComponent {
                     <Button icon="plus" onClick={()=>{message.info('开发中')}}>联系人</Button>
                     <Button icon="plus" onClick={()=>{message.info('开发中')}}>工单</Button>
                   </Col>
-                  <Col span={8}>
-                    <div>
-                      {detail.voiceStatus === "1" ? (
-                        <Tooltip title="激活自动提醒开关">
-                          <Button icon="bell" onClick={()=>this.voiceSubmit(0)} style={{ float:"right",border:'0',boxShadow:'none'}}></Button>
-                        </Tooltip>
-                      ) :(
-                        <Button style={{ float:"right",border:'0',boxShadow:'none'}} onClick={()=>this.voiceSubmit(1)}>
-                          <Tooltip title="激活自动提醒开关">
-                            <img src={bellShut} style={{float:"right"}} />
-                          </Tooltip>
-                        </Button>
-                      )}
-                    </div>
-                  </Col>
+                  {/*<Col span={8}>*/}
+                  {/*  <div>*/}
+                  {/*    {detail.voiceStatus === "1" ? (*/}
+                  {/*      <Tooltip title="激活自动提醒开关">*/}
+                  {/*        <Button icon="bell" onClick={()=>this.voiceSubmit(0)} style={{ float:"right",border:'0',boxShadow:'none'}}></Button>*/}
+                  {/*      </Tooltip>*/}
+                  {/*    ) :(*/}
+                  {/*      <Button style={{ float:"right",border:'0',boxShadow:'none'}} onClick={()=>this.voiceSubmit(1)}>*/}
+                  {/*        <Tooltip title="激活自动提醒开关">*/}
+                  {/*          <img src={bellShut} style={{float:"right"}} />*/}
+                  {/*        </Tooltip>*/}
+                  {/*      </Button>*/}
+                  {/*    )}*/}
+                  {/*  </div>*/}
+                  {/*</Col>*/}
                 </Row>
                 <div className={styles.tabContent} style={{marginRight:20,paddingTop:14}}>
                   <Tabs defaultActiveKey="1" onChange={this.callback}>
