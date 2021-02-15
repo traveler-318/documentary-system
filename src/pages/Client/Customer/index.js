@@ -63,7 +63,7 @@ import Journal from '../../Order/components/journal';
 import TimeConsuming from '../../Order/components/timeConsuming';
 import SMS from '../../Order/components/smsList';
 import VoiceList from '../../Order/components/voiceList';
-import OrderImport from '../../Order/components/orderImport';
+import OrderImport from './components/import';
 import { getCookie } from '../../../utils/support';
 import { getLabelList } from '@/services/user';
 import { CITY } from '@/utils/city';
@@ -688,7 +688,7 @@ class AllOrdersList extends PureComponent {
             >客户状态</Button>
             <Button
               icon="upload"
-              onClick={this.importData}
+              onClick={this.handleOrderImport}
             >导入</Button>
             <Button
             icon="download"
@@ -916,6 +916,16 @@ class AllOrdersList extends PureComponent {
   }
   // 订单导入弹窗
   handleOrderImport = () =>{
+    const { clientLevels,clientStatus } = this.state;
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: {
+        clientLevels:clientLevels,
+        clientStatus:clientStatus
+      },
+    });
+
     this.setState({
       OrderImportVisible: true,
     });
@@ -925,6 +935,8 @@ class AllOrdersList extends PureComponent {
     this.setState({
       OrderImportVisible: false,
     });
+
+    this.getDataList();
   }
 
   onCheck = (checkedKeys) => {
