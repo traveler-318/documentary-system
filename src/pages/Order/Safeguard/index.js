@@ -55,6 +55,7 @@ import {
   orderMenuTemplate,
   updateOrderHead
 } from '../../../services/newServices/order';
+import {getDataInfo} from '../../../services/order/ordermaintenance'
 
 // getList as getSalesmanLists,
 import { getSalesmangroup } from '../../../services/newServices/sales';
@@ -75,6 +76,7 @@ import VoiceList from '../components/voiceList';
 import OrderImport from '../components/orderImport';
 import SearchButton from '../components/button';
 import { getCookie } from '../../../utils/support';
+import { getLabelList } from '@/services/user';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -127,6 +129,7 @@ class AllOrdersList extends PureComponent {
         current:1,
         orderBy:false
       },
+      clientStatus:[],
       tabKey:sessionStorage.executiveOrderTabKey ? sessionStorage.executiveOrderTabKey : '0',
       selectedRows:[],
       productList:[],
@@ -185,12 +188,26 @@ class AllOrdersList extends PureComponent {
     this.currenttree();
     this.getOrderMenuHead();
     this.getOrderMenuTemplate();
+    this.getLabels();
 
   }
 
   getTreeList = () => {
     productTreelist().then(res=>{
       this.setState({productList:res.data})
+    })
+  }
+
+  getLabels = () =>{
+    //获取维护标签
+    getLabelList({
+      size:100,
+      current:1,
+      labelType:0
+    }).then(res=>{
+      this.setState({
+        clientStatus:res.data.records
+      })
     })
   }
 
@@ -208,18 +225,10 @@ class AllOrdersList extends PureComponent {
     this.setState({
       loading:true,
     })
-    getPermissions(params).then(res=>{
+    getDataInfo(params).then(res=>{
       this.setState({
         countSice:res.data.total,
-        data:{
-          list:[{}],
-          pagination:{
-            total:1,
-            current:1,
-            pageSize:1,
-          }
-        },
-        // data:setListData(res.data),
+        data:setListData(res.data),
         loading:false,
         selectedRowKeys:[]
       })
@@ -291,7 +300,7 @@ class AllOrdersList extends PureComponent {
 
     payload = {
       ...payload,
-      confirmTag:tabKey === 'null' ? null : tabKey
+      client_level:tabKey === 'null' ? null : tabKey
     };
 
     payload.payPanyId = payload.productType ? payload.productType[0] : payload.payPanyId ? payload.payPanyId : null;
@@ -318,7 +327,7 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, salesmangroup, params, productList,organizationTree } = this.state;
+    const { salesmanList, salesmangroup, params, productList,organizationTree,clientStatus } = this.state;
 
     return (
       <div className={"default_search_form"}>
@@ -334,15 +343,9 @@ class AllOrdersList extends PureComponent {
           {getFieldDecorator('productCoding',{
           })(<Input placeholder="请输入SN" />)}
         </Form.Item>
-        <Form.Item label="订单类型">
-          {getFieldDecorator('orderType', {
-          })(
-            <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
-              {ORDERTYPPE.map(item=>{
-                return (<Option value={item.key}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
+        <Form.Item label="商户号">
+          {getFieldDecorator('merchants', {
+          })(<Input placeholder="请输入商户号" />)}
         </Form.Item>
         <Form.Item label="所属组织">
           {getFieldDecorator('organizationId', {
@@ -369,23 +372,24 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="交易量">
-          {getFieldDecorator('orderSource', {
-          })(
-            <Select placeholder={"请选择订单来源"} style={{ width: 120 }}>
-              {ORDERSOURCE.map(item=>{
-                return (<Option value={item.key}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
+        {/*<Form.Item label="交易量">*/}
+        {/*  {getFieldDecorator('orderSource', {*/}
+        {/*  })(*/}
+        {/*    <Select placeholder={"请选择订单来源"} style={{ width: 120 }}>*/}
+        {/*      {ORDERSOURCE.map(item=>{*/}
+        {/*        return (<Option value={item.key}>{item.name}</Option>)*/}
+        {/*      })}*/}
+        {/*    </Select>*/}
+        {/*  )}*/}
+        {/*</Form.Item>*/}
         <Form.Item label="维护标签">
-          {getFieldDecorator('logisticsStatus', {
-            initialValue: params.logisticsStatus ? params.logsticsStatus : "全部",
+          {getFieldDecorator('client_status', {
+            initialValue: params.client_status ? params.client_status : "",
           })(
-            <Select placeholder={"请选择物流状态"} style={{ width: 120 }}>
-              {LOGISTICSSTATUS.map(item=>{
-                return (<Option value={item.key}>{item.name}</Option>)
+            <Select placeholder={"请选择维护标签"} style={{ width: 120 }}>
+              <Option value=''>全部</Option>
+              {clientStatus.map(item=>{
+                return (<Option value={item.id}>{item.labelName}</Option>)
               })}
             </Select>
           )}
@@ -409,10 +413,13 @@ class AllOrdersList extends PureComponent {
             )}
           </Form.Item>
           <Form.Item>
-            <Radio.Group onChange={this.onChangeRadio}>
-              <Radio value={6}>进中时间</Radio>
-              <Radio value={7}>激活时间</Radio>
+            {getFieldDecorator('timeType', {
+            })(
+            <Radio.Group>
+              <Radio value={2}>跟进时间</Radio>
+              <Radio value={1}>激活时间</Radio>
             </Radio.Group>
+            )}
           </Form.Item>
           <div style={{ float: 'right' }}>
             <Button type="primary" htmlType="submit">
@@ -582,7 +589,7 @@ class AllOrdersList extends PureComponent {
         return new Promise((resolve, reject) => {
           updateConfirmTag({
             id:confirmTagList[0].id,
-            confirmTag:radioChecked
+            client_level:radioChecked
           }).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
@@ -622,7 +629,7 @@ class AllOrdersList extends PureComponent {
 
     let type = false, _data = [];
     selectedRows.map(item=>{
-      if(item.confirmTag === '0' || item.confirmTag === '1'){
+      if(item.client_level === '0' || item.client_level === '1'){
         _data.push(item.id)
       }else{
         type = true;
@@ -682,12 +689,12 @@ class AllOrdersList extends PureComponent {
 
 
   }
-  toExamines = (confirmTag) => {
+  toExamines = (client_level) => {
     const {selectedRows} = this.state;
     let type = false, _data = [];
     const setAudit = this.setAudit;
     selectedRows.map(item=>{
-      if(item.confirmTag === '0' || item.confirmTag === '1'){
+      if(item.client_level === '0' || item.client_level === '1'){
         const list={}
         list.id=item.id;
         list.outOrderNo=item.outOrderNo;
@@ -706,19 +713,19 @@ class AllOrdersList extends PureComponent {
         cancelText: '取消',
         keyboard:false,
         onOk() {
-          setAudit(_data,confirmTag)
+          setAudit(_data,client_level)
         },
         onCancel() {
-          setAudit(_data,confirmTag)
+          setAudit(_data,client_level)
         },
       });
     }else{
-      setAudit(_data,confirmTag)
+      setAudit(_data,client_level)
     }
   }
-  setAudit = (_data,confirmTag) => {
+  setAudit = (_data,client_level) => {
     toExamine({
-      confirmTag,
+      client_level,
       orderIdAndNo:_data
     }).then(res=>{
       if(res.code === 200){
@@ -770,7 +777,7 @@ class AllOrdersList extends PureComponent {
     if(selectedRows.length > 1){
       return message.info('只能选择一条数据');
     }
-    if(selectedRows[0].confirmTag === "0" || selectedRows[0].confirmTag === "1" || selectedRows[0].confirmTag === "10" ){
+    if(selectedRows[0].client_level === "0" || selectedRows[0].client_level === "1" || selectedRows[0].client_level === "10" ){
       message.info('当前订单状态不适用变更操作');
     }else {
       this.changeUpdateConfirmTag(selectedRows);
@@ -790,7 +797,7 @@ class AllOrdersList extends PureComponent {
     selectedRows.map( item =>{
       list.push({
         id:item.id,
-        confirmTag: 6
+        client_level: 6
       })
     })
     Modal.confirm({
@@ -802,7 +809,7 @@ class AllOrdersList extends PureComponent {
       keyboard:false,
       onOk:() => {
         return new Promise((resolve, reject) => {
-          updateConfirmTag({id:selectedRows[0].id,confirmTag:6}).then(res=>{
+          updateConfirmTag({id:selectedRows[0].id,client_level:6}).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
               this.setState({
@@ -925,7 +932,7 @@ class AllOrdersList extends PureComponent {
         if(idSame){
           const item={};
           if(selectedRows[i].logisticsCompany && selectedRows[i].logisticsNumber && !selectedRows[i].logisticsStatus){
-            item.confirmTag=selectedRows[i].confirmTag;
+            item.client_level=selectedRows[i].client_level;
             item.deptId=selectedRows[i].deptId;
             item.id=selectedRows[i].id;
             item.logisticsCompany=selectedRows[i].logisticsCompany;
@@ -972,7 +979,7 @@ class AllOrdersList extends PureComponent {
 
         const item={};
         if(selectedRows[i].logisticsCompany && selectedRows[i].logisticsNumber && !selectedRows[i].logisticsStatus){
-          item.confirmTag=selectedRows[i].confirmTag;
+          item.client_level=selectedRows[i].client_level;
           item.deptId=selectedRows[i].deptId;
           item.id=selectedRows[i].id;
           item.logisticsCompany=selectedRows[i].logisticsCompany;
@@ -1285,7 +1292,7 @@ class AllOrdersList extends PureComponent {
             shipmentRemind: true,
             tenantId: row.tenantId,
             userPhone: row.userPhone,
-            confirmTag: row.confirmTag,
+            client_level: row.client_level,
           }
           subscription(params).then(res=>{
             if(res.code === 200){
@@ -1769,7 +1776,7 @@ class AllOrdersList extends PureComponent {
             }
           }
           // 订单状态
-          if(item.dataIndex === "confirmTag"){
+          if(item.dataIndex === "client_level"){
             item.render=(key,row)=>{
               // 待审核、已激活、已取消、已退回-不可切换状态
               if(key == '0' || key == '7' || key == '8' || key == '9'){
@@ -1926,9 +1933,7 @@ class AllOrdersList extends PureComponent {
       loading,
       tabKey,
       exportVisible,
-      TransferVisible,
-      LogisticsConfigVisible,
-      selectedRows,
+      clientStatus,
       detailsVisible,
       journalVisible,
       SMSVisible,
@@ -1956,6 +1961,7 @@ class AllOrdersList extends PureComponent {
       params
     } = this.state;
 
+    console.log(clientStatus)
     const loop = data =>
       data.map((item, index) => {
         return <TreeNode
@@ -2087,12 +2093,12 @@ class AllOrdersList extends PureComponent {
       },
       {
         title: '商户号',
-        dataIndex: 'userPhone',
+        dataIndex: 'merchants',
         width: 100,
       },
       {
         title: '商户名',
-        dataIndex: 'userPhone',
+        dataIndex: 'merchantName',
         width: 100,
       },
       {
@@ -2103,140 +2109,41 @@ class AllOrdersList extends PureComponent {
       },
       {
         title: '当前阶段',
-        dataIndex: 'userAddress',
+        dataIndex: 'clientLevel',
         width: 160,
         ellipsis: true,
       },
       {
         title: '维护标签',
-        dataIndex: 'confirmTag',
+        dataIndex: 'clientStatus',
         width: 80,
         render: (key,row)=>{
-          // 待审核、已激活、已取消、已退回-不可切换状态
-          if(key == '0' || key == '7' || key == '8' || key == '9'){
+            let r = clientStatus.find(t => t.id == row.clientStatus) || {}
             return (
-              <div>
-                <Tag color={this.getORDERSCOLOR(key)}>
-                  {this.getORDERSTATUS(key)}
-                </Tag>
-              </div>
+              r.labelName
             )
-          }else{
-            return (
-              <div style={{cursor: 'pointer'}}>
-                <Tag color={this.getORDERSCOLOR(key)}>
-                  {this.getORDERSTATUS(key)}
-                </Tag>
-              </div>
-            )
-          }
-        }
-      },
-      {
-        title: '客户标签',
-        dataIndex: 'mianyaStatus',
-        width: 130,
-        render: (key,row)=>{
-          let type=''
-          if (key === 0) {
-            type ='未授权';
-          } else if(key === 1){
-            type ='已授权';
-          }else if(key === 2){
-            type ='解冻';
-          }else if(key === 3){
-            type ='扣款';
-          }
-          return (
-            type
-          )
         }
       },
       {
         title: '交易量',
-        dataIndex: 'machineStatus',
-        width: 130,
-        render: (key,row)=>{
-          let type=''
-          if (key === 0) {
-            type ='未激活';
-          } else if(key === 1){
-            type ='已激活';
-          }else if(key === 2){
-            type ='已退回';
-          }else if(key === 3){
-            type ='被投诉';
-          }
-          return (
-            type
-          )
-        }
+        dataIndex: 'recentDealVolume',
+        width: 130
       },
-      {
-        title: '距离上次跟进',
-        dataIndex: 'payAmount',
-        width: 80,
-      },
+      // {
+      //   title: '距离上次跟进',
+      //   dataIndex: 'payAmount',
+      //   width: 80,
+      // },
       {
         title: '最新跟进记录',
-        dataIndex: 'productType',
+        dataIndex: 'followRecords',
         width: 130,
       },
       {
         title: '激活日期',
-        dataIndex: 'productName',
+        dataIndex: 'activationSigntime',
         width: 100,
       },
-      // {
-      //   title: '订单类型',
-      //   dataIndex: 'orderType',
-      //   width: 80,
-      //   render: (key)=>{
-      //     return (
-      //       <div>{this.getORDERTYPE(key)} </div>
-      //     )
-      //   }
-      // },
-      // {
-      //   title: '订单来源',
-      //   dataIndex: 'orderSource',
-      //   width: 80,
-      //   render: (key)=>{
-      //     return (
-      //       <div>{this.getORDERSOURCE(key)} </div>
-      //     )
-      //   }
-      // },
-      // {
-      //   title: '销售',
-      //   dataIndex: 'salesman',
-      //   width: 80,
-      // },
-      // {
-      //   title: '快递公司',
-      //   dataIndex: 'logisticsCompany',
-      //   width: 130,
-      // },
-      // {
-      //   title: '快递单号',
-      //   dataIndex: 'logisticsNumber',
-      //   width: 150,
-      // },
-      // {
-      //   title: '物流状态',
-      //   dataIndex: 'logisticsStatus',
-      //   width: 100,
-      //   render: (key)=>{
-      //     return (
-      //       <div>{this.getLogisticsStatusValue(key)} </div>
-      //     )
-      //   }
-      // },
-      // {
-      //   title: '下单时间',
-      //   dataIndex: 'createTime',
-      //   width: 150,
-      // },
       {
         title: '操作',
         key: 'operation',
@@ -2346,8 +2253,8 @@ class AllOrdersList extends PureComponent {
                 <TabPane tab={
                   <span>
                     {(
-                      item.key === params.confirmTag ||
-                      JSON.stringify(item.key) === params.confirmTag
+                      item.key === params.client_level ||
+                      JSON.stringify(item.key) === params.client_level
                     ) ? (
                       <Badge count={countSice} overflowCount={999}>
                         <a href="#" className="head-example" />
@@ -2538,7 +2445,7 @@ class AllOrdersList extends PureComponent {
               {confirmTagList.map(item=>{
                 return (
                   <>
-                    {item.confirmTag === "10" ? (
+                    {item.client_level === "10" ? (
                       <Radio.Group onChange={this.onChangeRadio}>
                         <Radio value={6}>认领</Radio>
                       </Radio.Group>
