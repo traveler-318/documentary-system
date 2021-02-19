@@ -37,6 +37,7 @@ class Survey extends PureComponent {
         ownership:"3"
       },
       describe:"",
+      followType:'',
       orderType:[
 
       ],
@@ -172,7 +173,11 @@ class Survey extends PureComponent {
         describe:e.target.value
       })
   };
-
+  handleChange(val){
+    this.setState({
+      followType:val
+    })
+  }
 
   // 物流详情窗口
 
@@ -202,7 +207,7 @@ class Survey extends PureComponent {
 };
 
   handleSubmit = () => {
-    const { detail , describe, reminderTime } = this.state;
+    const { detail , describe,followType, reminderTime } = this.state;
     let { followRecords } = this.state;
     if(describe === ""){
       return message.error("请输入跟进内容");
@@ -210,6 +215,7 @@ class Survey extends PureComponent {
     let param = {
       userName:detail.userName,
       describe,
+      followType:followType,
       createTime:moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
       type:reminderTime === "" ? "1" : "2",// 1是跟进-2提醒时间，
       reminderTime
@@ -417,11 +423,24 @@ class Survey extends PureComponent {
           // }}
         >
           <div style={{margin:'5px'}}>
-            <Select placeholder={"选择跟进方式"} style={{ width: 200,paddingRight:'5px' }}>
+            <Select placeholder={"选择跟进方式"} onChange={()=>this.handleChange} style={{ width: 200,paddingRight:'5px' }}>
               {followways.map((item,index)=>{
                 return (<Select.Option key={index} value={item}>{item}</Select.Option>)
               })}
             </Select>
+            <div style={{cursor:"pointer",border:"1px solid #ccc",height:'32px',padding:'4px 6px',display:'inline-block',marginRight:'5px'}} >
+              <span
+                onClick={this.handleReminderTime}>
+                <Icon
+                  type="clock-circle"
+                  style={{margin:"0 10px 0 5px"}}
+                />
+                计划提醒
+              </span>
+              <span>
+                {reminderTime}
+              </span>
+            </div>
             <Dropdown overlay={menu} placement="bottomLeft" trigger='click'>
               <Button>常用语</Button>
             </Dropdown>
@@ -433,21 +452,7 @@ class Survey extends PureComponent {
             placeholder='请输入内容（Alt+Enter快速提交）'
           />
           <div>
-            <div
-              onClick={this.handleReminderTime}
-              style={{float:"left",cursor:"pointer",paddingTop:7}}
-            >
-              <Icon
-                type="clock-circle"
-                style={{margin:"0 10px 0 15px"}}
-              />
-              计划提醒
-            </div>
-            <div
-              style={{float:"left",cursor:"pointer",paddingTop:7}}
-            >
-              {reminderTime}
-            </div>
+
             <div style={{float:"right"}}>
               <Button
                 onClick={this.handleEmpty}
