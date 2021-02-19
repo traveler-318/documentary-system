@@ -71,13 +71,15 @@ export default class Grid extends PureComponent {
       await this.setState({
         current: pagination.current,
         size: pagination.pageSize,
-        orderBy:true
+        orderBy:true,
+        sorts:sorter
       });
     }else {
       await this.setState({
         current: pagination.current,
         size: pagination.pageSize,
-        orderBy:false
+        orderBy:false,
+        sorts:sorter
       });
     }
     this.refreshTable();
@@ -85,12 +87,13 @@ export default class Grid extends PureComponent {
 
   refreshTable = (firstPage = false) => {
     const { onSearch } = this.props;
-    const { current, size, formValues,orderBy } = this.state;
+    const { current, size, formValues,orderBy,sorts } = this.state;
 
     const params = {
       current: firstPage ? 1 : current,
       orderBy,
       size,
+      sorts:sorts,
       ...formValues,
     };
     if (onSearch) {

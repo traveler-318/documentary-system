@@ -49,6 +49,7 @@ class Update extends PureComponent {
     const { detail} = this.state;
     form.validateFieldsAndScroll((err, values) => {
       values.id = detail.id;
+      values.clientLevel = values.clientLevel || 0;
       if (!err) {
         processupdate(values).then(res=>{
           if(res.code === 200){

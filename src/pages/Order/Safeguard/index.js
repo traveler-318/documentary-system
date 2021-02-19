@@ -64,7 +64,7 @@ import styles from './index.less';
 import Export from '../components/export'
 // import TransferCustomers from './components/TransferCustomers'
 // import LogisticsConfig from './components/LogisticsConfig'
-import PopupDetails from '../components/popupDetails'
+import PopupDetails from './components/popupDetails'
 import Transaction from './transaction'
 
 import ImportData from '../components/ImportData';
@@ -188,7 +188,7 @@ class AllOrdersList extends PureComponent {
 
     this.getTreeList();
     this.currenttree();
-    this.getOrderMenuHead();
+    // this.getOrderMenuHead();
     this.getOrderMenuTemplate();
     this.getLabels();
 
@@ -240,7 +240,6 @@ class AllOrdersList extends PureComponent {
   getSalesmanList = (value = "all_all") => {
     getCurrentsalesman(value).then(res=>{
 
-      console.log(res,"!!!!!!!!!!!!!!!")
 
       if(res.code === 200){
         res.data.unshift({key:'全部',value:''});
@@ -262,10 +261,11 @@ class AllOrdersList extends PureComponent {
       });
     }
   }
+
   // ============ 查询 ===============
   handleSearch = (params) => {
     console.log(params,"查询参数")
-    const { dateRange } = params;
+    const { sorts,dateRange } = params;
     const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
@@ -279,6 +279,13 @@ class AllOrdersList extends PureComponent {
       };
       // payload.dateRange = null;
     }
+
+    if(sorts){
+      if(sorts.field == "followRecords"){
+        payload.followSort = sorts.order=='ascend' ? true:false
+      }
+    }
+
     if(payload.organizationId && payload.organizationId === ""){
       payload.organizationId = null;
     }
@@ -311,6 +318,7 @@ class AllOrdersList extends PureComponent {
 
     delete payload.dateRange;
     delete payload.productType;
+    delete payload.sorts;
 
     for(let key in payload){
       payload[key] = payload[key] === "" ? null : payload[key]
@@ -771,7 +779,6 @@ class AllOrdersList extends PureComponent {
           text += `${selectedRows[i].userName}(${selectedRows[i].userPhone})订单物流信息有误，请修改物流信息\n`
         }
 
-        console.log(text)
         if(idSame){
           const item={};
           if(selectedRows[i].logisticsCompany && selectedRows[i].logisticsNumber && !selectedRows[i].logisticsStatus){
@@ -892,7 +899,7 @@ class AllOrdersList extends PureComponent {
             >流程变更</Button>
             <Button
               icon="message"
-              onClick={this.flowUpdate}
+              onClick={this.handleSMS}
             >短信提醒</Button>
             <Button
               icon="upload"
@@ -1210,7 +1217,7 @@ class AllOrdersList extends PureComponent {
       tabKey:key,
       params:_params
     },()=>{
-      this.getOrderMenuHead()
+      // this.getOrderMenuHead()
       this.handleSearch(this.state.params)
     })
   }
@@ -1449,7 +1456,7 @@ class AllOrdersList extends PureComponent {
     updateOrderHead(params).then(res=>{
       if(res.code === 200){
         message.success(res.msg)
-        this.getOrderMenuHead();
+        // this.getOrderMenuHead();
         this.setState({
             isClickHandleSearch: true,
           },() => {
@@ -1479,7 +1486,7 @@ class AllOrdersList extends PureComponent {
     updateOrderHead(params).then(res=>{
       if(res.code === 200){
         message.success(res.msg)
-        this.getOrderMenuHead();
+        // this.getOrderMenuHead();
         this.setState({
             isClickHandleSearch: true,
           },() => {
@@ -1540,9 +1547,7 @@ class AllOrdersList extends PureComponent {
   // 菜单列表头获取
   getOrderMenuHead = () => {
     const {tabKey}=this.state;
-    console.log(tabKey)
     orderMenuHead().then(resp=>{
-      console.log(resp)
       if(resp.code === 200){
         const list=resp.data.menuJson;
         const checked=[];
@@ -1748,7 +1753,6 @@ class AllOrdersList extends PureComponent {
       params
     } = this.state;
 
-    console.log(clientStatus)
     const loop = data =>
       data.map((item, index) => {
         return <TreeNode
@@ -1798,6 +1802,11 @@ class AllOrdersList extends PureComponent {
         width: 100,
       },
       {
+        title: '产品名称',
+        dataIndex: 'productName',
+        width: 120,
+      },
+      {
         title: 'SN',
         dataIndex: 'productCoding',
         width: 180,
@@ -1806,8 +1815,14 @@ class AllOrdersList extends PureComponent {
       {
         title: '当前阶段',
         dataIndex: 'clientLevel',
-        width: 160,
-        ellipsis: true,
+        width: 100,
+        render: (key,row)=>{
+          let s = row.clientLevel;
+          let r = s ==0 || s == '' || s== null ? '':'阶段'+s;
+          return (
+            r
+          )
+        }
       },
       {
         title: '维护标签',
@@ -1834,7 +1849,7 @@ class AllOrdersList extends PureComponent {
         title: '最新跟进记录',
         dataIndex: 'followRecords',
         width: 130,
-        sortDirections: ['descend', 'ascend'],
+        sorter:true,
       },
       {
         title: '激活日期',
@@ -1885,52 +1900,16 @@ class AllOrdersList extends PureComponent {
         render: (text,row) => {
           return(
             <div>
-              <a onClick={()=>this.handleSMS(row)}>跟进</a>
+              <a onClick={()=>this.handleDetails(row)}>跟进</a>
               <Divider type="vertical" />
-              {
-                row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
-              }
               <a onClick={()=>this.handleJournal(row)}>日志</a>
               <Divider type="vertical" />
               <a onClick={()=>this.handleDetails(row)}>详情</a>
-              {/*<Divider type="vertical" />*/}
-              {/*<a onClick={()=>this.handleVoice(row)}>语音</a>*/}
-
-              {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
-
-              {/* <a>跟进</a>
-                      <Divider type="vertical" />
-                      <a onClick={()=>this.handleEdit(row)}>编辑</a>
-                      <Divider type="vertical" />
-                      <a>置顶</a>
-                      <Divider type="vertical" />
-                      <a>归档</a>
-                      <Divider type="vertical" /> */}
-
-              {/* <Divider type="vertical" /> */}
-              {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
-              {/* <Divider type="vertical" />
-                      <a >短信</a> */}
-              {/* <Divider type="vertical" /> */}
-              {/* <a onClick={()=>this.handleReminds([row])}>提醒</a> */}
             </div>
           )
         },
       },
     ]
-
-    const TabPanes = () => (
-      <div className={styles.tabs}>
-        {ORDERSTATUS.map(item=>{
-          return (
-            <div
-              onClick={()=>this.statusChange(item.key)}
-              className={item.key === tabKey ? styles.status_item_select : styles.status_item}
-            >{item.name}</div>
-          )
-        })}
-      </div>
-    );
 
 
     return (
