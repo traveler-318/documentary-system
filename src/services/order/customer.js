@@ -98,3 +98,11 @@ export async function updateData(params) {
   });
 }
 
+//跟进
+export async function clientFollow(params) {
+  return request('/api/client_info/clientinfo/clientFollow', {
+    method: 'POST',
+    body: params,
+  });
+}
+

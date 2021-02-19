@@ -479,10 +479,11 @@ class AllOrdersList extends PureComponent {
   }
 
   // 对错误订单的状态进行变更操作
-  changeUpdateConfirmTag = (row) => {
+  changeUpdateConfirmTag = (row,type) => {
     this.setState({
       confirmTagList:row,
       updateConfirmTagVisible:true,
+      updateType:type
     })
   }
   handleCancelUpdateConfirmTag = () => {
@@ -494,11 +495,11 @@ class AllOrdersList extends PureComponent {
 
 
   handleSubmitUpdateConfirmTag = (e) => {
-    const { confirmTagList,updateStatusId,updatelevelId } = this.state;
-    if(!updateStatusId){
+    const { confirmTagList,updateStatusId,updatelevelId,updateType } = this.state;
+    if(updateType ==='state' && !updateStatusId){
       return message.error("请选择需要更改的状态");
     }
-    if(!updatelevelId){
+    if(updateType ==='leve' && !updatelevelId){
       return message.error("请选择需要更改的级别");
     }
 
@@ -592,7 +593,7 @@ class AllOrdersList extends PureComponent {
   }
 
   // 状态进行修改
-  bulkModification = () => {
+  bulkModification = (type) => {
     const {selectedRows} = this.state;
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
@@ -601,7 +602,7 @@ class AllOrdersList extends PureComponent {
       return message.info('只能选择一条数据');
     }
 
-    this.changeUpdateConfirmTag(selectedRows);
+    this.changeUpdateConfirmTag(selectedRows,type);
   }
 
   // 认领
@@ -684,8 +685,12 @@ class AllOrdersList extends PureComponent {
            )}
             <Button
               icon="highlight"
-              onClick={this.bulkModification}
+              onClick={()=>this.bulkModification('state')}
             >客户状态</Button>
+            <Button
+              icon="highlight"
+              onClick={()=>this.bulkModification('leve')}
+            >客户级别</Button>
             <Button
               icon="upload"
               onClick={this.handleOrderImport}
@@ -1089,6 +1094,7 @@ class AllOrdersList extends PureComponent {
       selectedRowKeys,
       noDepositVisible,
       updateConfirmTagVisible,
+      updateType,
       voiceStatusVisible,
       textVisible,
       excelVisible,
@@ -1098,10 +1104,21 @@ class AllOrdersList extends PureComponent {
       TransferVisible,
       tips,
       clientStatus,
-      clientLevels
+      clientLevels,
+      routerKey
     } = this.state;
 
-    const columns=[
+    let queryType = null;
+    switch (routerKey) {
+      case  'allcustomer': queryType = '1';break;//'全部客户',
+      case  'subordinate': queryType = '1';break; //'下属客户',
+      case  'mycustomer': queryType = '1';break; //'我的客户',
+      case  'allpublic': queryType = '2';break; //'全部公海',
+      case  'subordinatepublic': queryType = '2';break; //'下属公海',
+      case  'mypublic': queryType = '2';break; //'我的公海',
+    }
+
+    let columns=[
       {
         title: '姓名',
         dataIndex: 'clientName',
@@ -1176,33 +1193,36 @@ class AllOrdersList extends PureComponent {
         sorter: (a, b) => a.createUser.length - b.createUser.length,
         sortDirections: ['descend', 'ascend'],
       },
-      {
-        title: '销售',
-        dataIndex: 'salesman',
-        width: 80,
-        sorter: (a, b) => a.salesman.length - b.salesman.length,
-        sortDirections: ['descend', 'ascend'],
+
+    ];
+    if(queryType == '1'){
+      columns.push({
+          title: '销售',
+          dataIndex: 'salesman',
+          width: 80,
+          sorter: (a, b) => a.salesman.length - b.salesman.length,
+          sortDirections: ['descend', 'ascend'],
+        })
+    }
+    columns.push({
+      title: '操作',
+      key: 'operation',
+      fixed: 'right',
+      width: 250,
+      render: (text,row) => {
+        return(
+          <div>
+            <a onClick={()=>this.handleDetails(row)}>跟进</a>
+            <Divider type="vertical" />
+            <a onClick={()=>this.handleJournal(row)}>日志</a>
+            <Divider type="vertical" />
+            <a onClick={()=>this.handleDetails(row)}>详情</a>
+            {/*<Divider type="vertical" />*/}
+            {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
+          </div>
+        )
       },
-      {
-        title: '操作',
-        key: 'operation',
-        fixed: 'right',
-        width: 250,
-        render: (text,row) => {
-          return(
-            <div>
-              <a onClick={()=>this.handleSMS(row)}>跟进</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleJournal(row)}>日志</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleDetails(row)}>详情</a>
-              {/*<Divider type="vertical" />*/}
-              {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
-            </div>
-          )
-        },
-      },
-    ]
+    })
 
     const TabPanes = () => (
       <div className={styles.tabs}>
@@ -1331,7 +1351,7 @@ class AllOrdersList extends PureComponent {
           visible={updateConfirmTagVisible}
           maskClosable={false}
           destroyOnClose
-          width={660}
+          width={500}
           onCancel={this.handleCancelUpdateConfirmTag}
           footer={[
             <Button key="back" onClick={this.handleCancelUpdateConfirmTag}>
@@ -1343,24 +1363,27 @@ class AllOrdersList extends PureComponent {
           ]}
         >
           <Form>
-            <FormItem {...formAllItemLayout} label="客户状态">
-                  <Select placeholder={"请选择客户状态"} style={{ width: 200 }} onSelect={value => this.chooseState(value)} >
-                    {clientStatus.map(d => (
-                      <Select.Option key={d.id} value={d.id}>
-                        {d.labelName}
-                      </Select.Option>
-                    ))}
-                  </Select>
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="客户级别">
-              <Select placeholder={"请选择客户级别"} style={{ width: 200 }} onSelect={value => this.chooseLevel(value)} >
-                {clientLevels.map(d => (
-                  <Select.Option key={d.id} value={d.id}>
-                    {d.labelName}
-                  </Select.Option>
-                ))}
-              </Select>
-            </FormItem>
+            {updateType==='state'?(
+              <FormItem {...formAllItemLayout} label="客户状态">
+                <Select placeholder={"请选择客户状态"} style={{ width: 200 }} onSelect={value => this.chooseState(value)} >
+                  {clientStatus.map(d => (
+                    <Select.Option key={d.id} value={d.id}>
+                      {d.labelName}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </FormItem>
+            ):(
+              <FormItem {...formAllItemLayout} label="客户级别">
+                <Select placeholder={"请选择客户级别"} style={{ width: 200 }} onSelect={value => this.chooseLevel(value)} >
+                  {clientLevels.map(d => (
+                    <Select.Option key={d.id} value={d.id}>
+                      {d.labelName}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </FormItem>
+            )}
           </Form>
         </Modal>
 

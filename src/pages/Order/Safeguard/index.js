@@ -1960,16 +1960,9 @@ class AllOrdersList extends PureComponent {
           {detailsVisible?(
             <PopupDetails
               detailsVisible={detailsVisible}
+              clientStatus={clientStatus}
               handleCancelDetails={this.handleCancelDetails}
             >
-              <TabPane tab={`维护`} key="3">
-                <Descriptions column={2}>
-                  <Descriptions.Item label="商户名">Zhou Maomao</Descriptions.Item>
-                  <Descriptions.Item label="商户号">1810000000</Descriptions.Item>
-                  <Descriptions.Item label="激活时间">Hangzhou, Zhejiang</Descriptions.Item>
-                  <Descriptions.Item label="维护时间">empty</Descriptions.Item>
-                </Descriptions>
-              </TabPane>
               <TabPane tab={`交易量`} key="4">
                 <Transaction/>
               </TabPane>

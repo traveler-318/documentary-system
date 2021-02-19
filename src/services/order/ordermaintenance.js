@@ -53,3 +53,11 @@ export async function followway() {
     method: 'GET'
   });
 }
+
+//修改
+export async function updateData(params) {
+  return request('/api/tracking/ordermaintenance/update', {
+    method: 'POST',
+    body: params,
+  });
+}

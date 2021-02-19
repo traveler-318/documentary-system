@@ -1,11 +1,27 @@
 import React, { PureComponent } from 'react';
-import { Form, Input, Card, Row,Modal, Col, Button, Icon , Select, message, Tabs, Cascader, Radio,Timeline,Tooltip} from 'antd';
+import {
+  Form,
+  Input,
+  Card,
+  Row,
+  Modal,
+  Col,
+  Button,
+  Icon,
+  Select,
+  message,
+  Tabs,
+  Cascader,
+  Radio,
+  Timeline,
+  Tooltip,
+  Descriptions,
+} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import styles from './edit.less';
 import { CITY } from '../../../../utils/city';
 import {
-  updateData,
   orderDetail,
   updateReminds,
   productTreelist,
@@ -13,7 +29,7 @@ import {
   localPrinting,
   logisticsRepeatPrint,
 } from '../../../../services/newServices/order';
-import {getDetails} from '../../../../services/order/ordermaintenance'
+import {getDetails,updateData} from '../../../../services/order/ordermaintenance'
 import {ORDERSTATUS,ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../../components/FormDetailsTitle';
 import Survey from './Survey'
@@ -232,51 +248,51 @@ class OrdersEdit extends PureComponent {
             ...values
           };
           // if(detail.logisticsStatus){
-            Modal.confirm({
-              title: '提示',
-              content: '当前订单物流已经订阅,此次变更会删掉订阅有关信息,确认是否清理物流从新保存',
-              okText: '确定',
-              okType: 'danger',
-              cancelText: '取消',
-              keyboard:false,
-              async onOk() {
-                const _data={
-                  id:detail.id,
-                  outOrderNo:detail.outOrderNo
-                }
-                deleteLogisticsSuber(_data).then(resp=>{
-                  console.log(resp)
-                  updateData(params).then(res=>{
-                    if(res.code === 200){
-                      message.success(res.msg);
-                      _this.setState({
-                        edit:true,
-                        primary:"primary",
-                        primary1:''
-                      })
-                      _this.getEditDetails()
-                    }else {
-                      message.error(res.msg);
-                    }
-                  })
-                })
-              },
-              onCancel() {},
-            });
-          // }else {
-          //   updateData(params).then(res=>{
-          //     if(res.code === 200){
-          //       message.success(res.msg);
-          //       this.setState({
-          //         edit:true,
-          //         primary:"primary",
-          //         primary1:''
+          //   Modal.confirm({
+          //     title: '提示',
+          //     content: '当前订单物流已经订阅,此次变更会删掉订阅有关信息,确认是否清理物流从新保存',
+          //     okText: '确定',
+          //     okType: 'danger',
+          //     cancelText: '取消',
+          //     keyboard:false,
+          //     async onOk() {
+          //       const _data={
+          //         id:detail.id,
+          //         outOrderNo:detail.outOrderNo
+          //       }
+          //       deleteLogisticsSuber(_data).then(resp=>{
+          //         console.log(resp)
+          //         updateData(params).then(res=>{
+          //           if(res.code === 200){
+          //             message.success(res.msg);
+          //             _this.setState({
+          //               edit:true,
+          //               primary:"primary",
+          //               primary1:''
+          //             })
+          //             _this.getEditDetails()
+          //           }else {
+          //             message.error(res.msg);
+          //           }
+          //         })
           //       })
-          //       this.getEditDetails()
-          //     }else {
-          //       message.error(res.msg);
-          //     }
-          //   })
+          //     },
+          //     onCancel() {},
+          //   });
+          // }else {
+            updateData(params).then(res=>{
+              if(res.code === 200){
+                message.success(res.msg);
+                this.setState({
+                  edit:true,
+                  primary:"primary",
+                  primary1:''
+                })
+                this.getEditDetails()
+              }else {
+                message.error(res.msg);
+              }
+            })
           // }
         }else {
           if (values.logisticsCompany === ''){
@@ -442,6 +458,11 @@ class OrdersEdit extends PureComponent {
     return text
   }
 
+  clientStatusName(){
+    const {detail} = this.state;
+    let s = this.props.clientStatus.find(item=>item.id == detail.clientStatus);
+    return s? s.labelName :''
+  }
   validatePhone = (rule, value, callback) => {
     if (!(/^1[3456789]\d{9}$/.test(value))) {
       callback(new Error('请输入正确的手机号格式'));
@@ -700,6 +721,40 @@ class OrdersEdit extends PureComponent {
                         orderDetail={orderDetail}
                         changeDetails={this.changeDetails}
                       />
+                    </TabPane>
+                    <TabPane tab={`维护`} key="3">
+                      <Descriptions column={2}>
+                        <Descriptions.Item label="商户名">{detail.merchantName}</Descriptions.Item>
+                        <Descriptions.Item label="商户号">{detail.merchants}</Descriptions.Item>
+                        <Descriptions.Item label="激活时间">{detail.activationSigntime}</Descriptions.Item>
+                        <Descriptions.Item label="维护时间">empty</Descriptions.Item>
+                      </Descriptions>
+                      <Row gutter={16} style={{textAlign:'center'}}>
+                        <Col span={6}>
+                          <Card bordered={true} style={{lineHeight:'30px'}}>
+                            <div style={{fontWeight:'bold'}}>维护状态</div>
+                            <div>{this.clientStatusName}</div>
+                          </Card>
+                        </Col>
+                        <Col span={6}>
+                          <Card bordered={true} style={{lineHeight:'30px'}}>
+                            <div style={{fontWeight:'bold'}}>交易总额</div>
+                            <div>元</div>
+                          </Card>
+                        </Col>
+                        <Col span={6}>
+                          <Card bordered={true} style={{lineHeight:'30px'}}>
+                            <div style={{fontWeight:'bold'}}>交易次数</div>
+                            <div>{detail.totalTradingVolume}次</div>
+                          </Card>
+                        </Col>
+                        <Col span={6}>
+                          <Card bordered={true} style={{lineHeight:'30px'}}>
+                            <div style={{fontWeight:'bold'}}>距离上次跟进</div>
+                            <div></div>
+                          </Card>
+                        </Col>
+                      </Row>
                     </TabPane>
                     {this.props.children}
                     {/* <TabPane tab={`跟进(${data.followUp})`} key="3">
