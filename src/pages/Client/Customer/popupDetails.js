@@ -404,10 +404,12 @@ class OrdersEdit extends PureComponent {
                 <div className={styles.tabContent} style={{marginRight:20,paddingTop:14}}>
                   <Tabs defaultActiveKey="1" onChange={this.callback}>
                     <TabPane tab="客户动态" key="1">
-                      <TabTrends
-                        detail={detail}
-                        getEditDetails={this.getEditDetails}
-                      />
+                      {detail.id?(
+                        <TabTrends
+                          detail={detail}
+                          getEditDetails={this.getEditDetails}
+                        />
+                      ):''}
                     </TabPane>
                     <TabPane tab={`订单(${orderListLength})`} key="2">
                       <OrderListNew
@@ -417,18 +419,18 @@ class OrdersEdit extends PureComponent {
                       />
                     </TabPane>
                     <TabPane tab={`维护(${orderListLength})`} key="3">
-                      <OrderListNew
-                        detail={detail}
-                        orderDetail={orderDetail}
-                        changeDetails={this.changeDetails}
-                      />
+                      {/*<OrderListNew*/}
+                      {/*  detail={detail}*/}
+                      {/*  orderDetail={orderDetail}*/}
+                      {/*  changeDetails={this.changeDetails}*/}
+                      {/*/>*/}
                     </TabPane>
                     <TabPane tab={`联系人(${orderListLength})`} key="4">
-                      <OrderListNew
-                        detail={detail}
-                        orderDetail={orderDetail}
-                        changeDetails={this.changeDetails}
-                      />
+                      {/*<OrderListNew*/}
+                      {/*  detail={detail}*/}
+                      {/*  orderDetail={orderDetail}*/}
+                      {/*  changeDetails={this.changeDetails}*/}
+                      {/*/>*/}
                     </TabPane>
                     <TabPane tab={`工单(${orderListLength})`} key="5">
                       <OrderListNew
@@ -438,11 +440,11 @@ class OrdersEdit extends PureComponent {
                       />
                     </TabPane>
                     <TabPane tab={`归属(${orderListLength})`} key="6">
-                      <OrderListNew
-                        detail={detail}
-                        orderDetail={orderDetail}
-                        changeDetails={this.changeDetails}
-                      />
+                      {/*<OrderListNew*/}
+                      {/*  detail={detail}*/}
+                      {/*  orderDetail={orderDetail}*/}
+                      {/*  changeDetails={this.changeDetails}*/}
+                      {/*/>*/}
                     </TabPane>
                     <TabPane tab={`日志`} key="7">
                       <OrderListNew

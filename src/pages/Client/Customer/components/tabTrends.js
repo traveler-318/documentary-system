@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import styles from './edit.less';
 // import { orderFollowing } from '../../../services/newServices/order';
+import {clientFollow} from '../../../../services/order/customer'
 import ReminderTimes from '@/pages/Order/components/time';
 
 const { TextArea } = Input;
@@ -40,7 +41,24 @@ class TabTrends extends PureComponent {
   }
 
   componentWillMount() {
+    const { detail } = this.props;
+    console.log(detail)
+    this.initData(detail);
+  }
+  componentDidUpdate(prevProps, prevState, snapshot) {
 
+  }
+
+  initData(detail){
+    let list = [];
+    if(detail && detail.followRecords && JSON.parse(detail.followRecords).list){
+      list = JSON.parse(detail.followRecords).list
+    }
+
+    this.setState({
+      detail:detail,
+      followRecords:list
+    })
   }
   componentDidMount() {
     // let offsetLeftDistance = document.documentElement.clientWidth - this.myRef.current.clientWidth
@@ -94,15 +112,15 @@ class TabTrends extends PureComponent {
     })
     console.log(_param)
 
-    // orderFollowing(_param).then(res=>{
-    //   if(res.code === 200){
-    //     message.success(res.msg);
-    //     this.props.getEditDetails();
-    //     this.handleEmpty();
-    //   }else{
-    //     message.error(res.msg);
-    //   }
-    // })
+    clientFollow(_param).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg);
+        this.props.getEditDetails();
+        this.handleEmpty();
+      }else{
+        message.error(res.msg);
+      }
+    })
 
   }
 
@@ -151,7 +169,7 @@ class TabTrends extends PureComponent {
                     <p>
                       <span style={{fontWeight:"bold"}}>{item.userName}</span>
                       {item.type === '1' ? '跟进了该客户' : "添加了计划提醒"}
-                      <Icon type="close" />
+                      {/*<Icon type="close" />*/}
                     </p>
                     <p>{item.describe}</p>
                     <p>{item.createTime}</p>
