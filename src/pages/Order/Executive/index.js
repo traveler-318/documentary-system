@@ -1882,7 +1882,7 @@ class AllOrdersList extends PureComponent {
   }
 
   getOrderMenuTemplate = () => {
-    orderMenuTemplate().then(res=>{
+    orderMenuTemplate(0).then(res=>{
       res.data.menuJson.map(item => {
         item.key=item.dataIndex
       })
