@@ -903,7 +903,7 @@ class AllOrdersList extends PureComponent {
             >短信提醒</Button>
             <Button
               icon="upload"
-              onClick={this.importData}
+              onClick={this.handleOrderImport}
             >导入交易量</Button>
             <Button
             icon="download"
