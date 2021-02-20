@@ -45,6 +45,7 @@ import {
 } from '../../../services/newServices/order';
 import {
   getDataInfo,
+  queryCreator,
   deleteData,
   statusOrLevel,
   putPool,
@@ -166,7 +167,9 @@ class AllOrdersList extends PureComponent {
       updateConfirmTagVisible:false,
       confirmTagList:[],
       _listArr:[],
-      organizationTree:[]
+      organizationTree:[],
+
+      createUsers:[]
     };
   }
 
@@ -199,9 +202,20 @@ class AllOrdersList extends PureComponent {
     this.getTreeList();
     this.currenttree();
     this.getOrderMenuTemplate();
-
+    this.getCreator();
   }
 
+  getCreator(){
+    queryCreator().then(res=>{
+      if(res.success){
+        this.setState({
+          createUsers:res.data
+        })
+      }
+    }).catch(()=>{
+
+    })
+  }
   getTreeList = () => {
     productTreelist().then(res=>{
       this.setState({productList:res.data})
@@ -358,7 +372,7 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, organizationTree,clientLevels,clientStatus } = this.state;
+    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers } = this.state;
 
     console.log(clientLevels)
     return (
@@ -444,7 +458,13 @@ class AllOrdersList extends PureComponent {
           </Form.Item>
           <Form.Item label="创建人">
             {getFieldDecorator('createUser',{
-            })(<Input placeholder="请输入创建人" />)}
+            })(
+              <Select placeholder={"请选择创建人"} style={{ width: 200 }}>
+                {createUsers.map((item,index)=>{
+                  return (<Option key={index} value={item.account}>{item.name}</Option>)
+                })}
+              </Select>
+            )}
           </Form.Item>
           <div style={{ float: 'right' }}>
             <Button type="primary" htmlType="submit">

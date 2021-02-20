@@ -106,3 +106,8 @@ export async function clientFollow(params) {
   });
 }
 
+export async function queryCreator() {
+  return request('/api/client_info/clientinfo/creator', {
+    method: 'POST',
+  });
+}
