@@ -61,3 +61,18 @@ export async function updateData(params) {
     body: params,
   });
 }
+
+// 导入
+export async function importTradingVolume(params) {
+  const { file } = params;
+  const formData = new FormData();
+  // formData.append('salesman', salesman);
+  // formData.append('orderType', orderType);
+  // formData.append('payAmount', payAmount);
+  // formData.append('createTime', createTime);
+  formData.append('file', file);
+  return request('/api/tracking/ordermaintenance/importTradingVolume', {
+    method: 'POST',
+    body: formData,
+  });
+}

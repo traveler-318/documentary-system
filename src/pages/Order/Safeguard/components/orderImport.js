@@ -2,19 +2,16 @@ import React, { PureComponent } from 'react';
 import { Modal, Checkbox, Form, Input, Icon, Select, Col, Button, DatePicker, message, Switch, Upload,Row, Spin } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
-import router from 'umi/router';
 import axios from 'axios'
 
 import { tenantMode, clientId, clientSecret } from '../../../../defaultSettings';
-import { ORDERTYPPE, exportData} from './data.js';
 import {
   salesmanList,
 } from '../../../../services/newServices/order';
-import { getList,getVCode,exportOrder,getPhone, importOrder } from '../../../../services/newServices/order'
+import { importTradingVolume } from '../../../../services/order/ordermaintenance'
 import { getAccessToken, getToken } from '../../../../utils/authority';
 
 
-const FormItem = Form.Item;
 const { Dragger } = Upload;
 
 @connect(({ globalParameters}) => ({
@@ -72,12 +69,9 @@ class OrderImport extends PureComponent {
   };
 
   handleTemplate = () => {
-    // console.log(`http://121.37.251.134:9010/order/order/exportOrderTemplate`)
-    // window.location.href = `http://121.37.251.134:9010/order/order/exportOrderTemplate`
-    // window.open(`http://121.37.251.134:9010/order/order/exportOrderTemplate?Blade-Auth=${getAccessToken()}`);
     axios({
       method: "get",
-      url:`/api/order/order/exportOrderTemplate`,
+      url:`/api/tracking/ordermaintenance/exportTradingExcel`,
       // data:param,
       headers: {
         "content-type": "application/json; charset=utf-8",
@@ -110,7 +104,7 @@ class OrderImport extends PureComponent {
   // 下载方法
   downLoadBlobFile = (res) =>{
     var elink = document.createElement('a');
-    elink.download = '订单导入数据模板.xlsx';
+    elink.download = '导入交易量模板.xlsx';
     elink.style.display = 'none';
     var blob = new Blob([res.data]);
     elink.href = URL.createObjectURL(blob);
@@ -119,37 +113,15 @@ class OrderImport extends PureComponent {
     document.body.removeChild(elink);
   }
 
-  onSwitchChange = checked => {
-    this.setState({
-      isCovered: checked ? 1 : 0,
-    });
-  };
-
   handleOrderSave = () => {
     const {form} = this.props;
-    const params={}
+    // const params={}
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values.file = this.state.fileList[0];
-        values.createTime=this.state.createTime;
-        if(!values.salesman){
-          values.salesman=null
-        }
-        if(!values.payAmount){
-          values.payAmount=null
-        }
-        if(!values.createTime){
-          values.createTime=null
-        }
-        for(let key in values){
-          if(values[key] === "" || values[key] === null || values[key] === undefined){
 
-          }else {
-            params[key] = values[key]
-          }
-        }
         if(values.file){
-          importOrder(params).then(res=>{
+          importTradingVolume(values).then(res=>{
             this.setState({
               loading:false,
             })
@@ -208,14 +180,6 @@ class OrderImport extends PureComponent {
         md: { span: 16 },
       },
     };
-    const formItemLayout1 = {
-      labelCol: {
-        span: 10,
-      },
-      wrapperCol: {
-        span: 11,
-      },
-    };
 
     const propss = {
       onRemove: file => {
@@ -240,7 +204,7 @@ class OrderImport extends PureComponent {
     return (
       <>
         <Modal
-          title="订单导入"
+          title="交易量导入"
           width={550}
           visible={OrderImportVisible}
           confirmLoading={confirmLoading}
@@ -275,70 +239,12 @@ class OrderImport extends PureComponent {
                 <p className="ant-upload-hint">请上传 .xls,.xlsx 格式的文件</p>
               </Dragger>
             </Form.Item>
-            {/* <FormItem {...formItemLayout} label="数据覆盖">
-              <Switch checkedChildren="是" unCheckedChildren="否" onChange={this.onSwitchChange} />
-            </FormItem> */}
-            <Row gutter={24} style={{ margin: 0 }}>
-              <Col span={12} style={{ padding: 0 }}>
-                <Form.Item {...formItemLayout1} label="订单类型">
-                  {getFieldDecorator('orderType', {
-                    initialValue: null,
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择订单类型',
-                      },
-                    ],
-                  })(
-                    <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
-                      {ORDERTYPPE.map(item=>{
-                        return (<Option value={item.key}>{item.name}</Option>)
-                      })}
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col span={12} style={{ padding: 0 }}>
-                <FormItem {...formItemLayout1} label="订单金额">
-                  {getFieldDecorator('payAmount', {
-                    initialValue: null,
-                  })(<Input placeholder="请输入金额" />)}
-                </FormItem>
-              </Col>
-            </Row>
-            <Form.Item {...formItemLayout} label="销售">
-              {getFieldDecorator('salesman', {
-                // rules: [
-                //   {
-                //     required: true,
-                //     message: '请选择销售',
-                //   },
-                // ],
-              })(
-                <Select placeholder={"请选择销售"} style={{ width: 120 }}>
-                  {salesmanList.map((item,index)=>{
-                    return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
-                  })}
-                </Select>
-              )}
-            </Form.Item>
-            <FormItem {...formItemLayout} label="创建时间">
-              {getFieldDecorator('createTime')(
-                <DatePicker
-                  showTime={{ format: 'HH:mm:ss' }}
-                  format="YYYY-MM-DD HH:mm:ss"
-                  placeholder="请选择提醒时间"
-                  onChange={this.onChange}
-                  onOk={this.onOk}
-                />
-              )}
-            </FormItem>
             <Form.Item {...formItemLayout} label="模板下载">
               <Button type="primary" icon="download" size="small" onClick={this.handleTemplate}>
                 点击下载
               </Button>
             </Form.Item>
-            <div style={{color:"red",paddingLeft:'33px'}}>*注意：以界面选择为准</div>
+            {/*<div style={{color:"red",paddingLeft:'33px'}}>*注意：以界面选择为准</div>*/}
           </Form>
           </Spin>
         </Modal>

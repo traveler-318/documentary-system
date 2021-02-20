@@ -74,7 +74,7 @@ import Journal from '../components/journal';
 import TimeConsuming from '../components/timeConsuming';
 import SMS from '../components/smsList';
 import VoiceList from '../components/voiceList';
-import OrderImport from '../components/orderImport';
+import OrderImport from './components/orderImport';
 import SearchButton from '../components/button';
 import { getCookie } from '../../../utils/support';
 import { getLabelList } from '@/services/user';
@@ -1415,6 +1415,7 @@ class AllOrdersList extends PureComponent {
     this.setState({
       OrderImportVisible: false,
     });
+    this.getDataList();
   }
 
   onCheck = (checkedKeys) => {
