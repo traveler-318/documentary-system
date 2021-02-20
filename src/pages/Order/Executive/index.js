@@ -1732,7 +1732,7 @@ class AllOrdersList extends PureComponent {
   getOrderMenuHead = () => {
     const {tabKey}=this.state;
     console.log(tabKey)
-    orderMenuHead().then(resp=>{
+    orderMenuHead(0).then(resp=>{
       console.log(resp)
       if(resp.code === 200){
         const list=resp.data.menuJson;
