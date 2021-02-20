@@ -372,8 +372,17 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers } = this.state;
+    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers,routerKey } = this.state;
 
+    let queryType = null;
+    switch (routerKey) {
+      case  'allcustomer': queryType = '1';break;//'全部客户',
+      case  'subordinate': queryType = '1';break; //'下属客户',
+      case  'mycustomer': queryType = '1';break; //'我的客户',
+      case  'allpublic': queryType = '2';break; //'全部公海',
+      case  'subordinatepublic': queryType = '2';break; //'下属公海',
+      case  'mypublic': queryType = '2';break; //'我的公海',
+    }
     console.log(clientLevels)
     return (
       <div className={"default_search_form"}>
@@ -409,31 +418,35 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="所属组织">
-          {getFieldDecorator('organizationId', {
-          })(
-            <TreeSelect
-              style={{ width: 200 }}
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              onChange={this.changeGroup}
-              treeData={organizationTree}
-              allowClear
-              showSearch
-              treeNodeFilterProp="title"
-              placeholder="请选择所属组织"
-            />
-          )}
-        </Form.Item>
-        <Form.Item label="销售">
-          {getFieldDecorator('salesman', {
-          })(
-            <Select placeholder={"请选择销售"} style={{ width: 200 }}>
-              {salesmanList.map((item,index)=>{
-                return (<Option key={index} value={item.value}>{item.key}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
+        {queryType == '1'?(
+          <Form.Item label="所属组织">
+            {getFieldDecorator('organizationId', {
+            })(
+              <TreeSelect
+                style={{ width: 200 }}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                onChange={this.changeGroup}
+                treeData={organizationTree}
+                allowClear
+                showSearch
+                treeNodeFilterProp="title"
+                placeholder="请选择所属组织"
+              />
+            )}
+          </Form.Item>
+        ):''}
+        {queryType == '1'?(
+          <Form.Item label="销售">
+            {getFieldDecorator('salesman', {
+            })(
+              <Select placeholder={"请选择销售"} style={{ width: 200 }}>
+                {salesmanList.map((item,index)=>{
+                  return (<Option key={index} value={item.value}>{item.key}</Option>)
+                })}
+              </Select>
+            )}
+          </Form.Item>
+        ):''}
         <Form.Item label="省市区">
           {getFieldDecorator('cityparam', {
           })(
