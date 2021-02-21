@@ -45,6 +45,7 @@ import {
 } from '../../../services/newServices/order';
 import {
   getDataInfo,
+  queryCreator,
   deleteData,
   statusOrLevel,
   putPool,
@@ -166,7 +167,9 @@ class AllOrdersList extends PureComponent {
       updateConfirmTagVisible:false,
       confirmTagList:[],
       _listArr:[],
-      organizationTree:[]
+      organizationTree:[],
+
+      createUsers:[]
     };
   }
 
@@ -199,9 +202,20 @@ class AllOrdersList extends PureComponent {
     this.getTreeList();
     this.currenttree();
     this.getOrderMenuTemplate();
-
+    this.getCreator();
   }
 
+  getCreator(){
+    queryCreator().then(res=>{
+      if(res.success){
+        this.setState({
+          createUsers:res.data
+        })
+      }
+    }).catch(()=>{
+
+    })
+  }
   getTreeList = () => {
     productTreelist().then(res=>{
       this.setState({productList:res.data})
@@ -358,8 +372,17 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, organizationTree,clientLevels,clientStatus } = this.state;
+    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers,routerKey } = this.state;
 
+    let queryType = null;
+    switch (routerKey) {
+      case  'allcustomer': queryType = '1';break;//'全部客户',
+      case  'subordinate': queryType = '1';break; //'下属客户',
+      case  'mycustomer': queryType = '1';break; //'我的客户',
+      case  'allpublic': queryType = '2';break; //'全部公海',
+      case  'subordinatepublic': queryType = '2';break; //'下属公海',
+      case  'mypublic': queryType = '2';break; //'我的公海',
+    }
     console.log(clientLevels)
     return (
       <div className={"default_search_form"}>
@@ -395,31 +418,35 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="所属组织">
-          {getFieldDecorator('organizationId', {
-          })(
-            <TreeSelect
-              style={{ width: 200 }}
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              onChange={this.changeGroup}
-              treeData={organizationTree}
-              allowClear
-              showSearch
-              treeNodeFilterProp="title"
-              placeholder="请选择所属组织"
-            />
-          )}
-        </Form.Item>
-        <Form.Item label="销售">
-          {getFieldDecorator('salesman', {
-          })(
-            <Select placeholder={"请选择销售"} style={{ width: 200 }}>
-              {salesmanList.map((item,index)=>{
-                return (<Option key={index} value={item.value}>{item.key}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
+        {queryType == '1'?(
+          <Form.Item label="所属组织">
+            {getFieldDecorator('organizationId', {
+            })(
+              <TreeSelect
+                style={{ width: 200 }}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                onChange={this.changeGroup}
+                treeData={organizationTree}
+                allowClear
+                showSearch
+                treeNodeFilterProp="title"
+                placeholder="请选择所属组织"
+              />
+            )}
+          </Form.Item>
+        ):''}
+        {queryType == '1'?(
+          <Form.Item label="销售">
+            {getFieldDecorator('salesman', {
+            })(
+              <Select placeholder={"请选择销售"} style={{ width: 200 }}>
+                {salesmanList.map((item,index)=>{
+                  return (<Option key={index} value={item.value}>{item.key}</Option>)
+                })}
+              </Select>
+            )}
+          </Form.Item>
+        ):''}
         <Form.Item label="省市区">
           {getFieldDecorator('cityparam', {
           })(
@@ -444,7 +471,13 @@ class AllOrdersList extends PureComponent {
           </Form.Item>
           <Form.Item label="创建人">
             {getFieldDecorator('createUser',{
-            })(<Input placeholder="请输入创建人" />)}
+            })(
+              <Select placeholder={"请选择创建人"} style={{ width: 200 }}>
+                {createUsers.map((item,index)=>{
+                  return (<Option key={index} value={item.account}>{item.name}</Option>)
+                })}
+              </Select>
+            )}
           </Form.Item>
           <div style={{ float: 'right' }}>
             <Button type="primary" htmlType="submit">
@@ -479,10 +512,11 @@ class AllOrdersList extends PureComponent {
   }
 
   // 对错误订单的状态进行变更操作
-  changeUpdateConfirmTag = (row) => {
+  changeUpdateConfirmTag = (row,type) => {
     this.setState({
       confirmTagList:row,
       updateConfirmTagVisible:true,
+      updateType:type
     })
   }
   handleCancelUpdateConfirmTag = () => {
@@ -494,11 +528,11 @@ class AllOrdersList extends PureComponent {
 
 
   handleSubmitUpdateConfirmTag = (e) => {
-    const { confirmTagList,updateStatusId,updatelevelId } = this.state;
-    if(!updateStatusId){
+    const { confirmTagList,updateStatusId,updatelevelId,updateType } = this.state;
+    if(updateType ==='state' && !updateStatusId){
       return message.error("请选择需要更改的状态");
     }
-    if(!updatelevelId){
+    if(updateType ==='leve' && !updatelevelId){
       return message.error("请选择需要更改的级别");
     }
 
@@ -592,7 +626,7 @@ class AllOrdersList extends PureComponent {
   }
 
   // 状态进行修改
-  bulkModification = () => {
+  bulkModification = (type) => {
     const {selectedRows} = this.state;
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
@@ -601,7 +635,7 @@ class AllOrdersList extends PureComponent {
       return message.info('只能选择一条数据');
     }
 
-    this.changeUpdateConfirmTag(selectedRows);
+    this.changeUpdateConfirmTag(selectedRows,type);
   }
 
   // 认领
@@ -684,8 +718,12 @@ class AllOrdersList extends PureComponent {
            )}
             <Button
               icon="highlight"
-              onClick={this.bulkModification}
+              onClick={()=>this.bulkModification('state')}
             >客户状态</Button>
+            <Button
+              icon="highlight"
+              onClick={()=>this.bulkModification('leve')}
+            >客户级别</Button>
             <Button
               icon="upload"
               onClick={this.handleOrderImport}
@@ -1025,7 +1063,7 @@ class AllOrdersList extends PureComponent {
 
 
   getOrderMenuTemplate = () => {
-    orderMenuTemplate().then(res=>{
+    orderMenuTemplate(1).then(res=>{
       res.data.menuJson.map(item => {
         item.key=item.dataIndex
       })
@@ -1089,6 +1127,7 @@ class AllOrdersList extends PureComponent {
       selectedRowKeys,
       noDepositVisible,
       updateConfirmTagVisible,
+      updateType,
       voiceStatusVisible,
       textVisible,
       excelVisible,
@@ -1098,10 +1137,21 @@ class AllOrdersList extends PureComponent {
       TransferVisible,
       tips,
       clientStatus,
-      clientLevels
+      clientLevels,
+      routerKey
     } = this.state;
 
-    const columns=[
+    let queryType = null;
+    switch (routerKey) {
+      case  'allcustomer': queryType = '1';break;//'全部客户',
+      case  'subordinate': queryType = '1';break; //'下属客户',
+      case  'mycustomer': queryType = '1';break; //'我的客户',
+      case  'allpublic': queryType = '2';break; //'全部公海',
+      case  'subordinatepublic': queryType = '2';break; //'下属公海',
+      case  'mypublic': queryType = '2';break; //'我的公海',
+    }
+
+    let columns=[
       {
         title: '姓名',
         dataIndex: 'clientName',
@@ -1176,33 +1226,36 @@ class AllOrdersList extends PureComponent {
         sorter: (a, b) => a.createUser.length - b.createUser.length,
         sortDirections: ['descend', 'ascend'],
       },
-      {
-        title: '销售',
-        dataIndex: 'salesman',
-        width: 80,
-        sorter: (a, b) => a.salesman.length - b.salesman.length,
-        sortDirections: ['descend', 'ascend'],
+
+    ];
+    if(queryType == '1'){
+      columns.push({
+          title: '销售',
+          dataIndex: 'salesman',
+          width: 80,
+          sorter: (a, b) => a.salesman.length - b.salesman.length,
+          sortDirections: ['descend', 'ascend'],
+        })
+    }
+    columns.push({
+      title: '操作',
+      key: 'operation',
+      fixed: 'right',
+      width: 250,
+      render: (text,row) => {
+        return(
+          <div>
+            <a onClick={()=>this.handleDetails(row)}>跟进</a>
+            <Divider type="vertical" />
+            <a onClick={()=>this.handleJournal(row)}>日志</a>
+            <Divider type="vertical" />
+            <a onClick={()=>this.handleDetails(row)}>详情</a>
+            {/*<Divider type="vertical" />*/}
+            {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
+          </div>
+        )
       },
-      {
-        title: '操作',
-        key: 'operation',
-        fixed: 'right',
-        width: 250,
-        render: (text,row) => {
-          return(
-            <div>
-              <a onClick={()=>this.handleSMS(row)}>跟进</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleJournal(row)}>日志</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleDetails(row)}>详情</a>
-              {/*<Divider type="vertical" />*/}
-              {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
-            </div>
-          )
-        },
-      },
-    ]
+    })
 
     const TabPanes = () => (
       <div className={styles.tabs}>
@@ -1331,7 +1384,7 @@ class AllOrdersList extends PureComponent {
           visible={updateConfirmTagVisible}
           maskClosable={false}
           destroyOnClose
-          width={660}
+          width={500}
           onCancel={this.handleCancelUpdateConfirmTag}
           footer={[
             <Button key="back" onClick={this.handleCancelUpdateConfirmTag}>
@@ -1343,24 +1396,27 @@ class AllOrdersList extends PureComponent {
           ]}
         >
           <Form>
-            <FormItem {...formAllItemLayout} label="客户状态">
-                  <Select placeholder={"请选择客户状态"} style={{ width: 200 }} onSelect={value => this.chooseState(value)} >
-                    {clientStatus.map(d => (
-                      <Select.Option key={d.id} value={d.id}>
-                        {d.labelName}
-                      </Select.Option>
-                    ))}
-                  </Select>
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="客户级别">
-              <Select placeholder={"请选择客户级别"} style={{ width: 200 }} onSelect={value => this.chooseLevel(value)} >
-                {clientLevels.map(d => (
-                  <Select.Option key={d.id} value={d.id}>
-                    {d.labelName}
-                  </Select.Option>
-                ))}
-              </Select>
-            </FormItem>
+            {updateType==='state'?(
+              <FormItem {...formAllItemLayout} label="客户状态">
+                <Select placeholder={"请选择客户状态"} style={{ width: 200 }} onSelect={value => this.chooseState(value)} >
+                  {clientStatus.map(d => (
+                    <Select.Option key={d.id} value={d.id}>
+                      {d.labelName}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </FormItem>
+            ):(
+              <FormItem {...formAllItemLayout} label="客户级别">
+                <Select placeholder={"请选择客户级别"} style={{ width: 200 }} onSelect={value => this.chooseLevel(value)} >
+                  {clientLevels.map(d => (
+                    <Select.Option key={d.id} value={d.id}>
+                      {d.labelName}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </FormItem>
+            )}
           </Form>
         </Modal>
 

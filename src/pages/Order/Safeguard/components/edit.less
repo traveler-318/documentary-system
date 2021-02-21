@@ -33,14 +33,14 @@
       .ant-select-selection__rendered{
         margin-top: 7px;
       }
-      //.ant-form-item:last-child .ant-form-item-label{
-      //  height: 94px;
-      //  line-height: 94px;
-      //  border-bottom: 1px solid #ccc;
-      //}
-      //.ant-form-item:last-child input{
-      //  border-bottom: 1px solid #ccc;
-      //}
+      .ant-form-item:last-child .ant-form-item-label{
+        height: 94px;
+        line-height: 94px;
+        border-bottom: 1px solid #ccc;
+      }
+      .ant-form-item:last-child input{
+        border-bottom: 1px solid #ccc;
+      }
 
       .ant-form-item-control{
         line-height: 39px;
@@ -66,16 +66,15 @@
         }
     }
   .salesman{
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 20px;
-
+    margin-bottom: 10px;
+    :global{
+      .ant-form-item-label{
+        border-bottom: 1px solid #ccc;
+      }
+    }
     input{
       border-bottom: 1px solid #ccc;
     }
-  }
-
-  .bottomBorder{
-    border-bottom: 1px solid #ccc;
   }
 
 }
@@ -118,6 +117,18 @@
 }
 .tabContent{
   position: relative;
+  .tabText{
+    height: 136px;
+    // margin-left: 20px;
+    max-width: 100%;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    // position: absolute;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
+  }
   :global{
     .ant-tabs-nav {
       .ant-tabs-tab{
@@ -174,24 +185,9 @@
   }
 
 }
-
-.tabText{
-  height: 100px;
-  // margin-left: 20px;
-  max-width: 100%;
-  border: 1px solid #cccccc;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  // position: absolute;
-  // left: 0;
-  // right: 0;
-  // bottom: 0;
-}
-
 .timelineContent{
-  height: 666px;
+  height: 384px;
   overflow: auto;
-  padding: 20px 0;
   margin-bottom: 10px;
   p{
     margin-bottom: 5px;

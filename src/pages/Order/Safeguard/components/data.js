@@ -9,12 +9,18 @@
 
 // 订单状态
 export const ORDERSTATUS = [
-    // {"name":"待维护",key:'0'},
-    {"name":"阶段1",key:'1'},
-    {"name":"阶段2",key:'2'},//已审核
-    {"name":"阶段3",key:'3'},
-    // {"name":"未达标",key:'4'},
-    // {"name":"已达标",key:'5'},
+    {"name":"待审核",key:'0'},
+    {"name":"已初审",key:'1'},
+    {"name":"已终审",key:'2'},//已审核
+    {"name":"已发货",key:'3'},
+    {"name":"在途中",key:'4'},
+    {"name":"已签收",key:'5'},
+    {"name":"跟进中",key:'6'},
+    {"name":"已激活",key:'7'},
+    {"name":"退回中",key:'11'},
+    {"name":"已退回",key:'8'},
+    {"name":"已取消",key:'9'},
+    {"name":"已过期",key:'10'},
     {"name":"全部",key:null},
 ]
 
