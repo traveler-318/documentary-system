@@ -1105,12 +1105,12 @@ class AllOrdersList extends PureComponent {
       {
         title: '姓名',
         dataIndex: 'clientName',
-        width: 80
+        width: 100
       },
       {
         title: '手机号',
         dataIndex: 'clientPhone',
-        width: 100,
+        width: 120,
       },
       {
         title: '地区',
@@ -1137,7 +1137,7 @@ class AllOrdersList extends PureComponent {
       {
         title: '客户状态',
         dataIndex: 'clientStatus',
-        width: 160,
+        width: 130,
         ellipsis: true,
         sorter: (a, b) => a.clientStatus - b.clientStatus,
         sortDirections: ['descend', 'ascend'],
