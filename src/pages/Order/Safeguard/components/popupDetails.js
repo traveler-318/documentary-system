@@ -32,6 +32,7 @@ import {
 import {getDetails,updateData} from '../../../../services/order/ordermaintenance'
 import {ORDERSTATUS,ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../../components/FormDetailsTitle';
+import Transaction from '../transaction'
 import Survey from './Survey'
 import OrderListNew from './OrderListNew';
 import {
@@ -43,7 +44,6 @@ const FormItem = Form.Item;
 const { TextArea } = Input;
 const { TabPane } = Tabs;
 
-let backUrl = "";
 
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -100,21 +100,6 @@ class OrdersEdit extends PureComponent {
       this.getTreeList();
       this.getEditDetails();
     });
-
-
-
-    if(window.location.hash.indexOf("allOrders") != -1){
-      backUrl = "/order/allOrders?type=details"
-    }else if(window.location.hash.indexOf("salesmanOrder") != -1){
-      backUrl = "/order/salesmanOrder?type=details"
-    }else if(window.location.hash.indexOf("warehouseOrder") != -1){
-      backUrl = "/order/warehouseOrder?type=details"
-    }else if(window.location.hash.indexOf("afterSaleOrder") != -1){
-      backUrl = "/order/afterSaleOrder?type=details"
-    }else if(window.location.hash.indexOf("executive") != -1){
-      backUrl = "/order/executive?type=details"
-    }
-
 
   }
 
@@ -736,7 +721,10 @@ class OrdersEdit extends PureComponent {
                         </Col>
                       </Row>
                     </TabPane>
-                    {this.props.children}
+                    <TabPane tab={`交易量`} key="4">
+                        <Transaction detail={detail}/>
+                    </TabPane>
+                    {/*{this.props.children}*/}
                     {/* <TabPane tab={`跟进(${data.followUp})`} key="3">
                       <FollowUp />
                     </TabPane> */}

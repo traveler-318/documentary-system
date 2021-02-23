@@ -229,7 +229,7 @@ class Export extends PureComponent {
     console.log(param)
     axios({
       method: "post",
-      url:`/api/order/order/exportOrder`,
+      url:`/api/tracking/ordermaintenance/exportOrder`,
       data:param,
       headers: {
         "content-type": "application/json; charset=utf-8",
