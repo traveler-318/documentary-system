@@ -1730,7 +1730,7 @@ class AllOrdersList extends PureComponent {
   getOrderMenuHead = () => {
     const {tabKey}=this.state;
     console.log(tabKey)
-    orderMenuHead().then(resp=>{
+    orderMenuHead(0).then(resp=>{
       console.log(resp)
       if(resp.code === 200){
         const list=resp.data.menuJson;
@@ -1876,7 +1876,7 @@ class AllOrdersList extends PureComponent {
   }
 
   getOrderMenuTemplate = () => {
-    orderMenuTemplate().then(res=>{
+    orderMenuTemplate(0).then(res=>{
       res.data.menuJson.map(item => {
         item.key=item.dataIndex
       })
