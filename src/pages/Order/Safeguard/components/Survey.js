@@ -1,5 +1,25 @@
 import React, { PureComponent } from 'react';
-import { Form, message, Input, Card, Row, Col,Empty, Button, Icon, Modal , Dropdown,Menu,Select, DatePicker, Tabs, Cascader, Radio,Timeline,} from 'antd';
+import {
+  Form,
+  message,
+  Input,
+  Card,
+  Row,
+  Col,
+  Empty,
+  Button,
+  Icon,
+  Modal,
+  Dropdown,
+  Menu,
+  Select,
+  DatePicker,
+  Tabs,
+  Cascader,
+  Radio,
+  Timeline,
+  Descriptions,
+} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import styles from './edit.less';
@@ -60,10 +80,10 @@ class Survey extends PureComponent {
     this.getPhrase();
   }
   componentDidMount() {
-    let offsetLeftDistance = document.documentElement.clientWidth - this.myRef.current.clientWidth
-    this.setState({
-      offsetLeftDistance
-    })
+    // let offsetLeftDistance = document.documentElement.clientWidth - this.myRef.current.clientWidth
+    // this.setState({
+    //   offsetLeftDistance
+    // })
   }
 
   UNSAFE_componentWillReceiveProps(nex){
@@ -340,7 +360,7 @@ class Survey extends PureComponent {
       logisticsDetailsVisible,
       followways,
       phrases,
-      offsetLeftDistance,
+      // offsetLeftDistance,
       isPhrase
     } = this.state;
     console.log(followRecords,"followRecords")
@@ -359,30 +379,39 @@ class Survey extends PureComponent {
 
     return (
       <>
-        <div style={{marginBottom:15,paddingBottom:5}} className={styles.main} ref={this.myRef}>
-          <ul>
-            {orderType.map(item=>{
-              return (
-                <>
-                  {
-                    item.key === null ? "":(<li className={item.className ? styles.color : styles.defaultColor}>{item.name}</li>)
-                  }
-                </>
-              )
-            })}
-          </ul>
-          <p><label>订单号：</label>{detail.outOrderNo}</p>
-          <p><label>订单时间：</label>{detail.createTime}</p>
-          <p style={{height:5}}></p>
-          <p><span><label>快递：</label>{detail.logisticsCompany}</span><span><label>产品：</label>{detail.productType}</span></p>
-          <p><span><label>单号：</label>{detail.logisticsNumber}
-            {
-              detail.logisticsNumber ?
-                (<Button key="primary" onClick={()=>this.handleDetails()} style={{border: "0",background: "none"}}>查看物流信息</Button>)
-                :""
-            }
-            </span>
-            <span><label>SN：</label>{detail.productCoding}</span></p>
+        <div style={{marginBottom:15,paddingBottom:5}} className={styles.main}>
+          <Descriptions column={2}>
+            <Descriptions.Item label="商户名">{detail.merchantName}</Descriptions.Item>
+            <Descriptions.Item label="商户号">{detail.merchants}</Descriptions.Item>
+            <Descriptions.Item label="激活时间">{detail.activationSigntime}</Descriptions.Item>
+            <Descriptions.Item label="维护时间">{detail.createTime}</Descriptions.Item>
+          </Descriptions>
+          <Row gutter={16} style={{textAlign:'center'}}>
+            <Col span={6}>
+              <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
+                <div style={{fontWeight:'bold'}}>维护状态</div>
+                <div>{this.clientStatusName}</div>
+              </Card>
+            </Col>
+            <Col span={6}>
+              <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
+                <div style={{fontWeight:'bold'}}>交易总额</div>
+                <div>{detail.totalTradingVolume}元</div>
+              </Card>
+            </Col>
+            <Col span={6}>
+              <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
+                <div style={{fontWeight:'bold'}}>交易次数</div>
+                <div>次</div>
+              </Card>
+            </Col>
+            <Col span={6}>
+              <Card bordered={true} style={{lineHeight:'30px'}}>
+                <div style={{fontWeight:'bold'}}>距离上次跟进</div>
+                <div></div>
+              </Card>
+            </Col>
+          </Row>
         </div>
         <div className={styles.timelineContent}>
           {followRecords.length <= 0 ? (
