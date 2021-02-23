@@ -178,6 +178,9 @@ class AllOrdersList extends PureComponent {
     let key = this.props.route.key;
     let type = null;
     const currentUser = getCurrentUser();
+
+    console.log(key)
+
     switch (key) {
       case  'customer': type = 'list';break;//'全部客户',
       case  'public': type = 'allPool';break; //'全部公海',
@@ -444,13 +447,13 @@ class AllOrdersList extends PureComponent {
           <Form.Item label="创建时间">
             {getFieldDecorator('createTime', {
             })(
-              <DatePicker showTime size={"default"} />
+              <DatePicker size={"default"} />
             )}
           </Form.Item>
           <Form.Item label="跟进时间">
             {getFieldDecorator('followTime', {
             })(
-              <DatePicker showTime size={"default"} />
+              <DatePicker size={"default"} />
             )}
           </Form.Item>
           <Form.Item label="创建人">
@@ -696,14 +699,21 @@ class AllOrdersList extends PureComponent {
                onClick={this.receive}
              >领取</Button>
            )}
-            <Button
-              icon="highlight"
-              onClick={()=>this.bulkModification('state')}
-            >客户状态</Button>
-            <Button
-              icon="highlight"
-              onClick={()=>this.bulkModification('leve')}
-            >客户级别</Button>
+           {key == 1?(
+             <><Button
+               icon="highlight"
+               onClick={()=>this.bulkModification('state')}
+             >客户状态</Button>
+               <Button
+             icon="highlight"
+             onClick={()=>this.bulkModification('leve')}
+             >客户级别</Button>
+             </>
+           ):(
+             ''
+           )}
+
+
             <Button
               icon="upload"
               onClick={this.handleOrderImport}
@@ -845,6 +855,13 @@ class AllOrdersList extends PureComponent {
     this.setState({
       journalVisible:true,
       journalList:row
+    })
+  }
+
+  // 关闭日志弹窗
+  handleCancelJournal = () => {
+    this.setState({
+      journalVisible:false
     })
   }
 
@@ -1123,8 +1140,8 @@ class AllOrdersList extends PureComponent {
 
     let queryType = null;
     switch (routerKey) {
-      case  'customer': queryType = '1';break;//'全部客户',
-      case  'public': queryType = '2';break; //'全部公海',
+      case  'customer': queryType  = 1;break;//'全部客户',
+      case  'public': queryType  = 2;break; //'全部公海',
     }
 
     let columns=[
@@ -1141,7 +1158,8 @@ class AllOrdersList extends PureComponent {
       {
         title: '地区',
         dataIndex: 'province',
-        width: 130,
+        width: 160,
+        ellipsis: true,
         render: (key,row)=>{
             return this.setCityVal(row)
         },
@@ -1149,9 +1167,10 @@ class AllOrdersList extends PureComponent {
         sortDirections: ['descend', 'ascend'],
       },
       {
-        title: '详情地址',
+        title: '详细地址',
         dataIndex: 'clientAddress',
         width: 160,
+        ellipsis: true,
       },
       {
         title: '客户级别',
@@ -1159,6 +1178,11 @@ class AllOrdersList extends PureComponent {
         width: 110,
         sorter: (a, b) => a.clientLevel.length - b.clientLevel.length,
         sortDirections: ['descend', 'ascend'],
+        render: (key) => {
+          return({
+            key
+          })
+        },
       },
       {
         title: '客户状态',
