@@ -680,47 +680,16 @@ class OrdersEdit extends PureComponent {
                         getEditDetails={this.getEditDetails}
                       />
                     </TabPane>
-                    <TabPane tab={`重复订单(${orderListLength})`} key="2">
-                      <OrderListNew
-                        detail={detail}
-                        orderDetail={orderDetail}
-                        changeDetails={this.changeDetails}
-                      />
+                    <TabPane tab={`订单`} key="2">
+                      {/*<OrderListNew*/}
+                      {/*  detail={detail}*/}
+                      {/*  orderDetail={orderDetail}*/}
+                      {/*  changeDetails={this.changeDetails}*/}
+                      {/*/>*/}
                     </TabPane>
-                    <TabPane tab={`维护`} key="3" style={{paddingTop:'10px'}}>
-                      <Descriptions column={2}>
-                        <Descriptions.Item label="商户名">{detail.merchantName}</Descriptions.Item>
-                        <Descriptions.Item label="商户号">{detail.merchants}</Descriptions.Item>
-                        <Descriptions.Item label="激活时间">{detail.activationSigntime}</Descriptions.Item>
-                        <Descriptions.Item label="维护时间">{detail.createTime}</Descriptions.Item>
-                      </Descriptions>
-                      <Row gutter={16} style={{textAlign:'center'}}>
-                        <Col span={6}>
-                          <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
-                            <div style={{fontWeight:'bold'}}>维护状态</div>
-                            <div>{this.clientStatusName}</div>
-                          </Card>
-                        </Col>
-                        <Col span={6}>
-                          <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
-                            <div style={{fontWeight:'bold'}}>交易总额</div>
-                            <div>{detail.totalTradingVolume}元</div>
-                          </Card>
-                        </Col>
-                        <Col span={6}>
-                          <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
-                            <div style={{fontWeight:'bold'}}>交易次数</div>
-                            <div>次</div>
-                          </Card>
-                        </Col>
-                        <Col span={6}>
-                          <Card bordered={true} style={{lineHeight:'30px'}}>
-                            <div style={{fontWeight:'bold'}}>距离上次跟进</div>
-                            <div></div>
-                          </Card>
-                        </Col>
-                      </Row>
-                    </TabPane>
+                    {/*<TabPane tab={`维护`} key="3" style={{paddingTop:'10px'}}>*/}
+                      {/*<Maintain detail={detail}/>*/}
+                    {/*</TabPane>*/}
                     <TabPane tab={`交易量`} key="4">
                         <Transaction detail={detail}/>
                     </TabPane>

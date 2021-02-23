@@ -1546,7 +1546,7 @@ class AllOrdersList extends PureComponent {
 
   // 菜单列表头获取
   getOrderMenuHead = () => {
-    const {tabKey}=this.state;
+    const { clientStatus }=this.state;
     orderMenuHead(1).then(resp=>{
       if(resp.code === 200){
         const list=resp.data.menuJson;
