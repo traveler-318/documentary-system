@@ -32,6 +32,7 @@ import {
 import {getDetails,updateData} from '../../../../services/order/ordermaintenance'
 import {ORDERSTATUS,ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../../components/FormDetailsTitle';
+import Transaction from '../transaction'
 import Survey from './Survey'
 import OrderListNew from './OrderListNew';
 import {
@@ -43,7 +44,6 @@ const FormItem = Form.Item;
 const { TextArea } = Input;
 const { TabPane } = Tabs;
 
-let backUrl = "";
 
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -100,21 +100,6 @@ class OrdersEdit extends PureComponent {
       this.getTreeList();
       this.getEditDetails();
     });
-
-
-
-    if(window.location.hash.indexOf("allOrders") != -1){
-      backUrl = "/order/allOrders?type=details"
-    }else if(window.location.hash.indexOf("salesmanOrder") != -1){
-      backUrl = "/order/salesmanOrder?type=details"
-    }else if(window.location.hash.indexOf("warehouseOrder") != -1){
-      backUrl = "/order/warehouseOrder?type=details"
-    }else if(window.location.hash.indexOf("afterSaleOrder") != -1){
-      backUrl = "/order/afterSaleOrder?type=details"
-    }else if(window.location.hash.indexOf("executive") != -1){
-      backUrl = "/order/executive?type=details"
-    }
-
 
   }
 
@@ -280,19 +265,8 @@ class OrdersEdit extends PureComponent {
           //     onCancel() {},
           //   });
           // }else {
-            updateData(params).then(res=>{
-              if(res.code === 200){
-                message.success(res.msg);
-                this.setState({
-                  edit:true,
-                  primary:"primary",
-                  primary1:''
-                })
-                this.getEditDetails()
-              }else {
-                message.error(res.msg);
-              }
-            })
+
+          this.updateDataInfo(params)
           // }
         }else {
           if (values.logisticsCompany === ''){
@@ -304,30 +278,13 @@ class OrdersEdit extends PureComponent {
           const params = {
             ...values
           };
-          updateData(params).then(res=>{
-            if(res.code === 200){
-              message.success(res.msg);
-              this.setState({
-                edit:true,
-                primary:"primary",
-                primary1:''
-              })
-              this.getEditDetails()
-            }else {
-              message.error(res.msg);
-            }
-          })
+          this.updateDataInfo(params)
         }
       }
     });
   };
 
-  voiceSubmit = (key) =>{
-    const { detail } = this.state;
-    const params={
-      voiceStatus:key,
-      id :detail.id
-    }
+  updateDataInfo(params){
     updateData(params).then(res=>{
       if(res.code === 200){
         message.success(res.msg);
@@ -341,6 +298,14 @@ class OrdersEdit extends PureComponent {
         message.error(res.msg);
       }
     })
+  }
+  voiceSubmit = (key) =>{
+    const { detail } = this.state;
+    const params={
+      voiceStatus:key,
+      id :detail.id
+    }
+    this.updateDataInfo(params)
   };
 
   handleChange = value => {
@@ -722,30 +687,30 @@ class OrdersEdit extends PureComponent {
                         changeDetails={this.changeDetails}
                       />
                     </TabPane>
-                    <TabPane tab={`维护`} key="3">
+                    <TabPane tab={`维护`} key="3" style={{paddingTop:'10px'}}>
                       <Descriptions column={2}>
                         <Descriptions.Item label="商户名">{detail.merchantName}</Descriptions.Item>
                         <Descriptions.Item label="商户号">{detail.merchants}</Descriptions.Item>
                         <Descriptions.Item label="激活时间">{detail.activationSigntime}</Descriptions.Item>
-                        <Descriptions.Item label="维护时间">empty</Descriptions.Item>
+                        <Descriptions.Item label="维护时间">{detail.createTime}</Descriptions.Item>
                       </Descriptions>
                       <Row gutter={16} style={{textAlign:'center'}}>
                         <Col span={6}>
-                          <Card bordered={true} style={{lineHeight:'30px'}}>
+                          <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
                             <div style={{fontWeight:'bold'}}>维护状态</div>
                             <div>{this.clientStatusName}</div>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card bordered={true} style={{lineHeight:'30px'}}>
+                          <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
                             <div style={{fontWeight:'bold'}}>交易总额</div>
-                            <div>元</div>
+                            <div>{detail.totalTradingVolume}元</div>
                           </Card>
                         </Col>
                         <Col span={6}>
-                          <Card bordered={true} style={{lineHeight:'30px'}}>
+                          <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
                             <div style={{fontWeight:'bold'}}>交易次数</div>
-                            <div>{detail.totalTradingVolume}次</div>
+                            <div>次</div>
                           </Card>
                         </Col>
                         <Col span={6}>
@@ -756,7 +721,10 @@ class OrdersEdit extends PureComponent {
                         </Col>
                       </Row>
                     </TabPane>
-                    {this.props.children}
+                    <TabPane tab={`交易量`} key="4">
+                        <Transaction detail={detail}/>
+                    </TabPane>
+                    {/*{this.props.children}*/}
                     {/* <TabPane tab={`跟进(${data.followUp})`} key="3">
                       <FollowUp />
                     </TabPane> */}

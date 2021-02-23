@@ -61,11 +61,10 @@ import {getDataInfo} from '../../../services/order/ordermaintenance'
 // getList as getSalesmanLists,
 import { getSalesmangroup } from '../../../services/newServices/sales';
 import styles from './index.less';
-import Export from '../components/export'
+import Export from './components/export'
 // import TransferCustomers from './components/TransferCustomers'
 // import LogisticsConfig from './components/LogisticsConfig'
 import PopupDetails from './components/popupDetails'
-import Transaction from './transaction'
 
 import ImportData from '../components/ImportData';
 import Excel from '../components/excel';
@@ -74,7 +73,7 @@ import Journal from '../components/journal';
 import TimeConsuming from '../components/timeConsuming';
 import SMS from '../components/smsList';
 import VoiceList from '../components/voiceList';
-import OrderImport from '../components/orderImport';
+import OrderImport from './components/orderImport';
 import SearchButton from '../components/button';
 import { getCookie } from '../../../utils/support';
 import { getLabelList } from '@/services/user';
@@ -188,7 +187,7 @@ class AllOrdersList extends PureComponent {
 
     this.getTreeList();
     this.currenttree();
-    // this.getOrderMenuHead();
+    this.getOrderMenuHead();
     this.getOrderMenuTemplate();
     this.getLabels();
 
@@ -903,7 +902,7 @@ class AllOrdersList extends PureComponent {
             >短信提醒</Button>
             <Button
               icon="upload"
-              onClick={this.importData}
+              onClick={this.handleOrderImport}
             >导入交易量</Button>
             <Button
             icon="download"
@@ -1415,6 +1414,7 @@ class AllOrdersList extends PureComponent {
     this.setState({
       OrderImportVisible: false,
     });
+    this.getDataList();
   }
 
   onCheck = (checkedKeys) => {
@@ -1450,13 +1450,13 @@ class AllOrdersList extends PureComponent {
 
     const params={
       menuJson:arr,
-      menuType:0,
+      menuType:1,
       deptId:getCookie("dept_id")
     }
     updateOrderHead(params).then(res=>{
       if(res.code === 200){
         message.success(res.msg)
-        // this.getOrderMenuHead();
+        this.getOrderMenuHead();
         this.setState({
             isClickHandleSearch: true,
           },() => {
@@ -1548,136 +1548,32 @@ class AllOrdersList extends PureComponent {
   getOrderMenuHead = () => {
     const {tabKey}=this.state;
     orderMenuHead(1).then(resp=>{
-      console.log(resp)
       if(resp.code === 200){
         const list=resp.data.menuJson;
         const checked=[];
-
         list.map(item => {
-          // 姓名
-          if(item.dataIndex === "userName"){
-            item.render=(key,row)=>{
+          // 当前阶段
+          if(item.dataIndex === "clientLevel") {
+            item.render = (key, row) => {
+              let s = row.clientLevel;
+              let r = s == 0 || s == '' || s == null ? '' : '阶段' + s;
               return (
-                <div className={styles.userName}>
-                  {
-                    row.expireClaim === '1' ? (<p><span>过期</span></p>):""
-                  }
-                  <span>{key}</span>
-                </div>
+                r
               )
             }
           }
-          // 订单状态
-          if(item.dataIndex === "clientLevel"){
-            item.render=(key,row)=>{
-              // 待审核、已激活、已取消、已退回-不可切换状态
-              if(key == '0' || key == '7' || key == '8' || key == '9'){
-                return (
-                  <div>
-                    <Tag color={this.getORDERSCOLOR(key)}>
-                      {this.getORDERSTATUS(key)}
-                    </Tag>
-                  </div>
-                )
-              }else{
-                return (
-                  <div style={{cursor: 'pointer'}}>
-                    <Tag color={this.getORDERSCOLOR(key)}>
-                      {this.getORDERSTATUS(key)}
-                    </Tag>
-                  </div>
-                )
-              }
-            }
-          }
-          // 订单状态(免押宝)
-          if(item.dataIndex === "mianyaStatus"){
-            item.render=(key,row)=>{
-              let type=''
-              if (key === 0) {
-                type ='未授权';
-              } else if(key === 1){
-                type ='已授权';
-              }else if(key === 2){
-                type ='解冻';
-              }else if(key === 3){
-                type ='扣款';
-              }
+
+          // 维护标签
+          if(item.dataIndex === "clientStatus") {
+            item.render = (key, row) => {
+              let r = clientStatus.find(t => t.id == row.clientStatus) || {}
               return (
-                type
+                r.labelName
               )
             }
           }
-          // 机器状态(免押宝)
-          if(item.dataIndex === "machineStatus"){
-            item.render=(key,row)=>{
-              let type=''
-              if (key === 0) {
-                type ='未激活';
-              } else if(key === 1){
-                type ='已激活';
-              }else if(key === 2){
-                type ='已退回';
-              }else if(key === 3){
-                type ='被投诉';
-              }
-              return (
-                type
-              )
-            }
-          }
-          // 订单类型
-          if(item.dataIndex === "orderType"){
-            item.render=(key)=>{
-              return (
-                <div>{this.getORDERTYPE(key)} </div>
-              )
-            }
-          }
-          // 订单来源
-          if(item.dataIndex === "orderSource"){
-            item.render=(key)=> {
-              return (
-                <div>{this.getORDERSOURCE(key)} </div>
-              )
-            }
-          }
-          // 物流状态
-          if(item.dataIndex === "logisticsStatus"){
-            item.render=(key)=>{
-              return (
-                <div>{this.getLogisticsStatusValue(key)} </div>
-              )
-            }
-          }
-          // 签收时间
-          if(tabKey === '5'){
-            // item.defaultSortOrder= 'descend'
-            if(item.dataIndex === "logisticsSigntime"){
-              item.sorter=true
-            }
-          }
-          // 最后跟进时间
-          if(tabKey === '6'){
-            // item.defaultSortOrder= 'descend'
-            if(item.dataIndex === "followTime"){
-              item.sorter=true
-            }
-          }
-          // 激活时间
-          if(tabKey === '7'){
-            // item.defaultSortOrder= 'descend'
-            if(item.dataIndex === "activationSigntime"){
-              item.sorter=true
-            }
-          }
-          // SN
-          if(item.dataIndex === "productCoding"){
-            item.ellipsis=true
-          }
-          // 收货地址
-          if(item.dataIndex === "userAddress"){
-            item.ellipsis=true
+          if(item.dataIndex === "clientStatus") {
+            item.sorter=true
           }
           checked.push(item.dataIndex)
         })
@@ -1750,7 +1646,7 @@ class AllOrdersList extends PureComponent {
       countSice,
       plainOptions,
       checkedOptions,
-      // columns,
+      columns,
       params
     } = this.state;
 
@@ -1771,147 +1667,156 @@ class AllOrdersList extends PureComponent {
         />;
       });
 
-    const columns=[
-      {
-        title: '姓名',
-        dataIndex: 'userName',
-        width: 80,
-        render: (key,row)=>{
-          return (
-            <div className={styles.userName}>
-              {
-                row.expireClaim === '1' ? (<p><span>过期</span></p>):""
-              }
-              <span>{key}</span>
-            </div>
-          )
-        }
-      },
-      {
-        title: '手机号',
-        dataIndex: 'userPhone',
-        width: 100,
-      },
-      {
-        title: '商户号',
-        dataIndex: 'merchants',
-        width: 100,
-      },
-      {
-        title: '商户名',
-        dataIndex: 'merchantName',
-        width: 100,
-      },
-      {
-        title: '产品名称',
-        dataIndex: 'productName',
-        width: 120,
-      },
-      {
-        title: 'SN',
-        dataIndex: 'productCoding',
-        width: 180,
-        ellipsis: true,
-      },
-      {
-        title: '当前阶段',
-        dataIndex: 'clientLevel',
-        width: 100,
-        render: (key,row)=>{
-          let s = row.clientLevel;
-          let r = s ==0 || s == '' || s== null ? '':'阶段'+s;
-          return (
-            r
-          )
-        }
-      },
-      {
-        title: '维护标签',
-        dataIndex: 'clientStatus',
-        width: 80,
-        render: (key,row)=>{
-            let r = clientStatus.find(t => t.id == row.clientStatus) || {}
-            return (
-              r.labelName
-            )
-        }
-      },
-      {
-        title: '交易量',
-        dataIndex: 'recentDealVolume',
-        width: 130
-      },
-      // {
-      //   title: '距离上次跟进',
-      //   dataIndex: 'payAmount',
-      //   width: 80,
-      // },
-      {
-        title: '最新跟进记录',
-        dataIndex: 'followRecords',
-        width: 130,
-        sorter:true,
-      },
-      {
-        title: '激活日期',
-        dataIndex: 'activationSigntime',
-        width: 100,
-      },
-      {
-        title: '操作',
-        key: 'operation',
-        fixed: 'right',
-        width: 250,
-        filterDropdown: ({ confirm, clearFilters }) => (
-          <div style={{ padding: 8 }}>
-            <Tree
-              checkable
-              draggable
-              blockNode
-              selectable={false}
-              onCheck={this.onCheck}
-              checkedKeys={checkedOptions}
-              onDrop={this.onDrop.bind(this)}
-            >
-              {loop(plainOptions)}
-            </Tree>
-            <div>
-              <Button
-                type="primary"
-                size="small"
-                onClick={() => this.handleSubmit(confirm)}
-                style={{ width: "60px", marginRight: "10px" }}
-              >
-                确定
-              </Button>
-              <Button
-                size="small"
-                onClick={() => this.handleReset(clearFilters)}
-                style={{ width: "60px" }}
-              >
-                取消
-              </Button>
-            </div>
-          </div>
-        ),
-        filterIcon: filtered => <Icon type="setting" theme="filled" />,
-        onFilterDropdownVisibleChange: this.onFilterDropdownVisibleChange.bind(
-          this
-        ),
-        render: (text,row) => {
-          return(
-            <div>
-              <a onClick={()=>this.handleDetails(row)}>跟进</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleJournal(row)}>日志</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleDetails(row)}>详情</a>
-            </div>
-          )
-        },
-      },
-    ]
+    // const columns=[
+    //     title: '当前阶段',
+    {/*    dataIndex: 'clientLevel',*/}
+    {/*    width: 100,*/}
+    {/*    render: (key,row)=>{*/}
+    //       let s = row.clientLevel;
+    //       let r = s ==0 || s == '' || s== null ? '':'阶段'+s;
+    //       return (
+    //         r
+    //       )
+    {/*    }*/}
+    //   },
+    //   {
+    {/*    title: '维护标签',*/}
+    {/*    dataIndex: 'clientStatus',*/}
+    {/*    width: 80,*/}
+    {/*    render: (key,row)=>{*/}
+    {/*        let r = clientStatus.find(t => t.id == row.clientStatus) || {}*/}
+    //         return (
+    //           r.labelName
+    //         )
+    //     }
+    //   },
+    //   {
+    //     title: '最新跟进记录',
+    //     dataIndex: 'followRecords',
+    //     width: 130,
+    //     sorter:true,
+    //   },
+    //   {
+    //     title: '操作',
+    //     key: 'operation',
+    //     fixed: 'right',
+    //     width: 250,
+    //     filterDropdown: ({ confirm, clearFilters }) => (
+    //       <div style={{ padding: 8 }}>
+    //         <Tree
+    //           checkable
+    //           draggable
+    //           blockNode
+    //           selectable={false}
+    //           onCheck={this.onCheck}
+    //           checkedKeys={checkedOptions}
+    //           onDrop={this.onDrop.bind(this)}
+    //         >
+    //           {loop(plainOptions)}
+    //         </Tree>
+    //         <div>
+    //           <Button
+    //             type="primary"
+    //             size="small"
+    //             onClick={() => this.handleSubmit(confirm)}
+    //             style={{ width: "60px", marginRight: "10px" }}
+    //           >
+    //             确定
+    //           </Button>
+    //           <Button
+    //             size="small"
+    //             onClick={() => this.handleReset(clearFilters)}
+    //             style={{ width: "60px" }}
+    //           >
+    //             取消
+    //           </Button>
+    //         </div>
+    //       </div>
+    //     ),
+    //     filterIcon: filtered => <Icon type="setting" theme="filled" />,
+    //     onFilterDropdownVisibleChange: this.onFilterDropdownVisibleChange.bind(
+    //       this
+    //     ),
+    //     render: (text,row) => {
+    //       return(
+    //         <div>
+    //           <a onClick={()=>this.handleDetails(row)}>跟进</a>
+    //           <Divider type="vertical" />
+    //           <a onClick={()=>this.handleJournal(row)}>日志</a>
+    //           <Divider type="vertical" />
+    //           <a onClick={()=>this.handleDetails(row)}>详情</a>
+    //         </div>
+    //       )
+    //     },
+    //   },
+    // ]
+    let list=[];
+    columns.map((item, index) => {
+      list.push(item)
+    });
 
+    list.push(
+        {
+          title: '操作',
+          key: 'operation',
+          fixed: 'right',
+          width: 250,
+          filterDropdown: ({ confirm, clearFilters }) => (
+            <div style={{ padding: 8 }}>
+              <Tree
+                checkable
+                draggable
+                blockNode
+                selectable={false}
+                onCheck={this.onCheck}
+                checkedKeys={checkedOptions}
+                onDrop={this.onDrop.bind(this)}
+              >
+                {loop(plainOptions)}
+              </Tree>
+              <div>
+                <Button
+                  type="primary"
+                  size="small"
+                  onClick={() => this.handleSubmit(confirm)}
+                  style={{ width: "60px", marginRight: "10px" }}
+                >
+                  确定
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => this.handleReset(clearFilters)}
+                  style={{ width: "60px" }}
+                >
+                  取消
+                </Button>
+              </div>
+            </div>
+          ),
+          filterIcon: filtered => <Icon type="setting" theme="filled" />,
+          onFilterDropdownVisibleChange: this.onFilterDropdownVisibleChange.bind(
+            this
+          ),
+          render: (text,row) => {
+            return(
+              <div>
+                <a onClick={()=>this.handleDetails(row)}>跟进</a>
+                <Divider type="vertical" />
+                <a onClick={()=>this.handleJournal(row)}>日志</a>
+                <Divider type="vertical" />
+                <a onClick={()=>this.handleDetails(row)}>详情</a>
+              </div>
+            )
+          },
+        }
+    )
+    // const columns = this.state.columns.map((col, index) => ({
+    //   ...col,
+    //   onHeaderCell: column => ({
+    //     width: column.width,
+    //     onResize: this.handleResize(index),
+    //   }),
+    // }));
 
     return (
       <Panel>
@@ -1945,7 +1850,7 @@ class AllOrdersList extends PureComponent {
             renderSearchForm={this.renderSearchForm}
             loading={loading}
             data={data}
-            columns={columns}
+            columns={list}
             scroll={{ x: 1000 }}
             renderLeftButton={()=>this.renderLeftButton(tabKey)}
             // renderRightButton={this.renderRightButton}
@@ -1964,9 +1869,6 @@ class AllOrdersList extends PureComponent {
               clientStatus={clientStatus}
               handleCancelDetails={this.handleCancelDetails}
             >
-              <TabPane tab={`交易量`} key="4">
-                <Transaction/>
-              </TabPane>
             </PopupDetails>
           ):""}
         </div>

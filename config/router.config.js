@@ -647,13 +647,13 @@ export default [
       {
         path: '/client',
         routes: [
-          { path: '/client/allcustomer', component: './Client/Customer/index',key:'allcustomer' },
+          { path: '/client/allcustomer', component: './Client/Customer/index',key:'customer' },
           { path: '/client/customer/add/:type', component: './Client/Customer/add' },
-          { path: '/client/subordinate', component: './Client/Customer/index',key:'subordinate' },
-          { path: '/client/mycustomer', component: './Client/Customer/index',key:'mycustomer' },
-          { path: '/client/allpublic', component: './Client/Customer/index',key:'allpublic' },
-          { path: '/client/subordinatepublic', component: './Client/Customer/index',key:'subordinatepublic' },
-          { path: '/client/mypublic', component: './Client/Customer/index',key:'mypublic' }
+          // { path: '/client/subordinate', component: './Client/Customer/index',key:'subordinate' },
+          // { path: '/client/mycustomer', component: './Client/Customer/index',key:'mycustomer' },
+          { path: '/client/allpublic', component: './Client/Customer/index',key:'public' },
+          // { path: '/client/subordinatepublic', component: './Client/Customer/index',key:'subordinatepublic' },
+          // { path: '/client/mypublic', component: './Client/Customer/index',key:'mypublic' }
         ],
       },
       {

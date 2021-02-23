@@ -45,6 +45,7 @@ import {
 } from '../../../services/newServices/order';
 import {
   getDataInfo,
+  queryCreator,
   deleteData,
   statusOrLevel,
   putPool,
@@ -166,7 +167,9 @@ class AllOrdersList extends PureComponent {
       updateConfirmTagVisible:false,
       confirmTagList:[],
       _listArr:[],
-      organizationTree:[]
+      organizationTree:[],
+
+      createUsers:[]
     };
   }
 
@@ -176,20 +179,8 @@ class AllOrdersList extends PureComponent {
     let type = null;
     const currentUser = getCurrentUser();
     switch (key) {
-      case  'allcustomer': type = 'list';break;//'全部客户',
-      case  'subordinate': type = 'list';
-        // this.props.form.setFieldsValue({
-        //   salesman: currentUser.userId
-        // });
-        break; //'下属客户',
-      case  'mycustomer': type = 'myClient';break; //'我的客户',
-      case  'allpublic': type = 'allPool';break; //'全部公海',
-      case  'subordinatepublic': type = 'allPool';
-        // this.props.form.setFieldsValue({
-        //   salesman: currentUser.userId
-        // });
-        break; //'下属公海',
-      case  'mypublic': type = 'myPool';break; //'我的公海',
+      case  'customer': type = 'list';break;//'全部客户',
+      case  'public': type = 'allPool';break; //'全部公海',
     }
     this.setState({
       routerKey:key,
@@ -199,9 +190,20 @@ class AllOrdersList extends PureComponent {
     this.getTreeList();
     this.currenttree();
     this.getOrderMenuTemplate();
-
+    this.getCreator();
   }
 
+  getCreator(){
+    queryCreator().then(res=>{
+      if(res.success){
+        this.setState({
+          createUsers:res.data
+        })
+      }
+    }).catch(()=>{
+
+    })
+  }
   getTreeList = () => {
     productTreelist().then(res=>{
       this.setState({productList:res.data})
@@ -358,8 +360,13 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, organizationTree,clientLevels,clientStatus } = this.state;
+    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers,routerKey } = this.state;
 
+    let queryType = null;
+    switch (routerKey) {
+      case  'customer': queryType = '1';break;//'全部客户',
+      case  'public': queryType = '2';break; //'全部公海',
+    }
     console.log(clientLevels)
     return (
       <div className={"default_search_form"}>
@@ -395,31 +402,35 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="所属组织">
-          {getFieldDecorator('organizationId', {
-          })(
-            <TreeSelect
-              style={{ width: 200 }}
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              onChange={this.changeGroup}
-              treeData={organizationTree}
-              allowClear
-              showSearch
-              treeNodeFilterProp="title"
-              placeholder="请选择所属组织"
-            />
-          )}
-        </Form.Item>
-        <Form.Item label="销售">
-          {getFieldDecorator('salesman', {
-          })(
-            <Select placeholder={"请选择销售"} style={{ width: 200 }}>
-              {salesmanList.map((item,index)=>{
-                return (<Option key={index} value={item.value}>{item.key}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
+        {queryType == '1'?(
+          <Form.Item label="所属组织">
+            {getFieldDecorator('organizationId', {
+            })(
+              <TreeSelect
+                style={{ width: 200 }}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                onChange={this.changeGroup}
+                treeData={organizationTree}
+                allowClear
+                showSearch
+                treeNodeFilterProp="title"
+                placeholder="请选择所属组织"
+              />
+            )}
+          </Form.Item>
+        ):''}
+        {queryType == '1'?(
+          <Form.Item label="销售">
+            {getFieldDecorator('salesman', {
+            })(
+              <Select placeholder={"请选择销售"} style={{ width: 200 }}>
+                {salesmanList.map((item,index)=>{
+                  return (<Option key={index} value={item.value}>{item.key}</Option>)
+                })}
+              </Select>
+            )}
+          </Form.Item>
+        ):''}
         <Form.Item label="省市区">
           {getFieldDecorator('cityparam', {
           })(
@@ -444,7 +455,13 @@ class AllOrdersList extends PureComponent {
           </Form.Item>
           <Form.Item label="创建人">
             {getFieldDecorator('createUser',{
-            })(<Input placeholder="请输入创建人" />)}
+            })(
+              <Select placeholder={"请选择创建人"} style={{ width: 200 }}>
+                {createUsers.map((item,index)=>{
+                  return (<Option key={index} value={item.account}>{item.name}</Option>)
+                })}
+              </Select>
+            )}
           </Form.Item>
           <div style={{ float: 'right' }}>
             <Button type="primary" htmlType="submit">
@@ -655,12 +672,8 @@ class AllOrdersList extends PureComponent {
     let {routerKey} = this.state;
     let key = null;
     switch (routerKey) {
-      case  'allcustomer': key = 1;break;//'全部客户',
-      case  'subordinate': key = 1;break; //'下属客户',
-      case  'mycustomer': key = 1;break; //'我的客户',
-      case  'allpublic': key = 2;break; //'全部公海',
-      case  'subordinatepublic': key = 2;break; //'下属公海',
-      case  'mypublic': key = 2;break; //'我的公海',
+      case  'customer': key = 1;break;//'全部客户',
+      case  'public': key = 2;break; //'全部公海',
     }
 
     return (
@@ -1110,12 +1123,8 @@ class AllOrdersList extends PureComponent {
 
     let queryType = null;
     switch (routerKey) {
-      case  'allcustomer': queryType = '1';break;//'全部客户',
-      case  'subordinate': queryType = '1';break; //'下属客户',
-      case  'mycustomer': queryType = '1';break; //'我的客户',
-      case  'allpublic': queryType = '2';break; //'全部公海',
-      case  'subordinatepublic': queryType = '2';break; //'下属公海',
-      case  'mypublic': queryType = '2';break; //'我的公海',
+      case  'customer': queryType = '1';break;//'全部客户',
+      case  'public': queryType = '2';break; //'全部公海',
     }
 
     let columns=[
