@@ -123,7 +123,6 @@ class AllOrdersList extends PureComponent {
       },
       tabKey:sessionStorage.executiveOrderTabKey ? sessionStorage.executiveOrderTabKey : '0',
       selectedRows:[],
-      productList:[],
       // 导出
       exportVisible:false,
       // 转移客户
@@ -190,7 +189,6 @@ class AllOrdersList extends PureComponent {
       queryUrlKey:type,
     })
     this.getLabels();
-    this.getTreeList();
     this.currenttree();
     this.getOrderMenuTemplate();
     this.getCreator();
@@ -205,11 +203,6 @@ class AllOrdersList extends PureComponent {
       }
     }).catch(()=>{
 
-    })
-  }
-  getTreeList = () => {
-    productTreelist().then(res=>{
-      this.setState({productList:res.data})
     })
   }
 
