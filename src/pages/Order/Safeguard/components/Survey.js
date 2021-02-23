@@ -13,28 +13,18 @@ import {
   Dropdown,
   Menu,
   Select,
-  DatePicker,
-  Tabs,
-  Cascader,
-  Radio,
   Timeline,
   Descriptions,
 } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import styles from './edit.less';
-import { updateData } from '../../../../services/newServices/order';
-import {followupdate,followway,phrase} from '../../../../services/order/ordermaintenance'
-import {ORDERSTATUS} from './data'
-import LogisticsDetails from './LogisticsDetails'
+import {followupdate,followway,phrase,updateData} from '../../../../services/order/ordermaintenance'
 import ReminderTimes from './time'
 import EditTime from './editTime'
-import Panel from '@/components/Panel';
 
 
-const FormItem = Form.Item;
 const { TextArea } = Input;
-const { TabPane } = Tabs;
 const { confirm } = Modal;
 
 @connect(({ globalParameters}) => ({
@@ -58,20 +48,17 @@ class Survey extends PureComponent {
       },
       describe:"",
       followType:'',
-      orderType:[
-
-      ],
       followRecords:[],
       reminderTime:"",
       reminderTimeVisible:false,
-      logisticsDetailsVisible:false,
       editTimeVisible:false,
       timeIndex:"",
       editReminderTimes:"",
 
       followways:[],
       isPhrase:false,
-      phrases:[]
+      phrases:[],
+      transactionRecords:[]
     };
   }
 
@@ -95,24 +82,16 @@ class Survey extends PureComponent {
       list = JSON.parse(nex.detail.followRecords).list
     }
 
+    let d = nex.detail.transactionRecords;
+    let list1 = [];
+    if(d && JSON.parse(d).list){
+      list1 = JSON.parse(d).list
+    }
+
     this.setState({
       detail:nex.detail,
-      followRecords:list
-    })
-
-    let _type = ORDERSTATUS.map(item=>{
-      let _item = {...item}
-      if(Number(item.key) <= Number(nex.detail.confirmTag)){
-        _item.className = "clolor"
-      }else{
-        _item.className = ""
-      }
-
-      return _item
-    })
-
-    this.setState({
-      orderType:_type
+      followRecords:list,
+      transactionRecords:list1
     })
 
   }
@@ -120,7 +99,6 @@ class Survey extends PureComponent {
   // 修改时间
 
   handleediTtime = (index,reminderTime) => {
-    console.log(index,"index")
     this.setState({
       editTimeVisible:true,
       timeIndex:index,
@@ -194,30 +172,11 @@ class Survey extends PureComponent {
       })
   };
   handleChange(val){
+    console.log(val)
     this.setState({
       followType:val
     })
   }
-
-  // 物流详情窗口
-
-  handleDetails = () => {
-    const { dispatch } = this.props;
-    const {detail} = this.state;
-    dispatch({
-      type: `globalParameters/setDetailData`,
-      payload: detail,
-    });
-    this.setState({
-      logisticsDetailsVisible:true
-    })
-  };
-
-  handleLogisticsDetails = () => {
-    this.setState({
-      logisticsDetailsVisible:false
-    })
-  };
 
   handleEmpty = () => {
     this.setState({
@@ -227,7 +186,7 @@ class Survey extends PureComponent {
 };
 
   handleSubmit = () => {
-    const { detail , describe,followType, reminderTime } = this.state;
+    const { detail , describe,followType, reminderTime,phrase } = this.state;
     let { followRecords } = this.state;
     if(describe === ""){
       return message.error("请输入跟进内容");
@@ -235,7 +194,8 @@ class Survey extends PureComponent {
     let param = {
       userName:detail.userName,
       describe,
-      followType:followType,
+      followway:followType,
+      phrase:phrase,
       createTime:moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
       type:reminderTime === "" ? "1" : "2",// 1是跟进-2提醒时间，
       reminderTime
@@ -322,7 +282,8 @@ class Survey extends PureComponent {
   }
   setDescribe(val){
     this.setState({
-      describe:val
+      describe:val,
+      phrase:val
     })
   }
 
@@ -346,22 +307,16 @@ class Survey extends PureComponent {
     } = this.props;
 
     const {
-      data,
-      loading,
       detail,
-      edit,
       describe,
       followRecords,
-      orderType,
       reminderTimeVisible,
       reminderTime,
       editTimeVisible,
       editReminderTimes,
-      logisticsDetailsVisible,
       followways,
       phrases,
-      // offsetLeftDistance,
-      isPhrase
+      transactionRecords
     } = this.state;
     console.log(followRecords,"followRecords")
 
@@ -402,13 +357,13 @@ class Survey extends PureComponent {
             <Col span={6}>
               <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
                 <div style={{fontWeight:'bold'}}>交易次数</div>
-                <div>次</div>
+                <div>{transactionRecords.length}次</div>
               </Card>
             </Col>
             <Col span={6}>
               <Card bordered={true} style={{lineHeight:'30px'}}>
                 <div style={{fontWeight:'bold'}}>距离上次跟进</div>
-                <div></div>
+                <div>{detail.followTime}</div>
               </Card>
             </Col>
           </Row>
@@ -452,7 +407,7 @@ class Survey extends PureComponent {
           // }}
         >
           <div style={{margin:'5px'}}>
-            <Select placeholder={"选择跟进方式"} onChange={()=>this.handleChange} style={{ width: 200,paddingRight:'5px' }}>
+            <Select placeholder={"选择跟进方式"} onSelect={(v)=>this.handleChange(v)} style={{ width: 200,paddingRight:'5px' }}>
               {followways.map((item,index)=>{
                 return (<Select.Option key={index} value={item}>{item}</Select.Option>)
               })}
@@ -497,13 +452,6 @@ class Survey extends PureComponent {
           <ReminderTimes
             reminderTimeVisible={reminderTimeVisible}
             handleReminderTimeBack={this.handleReminderTimeBack}
-          />
-        ):""}
-      {/* 物流详情 */}
-        {logisticsDetailsVisible?(
-          <LogisticsDetails
-            logisticsDetailsVisible={logisticsDetailsVisible}
-            handleLogisticsDetails={this.handleLogisticsDetails}
           />
         ):""}
         {editTimeVisible?(
