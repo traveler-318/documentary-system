@@ -179,20 +179,8 @@ class AllOrdersList extends PureComponent {
     let type = null;
     const currentUser = getCurrentUser();
     switch (key) {
-      case  'allcustomer': type = 'list';break;//'全部客户',
-      case  'subordinate': type = 'list';
-        // this.props.form.setFieldsValue({
-        //   salesman: currentUser.userId
-        // });
-        break; //'下属客户',
-      case  'mycustomer': type = 'myClient';break; //'我的客户',
-      case  'allpublic': type = 'allPool';break; //'全部公海',
-      case  'subordinatepublic': type = 'allPool';
-        // this.props.form.setFieldsValue({
-        //   salesman: currentUser.userId
-        // });
-        break; //'下属公海',
-      case  'mypublic': type = 'myPool';break; //'我的公海',
+      case  'customer': type = 'list';break;//'全部客户',
+      case  'public': type = 'allPool';break; //'全部公海',
     }
     this.setState({
       routerKey:key,
@@ -376,12 +364,8 @@ class AllOrdersList extends PureComponent {
 
     let queryType = null;
     switch (routerKey) {
-      case  'allcustomer': queryType = '1';break;//'全部客户',
-      case  'subordinate': queryType = '1';break; //'下属客户',
-      case  'mycustomer': queryType = '1';break; //'我的客户',
-      case  'allpublic': queryType = '2';break; //'全部公海',
-      case  'subordinatepublic': queryType = '2';break; //'下属公海',
-      case  'mypublic': queryType = '2';break; //'我的公海',
+      case  'customer': queryType = '1';break;//'全部客户',
+      case  'public': queryType = '2';break; //'全部公海',
     }
     console.log(clientLevels)
     return (
@@ -688,12 +672,8 @@ class AllOrdersList extends PureComponent {
     let {routerKey} = this.state;
     let key = null;
     switch (routerKey) {
-      case  'allcustomer': key = 1;break;//'全部客户',
-      case  'subordinate': key = 1;break; //'下属客户',
-      case  'mycustomer': key = 1;break; //'我的客户',
-      case  'allpublic': key = 2;break; //'全部公海',
-      case  'subordinatepublic': key = 2;break; //'下属公海',
-      case  'mypublic': key = 2;break; //'我的公海',
+      case  'customer': key = 1;break;//'全部客户',
+      case  'public': key = 2;break; //'全部公海',
     }
 
     return (
@@ -1143,12 +1123,8 @@ class AllOrdersList extends PureComponent {
 
     let queryType = null;
     switch (routerKey) {
-      case  'allcustomer': queryType = '1';break;//'全部客户',
-      case  'subordinate': queryType = '1';break; //'下属客户',
-      case  'mycustomer': queryType = '1';break; //'我的客户',
-      case  'allpublic': queryType = '2';break; //'全部公海',
-      case  'subordinatepublic': queryType = '2';break; //'下属公海',
-      case  'mypublic': queryType = '2';break; //'我的公海',
+      case  'customer': queryType = '1';break;//'全部客户',
+      case  'public': queryType = '2';break; //'全部公海',
     }
 
     let columns=[

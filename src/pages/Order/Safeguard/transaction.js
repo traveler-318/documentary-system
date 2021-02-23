@@ -1,20 +1,38 @@
 import {
-  Table
+  Form,
+  Table,
 } from 'antd';
 import React, { PureComponent } from 'react';
+import { connect } from 'dva';
 
+@connect(({ globalParameters}) => ({
+  globalParameters,
+}))
+@Form.create()
 class Transaction extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
+      transactionRecords:[]
     };
   }
 
   // 页面构建
   componentWillMount() {
+    let d = this.props.detail.transactionRecords;
+    let list = [];
+    if(d && JSON.parse(d).list){
+      list = JSON.parse(d).list
+    }
+
+    console.log(list)
+    this.setState({
+      transactionRecords:list
+    })
 
   }
+
 
   // getTreeList = () => {
   //   productTreelist().then(res=>{
@@ -24,22 +42,32 @@ class Transaction extends PureComponent {
 
   render() {
 
+    const { transactionRecords } = this.state;
     const columns = [
       {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        render: text => <a>{text}</a>,
+        title: 'SN',
+        dataIndex: 'productCoding',
+        key: 'productCoding',
       },
       {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
+        title: '商户号',
+        dataIndex: 'merchants',
+        key: 'merchants',
       },
       {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
+        title: '商户名称',
+        dataIndex: 'merchantName',
+        key: 'merchantName',
+      },
+      {
+        title: '交易金额',
+        dataIndex: 'amount',
+        key: 'amount',
+      },
+      {
+        title: '交易时间',
+        dataIndex: 'tradingHours',
+        key: 'tradingHours',
       }
     ];
 
@@ -68,7 +96,7 @@ class Transaction extends PureComponent {
     ];
 
     return (
-      <Table columns={columns} dataSource={data} pagination={false}/>
+      <Table columns={columns} dataSource={transactionRecords} pagination={false}/>
     );
   }
 }
