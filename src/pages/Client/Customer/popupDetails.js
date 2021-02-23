@@ -418,28 +418,28 @@ class OrdersEdit extends PureComponent {
                         changeDetails={this.changeDetails}
                       />
                     </TabPane>
-                    <TabPane tab={`维护(${orderListLength})`} key="3">
+                    <TabPane tab={`维护(0)`} key="3">
                       {/*<OrderListNew*/}
                       {/*  detail={detail}*/}
                       {/*  orderDetail={orderDetail}*/}
                       {/*  changeDetails={this.changeDetails}*/}
                       {/*/>*/}
                     </TabPane>
-                    <TabPane tab={`联系人(${orderListLength})`} key="4">
+                    <TabPane tab={`联系人(0)`} key="4">
                       {/*<OrderListNew*/}
                       {/*  detail={detail}*/}
                       {/*  orderDetail={orderDetail}*/}
                       {/*  changeDetails={this.changeDetails}*/}
                       {/*/>*/}
                     </TabPane>
-                    <TabPane tab={`工单(${orderListLength})`} key="5">
-                      <OrderListNew
-                        detail={detail}
-                        orderDetail={orderDetail}
-                        changeDetails={this.changeDetails}
-                      />
+                    <TabPane tab={`工单(0)`} key="5">
+                      {/*<OrderListNew*/}
+                        {/*detail={detail}*/}
+                        {/*orderDetail={orderDetail}*/}
+                        {/*changeDetails={this.changeDetails}*/}
+                      {/*/>*/}
                     </TabPane>
-                    <TabPane tab={`归属(${orderListLength})`} key="6">
+                    <TabPane tab={`归属(0)`} key="6">
                       {/*<OrderListNew*/}
                       {/*  detail={detail}*/}
                       {/*  orderDetail={orderDetail}*/}
@@ -447,11 +447,11 @@ class OrdersEdit extends PureComponent {
                       {/*/>*/}
                     </TabPane>
                     <TabPane tab={`日志`} key="7">
-                      <OrderListNew
-                        detail={detail}
-                        orderDetail={orderDetail}
-                        changeDetails={this.changeDetails}
-                      />
+                      {/*<OrderListNew*/}
+                        {/*detail={detail}*/}
+                        {/*orderDetail={orderDetail}*/}
+                        {/*changeDetails={this.changeDetails}*/}
+                      {/*/>*/}
                     </TabPane>
                   </Tabs>
                 </div>
