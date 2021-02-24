@@ -60,6 +60,11 @@ class Transaction extends PureComponent {
         key: 'merchantName',
       },
       {
+        title: '交易金额',
+        dataIndex: 'amount',
+        key: 'amount',
+      },
+      {
         title: '交易时间',
         dataIndex: 'tradingHours',
         key: 'tradingHours',

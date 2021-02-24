@@ -10,7 +10,7 @@ import styles from '../../../layouts/Sword.less';
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
 import { getLabelList } from '../../../services/user';
-import SalesSelect from '@/pages/Client/Customer/components/salesSelect';
+import SalesSelect from './components/salesSelect';
 import {
   createData
 }from '../../../services/order/customer';
@@ -18,6 +18,7 @@ import {
   CLIENTTYPE,
 } from './data.js';
 import func from '@/utils/Func';
+import { getList as getSalesmanLists } from '../../../services/newServices/sales';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -38,7 +39,7 @@ class CustomerAdd extends PureComponent {
       isTaskTypeBox:false,
       clientLevels:[],//客户级别数组
       clientStatus:[],//客户等级数组
-
+      salesmanList:[],
       loading:false,
       cityparam:{},
       selectedOptions:[]
@@ -52,7 +53,7 @@ class CustomerAdd extends PureComponent {
       case '1':backUrl = '/client/allcustomer';break;
       default:backUrl = '/client/mycustomer';break;
     }
-
+    this.getSalesmanList()
     this.getLabels();
   }
 
@@ -88,12 +89,22 @@ class CustomerAdd extends PureComponent {
     }
   }
 
+  // 获取业务员数据
+  getSalesmanList = () => {
+    getSalesmanLists({size:100,current:1}).then(res=>{
+      this.setState({
+        salesmanList:res.data.records
+      })
+    })
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
     const { cityparam, selectedOptions} = this.state;
 
     form.validateFieldsAndScroll((err, values) => {
+      console.log(values)
       if (!err) {
         values.deptId = getCookie("dept_id");
         values.tenantId = getCookie("tenantId");
@@ -148,7 +159,7 @@ class CustomerAdd extends PureComponent {
     } = this.props;
 
     const {
-      loading,clientStatus,clientLevels
+      loading,clientStatus,clientLevels,salesmanList
     } = this.state;
 
     const formLeftItemLayout = {
@@ -267,7 +278,11 @@ class CustomerAdd extends PureComponent {
                       { required: true, message: '请选择归属销售' },
                     ],
                   })(
-                    <SalesSelect/>
+                    <Select placeholder={"请选择销售"}>
+                      {salesmanList.map(item=>{
+                        return (<Select.Option value={item.userAccount}>{item.userName}</Select.Option>)
+                      })}
+                    </Select>
                   )}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="下次跟进时间">
