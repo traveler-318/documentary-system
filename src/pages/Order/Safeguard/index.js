@@ -1211,7 +1211,7 @@ class AllOrdersList extends PureComponent {
           title: '操作',
           key: 'operation',
           fixed: 'right',
-          width: 250,
+          width: 90,
           filterDropdown: ({ confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
               <Tree
@@ -1258,8 +1258,8 @@ class AllOrdersList extends PureComponent {
           render: (text,row) => {
             return(
               <div>
-                <a onClick={()=>this.handleDetails(row)}>跟进</a>
-                <Divider type="vertical" />
+                {/*<a onClick={()=>this.handleDetails(row)}>跟进</a>*/}
+                {/*<Divider type="vertical" />*/}
                 {/*<a onClick={()=>this.handleJournal(row)}>日志</a>*/}
                 {/*<Divider type="vertical" />*/}
                 <a onClick={()=>this.handleDetails(row)}>详情</a>
