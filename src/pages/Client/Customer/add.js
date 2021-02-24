@@ -109,7 +109,7 @@ class CustomerAdd extends PureComponent {
         values.deptId = getCookie("dept_id");
         values.tenantId = getCookie("tenantId");
         values = {...values,...cityparam};
-        values.clientAddress = `${selectedOptions}${values.clientAddress}`;
+        values.clientAddress = values.clientAddress ? `${selectedOptions}${values.clientAddress}`:'';
         values.nextFollowTime = func.format(values.nextFollowTime),
         console.log(values,"提交数据")
         createData(values).then(res=>{
