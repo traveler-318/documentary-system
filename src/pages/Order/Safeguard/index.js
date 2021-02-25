@@ -30,6 +30,7 @@ import { Resizable } from 'react-resizable';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import Update from '@/pages/Order/Safeguard/update';
+import UpdateStatus from '@/pages/Order/Safeguard/components/updateStatus';
 import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY, LOGISTICSSTATUS } from './data.js';
@@ -123,6 +124,7 @@ class AllOrdersList extends PureComponent {
       selectedRows:[],
       productList:[],
       isUpdate:false,
+      isUpdateStatus:false,
       // 导出
       exportVisible:false,
       // 转移客户
@@ -520,7 +522,33 @@ class AllOrdersList extends PureComponent {
     this.setState({
       isUpdate:false
     })
+    this.getDataList()
   }
+
+  //标签变更
+  statusUpdate = () => {
+    const {selectedRows} = this.state;
+
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+    const { dispatch } = this.props;
+    dispatch({
+      type: `globalParameters/setDetailData`,
+      payload: selectedRows[0],
+    });
+
+    this.setState({
+      isUpdateStatus:true
+    })
+  }
+  statusUpdateCancel = () =>{
+    this.setState({
+      isUpdateStatus:false
+    })
+    this.getDataList()
+  }
+
   // 导出
   exportFile = () => {
     const {params}=this.state;
@@ -555,7 +583,11 @@ class AllOrdersList extends PureComponent {
             <Button
               icon="menu-unfold"
               onClick={this.flowUpdate}
-            >流程变更</Button>
+            >阶段变更</Button>
+            <Button
+              icon="menu-unfold"
+              onClick={this.statusUpdate}
+            >标签变更</Button>
             <Button
               icon="message"
               onClick={this.batchReminders}
@@ -1165,6 +1197,7 @@ class AllOrdersList extends PureComponent {
       journalVisible,
       SMSVisible,
       isUpdate,
+      isUpdateStatus,
       smsList,
       voice,
       journalList,
@@ -1352,6 +1385,10 @@ class AllOrdersList extends PureComponent {
           <Update isUpdate={isUpdate} handleCancel={this.flowUpdateCancel}>
 
           </Update>
+        ):''}
+
+        {isUpdateStatus?(
+          <UpdateStatus isUpdate={isUpdateStatus} clientStatus={clientStatus} handleCancel={this.statusUpdateCancel}/>
         ):''}
 
         {/* 导出 */}

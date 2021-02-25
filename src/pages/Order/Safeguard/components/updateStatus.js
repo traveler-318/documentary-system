@@ -3,7 +3,7 @@ import {
   Table,
 } from 'antd';
 import React, { PureComponent } from 'react';
-import {getProductDetail,processupdate} from '../../../services/order/ordermaintenance'
+import {updateData} from '../../../../services/order/ordermaintenance'
 import { connect } from 'dva';
 
 const FormItem = Form.Item;
@@ -12,7 +12,7 @@ const FormItem = Form.Item;
   globalParameters,
 }))
 @Form.create()
-class Update extends PureComponent {
+class UpdateStatus extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -27,21 +27,8 @@ class Update extends PureComponent {
 
     const { globalParameters } = this.props;
     const propData = globalParameters.detailData;
-    this.queryDetail(propData.productId);
-  }
-
-  queryDetail(id){
-    // id = 19;//需删除
-    getProductDetail({
-      id:id
-    }).then(res=>{
-      if(res.success){
-        let d = res.data;
-        this.setState({
-          detail:d,
-          customs:[d.customOne,d.customTwo]
-        })
-      }
+    this.setState({
+      detail:propData
     })
   }
   handleSubmit = () => {
@@ -49,9 +36,9 @@ class Update extends PureComponent {
     const { detail} = this.state;
     form.validateFieldsAndScroll((err, values) => {
       values.id = detail.id;
-      values.clientLevel = values.clientLevel || 0;
+      values.clientStatus = values.clientStatus || detail.clientStatus;
       if (!err) {
-        processupdate(values).then(res=>{
+        updateData(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
             this.props.handleCancel()
@@ -81,9 +68,13 @@ class Update extends PureComponent {
       },
     };
 
+    const clientStatus = this.props.clientStatus;
+    let r = clientStatus.find(t => t.id == detail.clientStatus) || {}
+    const clientStatusName = r.labelName;
+
     return (
       <Modal
-        title="阶段变更"
+        title="标签变更"
         visible={this.props.isUpdate}
         maskClosable={false}
         destroyOnClose
@@ -99,13 +90,13 @@ class Update extends PureComponent {
         ]}
       >
         <Form>
-          <FormItem {...formAllItemLayout} label="阶段">
-            {getFieldDecorator('clientLevel', {
-              initialValue:detail.clientLevel,
+          <FormItem {...formAllItemLayout} label="标签">
+            {getFieldDecorator('clientStatus', {
+              initialValue:clientStatusName,
             })(
-              <Select placeholder={"请选择阶段"}>
-                {customs.map(item=>{
-                  return (<Select.Option value={item}>{item}</Select.Option>)
+              <Select placeholder={"请选择阶段"} >
+                {clientStatus.map(item=>{
+                  return (<Select.Option value={item.id}>{item.labelName}</Select.Option>)
                 })}
               </Select>
             )}
@@ -116,4 +107,4 @@ class Update extends PureComponent {
   }
 }
 
-export default Update;
+export default UpdateStatus;
