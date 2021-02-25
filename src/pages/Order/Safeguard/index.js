@@ -397,19 +397,19 @@ class AllOrdersList extends PureComponent {
           )}
         </Form.Item>
         <div>
-          <Form.Item label="下单时间">
+          <Form.Item label="时间类型">
+            {getFieldDecorator('timeType', {
+            })(
+              <Select placeholder={"时间类型"} style={{ width: 130 }}>
+                <Option key={2} value={2}>跟进时间</Option>
+                <Option key={1} value={1}>激活时间</Option>
+              </Select>
+            )}
+          </Form.Item>
+          <Form.Item label="时间范围">
             {getFieldDecorator('dateRange', {
             })(
               <RangePicker showTime size={"default"} />
-            )}
-          </Form.Item>
-          <Form.Item>
-            {getFieldDecorator('timeType', {
-            })(
-            <Radio.Group>
-              <Radio value={2}>跟进时间</Radio>
-              <Radio value={1}>激活时间</Radio>
-            </Radio.Group>
             )}
           </Form.Item>
           <div style={{ float: 'right' }}>
