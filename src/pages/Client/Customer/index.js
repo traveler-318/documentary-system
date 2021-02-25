@@ -1168,12 +1168,7 @@ class AllOrdersList extends PureComponent {
         dataIndex: 'clientLevel',
         width: 110,
         sorter: (a, b) => a.clientLevel.length - b.clientLevel.length,
-        sortDirections: ['descend', 'ascend'],
-        render: (key) => {
-          return({
-            key
-          })
-        },
+        sortDirections: ['descend', 'ascend']
       },
       {
         title: '客户状态',
