@@ -233,8 +233,6 @@ class AllOrdersList extends PureComponent {
   getSalesmanList = (value = "all_all") => {
     getCurrentsalesman(value).then(res=>{
 
-      console.log(res,"!!!!!!!!!!!!!!!")
-
       if(res.code === 200){
         res.data.unshift({key:'全部',value:''});
         this.setState({
@@ -1170,12 +1168,7 @@ class AllOrdersList extends PureComponent {
         dataIndex: 'clientLevel',
         width: 110,
         sorter: (a, b) => a.clientLevel.length - b.clientLevel.length,
-        sortDirections: ['descend', 'ascend'],
-        render: (key) => {
-          return({
-            key
-          })
-        },
+        sortDirections: ['descend', 'ascend']
       },
       {
         title: '客户状态',
