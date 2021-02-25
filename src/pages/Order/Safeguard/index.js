@@ -171,9 +171,9 @@ class AllOrdersList extends PureComponent {
 
     this.getTreeList();
     this.currenttree();
+    this.getLabels();
     this.getOrderMenuHead();
     this.getOrderMenuTemplate();
-    this.getLabels();
 
   }
 
@@ -1116,7 +1116,6 @@ class AllOrdersList extends PureComponent {
 
   // 菜单列表头获取
   getOrderMenuHead = () => {
-    const { clientStatus }=this.state;
     orderMenuHead(1).then(resp=>{
       if(resp.code === 200){
         const list=resp.data.menuJson;
@@ -1137,7 +1136,8 @@ class AllOrdersList extends PureComponent {
           // 维护标签
           if(item.dataIndex === "clientStatus") {
             item.render = (key, row) => {
-              let r = clientStatus.find(t => t.id == row.clientStatus) || {}
+              const { clientStatus }=this.state;
+              let r = clientStatus.find(t => t.id+'' == row.clientStatus) || {}
               return (
                 r.labelName
               )
