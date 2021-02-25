@@ -220,10 +220,10 @@ class AuthorityList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: res,
     });
-    const {handleAggregateCodeVisible}=this.state
-    console.log(handleAggregateCodeVisible)
+    const {handleAggregateCodeVisible}=this.state;
     this.setState({
       handleAggregateCodeVisible:true
+
     })
   };
 // =========关闭聚合码弹窗========
