@@ -36,7 +36,6 @@ class UpdateStatus extends PureComponent {
     const { detail} = this.state;
     form.validateFieldsAndScroll((err, values) => {
       values.id = detail.id;
-      values.clientStatus = values.clientStatus || detail.clientStatus;
       if (!err) {
         updateData(values).then(res=>{
           if(res.code === 200){
@@ -69,8 +68,6 @@ class UpdateStatus extends PureComponent {
     };
 
     const clientStatus = this.props.clientStatus;
-    let r = clientStatus.find(t => t.id == detail.clientStatus) || {}
-    const clientStatusName = r.labelName;
 
     return (
       <Modal
@@ -92,11 +89,11 @@ class UpdateStatus extends PureComponent {
         <Form>
           <FormItem {...formAllItemLayout} label="标签">
             {getFieldDecorator('clientStatus', {
-              initialValue:clientStatusName,
+              initialValue:detail.clientStatus,
             })(
               <Select placeholder={"请选择阶段"} >
                 {clientStatus.map(item=>{
-                  return (<Select.Option value={item.id}>{item.labelName}</Select.Option>)
+                  return (<Select.Option value={item.id+''}>{item.labelName}</Select.Option>)
                 })}
               </Select>
             )}

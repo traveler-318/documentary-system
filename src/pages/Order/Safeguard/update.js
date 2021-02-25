@@ -27,6 +27,9 @@ class Update extends PureComponent {
 
     const { globalParameters } = this.props;
     const propData = globalParameters.detailData;
+    this.setState({
+      detail:propData
+    })
     this.queryDetail(propData.productId);
   }
 
@@ -38,8 +41,7 @@ class Update extends PureComponent {
       if(res.success){
         let d = res.data;
         this.setState({
-          detail:d,
-          customs:[d.customOne,d.customTwo]
+          customs:[d.customOne,d.customTwo,d.customThree]
         })
       }
     })
@@ -104,8 +106,9 @@ class Update extends PureComponent {
               initialValue:detail.clientLevel,
             })(
               <Select placeholder={"请选择阶段"}>
-                {customs.map(item=>{
-                  return (<Select.Option value={item}>{item}</Select.Option>)
+                <Select.Option value={'0'} disabled={true}>无</Select.Option>
+                {customs.map((item,i)=>{
+                  return (<Select.Option value={(i+1)+''}>{item}</Select.Option>)
                 })}
               </Select>
             )}
