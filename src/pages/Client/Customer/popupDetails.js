@@ -6,9 +6,10 @@ import styles from '../../Order/components/edit.less';
 import {
   updateReminds
 } from '../../../services/newServices/order';
-import {getDetail,updateData,clientOrder} from '../../../services/order/customer';
+import {getDetail,updateData,clientOrder,clientOperationRecord} from '../../../services/order/customer';
 import TabTrends from '@/pages/Client/Customer/components/tabTrends';
 import OrderListNew from './components/OrderListNew';
+import Ownership from './components/Ownership';
 import CustomerDetail from '@/pages/Client/Customer/components/detail';
 
 import func from '@/utils/Func';
@@ -99,6 +100,21 @@ class OrdersEdit extends PureComponent {
           pageSize:data.size,
         },
         orderListLength:data.total
+      })
+    })
+
+    //查询归属总条数
+    clientOperationRecord({
+      clientId:detail.id,
+      deptId:detail.deptId,
+      tenantId:detail.tenantId,
+      type:0,
+      size:1,
+      current:1
+    }).then(res=>{
+      const data = res.data;
+      this.setState({
+        clientOperationRecordLength:data.total
       })
     })
   }
@@ -247,6 +263,7 @@ class OrdersEdit extends PureComponent {
       detail,
       edit,
       orderListLength,
+      clientOperationRecordLength,
       primary,
       primary1
     } = this.state;
@@ -343,12 +360,8 @@ class OrdersEdit extends PureComponent {
                         {/*changeDetails={this.changeDetails}*/}
                       {/*/>*/}
                     </TabPane>
-                    <TabPane tab={`归属(0)`} key="6">
-                      {/*<OrderListNew*/}
-                      {/*  detail={detail}*/}
-                      {/*  orderDetail={orderDetail}*/}
-                      {/*  changeDetails={this.changeDetails}*/}
-                      {/*/>*/}
+                    <TabPane tab={`归属(${clientOperationRecordLength})`} key="6">
+                      <Ownership detail={detail}/>
                     </TabPane>
                     <TabPane tab={`日志`} key="7">
                       {/*<OrderListNew*/}

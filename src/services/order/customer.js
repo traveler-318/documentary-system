@@ -119,4 +119,10 @@ export async function clientOrder(params) {
     body: params,
   });
 }
-
+//客户归属日志
+export async function clientOperationRecord(params) {
+  return request(`/api/client_operation_record/record/list`, {
+    method: 'POST',
+    body: params,
+  });
+}
