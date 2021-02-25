@@ -74,7 +74,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-
+const { RangePicker } = DatePicker;
 
 let modal;
 
@@ -295,21 +295,28 @@ class AllOrdersList extends PureComponent {
   handleSearch = (params) => {
     console.log(params,"查询参数")
     const { salesmanList,cityparam } = this.state;
-
+    const { createTime,followTime } = params;
     let payload = {};
+
     if(params.cityparam){
       payload = {
         ...params,
-        ...cityparam
+        ...cityparam,
+
       };
     }else{
       payload = {
         ...params
       };
     }
-
-    if(payload.createTime)payload.createTime = func.format(payload.createTime, dateFormat)
-    if(payload.followTime)payload.followTime = func.format(payload.followTime, dateFormat)
+    if(payload.createTime){
+      payload.createTime= createTime ? func.format(createTime[0], dateFormat) : null
+      payload.endTime= createTime ? func.format(createTime[1], dateFormat) : null
+    }
+    if(payload.followTime){
+      payload.followTime= createTime ? func.format(followTime[0], dateFormat) : null
+      payload.followEndTime= createTime ? func.format(followTime[1], dateFormat) : null
+    }
 
     if(payload.organizationId && payload.organizationId === ""){
       payload.organizationId = null;
@@ -438,13 +445,13 @@ class AllOrdersList extends PureComponent {
           <Form.Item label="创建时间">
             {getFieldDecorator('createTime', {
             })(
-              <DatePicker size={"default"} />
+              <RangePicker showTime size={"default"} />
             )}
           </Form.Item>
           <Form.Item label="跟进时间">
             {getFieldDecorator('followTime', {
             })(
-              <DatePicker size={"default"} />
+              <RangePicker showTime size={"default"} />
             )}
           </Form.Item>
           <Form.Item label="创建人">
