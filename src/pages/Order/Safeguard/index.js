@@ -1090,6 +1090,7 @@ class AllOrdersList extends PureComponent {
         const list=resp.data.menuJson;
         const checked=[];
         list.map(item => {
+          item.ellipsis=true;
           // 当前阶段
           if(item.dataIndex === "clientLevel") {
             item.render = (key, row) => {
