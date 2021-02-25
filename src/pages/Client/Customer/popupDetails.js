@@ -3,29 +3,16 @@ import { Form, Input, Card, Row,Modal, Col, Button, Icon , Select, message, Tabs
 import { connect } from 'dva';
 import moment from 'moment';
 import styles from '../../Order/components/edit.less';
-import { CITY } from '../../../utils/city';
 import {
-  orderDetail,
-  updateReminds,
-  productTreelist,
-  deleteLogisticsSuber,
-  localPrinting,
-  logisticsRepeatPrint,
+  updateReminds
 } from '../../../services/newServices/order';
-import {getDetail,updateData} from '../../../services/order/customer';
-import FormDetailsTitle from '../../../components/FormDetailsTitle';
-import Survey from '../../Order/components/Survey'
+import {getDetail,updateData,clientOrder} from '../../../services/order/customer';
 import TabTrends from '@/pages/Client/Customer/components/tabTrends';
-import OrderListNew from '../../Order/components/OrderListNew';
+import OrderListNew from './components/OrderListNew';
 import CustomerDetail from '@/pages/Client/Customer/components/detail';
-// import {
-//   LOGISTICSCOMPANY,
-// } from './data.js';
-import bellShut from '../../../assets/bellShut.svg'
+
 import func from '@/utils/Func';
 
-const FormItem = Form.Item;
-const { TextArea } = Input;
 const { TabPane } = Tabs;
 
 @connect(({ globalParameters}) => ({
@@ -50,7 +37,6 @@ class OrdersEdit extends PureComponent {
       selectedOptions:"",
       primary:'primary',
       primary1:'',
-      productList:[],
       repeatLoading:false,
       payPanyId:null,
       productTypeId:null,
@@ -67,7 +53,6 @@ class OrdersEdit extends PureComponent {
     this.setState({
       detailsId:propData.detail.id,
     },()=>{
-      this.getTreeList();
       this.getEditDetails();
     });
 
@@ -75,13 +60,6 @@ class OrdersEdit extends PureComponent {
     // setTimeout(()=>{
     //   _this.getEditDetails();
     // },4000)
-  }
-
-  getTreeList = () => {
-    productTreelist().then(res=>{
-      console.log(res.data,"productTreelist")
-      this.setState({productList:res.data})
-    })
   }
 
   changeDetails = (id) => {
@@ -106,27 +84,21 @@ class OrdersEdit extends PureComponent {
   }
 
   getList = (detail) =>{
-    console.log(detail)
     const params={
-      userAddress:detail.userAddress,
-      userPhone:detail.userPhone,
-      userName:detail.userName,
-      id:detail.id,
-      size:100,
+      clientPhone:detail.clientPhone,
+      size:10,
       current:1
     }
-    orderDetail(params).then(res=>{
-      console.log(res)
-      const data = res.data.records;
-      let list=[];
-      for(let i=0; i<data.length; i++){
-        if(data[i].id != detail.id){
-          list.push(data[i])
-        }
-      }
+    clientOrder(params).then(res=>{
+      const data = res.data;
       this.setState({
-        orderDetail:list,
-        orderListLength:list.length
+        orderDetail:data.records,
+        orderPagination:{
+          total:data.total,
+          current:data.current,
+          pageSize:data.size,
+        },
+        orderListLength:data.total
       })
     })
   }
@@ -271,12 +243,12 @@ class OrdersEdit extends PureComponent {
       data,
       loading,
       orderDetail,
+      orderPagination,
       detail,
       edit,
       orderListLength,
       primary,
-      primary1,
-      productList
+      primary1
     } = this.state;
 
     return (
@@ -346,6 +318,7 @@ class OrdersEdit extends PureComponent {
                       <OrderListNew
                         detail={detail}
                         orderDetail={orderDetail}
+                        orderPagination={orderPagination}
                         changeDetails={this.changeDetails}
                       />
                     </TabPane>

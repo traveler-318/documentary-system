@@ -111,3 +111,12 @@ export async function queryCreator() {
     method: 'POST',
   });
 }
+
+//客户订单
+export async function clientOrder(params) {
+  return request(`/api/client_info/clientinfo/clientOrder`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
