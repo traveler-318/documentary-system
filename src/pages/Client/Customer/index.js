@@ -233,8 +233,6 @@ class AllOrdersList extends PureComponent {
   getSalesmanList = (value = "all_all") => {
     getCurrentsalesman(value).then(res=>{
 
-      console.log(res,"!!!!!!!!!!!!!!!")
-
       if(res.code === 200){
         res.data.unshift({key:'全部',value:''});
         this.setState({
