@@ -917,6 +917,7 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+
   handleResize = index => (e, { size }) => {
     this.setState(({ columns }) => {
       const nextColumns = [...columns];
