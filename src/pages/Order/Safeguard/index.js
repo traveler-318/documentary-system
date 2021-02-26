@@ -264,8 +264,13 @@ class AllOrdersList extends PureComponent {
     }
 
     if(sorts){
-      if(sorts.field == "followRecords"){
+      if(sorts.field == "followTime"){
         payload.followSort = sorts.order=='ascend' ? true:false
+        payload.sortType = 2;
+      }
+      if(sorts.field == "activationSigntime"){
+        payload.activationSort = sorts.order=='ascend' ? true:false
+        payload.sortType = 1;
       }
     }
 
@@ -1143,7 +1148,7 @@ class AllOrdersList extends PureComponent {
               )
             }
           }
-          if(item.dataIndex === "clientStatus") {
+          if(item.dataIndex === "followTime" || item.dataIndex === 'activationSigntime') {
             item.sorter=true
           }
           checked.push(item.dataIndex)
