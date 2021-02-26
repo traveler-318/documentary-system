@@ -295,7 +295,7 @@ class AllOrdersList extends PureComponent {
   handleSearch = (params) => {
     console.log(params,"查询参数")
     const { salesmanList,cityparam } = this.state;
-    const { createTime,followTime } = params;
+    const { createTime,followTime,sorts } = params;
     let payload = {};
 
     if(params.cityparam){
@@ -320,6 +320,21 @@ class AllOrdersList extends PureComponent {
 
     if(payload.organizationId && payload.organizationId === ""){
       payload.organizationId = null;
+    }
+
+    if(sorts){
+      if(sorts.field == "clientLevel" || sorts.field == 'clientStatus'){
+        payload.sort = sorts.order=='ascend' ? '00':'01'
+      }
+      else if(sorts.field == "createTime"){
+        payload.sort = sorts.order=='ascend' ? '20':'21'
+      }
+      else if(sorts.field == "province"){
+        payload.sort = sorts.order=='ascend' ? '30':'31'
+      }
+      else if(sorts.field == "nextFollowTime"){
+        payload.sort = sorts.order=='ascend' ? '40':'41'
+      }
     }
 
     let text = "";
@@ -1161,8 +1176,7 @@ class AllOrdersList extends PureComponent {
         render: (key,row)=>{
             return this.setCityVal(row)
         },
-        sorter: (a, b) => a.province - b.province,
-        sortDirections: ['descend', 'ascend'],
+        sorter:true
       },
       {
         title: '详细地址',
@@ -1174,21 +1188,20 @@ class AllOrdersList extends PureComponent {
         title: '客户级别',
         dataIndex: 'clientLevel',
         width: 110,
-        sorter: (a, b) => a.clientLevel.length - b.clientLevel.length,
-        sortDirections: ['descend', 'ascend']
+        sorter:true
       },
       {
         title: '客户状态',
         dataIndex: 'clientStatus',
         width: 130,
         ellipsis: true,
-        sorter: (a, b) => a.clientStatus - b.clientStatus,
-        sortDirections: ['descend', 'ascend'],
+        sorter:true
       },
       {
         title: '下次跟进时间',
         dataIndex: 'nextFollowTime',
-        width: 180
+        width: 180,
+        sorter:true
       },
       {
         title: '跟进记录',
@@ -1209,15 +1222,12 @@ class AllOrdersList extends PureComponent {
         title: '创建时间',
         dataIndex: 'createTime',
         width: 180,
-        sorter: (a, b) => a.createTime - b.createTime,
-        sortDirections: ['descend', 'ascend'],
+        sorter:true
       },
       {
         title: '创建人',
         dataIndex: 'createUser',
-        width: 100,
-        sorter: (a, b) => a.createUser.length - b.createUser.length,
-        sortDirections: ['descend', 'ascend'],
+        width: 100
       },
 
     ];
@@ -1225,9 +1235,7 @@ class AllOrdersList extends PureComponent {
       columns.push({
           title: '销售',
           dataIndex: 'salesman',
-          width: 80,
-          sorter: (a, b) => a.salesman.length - b.salesman.length,
-          sortDirections: ['descend', 'ascend'],
+          width: 80
         })
     }
     columns.push({
