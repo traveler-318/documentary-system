@@ -186,14 +186,15 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                {/* <FormItem {...formItemLayout} label={'下单验证'}>
-                  {getFieldDecorator('orderVerification')(
+                <FormItem {...formItemLayout} label={'下单验证'}>
+                  {getFieldDecorator('authorization_type')(
                     <Radio.Group>
+                      <Radio key={2} value={2}>本机+短信</Radio>
                       <Radio key={1} value={1}>短信</Radio>
-                      <Radio key={0} value={0}>本机</Radio>
+                      <Radio key={0} value={0}>无</Radio>
                     </Radio.Group>
                   )}
-                </FormItem> */}
+                </FormItem>
                 <FormItem {...formItemLayout} label={'备注'}>
                   {getFieldDecorator('note')(
                     <TextArea rows={4} />
