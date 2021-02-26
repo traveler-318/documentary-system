@@ -242,11 +242,11 @@ class AllOrdersList extends PureComponent {
   // ============ 查询 ===============
   handleSearch = (params) => {
     console.log(params,"查询参数")
-    const { dateRange } = params;
+    const { dateRange,sorts } = params;
+
     const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
-      // orderBy:false
     };
     if (dateRange) {
       payload = {
@@ -256,6 +256,11 @@ class AllOrdersList extends PureComponent {
       };
       // payload.dateRange = null;
     }
+
+    if(sorts){
+      payload.orderBy = sorts.order ==='ascend' ? true:false
+    }
+
     if(payload.organizationId && payload.organizationId === ""){
       payload.organizationId = null;
     }
@@ -1088,7 +1093,6 @@ class AllOrdersList extends PureComponent {
   }
   // 左侧操作按钮
   renderLeftButton = (tabKey) => {
-    console.log(tabKey,"tabKey")
     return (<>
       <SearchButton
         btnButtonBack={this.btnButtonBack}
