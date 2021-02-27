@@ -314,8 +314,8 @@ class AllOrdersList extends PureComponent {
       payload.endTime= createTime ? func.format(createTime[1], dateFormat) : null
     }
     if(payload.followTime){
-      payload.followTime= createTime ? func.format(followTime[0], dateFormat) : null
-      payload.followEndTime= createTime ? func.format(followTime[1], dateFormat) : null
+      payload.followTime= followTime ? func.format(followTime[0], dateFormat) : null
+      payload.followEndTime= followTime ? func.format(followTime[1], dateFormat) : null
     }
 
     if(payload.organizationId && payload.organizationId === ""){
