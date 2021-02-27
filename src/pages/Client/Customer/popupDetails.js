@@ -155,6 +155,7 @@ class OrdersEdit extends PureComponent {
       values.id = detail.id;
       values.clientAddress = `${selectedOptions}${values.clientAddress}`;
       values.nextFollowTime = func.format(values.nextFollowTime);
+      delete values.updateTime;
       if (!err) {
           updateData(values).then(res=>{
             if(res.code === 200){

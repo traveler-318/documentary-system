@@ -356,6 +356,7 @@ class AllOrdersList extends PureComponent {
     delete payload.dateRange;
     delete payload.productType;
     delete payload.cityparam;
+    delete payload.sorts;
 
     for(let key in payload){
       payload[key] = payload[key] === "" ? null : payload[key]
