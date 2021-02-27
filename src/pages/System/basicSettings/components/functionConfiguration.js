@@ -103,6 +103,7 @@ class BaseView extends Component {
           id: userId,
           daysOverdue:values.daysOverdue,
           transferNumber:values.transferNumber,
+          authenticationStatus:values.authenticationStatus
         }
         propertyUpdate(property).then(resp => {
           if (resp.success) {
