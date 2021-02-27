@@ -42,7 +42,8 @@ class CustomerAdd extends PureComponent {
       salesmanList:[],
       loading:false,
       cityparam:{},
-      selectedOptions:[]
+      selectedOptions:[],
+      addType:1,
     };
   }
 
@@ -51,8 +52,11 @@ class CustomerAdd extends PureComponent {
     const type = this.props.match.params.type;
     switch (type) {
       case '1':backUrl = '/client/allcustomer';break;
-      default:backUrl = '/client/mycustomer';break;
+      default:backUrl = '/client/allpublic';break;
     }
+    this.setState({
+      addType:type
+    })
     this.getSalesmanList()
     this.getLabels();
   }
@@ -159,7 +163,7 @@ class CustomerAdd extends PureComponent {
     } = this.props;
 
     const {
-      loading,clientStatus,clientLevels,salesmanList
+      loading,clientStatus,clientLevels,salesmanList,addType
     } = this.state;
 
     const formLeftItemLayout = {
@@ -272,19 +276,35 @@ class CustomerAdd extends PureComponent {
                     </Select>
                   )}
                 </FormItem>
-                <FormItem {...formAllItemLayout} label="归属销售">
-                  {getFieldDecorator('salesman',{
-                    rules: [
-                      { required: true, message: '请选择归属销售' },
-                    ],
-                  })(
-                    <Select placeholder={"请选择销售"}>
-                      {salesmanList.map(item=>{
-                        return (<Select.Option value={item.userAccount}>{item.userName}</Select.Option>)
-                      })}
-                    </Select>
-                  )}
-                </FormItem>
+                {addType == 1 ?(
+                  <FormItem {...formAllItemLayout} label="归属销售">
+                    {getFieldDecorator('salesman',{
+                      rules: [
+                        { required: true, message: '请选择归属销售' },
+                      ],
+                    })(
+                      <Select placeholder={"请选择销售"}>
+                        {salesmanList.map(item=>{
+                          return (<Select.Option value={item.userAccount}>{item.userName}</Select.Option>)
+                        })}
+                      </Select>
+                    )}
+                  </FormItem>
+                ):(
+                  <FormItem {...formAllItemLayout} label="归属销售">
+                    {getFieldDecorator('salesman',{
+
+                    })(
+                      <Select placeholder={"请选择销售"}>
+                        {salesmanList.map(item=>{
+                          return (<Select.Option value={item.userAccount}>{item.userName}</Select.Option>)
+                        })}
+                      </Select>
+                    )}
+                  </FormItem>
+                  )
+                }
+
                 <FormItem {...formAllItemLayout} label="下次跟进时间">
                   {getFieldDecorator('nextFollowTime')(<DatePicker
                     style={{ width: '100%' }}

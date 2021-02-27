@@ -696,7 +696,7 @@ class AllOrdersList extends PureComponent {
     return (
         <div>
             <Button type="primary" icon="plus" onClick={()=>{
-              router.push(`/client/customer/add/1`);
+              router.push(`/client/customer/add/`+key);
             }}>添加</Button>
             <Button
               icon="interaction"
