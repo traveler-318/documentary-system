@@ -30,10 +30,17 @@ class BaseView extends Component {
     userId: '',
     avatar: '',
     loading: false,
+    TabsKey: '',
   };
 
   componentWillMount() {
-    this.setBaseInfo();
+    // if(this.props.TabsKey != this.state.TabsKey){
+    //   this.setState({
+    //     TabsKey: this.props.TabsKey
+    //   },()=>{
+        this.setBaseInfo();
+    //   })
+    // }
   }
 
   setBaseInfo = () => {

@@ -131,6 +131,7 @@ class BaseView extends Component {
     } = this.props;
 
     const { TabsKey } = this.state;
+    console.log(TabsKey,"TabsKeys")
 
     const action = (
       <Button type="primary" onClick={this.handleSubmit}>
@@ -147,52 +148,46 @@ class BaseView extends Component {
                   return (
                     <TabPane tab={item.name} key={item.key}>
                       {
-                        item.key === "1" ? (
+                        TabsKey === "1" ? (
                           <BasicConfiguration
+                          TabsKey={TabsKey}
                           ref={form => {
                             this.BasicView = form;
                           }}
                           />
-                        ) :""
-                      }
-                      {
-                        item.key === "2" ? (
+                        ) : 
+                        TabsKey === "2" ? (
                           <Empty 
                             style={{margin:"40px 8px"}}
                           />
-                        ) :""
-                      }
-                      {
-                        item.key === "3" ? (
+                        ) : 
+                        TabsKey === "3" ? (
                           <FunctionConfiguration
+                          TabsKey={TabsKey}
                           ref={form => {
                             this.BasicView = form;
                           }}
                           />
-                        ) :""
-                      }
-                      {
-                        item.key === "4" ? (
+                        ) : 
+                        TabsKey === "4" ? (
                           <AfterSalesConfiguration
+                          TabsKey={TabsKey}
                           ref={form => {
                             this.BasicView = form;
                           }}
                           />
-                        ) :""
-                      }
-                      {
-                        item.key === "5" ? (
+                        ) : 
+                        TabsKey === "5" ? (
                           <Empty 
                             style={{margin:"40px 8px"}}
                           />
-                        ) :""
-                      }
-                      {
-                        item.key === "6" ? (
+                        ) : 
+                        TabsKey === "6" ? (
                           <VersionInformation 
+                          TabsKey={TabsKey}
                             style={{margin:"40px 8px"}}
                           />
-                        ) :""
+                        ) : ""
                       }
                     </TabPane>
                   )

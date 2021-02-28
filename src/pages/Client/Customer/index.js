@@ -1106,6 +1106,36 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  handleSubmit = confirm => {
+    // 确定 保存用户设置的字段排序和需要显示的字段key
+    const { plainOptions, checkedOptions } = this.state;
+    const arr=[];
+
+    plainOptions.map(item=>{
+      if(checkedOptions.indexOf(item.key) != -1){
+        arr.push(item)
+      }
+    })
+
+    const params={
+      menuJson:arr,
+      menuType:2,
+      deptId:getCookie("dept_id")
+    }
+    updateOrderHead(params).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg)
+        this.getOrderMenuHead();
+        this.setState({
+            isClickHandleSearch: true,
+          },() => {
+            confirm();
+          }
+        )
+      }
+    })
+  };
+
   handleCancel = clearFilters => {
     // 用户点击取消按钮，重置字段
     clearFilters();
