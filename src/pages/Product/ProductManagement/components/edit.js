@@ -319,7 +319,7 @@ class Logistics extends PureComponent {
                   ],
                 })(<Input placeholder="请输入价格" />)}
               </FormItem>
-              <FormItem {...formAllItemLayout} label="结算价">
+              {/* <FormItem {...formAllItemLayout} label="结算价">
                 {getFieldDecorator('settlePrice', {
                   initialValue: details.settlePrice,
                   rules: [
@@ -340,7 +340,7 @@ class Logistics extends PureComponent {
                     },
                   ],
                 })(<Input placeholder="请输入排序编号" />)}
-              </FormItem>
+              </FormItem> */}
               <FormItem {...formAllItemLayout} label="一阶段">
                 {getFieldDecorator('customOne', {
                   initialValue: details.customOne,
