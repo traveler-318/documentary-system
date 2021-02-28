@@ -211,7 +211,7 @@ class PayBrandAdd extends PureComponent {
             </FormItem>
             <FormItem {...formAllItemLayout} label="标签排序">
               {getFieldDecorator('sortNumber', {
-                initialValue: data.sortNumber,
+                initialValue: details.sortNumber,
                 rules: [
                   {
                     required: true,
