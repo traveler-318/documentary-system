@@ -15,7 +15,7 @@ import {
   Radio,
   Cascader,
   TreeSelect,
-  Descriptions
+  Descriptions, Icon,
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
@@ -41,7 +41,7 @@ import {
   updateConfirmTag,
   updateVoiceStatus,
   orderMenuTemplate,
-  updateOrderHead
+  updateOrderHead, orderMenuHead,
 } from '../../../services/newServices/order';
 import {
   getDataInfo,
@@ -71,6 +71,7 @@ import { CITY } from '@/utils/city';
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
 const { TextArea } = Input;
+const { TreeNode } = Tree;
 const { Option } = Select;
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -167,7 +168,6 @@ class AllOrdersList extends PureComponent {
       confirmTagList:[],
       _listArr:[],
       organizationTree:[],
-
       createUsers:[]
     };
   }
@@ -191,6 +191,7 @@ class AllOrdersList extends PureComponent {
     this.getLabels();
     this.currenttree();
     this.getOrderMenuTemplate();
+    this.getOrderMenuHead();
     this.getCreator();
   }
 
@@ -323,6 +324,9 @@ class AllOrdersList extends PureComponent {
     }
 
     if(sorts){
+
+      console.log(sorts,"###########33")
+
       if(sorts.field == "clientLevel" || sorts.field == 'clientStatus'){
         payload.sort = sorts.order=='ascend' ? '00':'01'
       }
@@ -995,37 +999,6 @@ class AllOrdersList extends PureComponent {
     });
   };
 
-
-  handleCancel = clearFilters => {
-    // 用户点击取消按钮，重置字段
-    clearFilters();
-    this.setState({
-      plainOptions: this.state.editPlainOptions,
-      checkedOptions: this.state.editCheckedOptions
-    });
-  };
-  handleReset = confirm => {
-    // 确定 保存用户设置的字段排序和需要显示的字段key
-    const { plainOptions } = this.state;
-    const params={
-      menuJson:plainOptions,
-      menuType:0,
-      deptId:getCookie("dept_id")
-    }
-    updateOrderHead(params).then(res=>{
-      if(res.code === 200){
-        message.success(res.msg)
-        this.getOrderMenuHead();
-        this.setState({
-            isClickHandleSearch: true,
-          },() => {
-            confirm();
-          }
-        )
-      }
-    })
-  };
-
   components = {
     header: {
       cell: ResizeableTitle,
@@ -1073,9 +1046,56 @@ class AllOrdersList extends PureComponent {
   };
 
 
+  // 菜单列表头获取
+  getOrderMenuHead = () => {
+    orderMenuHead(2).then(resp=>{
+      const {routerKey}=this.state;
+      let queryType = null;
+
+      switch (routerKey) {
+        case  'customer': queryType  = 1;break;//'全部客户',
+        case  'public': queryType  = 2;break; //'全部公海',
+      }
+      if(resp.code === 200){
+        let list=resp.data.menuJson;
+        const checked=[];
+        list.map(item => {
+          item.ellipsis=true;
+          // 地区
+          if(item.dataIndex === "province") {
+            item.render = (key, row) => {
+              return this.setCityVal(row)
+            }
+          }
+          if(item.dataIndex === "province" || item.dataIndex === 'clientLevel'|| item.dataIndex === 'clientStatus'|| item.dataIndex === 'nextFollowTime'|| item.dataIndex === 'createTime') {
+            item.sorter=true
+          }
+          checked.push(item.dataIndex)
+        })
+
+        if(queryType === 2){
+          let arr=[]
+          for(let i=0; i<list.length; i++){
+            if(list[i].dataIndex != "salesman"){
+              arr.push(list[i])
+            }
+          }
+          list = arr;
+        }
+        console.log(list,"@@@@@@@@@@@@@@@@@@@@@@@")
+        this.setState({
+          checkedOptions:checked,
+          columns:list,
+          editCheckedOptions:checked
+        })
+      }else {
+        message.error(resp.msg)
+      }
+    })
+  }
 
   getOrderMenuTemplate = () => {
-    orderMenuTemplate(1).then(res=>{
+    orderMenuTemplate(2).then(res=>{
       res.data.menuJson.map(item => {
         item.key=item.dataIndex
       })
@@ -1085,6 +1105,51 @@ class AllOrdersList extends PureComponent {
       })
     })
   }
+
+  handleCancel = clearFilters => {
+    // 用户点击取消按钮，重置字段
+    clearFilters();
+    this.setState({
+      plainOptions: this.state.editPlainOptions,
+      checkedOptions: this.state.editCheckedOptions
+    });
+  };
+
+  handleReset = confirm => {
+    // 确定 保存用户设置的字段排序和需要显示的字段key
+    const { plainOptions } = this.state;
+    const params={
+      menuJson:plainOptions,
+      menuType:2,
+      deptId:getCookie("dept_id")
+    }
+    updateOrderHead(params).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg)
+        this.getOrderMenuHead();
+        this.setState({
+            isClickHandleSearch: true,
+          },() => {
+            confirm();
+          }
+        )
+      }
+    })
+  };
+
+  onFilterDropdownVisibleChange = (visible, type) => {
+    const {isClickHandleSearch,editPlainOptions,editCheckedOptions}=this.state
+    if (visible && !isClickHandleSearch) {
+      this.setState({
+        isClickHandleSearch: false
+      });
+    } else {
+      this.setState({
+        plainOptions: editPlainOptions,
+        checkedOptions: editCheckedOptions
+      });
+    }
+  };
 
   setCityVal = (row) =>{
     let v = "";
@@ -1150,115 +1215,210 @@ class AllOrdersList extends PureComponent {
       tips,
       clientStatus,
       clientLevels,
+      checkedOptions,
+      plainOptions,
+      columns,
       routerKey
     } = this.state;
 
-    let queryType = null;
-    switch (routerKey) {
-      case  'customer': queryType  = 1;break;//'全部客户',
-      case  'public': queryType  = 2;break; //'全部公海',
-    }
+    // let columns=[
+    //   {
+    //     title: '姓名',
+    //     dataIndex: 'clientName',
+    //     width: 100
+    //   },
+    //   {
+    //     title: '手机号',
+    //     dataIndex: 'clientPhone',
+    //     width: 120,
+    //   },
+    //   {
+    //     title: '地区',
+    //     dataIndex: 'province',
+    //     width: 160,
+    //     ellipsis: true,
+    //     render: (key,row)=>{
+    //         return this.setCityVal(row)
+    //     },
+    //     sorter:true
+    //   },
+    //   {
+    //     title: '详细地址',
+    //     dataIndex: 'clientAddress',
+    //     width: 160,
+    //     ellipsis: true,
+    //   },
+    //   {
+    //     title: '客户级别',
+    //     dataIndex: 'clientLevel',
+    //     width: 110,
+    //     sorter:true
+    //   },
+    //   {
+    //     title: '客户状态',
+    //     dataIndex: 'clientStatus',
+    //     width: 130,
+    //     ellipsis: true,
+    //     sorter:true
+    //   },
+    //   {
+    //     title: '下次跟进时间',
+    //     dataIndex: 'nextFollowTime',
+    //     width: 180,
+    //     sorter:true
+    //   },
+    //   {
+    //     title: '跟进记录',
+    //     dataIndex: 'followRecords',
+    //     width: 130
+    //   },
+    //   {
+    //     title: '最后跟进时间',
+    //     dataIndex: 'followTime',
+    //     width: 180
+    //   },
+    //   {
+    //     title: '更新时间',
+    //     dataIndex: 'updateTime',
+    //     width: 180,
+    //   },
+    //   {
+    //     title: '创建时间',
+    //     dataIndex: 'createTime',
+    //     width: 180,
+    //     sorter:true
+    //   },
+    //   {
+    //     title: '创建人',
+    //     dataIndex: 'createUser',
+    //     width: 100
+    //   },
+    //
+    // ];
+    //
+    //
+    //
+    //
+    //
+    // if(queryType == '1'){
+    //   columns.push({
+    //       title: '销售',
+    //       dataIndex: 'salesman',
+    //       width: 80
+    //     })
+    // }
+    // columns.push({
+    //   title: '操作',
+    //   key: 'operation',
+    //   fixed: 'right',
+    //   width: 120,
+    //   render: (text,row) => {
+    //     return(
+    //       <div>
+    //         {/*<a onClick={()=>this.handleDetails(row)}>跟进</a>*/}
+    //         {/*<Divider type="vertical" />*/}
+    //         <a onClick={()=>this.handleJournal(row)}>日志</a>
+    //         <Divider type="vertical" />
+    //         <a onClick={()=>this.handleDetails(row)}>详情</a>
+    //         {/*<Divider type="vertical" />*/}
+    //         {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
+    //       </div>
+    //     )
+    //   },
+    // })
 
-    let columns=[
-      {
-        title: '姓名',
-        dataIndex: 'clientName',
-        width: 100
-      },
-      {
-        title: '手机号',
-        dataIndex: 'clientPhone',
-        width: 120,
-      },
-      {
-        title: '地区',
-        dataIndex: 'province',
-        width: 160,
-        ellipsis: true,
-        render: (key,row)=>{
-            return this.setCityVal(row)
-        },
-        sorter:true
-      },
-      {
-        title: '详细地址',
-        dataIndex: 'clientAddress',
-        width: 160,
-        ellipsis: true,
-      },
-      {
-        title: '客户级别',
-        dataIndex: 'clientLevel',
-        width: 110,
-        sorter:true
-      },
-      {
-        title: '客户状态',
-        dataIndex: 'clientStatus',
-        width: 130,
-        ellipsis: true,
-        sorter:true
-      },
-      {
-        title: '下次跟进时间',
-        dataIndex: 'nextFollowTime',
-        width: 180,
-        sorter:true
-      },
-      {
-        title: '跟进记录',
-        dataIndex: 'followRecords',
-        width: 130
-      },
-      {
-        title: '最后跟进时间',
-        dataIndex: 'followTime',
-        width: 180
-      },
-      {
-        title: '更新时间',
-        dataIndex: 'updateTime',
-        width: 180,
-      },
-      {
-        title: '创建时间',
-        dataIndex: 'createTime',
-        width: 180,
-        sorter:true
-      },
-      {
-        title: '创建人',
-        dataIndex: 'createUser',
-        width: 100
-      },
+    const loop = data =>
+      data.map((item, index) => {
+        return <TreeNode
+          className={styles.TreeNode}
+          key={item.key}
+          icon={<Icon
+            className={styles.TreeNodeIcon}
+            style={{
+              position: 'absolute',
+              // display:"none",
+              right: '10px',
+              marginTop: '3px'}}
+            type="menu" />}
+          title={item.title}
+        />;
+      });
 
-    ];
-    if(queryType == '1'){
-      columns.push({
-          title: '销售',
-          dataIndex: 'salesman',
-          width: 80
-        })
-    }
-    columns.push({
-      title: '操作',
-      key: 'operation',
-      fixed: 'right',
-      width: 120,
-      render: (text,row) => {
-        return(
-          <div>
-            {/*<a onClick={()=>this.handleDetails(row)}>跟进</a>*/}
-            {/*<Divider type="vertical" />*/}
-            <a onClick={()=>this.handleJournal(row)}>日志</a>
-            <Divider type="vertical" />
-            <a onClick={()=>this.handleDetails(row)}>详情</a>
-            {/*<Divider type="vertical" />*/}
-            {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
+    let list=[];
+    columns.map((item, index) => {
+      list.push(item)
+    });
+
+    list.push(
+      {
+        title: '操作',
+        key: 'operation',
+        fixed: 'right',
+        width: 90,
+        filterDropdown: ({ confirm, clearFilters }) => (
+          <div style={{ padding: 8 }}>
+            <Tree
+              checkable
+              draggable
+              blockNode
+              selectable={false}
+              onCheck={this.onCheck}
+              checkedKeys={checkedOptions}
+              onDrop={this.onDrop.bind(this)}
+            >
+              {loop(plainOptions)}
+            </Tree>
+            <div>
+              <Button
+                type="primary"
+                size="small"
+                onClick={() => this.handleSubmit(confirm)}
+                style={{ width: "60px", marginRight: "10px" }}
+              >
+                确定
+              </Button>
+              <Button
+                size="small"
+                onClick={() => this.handleCancel(clearFilters)}
+                style={{ width: "60px" }}
+              >
+                取消
+              </Button>
+              <Button
+                size="small"
+                onClick={() => this.handleReset(clearFilters)}
+                style={{ width: "60px", marginRight: "10px" }}
+              >
+                重置
+              </Button>
+            </div>
           </div>
-        )
-      },
-    })
+        ),
+        filterIcon: filtered => <Icon type="setting" theme="filled" />,
+        onFilterDropdownVisibleChange: this.onFilterDropdownVisibleChange.bind(
+          this
+        ),
+        render: (text,row) => {
+          return(
+            <div>
+              {/*<a onClick={()=>this.handleDetails(row)}>跟进</a>*/}
+              {/*<Divider type="vertical" />*/}
+              <a onClick={()=>this.handleJournal(row)}>日志</a>
+              <Divider type="vertical" />
+              <a onClick={()=>this.handleDetails(row)}>详情</a>
+              {/*<Divider type="vertical" />*/}
+              {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
+            </div>
+          )
+        },
+      }
+    )
+
+
+
+
+
+
 
     const TabPanes = () => (
       <div className={styles.tabs}>
@@ -1284,7 +1444,7 @@ class AllOrdersList extends PureComponent {
             renderSearchForm={this.renderSearchForm}
             loading={loading}
             data={data}
-            columns={columns}
+            columns={list}
             scroll={{ x: 1000 }}
             renderLeftButton={()=>this.renderLeftButton(tabKey)}
             counterElection={true}
