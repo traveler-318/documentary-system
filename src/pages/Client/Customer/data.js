@@ -226,13 +226,18 @@ export function exportData() {
   return [
     {value:"客户姓名",code:"client_name"},
     {value:"客户手机号",code:"client_phone"},
+    {value:"客户详细地址",code:"client_address"},
     {value:"客户级别",code:"client_level"},
     {value:"客户状态",code:"client_status"},
     {value:"客户来源",code:"client_type"},
+    {value:"下次跟进时间",code:"next_follow_time"},
     // {value:"验证码",code:"code"},
     // {value:"负责人",code:"deptId"},
     // {value:"结束时间",code:"endTime"},
-    {value:"销售",code:"salesman"}
+    {value:"销售",code:"salesman"},
+    {value:"创建时间",code:"create_time"},
+    {value:"最新跟进时间",code:"follow_time"},
+
   ]
 }
 
