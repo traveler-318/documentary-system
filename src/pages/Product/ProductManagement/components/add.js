@@ -306,28 +306,28 @@ class Logistics extends PureComponent {
                   ],
                 })(<Input placeholder="请输入价格" />)}
               </FormItem>
-              <FormItem {...formAllItemLayout} label="结算价">
-                {getFieldDecorator('settlePrice', {
-                  initialValue: data.settlePrice,
-                  rules: [
-                    {
-                      required: true,
-                      validator:this.countChange,
-                    },
-                  ],
-                })(<Input placeholder="请输入结算价" />)}
-              </FormItem>
-              <FormItem {...formAllItemLayout} label="排序编号">
-                {getFieldDecorator('sortNumber', {
-                  initialValue: data.sortNumber,
-                  rules: [
-                    {
-                      required: true,
-                      validator:this.valinsPayChange
-                    },
-                  ],
-                })(<Input placeholder="请输入排序编号" />)}
-              </FormItem>
+              {/*<FormItem {...formAllItemLayout} label="结算价">*/}
+                {/*{getFieldDecorator('settlePrice', {*/}
+                  {/*initialValue: data.settlePrice,*/}
+                  {/*rules: [*/}
+                    {/*{*/}
+                      {/*required: true,*/}
+                      {/*validator:this.countChange,*/}
+                    {/*},*/}
+                  {/*],*/}
+                {/*})(<Input placeholder="请输入结算价" />)}*/}
+              {/*</FormItem>*/}
+              {/*<FormItem {...formAllItemLayout} label="排序编号">*/}
+                {/*{getFieldDecorator('sortNumber', {*/}
+                  {/*initialValue: data.sortNumber,*/}
+                  {/*rules: [*/}
+                    {/*{*/}
+                      {/*required: true,*/}
+                      {/*validator:this.valinsPayChange*/}
+                    {/*},*/}
+                  {/*],*/}
+                {/*})(<Input placeholder="请输入排序编号" />)}*/}
+              {/*</FormItem>*/}
               <FormItem {...formAllItemLayout} label="一阶段">
                 {getFieldDecorator('customOne', {
                   initialValue: data.customOne,

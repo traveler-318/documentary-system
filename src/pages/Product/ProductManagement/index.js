@@ -120,11 +120,11 @@ class ProductManagement extends PureComponent {
           dataIndex: 'price',
           width: 150,
         },
-        {
-          title: '结算价',
-          dataIndex: 'settlePrice',
-          width: 150,
-        },
+        // {
+        //   title: '结算价',
+        //   dataIndex: 'settlePrice',
+        //   width: 150,
+        // },
         {
           title: '自定义1',
           dataIndex: 'customOne',
