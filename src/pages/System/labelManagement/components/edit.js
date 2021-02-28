@@ -26,9 +26,7 @@ class PayBrandAdd extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:{
-        sortNumber:0
-      },
+      data:{},
       params:{
         size:10,
         current:1
@@ -211,7 +209,7 @@ class PayBrandAdd extends PureComponent {
             </FormItem>
             <FormItem {...formAllItemLayout} label="标签排序">
               {getFieldDecorator('sortNumber', {
-                initialValue: data.sortNumber,
+                initialValue: details.sortNumber,
                 rules: [
                   {
                     required: true,
