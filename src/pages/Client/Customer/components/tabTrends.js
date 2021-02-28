@@ -87,7 +87,7 @@ class TabTrends extends PureComponent {
       return message.error("请输入跟进内容");
     }
     let param = {
-      userName:detail.userName,
+      userName:detail.clientName,
       describe,
       createTime:moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
       type:reminderTime === "" ? "1" : "2",// 1是跟进-2提醒时间，
@@ -103,7 +103,7 @@ class TabTrends extends PureComponent {
       confirmTag:detail.confirmTag,
       outOrderNo:detail.outOrderNo,
       salesman:detail.salesman,
-      userName:detail.userName,
+      userName:detail.clientName,
       userPhone:detail.userPhone,
       reminderTime:reminderTime === ""? null:moment(reminderTime,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
     }

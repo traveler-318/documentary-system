@@ -224,15 +224,20 @@ export function getLogisticsQuery() {
 // 导出
 export function exportData() {
   return [
-    {value:"客户姓名",code:"clientName"},
-    {value:"客户手机号",code:"clientPhone"},
-    {value:"客户级别",code:"clientLevel"},
-    {value:"客户状态",code:"clientStatus"},
-    {value:"客户来源",code:"clientType"},
-    {value:"验证码",code:"code"},
-    {value:"负责人",code:"deptId"},
-    {value:"结束时间",code:"endTime"},
-    {value:"销售",code:"salesman"}
+    {value:"客户姓名",code:"client_name"},
+    {value:"客户手机号",code:"client_phone"},
+    {value:"客户详细地址",code:"client_address"},
+    {value:"客户级别",code:"client_level"},
+    {value:"客户状态",code:"client_status"},
+    {value:"客户来源",code:"client_type"},
+    {value:"下次跟进时间",code:"next_follow_time"},
+    // {value:"验证码",code:"code"},
+    // {value:"负责人",code:"deptId"},
+    // {value:"结束时间",code:"endTime"},
+    {value:"销售",code:"salesman"},
+    {value:"创建时间",code:"create_time"},
+    {value:"最新跟进时间",code:"follow_time"},
+
   ]
 }
 
