@@ -79,16 +79,10 @@ class PayBrandAdd extends PureComponent {
 
   valinsPayChange = (rule, value, callback) => {
     var reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
-<<<<<<< HEAD
-    if(!value || value === "" || value === null){
-      callback('请输入正确的排序');
-    }else 
-=======
     console.log(value,"valuevalue")
     if(!value || value === "" || value === null){
       callback('请输入正确的排序');
     }else
->>>>>>> 4477788521e776d20d6b94bc441fb3e9d68fe488
     if(value != "" && value != null){
       if(!reg.test(value)){
         callback('请输入正确的排序');
