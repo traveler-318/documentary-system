@@ -341,20 +341,20 @@ class Logistics extends PureComponent {
                   ],
                 })(<Input placeholder="请输入排序编号" />)}
               </FormItem>
-              <FormItem {...formAllItemLayout} label="自定义名称1">
+              <FormItem {...formAllItemLayout} label="一阶段">
                 {getFieldDecorator('customOne', {
                   initialValue: details.customOne,
-                })(<Input placeholder="请输入自定义名称1" />)}
+                })(<Input placeholder="请输入一阶段" disabled={details.customOne ? true : false} />)}
               </FormItem>
-              <FormItem {...formAllItemLayout} label="自定义名称2">
+              <FormItem {...formAllItemLayout} label="二阶段">
                 {getFieldDecorator('customTwo', {
                   initialValue: details.customTwo,
-                })(<Input placeholder="请输入自定义名称2" />)}
+                })(<Input placeholder="请输入二阶段" disabled={details.customTwo ? true : false} />)}
               </FormItem>
-              <FormItem {...formAllItemLayout} label="自定义名称3">
+              <FormItem {...formAllItemLayout} label="三阶段">
                 {getFieldDecorator('customThree', {
                   initialValue: details.customThree,
-                })(<Input placeholder="请输入自定义名称3" />)}
+                })(<Input placeholder="请输入三阶段" disabled={details.customThree ? true : false} />)}
               </FormItem>
             </Form>
           </div>
