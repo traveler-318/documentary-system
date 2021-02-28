@@ -227,10 +227,12 @@ class Export extends PureComponent {
       ...downloadExcelParam,
       code:verificationCode
     }
+
+    // param.deptId = getCookie("dept_id");
     console.log(param)
     axios({
       method: "post",
-      url:`/api/client_info/clientinfo/exportClientExcel`,
+      url:`/api/client_info/clientinfo/exportClient`,
       data:param,
       headers: {
         "content-type": "application/json; charset=utf-8",
