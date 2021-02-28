@@ -17,8 +17,9 @@ import {
 } from 'antd';
 import Panel from '../../../components/Panel';
 
-import Label from './label';
-import Grade from './grade';
+import Label from './labelList';
+import Grade from './gradeList';
+import State from './stateList';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -30,8 +31,10 @@ const { TabPane } = Tabs;
 const topTabPane = [
   {name:"维护标签",key:'1'},
   {name:"客户等级",key:'2'},
+  {name:"客户状态",key:'3'},
 ]
 
+// 发布客户状态
 
 @Form.create()
 class BaseView extends Component {
@@ -41,7 +44,7 @@ class BaseView extends Component {
     super(props);
     // this.myRef = React.createRef();
     this.state = {
-      TabsKey:"7"
+      TabsKey:"1"
     };
   }
 
@@ -76,14 +79,18 @@ class BaseView extends Component {
                   return (
                     <TabPane tab={item.name} key={item.key}>
                       {
-                        item.key === "1" ? (
+                        TabsKey === "1" ? (
                             <Label/>
-                            
                         ) :""
                       }
                       {
-                        item.key === "2" ? (
+                        TabsKey === "2" ? (
                             <Grade/>
+                        ) :""
+                      }
+                      {
+                        TabsKey === "3" ? (
+                            <State/>
                         ) :""
                       }
                     </TabPane>

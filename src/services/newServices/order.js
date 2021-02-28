@@ -301,15 +301,17 @@ export async function importText(params) {
 }
 
 // 获取订单菜单列表头
-export async function orderMenuHead() {
-  return request("/api/menu_config/menulistconfig/orderMenuHead",{
+export async function orderMenuHead(params) {
+  return request(`/api/menu_config/menulistconfig/orderMenuHead`,{
     method: 'POST',
+    body: params,
   });
 }
 // 菜单列表头总模板
-export async function orderMenuTemplate() {
-  return request("/api/menu_config/menulistconfig/orderMenuTemplate",{
+export async function orderMenuTemplate(params) {
+  return request(`/api/menu_config/menulistconfig/orderMenuTemplate`,{
     method: 'POST',
+    body: params,
   });
 }
 // 订单菜单列表头修改

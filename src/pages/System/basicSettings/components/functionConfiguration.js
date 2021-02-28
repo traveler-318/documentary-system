@@ -103,6 +103,7 @@ class BaseView extends Component {
           id: userId,
           daysOverdue:values.daysOverdue,
           transferNumber:values.transferNumber,
+          authenticationStatus:values.authenticationStatus
         }
         propertyUpdate(property).then(resp => {
           if (resp.success) {
@@ -248,6 +249,15 @@ class BaseView extends Component {
                     <Radio.Group>
                       <Radio key={1} value={1}>是</Radio>
                       <Radio key={0} value={0}>否</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'下单验证'}>
+                  {getFieldDecorator('authenticationStatus')(
+                    <Radio.Group>
+                      <Radio key={2} value={2}>本机+短信</Radio>
+                      <Radio key={1} value={1}>短信</Radio>
+                      <Radio key={0} value={0}>无</Radio>
                     </Radio.Group>
                   )}
                 </FormItem>

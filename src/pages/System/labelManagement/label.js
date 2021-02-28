@@ -29,19 +29,20 @@ const { Option } = Select;
 
 const EditableContext = React.createContext();
 
-const EditableRow = ({ form, index, ...props }) => (
-  <EditableContext.Provider value={form}>
-    <tr {...props} />
-  </EditableContext.Provider>
-);
+// const EditableRow = ({ form, index, ...props }) => (
+//   <EditableContext.Provider value={form}>
+//     <tr {...props} />
+//   </EditableContext.Provider>
+// );
 
-const EditableFormRow = Form.create()(EditableRow);
+// const EditableFormRow = Form.create()(EditableRow);
 
 @Form.create()
 class EditableCell extends Component {
   state = {
     data: '',
-    editing: true,
+    editing: false,
+    editingKey: '',
     colorList:[
         {
             title:'浅蓝',
@@ -77,57 +78,33 @@ class EditableCell extends Component {
         },
     ]
   };
-
-  toggleEdit = () => {
-    const editing = !this.state.editing;
-    this.setState({ editing }, () => {
-      if (editing) {
-        this.input.focus();
-      }
-    });
-  };
-
-  updateLabelDate = (param) => {
-    updateLabel(param).then(res=>{
-      if(res.code != 200){
-        this.props.handletLabelList()
-      }
-    })
-  }
-
-  save = (e,color,type) => {
-    if(type === 'color'){
-      let param = {
-        labelName:e.labelName,
-        id:e.id,
-        color
-      }
-      this.updateLabelDate(param)
-    }else{
-      const { record } = this.props;
-      this.form.validateFields((error, values) => {
-        if (error && error[e.currentTarget.id]) {
-          return;
-        }
-  
-        this.updateLabelDate({
-          id:record.id,
-          labelName:values.labelName,
-          color:record.color,
-        })
-      });
+  getInput = () => {
+    if (this.props.inputType === 'number') {
+      return <InputNumber />;
     }
+    return <Input />;
   };
 
-  renderCell = form => {
-    this.form = form;
-    const { children, dataIndex, record, title } = this.props;
-    const { editing, colorList } = this.state;
+  renderCell = ({ getFieldDecorator }) => {
+    const {
+      editing,
+      dataIndex,
+      title,
+      inputType,
+      record,
+      index,
+      children,
+      ...restProps
+    } = this.props;
+
+    const {colorList} = this.state;
 
     if(dataIndex === 'color'){
-        return editing ? (
+      return (
+        <td {...restProps}>
+          {editing ? (
             <Form.Item style={{ margin: 0 }}>
-              {form.getFieldDecorator(dataIndex, {
+              {getFieldDecorator(dataIndex, {
                 rules: [
                   {
                     required: true,
@@ -135,11 +112,11 @@ class EditableCell extends Component {
                   },
                 ],
                 initialValue: record[dataIndex],
-                getValueFromEvent: (color)=>{
-                    console.log(color,"argsargsargs")
-                    this.save(record,color,'color')
-                    return color
-                }
+                // getValueFromEvent: (color)=>{
+                //     console.log(color,"argsargsargs")
+                //     this.save(record,color,'color')
+                //     return color
+                // }
               })(<Select>
                   {
                     colorList.map(item=>{
@@ -162,18 +139,30 @@ class EditableCell extends Component {
               </Select>)}
             </Form.Item>
           ) : (
-            <div
-              className="editable-cell-value-wrap"
-              style={{ paddingRight: 24 }}
-              onClick={this.toggleEdit}
-            >
-              {children}
+            <div>
+              <span style={{
+                display:'inline-block',
+                width:"10px",
+                height:'10px',
+                marginRight: 5,
+                background:record[dataIndex],
+                borderRadius: '50%'
+              }}></span>
+              {colorList.map(item=>{
+                if(record[dataIndex] === item.color){
+                  return item.title
+                }
+              })}
             </div>
-          );
+          )}
+        </td>
+      );
     }else{
-        return editing ? (
+      return (
+        <td {...restProps}>
+          {editing ? (
             <Form.Item style={{ margin: 0 }}>
-              {form.getFieldDecorator(dataIndex, {
+              {getFieldDecorator(dataIndex, {
                 rules: [
                   {
                     required: true,
@@ -181,213 +170,262 @@ class EditableCell extends Component {
                   },
                 ],
                 initialValue: record[dataIndex],
-              })(<Input 
-                  ref={node => (this.input = node)} 
-                  // onPressEnter={this.save} 
-                  onBlur={this.save}
-              />)}
+              })(this.getInput())}
             </Form.Item>
-          ) : (
-            <div
-              className="editable-cell-value-wrap"
-              style={{ paddingRight: 24 }}
-              onClick={this.toggleEdit}
-            >
-              {children}
-            </div>
-          );
-    }
-
-    
-  };
-
-  render() {
-    const {
-        editable,
-        dataIndex,
-        title,
-        record,
-        index,
-        handleSave,
-        children,
-        ...restProps
-      } = this.props;
-      return (
-        <td {...restProps}>
-          {editable ? (
-            <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>
           ) : (
             children
           )}
         </td>
+      );
+    }
+  };
+
+  render() {
+    return <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>;
+  }
+}
+
+class EditableTable extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { data : [], editingKey: '' };
+    this.columns = [
+      {
+        title: '标签',
+        dataIndex: 'labelName',
+        width: '45%',
+        editable: true,
+    },
+    {
+        title: '颜色',
+        dataIndex: 'color',
+        width: '30%',
+        editable: true,
+    },
+      {
+        title: '操作',
+        dataIndex: 'operation',
+        render: (text, record, index) => {
+          const { editingKey } = this.state;
+          const editable = this.isEditing(record);
+
+          return editable ? (
+            <span>
+              <EditableContext.Consumer>
+                {form => (
+                  <a
+                    onClick={() => this.save(form, record.key)}
+                    style={{ marginRight: 8 }}
+                  >
+                    保存
+                  </a>
+                )}
+              </EditableContext.Consumer>
+              <Popconfirm title="是否取消您的修改？" onConfirm={() => this.cancel(record.key)}>
+                <a>取消</a>
+              </Popconfirm>
+            </span>
+          ) : (
+            <>
+              <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)} style={{ marginRight: 8 }}>
+                修改
+              </a>
+              <Popconfirm style={{ marginRight: 8 }} title="确定删除吗?" onConfirm={() => this.removeLabelData(record.key)}>
+                <a>删除</a>
+              </Popconfirm>
+              {
+                index+1 === this.state.data.length ? (
+                  <a style={{marginLeft:5}} onClick={this.handleAdd}>添加</a>
+                ) :""
+              }
+              
+            </>
+          );
+        },
+      },
+    ];
+  }
+
+  handleAdd = () => {
+    const { data } = this.state;
+    const newData = {
+      // key: count,
+      labelName: `标签 名称`,
+      color: '#40A9FF',
+      key:'xz'
+    };
+    // this.addLabellData({
+    //   labelName: `标签 名称`,
+    //   color: '#40A9FF',
+    // })
+    this.setState({
+      data: [...data, newData],
+      editingKey: 'xz'
+      // count: count + 1,
+    });
+  };
+
+  addLabellData = (param) =>{
+    param.labelType = 0;
+    addLabel([param]).then(res=>{
+      this.getLabelList()
+    })
+  }
+
+  removeLabelData = (id) =>{
+    removeLabel(id).then(res=>{
+      this.getLabelList()
+    })
+  }
+
+  componentWillMount(){
+    this.getLabelList()
+  }
+
+  getLabelList = () =>{
+    getLabel({
+      "current": 1,
+      "size": 100,
+    }).then(res=>{
+      let _data = res.data.records.map(item=>{
+        item.key = item.id
+        return item
+      })
+      
+      this.setState({
+        data:_data,
+        editingKey: ''
+      })
+    })
+  }
+
+  isEditing = record => record.key === this.state.editingKey;
+
+  cancel = () => {
+    const { data } = this.state;
+    let _data = []
+    data.map(item=>{
+      if(item.key != 'xz'){
+        _data.push(item)
+      }
+    })
+    this.setState({ editingKey: '' , data: _data});
+  };
+
+  updateLabelDate = (param) => {
+    updateLabel(param).then(res=>{
+      if(res.code != 200){
+        this.getLabelList();
+        message.error(res.msg)
+      }else{
+        this.getLabelList();
+        message.success(res.msg)
+      }
+    })
+  }
+
+  save(form, key) {
+    form.validateFields((error, row) => {
+      if (error) {
+        return;
+      }
+      const newData = [...this.state.data];
+      const index = newData.findIndex(item => key === item.key);
+      const item = newData[index];
+      
+      // this.updateLabelDate(param);
+      if(key != 'xz'){
+        this.updateLabelDate({
+          ...row,
+          id:key,
+          labelType:0
+        });
+      }else{
+        this.addLabellData({
+          ...row,
+          labelType:0
+        })
+      }
+      
+        console.log(row,"itemitemitemitem")
+      // if (index > -1) {
+        
+
+        // newData.splice(index, 1, {
+        //   ...item,
+        //   ...row,
+        // });
+
+
+        // this.setState({ data: newData, editingKey: '' });
+      // } else {
+        // newData.push(row);
+        // this.setState({ data: newData, editingKey: '' });
+      // }
+    });
+  }
+
+  edit(key) {
+    this.setState({ editingKey: key });
+  }
+
+  render() {
+    const components = {
+      body: {
+        cell: EditableCell,
+      },
+    };
+
+    const {data} = this.state;
+
+    const columns = this.columns.map(col => {
+      if (!col.editable) {
+        return col;
+      }
+      return {
+        ...col,
+        onCell: record => ({
+          record,
+          inputType: col.dataIndex === 'age' ? 'number' : 'text',
+          dataIndex: col.dataIndex,
+          title: col.title,
+          editing: this.isEditing(record),
+        }),
+      };
+    });
+
+    return (
+      <div style={{
+          // width: '500px',
+          margin: '20px',
+      }}>
+        {data.length <=0 ? (<Button style={{marginBottom:10}} onClick={this.handleAdd}>新增标签</Button>):""}
+        <EditableContext.Provider value={this.props.form}>
+          <Table
+            components={components}
+            bordered={false}
+            size="small"
+            dataSource={data}
+            columns={columns}
+            rowClassName="editable-row"
+            pagination={
+              false
+            //   {
+            //   onChange: this.cancel,
+            // }
+          }
+          />
+        </EditableContext.Provider>
+      </div>
     );
   }
 }
-// export default BaseView;
+
+// const EditableFormTable = Form.create()(EditableTable);
+
+// ReactDOM.render(<EditableFormTable />, mountNode);
 
 
-class EditableTable extends React.Component {
-    constructor(props) {
-      super(props);
-      this.columns = [
-        {
-            title: '标签',
-            dataIndex: 'labelName',
-            width: '40%',
-            editable: true,
-        },
-        {
-            title: '颜色',
-            dataIndex: 'color',
-            width: '40%',
-            editable: true,
-        },
-        {
-            title: '操作',
-            dataIndex: 'operation',
-            render: (text, record, index) =>{
-                console.log(this.state.dataSource,index)
-                if(this.state.dataSource.length < 1){
-                    return null
-                }
-                if(index+1 === this.state.dataSource.length){
-                    return (
-                      <>
-                      <Popconfirm 
-                       title="确定删除吗?" 
-                       onConfirm={() => this.handleDelete(record.id)}
-                      >
-                           <a>删除</a>
-                       </Popconfirm>
-                       <a style={{marginLeft:5}} onClick={this.handleAdd}>添加</a>
-                    </>
-                    )
-                }else{
-                    return (
-                        <Popconfirm title="确定删除吗?" onConfirm={() => this.handleDelete(record.id)}>
-                            <a>删除</a>
-                        </Popconfirm>
-                    )
-                }
-            }
-        },
-      ];
-  
-      this.state = {
-        dataSource: [],
-        count: 2,
-      };
-    }
-
-    componentWillMount(){
-      this.getLabelList()
-    }
-
-    getLabelList = () =>{
-      getLabel({
-        "current": 1,
-	      "size": 100,
-      }).then(res=>{
-        
-        this.setState({
-          dataSource:res.data.records
-        })
-      })
-    }
-
-    addLabellData = (param) =>{
-      param.labelType = 0;
-      addLabel([param]).then(res=>{
-        this.getLabelList()
-      })
-    }
-
-    removeLabelData = (id) =>{
-      removeLabel(id).then(res=>{
-        this.getLabelList()
-      })
-    }
-  
-    handleDelete = id => {
-      // const dataSource = [...this.state.dataSource];
-      // this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
-      this.removeLabelData(id)
-    };
-  
-    handleAdd = () => {
-      const { count, dataSource } = this.state;
-      const newData = {
-        key: count,
-        labelName: `标签 ${count}`,
-        color: '#40A9FF',
-      };
-      this.addLabellData({
-        labelName: `标签 ${count}`,
-        color: '#40A9FF',
-      })
-      this.setState({
-        dataSource: [...dataSource, newData],
-        count: count + 1,
-      });
-    };
-  
-    handleSave = row => {
-      const newData = [...this.state.dataSource];
-      const index = newData.findIndex(item => row.key === item.key);
-      const item = newData[index];
-      newData.splice(index, 1, {
-        ...item,
-        ...row,
-      });
-      console.log(newData,"newData")
-      this.setState({ dataSource: newData });
-    };
-  
-    render() {
-      const { dataSource } = this.state;
-      const components = {
-        body: {
-          row: EditableFormRow,
-          cell: EditableCell,
-        },
-      };
-      const columns = this.columns.map(col => {
-        if (!col.editable) {
-          return col;
-        }
-        return {
-          ...col,
-          onCell: record => ({
-            record,
-            editable: col.editable,
-            dataIndex: col.dataIndex,
-            title: col.title,
-            handleSave: this.handleSave,
-            handletLabelList: this.getLabelList
-          }),
-        };
-      });
-      return (
-        <div style={{
-            width: '500px',
-            margin: '20px',
-            float: 'left'
-        }}>
-          <Alert message="此页面操作为实时更新，请谨慎操作！" type="warning" showIcon style={{marginBottom:10}}/>
-          {dataSource.length <=0 ? (<Button style={{marginBottom:10}} onClick={this.handleAdd}>新增标签</Button>):""}
-            <Table
-                components={components}
-                rowClassName={() => 'editable-row'}
-                // bordered
-                size="small"
-                dataSource={dataSource}
-                columns={columns}
-                pagination={false}
-            />
-        </div>
-      );
-    }
-  }
   const EditableFormTable = Form.create()(EditableTable);
   export default EditableFormTable;
 //   ReactDOM.render(<EditableTable />, mountNode);

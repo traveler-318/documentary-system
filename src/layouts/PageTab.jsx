@@ -147,6 +147,12 @@ class App extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.setState({
+      pages: [],
+    });
+  }
+
   reflash(key) {
     const { keys } = this.state;
     keys[key] = Date.now();
@@ -159,7 +165,6 @@ class App extends Component {
     const { tabs, children } = this.props;
     const { pathname, pageName } = tabs;
     const { pages } = this.state;
-    console.log(pages)
     const myPage = Object.assign([], pages);
     // 如果是新开标签页，push到tabs标签页数组中，并设置当前激活页面
     if (pathname !== '/' && !pages.some(page => page.key === pathname)) {
@@ -235,7 +240,7 @@ class App extends Component {
 
   render() {
     const { pages = [], activeKey, keys } = this.state;
-
+    const activeKey1 = sessionStorage.getItem('current-tab-activeKey');
     return (
       <div>
         <DraggableTabs
@@ -273,7 +278,7 @@ class App extends Component {
                           this.reflash(pane.key);
                         }}
                       >
-                        {pane.title == '首页' ? (<Icon type="home" />):(<Icon type="file" />)}
+                        {pane.title === '首页' ? (<Icon type="home" />):(<Icon type="file" />)}
                         {pane.title}
                       </span>
                     </Tooltip>
@@ -283,7 +288,10 @@ class App extends Component {
                 closable={pages.length > 1}
                 style={{ background: 'transparent', paddingLeft: 0, paddingRight: 0 }}
               >
-                <div key={keys[pane.key]} className={pageTabStyle.content}>{pane.content}</div>
+                {/*<div key={keys[pane.key]} className={pageTabStyle.content}>{pane.content}</div>*/}
+                {activeKey1 === pane.key ? (
+                  <div key={keys[pane.key]} className={pageTabStyle.content}>{pane.content}</div>
+                ):''}
               </TabPane>
             );
           })}

@@ -63,13 +63,11 @@ class ProductList extends PureComponent {
         // this.setState({
         //   loading:false
         // })
-        console.log(res.data.records,"12323")
         this.setState({
             dataSource:res.data.records
         },()=>{
             console.log(this.state.dataSource,"12323")
         })
-
         // {
         //     list:res.data.records,
         //     pagination:{
@@ -83,7 +81,6 @@ class ProductList extends PureComponent {
 
   getUrl = () => {
     getCodeUrl().then(res=>{
-      console.log(res)
       this.setState({
         codeUrl:res.data
       })
@@ -91,7 +88,7 @@ class ProductList extends PureComponent {
   }
 
   handleChange = value => {
-    console.log("1111")
+
   };
 
   // ======关闭弹窗==========
@@ -109,6 +106,12 @@ class ProductList extends PureComponent {
         const { globalParameters } = this.props;
         const { codeUrl } = this.state;
         console.log(globalParameters)
+
+        if(!globalParameters.detailData.name){
+          message.error('当前销售二维码未绑定售后人员，请配置售后人员后再次尝试。');
+          return false;
+        }
+
         //const url = codeUrl+"&userName="+globalParameters.detailData.userName+"&deptId="+globalParameters.detailData.deptId+"&payAmount="+values.payAmount;
         const url = codeUrl+globalParameters.detailData.userAccount+"_"+row.id+"_"+row.price;
         console.log(url)
@@ -229,7 +232,6 @@ class ProductList extends PureComponent {
             },
         },
       ];
-      console.log(dataSource,"12323")
     // confirmTag
     return (
       <div>

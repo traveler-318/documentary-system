@@ -93,6 +93,7 @@ class BaseView extends Component {
           const property ={
             daysOverdue:values.daysOverdue,
             transferNumber:values.transferNumber,
+            authenticationStatus:values.authenticationStatus,
             deptId:values.deptId
           }
           propertyUpdate(property).then(resp => {

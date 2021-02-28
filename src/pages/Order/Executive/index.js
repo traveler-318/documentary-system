@@ -218,8 +218,6 @@ class AllOrdersList extends PureComponent {
   getSalesmanList = (value = "all_all") => {
     getCurrentsalesman(value).then(res=>{
 
-      console.log(res,"!!!!!!!!!!!!!!!")
-
       if(res.code === 200){
         res.data.unshift({key:'全部',value:''});
         this.setState({
@@ -236,18 +234,19 @@ class AllOrdersList extends PureComponent {
         salesmanList:[]
       })
       this.props.form.setFieldsValue({
-        salesman: `全部`
+        // salesman: `全部`
+        salesman: ['全部']
       });
     }
   }
   // ============ 查询 ===============
   handleSearch = (params) => {
     console.log(params,"查询参数")
-    const { dateRange } = params;
+    const { dateRange,sorts } = params;
+
     const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
-      // orderBy:false
     };
     if (dateRange) {
       payload = {
@@ -257,6 +256,11 @@ class AllOrdersList extends PureComponent {
       };
       // payload.dateRange = null;
     }
+
+    if(sorts){
+      payload.orderBy = sorts.order ==='ascend' ? true:false
+    }
+
     if(payload.organizationId && payload.organizationId === ""){
       payload.organizationId = null;
     }
@@ -267,16 +271,19 @@ class AllOrdersList extends PureComponent {
       payload.orderSource = null;
     }
     let text = "";
-    if(payload.salesman === "全部" || payload.salesman === ""){
-      for(let i=0; i<salesmanList.length; i++){
-        if(salesmanList[i].value){
-          text +=salesmanList[i].value+","
+    if(payload.salesman != undefined ){
+      if(payload.salesman[0] === "全部" || payload.salesman === ""){
+        for(let i=0; i<salesmanList.length; i++){
+          if(salesmanList[i].value){
+            text +=salesmanList[i].value+","
+          }
         }
+        payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"");
+      }else{
+        payload.salesman = payload.salesman.toString()
       }
-      payload.salesman = text.replace(/^,+/,"").replace(/,+$/,"");
-    }else{
-      payload.salesman = payload.salesman
     }
+
 
     payload = {
       ...payload,
@@ -365,11 +372,11 @@ class AllOrdersList extends PureComponent {
         <Form.Item label="销售">
           {getFieldDecorator('salesman', {
               })(
-              <Select placeholder={"请选择销售"} style={{ width: 200 }}>
-                {salesmanList.map((item,index)=>{
-                  return (<Option key={index} value={item.value}>{item.key}</Option>)
-                })}
-              </Select>
+            <Select mode="multiple" placeholder={"请选择销售"} style={{ width: 200 }}>
+              {salesmanList.map((item,index)=>{
+                return (<Option key={index} value={item.value}>{item.key}</Option>)
+              })}
+            </Select>
             )}
         </Form.Item>
         <Form.Item label="订单来源">
@@ -1086,7 +1093,6 @@ class AllOrdersList extends PureComponent {
   }
   // 左侧操作按钮
   renderLeftButton = (tabKey) => {
-    console.log(tabKey,"tabKey")
     return (<>
       <SearchButton
         btnButtonBack={this.btnButtonBack}
@@ -1730,7 +1736,7 @@ class AllOrdersList extends PureComponent {
   getOrderMenuHead = () => {
     const {tabKey}=this.state;
     console.log(tabKey)
-    orderMenuHead().then(resp=>{
+    orderMenuHead(0).then(resp=>{
       console.log(resp)
       if(resp.code === 200){
         const list=resp.data.menuJson;
@@ -1862,6 +1868,10 @@ class AllOrdersList extends PureComponent {
           if(item.dataIndex === "userAddress"){
             item.ellipsis=true
           }
+          // 销售
+          if(item.dataIndex === "salesman"){
+            item.ellipsis=true
+          }
           checked.push(item.dataIndex)
         })
         this.setState({
@@ -1876,7 +1886,7 @@ class AllOrdersList extends PureComponent {
   }
 
   getOrderMenuTemplate = () => {
-    orderMenuTemplate().then(res=>{
+    orderMenuTemplate(0).then(res=>{
       res.data.menuJson.map(item => {
         item.key=item.dataIndex
       })

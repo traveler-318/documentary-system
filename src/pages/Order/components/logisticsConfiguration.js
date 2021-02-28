@@ -8,7 +8,7 @@ import Panel from '../../../components/Panel';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import styles from '../../../layouts/Sword.less';
 import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
-import { getUserInfo } from '../../../services/user';
+import { getSalesmanInfo } from '../../../services/user';
 import func from '../../../utils/Func';
 import { tenantMode } from '../../../defaultSettings';
 import { CITY } from '../../../utils/city';
@@ -111,7 +111,7 @@ class LogisticsConfiguration extends PureComponent {
     // this.assemblingData();
     this.getTreeList();
 
-    getUserInfo().then(resp => {
+    getSalesmanInfo().then(resp => {
       if (resp.success) {
         const userInfo = resp.data;
         this.setState({

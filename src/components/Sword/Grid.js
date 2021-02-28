@@ -66,31 +66,22 @@ export default class Grid extends PureComponent {
   };
 
   handleStandardTableChange = async (pagination, filters, sorter) => {
-
-    if(sorter.order === "ascend"){
-      await this.setState({
-        current: pagination.current,
-        size: pagination.pageSize,
-        orderBy:true
-      });
-    }else {
-      await this.setState({
-        current: pagination.current,
-        size: pagination.pageSize,
-        orderBy:false
-      });
-    }
+    await this.setState({
+      current: pagination.current,
+      size: pagination.pageSize,
+      sorts:sorter
+    });
     this.refreshTable();
   };
 
   refreshTable = (firstPage = false) => {
     const { onSearch } = this.props;
-    const { current, size, formValues,orderBy } = this.state;
+    const { current, size, formValues,sorts } = this.state;
 
     const params = {
       current: firstPage ? 1 : current,
-      orderBy,
       size,
+      sorts:sorts,
       ...formValues,
     };
     if (onSearch) {

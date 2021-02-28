@@ -1,4 +1,12 @@
 export default {
+  'menu.client': '客户管理',
+  'menu.client.allcustomer': '全部客户',
+  'menu.client.subordinate': '下属客户',
+  'menu.client.mycustomer': '我的客户',
+  'menu.client.allpublic': '全部公海',
+  'menu.client.subordinatepublic': '下属公海',
+  'menu.client.mypublic': '我的公海',
+
   'menu.order': '订单管理',
   'menu.order.allOrders': '全部订单',
   'menu.order.salesmanOrder': '销售订单',
@@ -7,6 +15,7 @@ export default {
   'menu.order.smsrecord': '短信记录',
   'menu.order.mySubordinates': '我的下属',
   'menu.order.executive': '团队订单',
+  'menu.order.safeguard': '维护订单',
 
   'menu.orders': '订单管理',
   'menu.orders.orderList': '全部订单',
@@ -24,6 +33,7 @@ export default {
   'menu.customer': '客服管理',
   'menu.customer.sales': '销售列表',
   'menu.customer.afterSale': '售后管理',
+
   'menu.product': '产品管理',
   'menu.product.payBrand': '支付品牌',
   'menu.product.productType': '产品类型',

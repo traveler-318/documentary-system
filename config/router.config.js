@@ -537,6 +537,16 @@ export default [
             ],
           },
           {
+            path: '/order/safeguard',
+            routes: [
+              { path: '/order/safeguard', component: './Order/Safeguard/index' },
+              // { path: '/order/executive/list', component: './Order/Executive/index' },
+              { path: '/order/safeguard/add', component: './Order/Safeguard/add' },
+              { path: '/order/safeguard/edit/:id', component: './Order/components/edit' },
+              { path: '/order/safeguard/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
+            ],
+          },
+          {
             path: '/order/salesmanOrder',  //业务员订单
             routes: [
               { path: '/order/salesmanOrder', component: './Order/SalesmanOrder/index' },
@@ -631,7 +641,19 @@ export default [
               { path: '/logistics/additional/edit', component: './Logistics/Additional/edit' },
             ],
           },
-        
+
+        ],
+      },
+      {
+        path: '/client',
+        routes: [
+          { path: '/client/allcustomer', component: './Client/Customer/index',key:'customer' },
+          { path: '/client/customer/add/:type', component: './Client/Customer/add' },
+          // { path: '/client/subordinate', component: './Client/Customer/index',key:'subordinate' },
+          // { path: '/client/mycustomer', component: './Client/Customer/index',key:'mycustomer' },
+          { path: '/client/allpublic', component: './Client/Customer/index',key:'public' },
+          // { path: '/client/subordinatepublic', component: './Client/Customer/index',key:'subordinatepublic' },
+          // { path: '/client/mypublic', component: './Client/Customer/index',key:'mypublic' }
         ],
       },
       {
@@ -652,7 +674,7 @@ export default [
               { path: '/customer/afterSale/add', component: './Customer/AfterSale/add' },
               { path: '/customer/afterSale/edit', component: './Customer/AfterSale/edit' },
             ],
-          },
+          }
         ],
       },{
         path: '/product',
