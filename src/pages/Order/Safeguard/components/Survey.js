@@ -343,25 +343,25 @@ class Survey extends PureComponent {
           </Descriptions>
           <Row gutter={16} style={{textAlign:'center'}}>
             <Col span={6}>
-              <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
+              <Card bordered={true} style={{lineHeight:'30px',height:'70px',backgroundColor:'#F1F6FC',borderColor:'#EDF3FC'}}>
                 <div style={{fontWeight:'bold'}}>维护状态</div>
                 <div>{this.clientStatusName}</div>
               </Card>
             </Col>
             <Col span={6}>
-              <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
+              <Card bordered={true} style={{lineHeight:'30px',height:'70px',backgroundColor:'#F1F6FC'}}>
                 <div style={{fontWeight:'bold'}}>交易总额</div>
                 <div>{detail.totalTradingVolume}元</div>
               </Card>
             </Col>
             <Col span={6}>
-              <Card bordered={true} style={{lineHeight:'30px',borderWidth:'2px'}}>
+              <Card bordered={true} style={{lineHeight:'30px',height:'70px',backgroundColor:'#F1F6FC'}}>
                 <div style={{fontWeight:'bold'}}>交易次数</div>
                 <div>{transactionRecords.length}次</div>
               </Card>
             </Col>
             <Col span={6}>
-              <Card bordered={true} style={{lineHeight:'30px'}}>
+              <Card bordered={true} style={{lineHeight:'30px',height:'70px',backgroundColor:'#F1F6FC'}}>
                 <div style={{fontWeight:'bold'}}>距离上次跟进</div>
                 <div>{detail.followTime}</div>
               </Card>
@@ -412,7 +412,7 @@ class Survey extends PureComponent {
                 return (<Select.Option key={index} value={item}>{item}</Select.Option>)
               })}
             </Select>
-            <div style={{cursor:"pointer",border:"1px solid #ccc",height:'32px',padding:'4px 6px',display:'inline-block',marginRight:'5px'}} >
+            <div style={{cursor:"pointer",border:"1px solid #ccc",height:'32px',padding:'4px 6px',display:'inline-block',marginRight:'5px', color: '#7b7b7b',borderRadius:'2px'}} >
               <span
                 onClick={this.handleReminderTime}>
                 <Icon
