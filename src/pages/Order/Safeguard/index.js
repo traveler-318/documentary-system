@@ -512,9 +512,13 @@ class AllOrdersList extends PureComponent {
   flowUpdate = () => {
     const {selectedRows} = this.state;
 
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
+    if (selectedRows.length === 0) {
+      return message.info('请先选择一条数据!');
     }
+    if (selectedRows.length > 1) {
+      return message.info('只能选择一条数据!');
+    }
+
     const { dispatch } = this.props;
     dispatch({
       type: `globalParameters/setDetailData`,
@@ -539,9 +543,13 @@ class AllOrdersList extends PureComponent {
   statusUpdate = () => {
     const {selectedRows} = this.state;
 
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
+    if (selectedRows.length === 0) {
+      return message.info('请先选择一条数据!');
     }
+    if (selectedRows.length > 1) {
+      return message.info('只能选择一条数据!');
+    }
+
     const { dispatch } = this.props;
     dispatch({
       type: `globalParameters/setDetailData`,
