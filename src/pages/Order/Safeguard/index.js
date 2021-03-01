@@ -218,6 +218,8 @@ class AllOrdersList extends PureComponent {
         selectedRowKeys:[]
       })
     })
+
+    this.onSelectRow([],[])
   }
   // 根据组织获取对应的业务员数据
   getSalesmanList = (value = "all_all") => {
@@ -527,6 +529,9 @@ class AllOrdersList extends PureComponent {
     this.setState({
       isUpdate:false
     })
+  }
+  flowUpdateSuccess = () =>{
+    this.flowUpdateCancel()
     this.getDataList()
   }
 
@@ -551,8 +556,12 @@ class AllOrdersList extends PureComponent {
     this.setState({
       isUpdateStatus:false
     })
+  }
+  statusUpdateSuccess =() =>{
+    this.statusUpdateCancel();
     this.getDataList()
   }
+
 
   // 导出
   exportFile = () => {
@@ -1387,13 +1396,13 @@ class AllOrdersList extends PureComponent {
         ):""}
 
         {isUpdate?(
-          <Update isUpdate={isUpdate} handleCancel={this.flowUpdateCancel}>
+          <Update isUpdate={isUpdate} handleSuccess={this.flowUpdateSuccess} handleCancel={this.flowUpdateCancel}>
 
           </Update>
         ):''}
 
         {isUpdateStatus?(
-          <UpdateStatus isUpdate={isUpdateStatus} clientStatus={clientStatus} handleCancel={this.statusUpdateCancel}/>
+          <UpdateStatus isUpdate={isUpdateStatus} clientStatus={clientStatus} handleSuccess={this.statusUpdateSuccess} handleCancel={this.statusUpdateCancel}/>
         ):''}
 
         {/* 导出 */}

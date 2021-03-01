@@ -56,7 +56,7 @@ class Update extends PureComponent {
         processupdate(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
-            this.props.handleCancel()
+            this.props.handleSuccess()
           }else {
             message.error(res.msg);
           }
