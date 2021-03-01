@@ -178,6 +178,8 @@ class Import extends PureComponent {
             params[key] = values[key]
           }
         }
+
+
         delete params.addrCoding;
         if(values.file){
           importClient(params).then(res=>{
