@@ -251,6 +251,7 @@ class CustomerDetail extends PureComponent {
                 initialValue: moment(detail.createTime),
               })(<DatePicker
                 disabled={true}
+                format="YYYY-MM-DD HH:mm:ss"
                 style={{ width: '100%' }}
               />)}
             </FormItem>
@@ -259,6 +260,7 @@ class CustomerDetail extends PureComponent {
                 initialValue: moment(detail.updateTime),
               })(<DatePicker
                 disabled={true}
+                format="YYYY-MM-DD HH:mm:ss"
                 style={{ width: '100%' }}
               />)}
             </FormItem>

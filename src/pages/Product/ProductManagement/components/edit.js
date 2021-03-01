@@ -319,7 +319,7 @@ class Logistics extends PureComponent {
                   ],
                 })(<Input placeholder="请输入价格" />)}
               </FormItem>
-              <FormItem {...formAllItemLayout} label="结算价">
+              {/* <FormItem {...formAllItemLayout} label="结算价">
                 {getFieldDecorator('settlePrice', {
                   initialValue: details.settlePrice,
                   rules: [
@@ -340,21 +340,21 @@ class Logistics extends PureComponent {
                     },
                   ],
                 })(<Input placeholder="请输入排序编号" />)}
-              </FormItem>
+              </FormItem> */}
               <FormItem {...formAllItemLayout} label="一阶段">
                 {getFieldDecorator('customOne', {
                   initialValue: details.customOne,
-                })(<Input placeholder="请输入一阶段" disabled={details.customOne ? true : false} />)}
+                })(<Input placeholder="请输入一阶段" disabled={details.customOne ==='0' || details.customOne ==='' ? false : true} />)}
               </FormItem>
               <FormItem {...formAllItemLayout} label="二阶段">
                 {getFieldDecorator('customTwo', {
                   initialValue: details.customTwo,
-                })(<Input placeholder="请输入二阶段" disabled={details.customTwo ? true : false} />)}
+                })(<Input placeholder="请输入二阶段" disabled={details.customTwo ==='0' || details.customTwo ==='' ? false : true} />)}
               </FormItem>
               <FormItem {...formAllItemLayout} label="三阶段">
                 {getFieldDecorator('customThree', {
                   initialValue: details.customThree,
-                })(<Input placeholder="请输入三阶段" disabled={details.customThree ? true : false} />)}
+                })(<Input placeholder="请输入三阶段" disabled={details.customThree ==='0' || details.customThree ==='' ? false : true} />)}
               </FormItem>
             </Form>
           </div>

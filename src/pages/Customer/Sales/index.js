@@ -215,6 +215,10 @@ class AuthorityList extends PureComponent {
       message.success('当前业务员关闭状态,不能生成聚合码');
       return false
     }
+    if(!res.name){
+      message.error('当前销售二维码未绑定售后人员，请配置售后人员后再次尝试。');
+      return false;
+    }
     const { dispatch } = this.props;
     dispatch({
       type: `globalParameters/setDetailData`,

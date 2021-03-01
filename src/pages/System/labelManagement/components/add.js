@@ -29,9 +29,7 @@ class PayBrandAdd extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:{
-        sortNumber:0
-      },
+      data:{},
       params:{
         size:10,
         current:1
@@ -81,6 +79,10 @@ class PayBrandAdd extends PureComponent {
 
   valinsPayChange = (rule, value, callback) => {
     var reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    console.log(value,"valuevalue")
+    if(!value || value === "" || value === null){
+      callback('请输入正确的排序');
+    }else
     if(value != "" && value != null){
       if(!reg.test(value)){
         callback('请输入正确的排序');
@@ -208,7 +210,6 @@ class PayBrandAdd extends PureComponent {
             </FormItem>
             <FormItem {...formAllItemLayout} label="标签排序">
               {getFieldDecorator('sortNumber', {
-                initialValue: data.sortNumber,
                 rules: [
                   {
                     required: true,

@@ -30,6 +30,7 @@ class BaseView extends Component {
     userId: '',
     avatar: '',
     loading: false,
+    TabsKey: '',
   };
 
   componentWillMount() {
