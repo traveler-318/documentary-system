@@ -385,7 +385,6 @@ class AllOrdersList extends PureComponent {
       case  'customer': queryType = '1';break;//'全部客户',
       case  'public': queryType = '2';break; //'全部公海',
     }
-    console.log(clientLevels)
     return (
       <div className={"default_search_form"}>
         <Form.Item label="姓名">
@@ -1086,7 +1085,6 @@ class AllOrdersList extends PureComponent {
           }
           list = arr;
         }
-        console.log(list,"@@@@@@@@@@@@@@@@@@@@@@@")
         this.setState({
           checkedOptions:checked,
           columns:list,
