@@ -267,7 +267,7 @@ class CustomerDetail extends PureComponent {
               {getFieldDecorator('nextFollowTime', {
                 initialValue: detail.nextFollowTime ? moment(detail.nextFollowTime) : '' ,
               })(<DatePicker
-                disabled={detail.nextFollowTime ? true : edit}
+                disabled={edit}
                 style={{ width: '100%' }}
                 format="YYYY-MM-DD HH:mm:ss"
               />)}
