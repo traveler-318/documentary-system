@@ -101,16 +101,17 @@ class Logistics extends PureComponent {
           productTypeName,
           deptId:getCookie("dept_id"),
           price:values.price ? Number(values.price) : null,
-          settlePrice:values.settlePrice ? Number(values.settlePrice) : null,
+          // settlePrice:values.settlePrice ? Number(values.settlePrice) : null,
           originalName:Imglist.originalName
         };
-        console.log(params)
-        getProductattributeAdd(params).then(res=>{
-          if(res.code === 200){
-            message.success(res.msg);
-            router.push('/product/productManagement');
-          }
-        })
+        console.log(values,"!!!!!!!!!")
+        console.log(params,"@@@@@@@@@@")
+        // getProductattributeAdd(params).then(res=>{
+        //   if(res.code === 200){
+        //     message.success(res.msg);
+        //     router.push('/product/productManagement');
+        //   }
+        // })
       }
     });
   };
@@ -150,20 +151,20 @@ class Logistics extends PureComponent {
 
   amountMarkChange = (rule, value, callback) => {
     var re = /^[0-9]+$/ ;
-    if (re.test(value)) {
-      callback('请输入总达标金额!');
-    }else if(!value){
+    if (!re.test(value)) {
       callback('请输入正整数!');
+    }else if(!value){
+      callback('请输入总达标金额');
     }
     return callback();
   };
 
   timeoutTimeChange = (rule, value, callback) => {
     var re = /^[0-9]+$/ ;
-    if (re.test(value)) {
-      callback('请输入未达标周期!');
-    }else if(!value){
+    if (!re.test(value)) {
       callback('请输入正整数!');
+    }else if(!value){
+      callback('请输入未达标周期');
     }
     return callback();
   };
@@ -201,7 +202,6 @@ class Logistics extends PureComponent {
 
 
   onChangeRadio = e => {
-    console.log('radio checked', e.target.value);
     this.setState({
       radioValue: e.target.value,
     });
@@ -359,9 +359,10 @@ class Logistics extends PureComponent {
                 })(<Input placeholder="请输入排序编号" />)}
               </FormItem> */}
 
-
               <FormItem {...formAllItemLayout} label='任务功能'>
-                {getFieldDecorator('tasksMark')(
+                {getFieldDecorator('tasksMark', {
+                  initialValue: data.tasksMark,
+                })(
                   <Radio.Group onChange={this.onChangeRadio}>
                     <Radio key={1} value={1}>开启</Radio>
                     <Radio key={0} value={0}>关闭</Radio>

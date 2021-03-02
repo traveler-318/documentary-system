@@ -1002,12 +1002,6 @@ class AllOrdersList extends PureComponent {
     });
   };
 
-  components = {
-    header: {
-      cell: ResizeableTitle,
-    },
-  };
-
   onDrop = info => {
     const dropKey = info.node.props.eventKey;
     const dragKey = info.dragNode.props.eventKey;
@@ -1202,6 +1196,12 @@ class AllOrdersList extends PureComponent {
     })
     return v
   }
+
+  components = {
+    header: {
+      cell: ResizeableTitle,
+    },
+  };
 
   render() {
     const code = 'allOrdersList';
@@ -1446,10 +1446,13 @@ class AllOrdersList extends PureComponent {
       }
     )
 
-
-
-
-
+    list = list.map((col, index) => ({
+      ...col,
+      onHeaderCell: column => ({
+        width: column.width,
+        onResize: this.handleResize(index),
+      }),
+    }));
 
 
     const TabPanes = () => (

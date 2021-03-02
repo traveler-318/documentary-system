@@ -159,7 +159,13 @@ class Import extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values.file = this.state.fileList[0];
-        values.createTime=this.state.createTime;
+
+        if(this.state.createTime){
+          values.createTime=this.state.createTime;
+        }else {
+          values.createTime=moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+        }
+
         if(!values.salesman){
           values.salesman=null
         }
@@ -204,7 +210,7 @@ class Import extends PureComponent {
             })
             if(res.code === 200){
               message.success(res.msg)
-              // this.props.handleOrderImportCancel();
+              this.props.handleOrderImportCancel();
             }else{
               message.error(res.msg)
             }
