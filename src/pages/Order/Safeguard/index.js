@@ -957,16 +957,16 @@ class AllOrdersList extends PureComponent {
     })
   }
 
-  // handleResize = index => (e, { size }) => {
-  //   this.setState(({ columns }) => {
-  //     const nextColumns = [...columns];
-  //     nextColumns[index] = {
-  //       ...nextColumns[index],
-  //       width: size.width,
-  //     };
-  //     return { columns: nextColumns };
-  //   });
-  // };
+  handleResize = index => (e, { size }) => {
+    this.setState(({ columns }) => {
+      const nextColumns = [...columns];
+      nextColumns[index] = {
+        ...nextColumns[index],
+        width: size.width,
+      };
+      return { columns: nextColumns };
+    });
+  };
 
 
   // SN激活导入弹窗
@@ -1324,13 +1324,13 @@ class AllOrdersList extends PureComponent {
           },
         }
     )
-    // const columns = this.state.columns.map((col, index) => ({
-    //   ...col,
-    //   onHeaderCell: column => ({
-    //     width: column.width,
-    //     onResize: this.handleResize(index),
-    //   }),
-    // }));
+    const tableColumns = list.map((col, index) => ({
+      ...col,
+      onHeaderCell: column => ({
+        width: column.width,
+        onResize: this.handleResize(index),
+      }),
+    }));
 
     return (
       <Panel>
@@ -1364,7 +1364,7 @@ class AllOrdersList extends PureComponent {
             renderSearchForm={this.renderSearchForm}
             loading={loading}
             data={data}
-            columns={list}
+            columns={tableColumns}
             scroll={{ x: 1000 }}
             renderLeftButton={()=>this.renderLeftButton(tabKey)}
             // renderRightButton={this.renderRightButton}

@@ -343,7 +343,7 @@ class Survey extends PureComponent {
           </Descriptions>
           <Row gutter={16} style={{textAlign:'center'}}>
             <Col span={6}>
-              <Card bordered={true} style={{lineHeight:'30px',height:'70px',backgroundColor:'#F1F6FC',borderColor:'#EDF3FC'}}>
+              <Card bordered={true} style={{lineHeight:'30px',height:'70px',backgroundColor:'#F1F6FC'}}>
                 <div style={{fontWeight:'bold'}}>维护状态</div>
                 <div>{this.clientStatusName}</div>
               </Card>
@@ -384,13 +384,13 @@ class Survey extends PureComponent {
                       style={{color:"rgb(90, 205, 216)",marginLeft:5,cursor:"pointer"}}
                     >{item.reminderTime}</span>
                     <span
-                      style={{float:"right",cursor:"pointer"}}
+                      style={{float:"right",cursor:"pointer",color:"#bfbfbf"}}
                       onClick={()=>this.handleDelect(index)}
                     >
                       <Icon type="close" />
                     </span>
                   </p>
-                  <p>{item.describe}</p>
+                  <p>{item.followway+','+item.describe}</p>
                   <p>{item.createTime}</p>
                 </Timeline.Item>
               )
@@ -412,7 +412,7 @@ class Survey extends PureComponent {
                 return (<Select.Option key={index} value={item}>{item}</Select.Option>)
               })}
             </Select>
-            <div style={{cursor:"pointer",border:"1px solid #ccc",height:'32px',padding:'4px 6px',display:'inline-block',marginRight:'5px', color: '#7b7b7b',borderRadius:'2px'}} >
+            <div style={{cursor:"pointer",border:"1px solid #ccc",height:'32px',padding:'4px 6px',display:'inline-block',marginRight:'5px', color: '#bfbfbf',borderRadius:'2px'}} >
               <span
                 onClick={this.handleReminderTime}>
                 <Icon

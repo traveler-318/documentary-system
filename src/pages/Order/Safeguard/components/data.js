@@ -219,17 +219,18 @@ export function exportData() {
   return [
     {value:"姓名",code:"user_name"},
     {value:"手机号",code:"user_phone"},
-    {value:"收货地址",code:"user_address"},
-    {value:"产品分类",code:"product_type"},
-    {value:"产品型号",code:"product_name"},
+    {value:"客户详细地址",code:"user_address"},
+    {value:"商户名称",code:"merchantName"},
+    {value:"商户号",code:"merchants"},
     {value:"SN",code:"product_coding"},
-    {value:"订单状态",code:"confirm_tag"},
-    {value:"订单类型",code:"order_type"},
-    {value:"订单来源",code:"order_source"},
-    {value:"销售",code:"salesman"},
-    {value:"快递公司",code:"logistics_company"},
-    {value:"快递单号",code:"logistics_number"},
-    {value:"下单时间",code:"create_time"},
+    {value:"产品名称",code:"product_name"},//productName
+    {value:"产品流程阶段",code:"client_level"},
+    {value:"维护标签",code:"client_status"},
+    {value:"最近一笔交易量",code:"recent_deal_volume"},
+    {value:"总交易量",code:"total_trading_volume"},
+    {value:"最新跟进记录描述",code:"follow_recent_records"},
+    {value:"最近跟进时间",code:"follow_time"},
+    {value:"激活时间",code:"activation_signtime"},
   ]
 }
 
