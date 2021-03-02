@@ -15,7 +15,9 @@ export default {
   'menu.order.smsrecord': '短信记录',
   'menu.order.mySubordinates': '我的下属',
   'menu.order.executive': '团队订单',
-  'menu.order.safeguard': '维护订单',
+
+  'menu.standard':'达标管理',
+  'menu.standard.safeguard': '达标订单',
 
   'menu.orders': '订单管理',
   'menu.orders.orderList': '全部订单',
