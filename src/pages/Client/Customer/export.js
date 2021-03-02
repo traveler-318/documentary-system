@@ -229,7 +229,6 @@ class Export extends PureComponent {
     }
 
     // param.deptId = getCookie("dept_id");
-    console.log(param)
     axios({
       method: "post",
       url:`/api/client_info/clientinfo/exportClient`,

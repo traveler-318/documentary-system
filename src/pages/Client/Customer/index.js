@@ -385,7 +385,6 @@ class AllOrdersList extends PureComponent {
       case  'customer': queryType = '1';break;//'全部客户',
       case  'public': queryType = '2';break; //'全部公海',
     }
-    console.log(clientLevels)
     return (
       <div className={"default_search_form"}>
         <Form.Item label="姓名">
@@ -1003,12 +1002,6 @@ class AllOrdersList extends PureComponent {
     });
   };
 
-  components = {
-    header: {
-      cell: ResizeableTitle,
-    },
-  };
-
   onDrop = info => {
     const dropKey = info.node.props.eventKey;
     const dragKey = info.dragNode.props.eventKey;
@@ -1086,7 +1079,6 @@ class AllOrdersList extends PureComponent {
           }
           list = arr;
         }
-        console.log(list,"@@@@@@@@@@@@@@@@@@@@@@@")
         this.setState({
           checkedOptions:checked,
           columns:list,
@@ -1204,6 +1196,12 @@ class AllOrdersList extends PureComponent {
     })
     return v
   }
+
+  components = {
+    header: {
+      cell: ResizeableTitle,
+    },
+  };
 
   render() {
     const code = 'allOrdersList';
@@ -1448,10 +1446,13 @@ class AllOrdersList extends PureComponent {
       }
     )
 
-
-
-
-
+    list = list.map((col, index) => ({
+      ...col,
+      onHeaderCell: column => ({
+        width: column.width,
+        onResize: this.handleResize(index),
+      }),
+    }));
 
 
     const TabPanes = () => (

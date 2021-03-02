@@ -56,10 +56,10 @@ class BaseView extends Component {
 
   salesmanInfo = (userInfo) => {
     getSalesmanInfo().then(resp => {
-      console.log(resp)
       const { form } = this.props;
 
-      const _data = {...userInfo,...resp.data}
+      const _data = {...resp.data,...userInfo};
+
       Object.keys(form.getFieldsValue()).forEach(key => {
         const obj = {};
         obj[key] = _data[key];
@@ -244,11 +244,11 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formItemLayout} label={'本地打印'}>
+                <FormItem {...formItemLayout} label={'打印机类型'}>
                   {getFieldDecorator('localPrintStatus')(
                     <Radio.Group>
-                      <Radio key={1} value={1}>是</Radio>
-                      <Radio key={0} value={0}>否</Radio>
+                      <Radio key={1} value={1}>本地打印</Radio>
+                      <Radio key={0} value={0}>云打印</Radio>
                     </Radio.Group>
                   )}
                 </FormItem>

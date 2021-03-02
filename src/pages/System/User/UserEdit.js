@@ -98,6 +98,8 @@ class UserEdit extends PureComponent {
   validateName = (rule, value, callback) => {
     if ((/[\W]/g.test(value))) {
       callback(new Error('登录账号只能输入英文'));
+    }else if(/^\d+$/.test(value)){
+      callback(new Error('登录账号不能为纯数字'));
     }else{
       callback();
     }
