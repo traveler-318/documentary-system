@@ -257,7 +257,7 @@ class Export extends PureComponent {
     // param.deptId = getCookie("dept_id");
     axios({
       method: "post",
-      url:`/api//client_info/clientinfo/exportClient`,
+      url:`/api/client_info/clientinfo/exportClient`,
       data:param,
       headers: {
         "content-type": "application/json; charset=utf-8",
