@@ -53,7 +53,7 @@ class Logistics extends PureComponent {
     this.getProductcategoryLists(details.payPanyId)
 
     this.setState({
-      radioValue:details.tasksMark
+      radioValue:Number(details.tasksMark)
     })
 
     getPaypanyList({
@@ -376,9 +376,9 @@ class Logistics extends PureComponent {
 
               <FormItem {...formAllItemLayout} label='任务功能'>
                 {getFieldDecorator('tasksMark', {
-                  initialValue: data.tasksMark,
+                  initialValue: radioValue,
                 })(
-                  <Radio.Group onChange={this.onChangeRadio}>
+                  <Radio.Group onChange={this.onChangeRadio} value={radioValue}>
                     <Radio key={1} value={1}>开启</Radio>
                     <Radio key={0} value={0}>关闭</Radio>
                   </Radio.Group>
