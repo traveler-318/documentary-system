@@ -236,8 +236,8 @@ class CustomerDetail extends PureComponent {
               )}
             </FormItem>
             <FormItem {...formAllItemLayout} label="创建人">
-              {getFieldDecorator('createUser', {
-                initialValue: detail.createUser,
+              {getFieldDecorator('createName', {
+                initialValue: detail.createName,
               })(<Input disabled={true} placeholder="" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="系统编号">
