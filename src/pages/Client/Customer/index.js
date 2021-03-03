@@ -612,7 +612,7 @@ class AllOrdersList extends PureComponent {
     const { dispatch } = this.props;
     let param = {
       ...params,
-      startTime:params.startTime,
+      createTime:params.createTime,
       endTime:params.endTime
     };
     dispatch({
@@ -1250,6 +1250,7 @@ class AllOrdersList extends PureComponent {
       checkedOptions,
       plainOptions,
       columns,
+      queryUrlKey,
       routerKey
     } = this.state;
 
@@ -1524,6 +1525,7 @@ class AllOrdersList extends PureComponent {
         {exportVisible?(
           <Export
             exportVisible={exportVisible}
+            queryUrlKey={queryUrlKey}
             handleCancelExport={this.handleCancelExport}
           />
         ):""}
