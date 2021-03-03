@@ -18,7 +18,9 @@ class Update extends PureComponent {
     super(props);
     this.state = {
       detail:{},
-      customs:[]
+      customs:[],
+      isUpdate:true,
+      message:''
     };
   }
 
@@ -40,6 +42,13 @@ class Update extends PureComponent {
     }).then(res=>{
       if(res.success){
         let d = res.data;
+        if(!d.tasksMark){
+          this.setState({
+            isUpdate:false,
+            message:'当前产品没有阶段指标，不能进行阶段流程操作!'
+          })
+          return false;
+        }
         this.setState({
           customs:[d.customOne,d.customTwo,d.customThree]
         })
@@ -56,7 +65,7 @@ class Update extends PureComponent {
         processupdate(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
-            this.props.handleCancel()
+            this.props.handleSuccess()
           }else {
             message.error(res.msg);
           }
@@ -71,7 +80,7 @@ class Update extends PureComponent {
       form: { getFieldDecorator }
     } = this.props;
     const {
-      detail,customs
+      detail,customs,isUpdate,message
     } = this.state;
 
     const formAllItemLayout = {
@@ -95,25 +104,30 @@ class Update extends PureComponent {
           <Button key="back" onClick={this.props.handleCancel}>
             取消
           </Button>,
-          <Button key="submit" type="primary" onClick={this.handleSubmit}>
+          <Button key="submit" disabled={!isUpdate} type="primary" onClick={this.handleSubmit}>
             确定
           </Button>,
         ]}
       >
-        <Form>
-          <FormItem {...formAllItemLayout} label="阶段">
-            {getFieldDecorator('clientLevel', {
-              initialValue:detail.clientLevel,
-            })(
-              <Select placeholder={"请选择阶段"}>
-                <Select.Option value={'0'} disabled={true}>无</Select.Option>
-                {customs.map((item,i)=>{
-                  return (<Select.Option value={(i+1)+''}>{item}</Select.Option>)
-                })}
-              </Select>
-            )}
-          </FormItem>
-        </Form>
+        {isUpdate ? (
+          <Form>
+            <FormItem {...formAllItemLayout} label="阶段">
+              {getFieldDecorator('clientLevel', {
+                initialValue:detail.clientLevel,
+              })(
+                <Select placeholder={"请选择阶段"}>
+                  {/*<Select.Option value={'0'} disabled={true}>待维护</Select.Option>*/}
+                  {customs.map((item,i)=>{
+                    return (<Select.Option value={(i+1)+''}>{item}</Select.Option>)
+                  })}
+                </Select>
+              )}
+            </FormItem>
+          </Form>
+        ):(
+          <div>{message}</div>
+        )}
+
       </Modal>
     );
   }

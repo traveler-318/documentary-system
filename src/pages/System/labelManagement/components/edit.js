@@ -26,9 +26,7 @@ class PayBrandAdd extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:{
-        sortNumber:0
-      },
+      data:{},
       params:{
         size:10,
         current:1

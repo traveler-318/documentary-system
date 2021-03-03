@@ -236,8 +236,8 @@ class CustomerDetail extends PureComponent {
               )}
             </FormItem>
             <FormItem {...formAllItemLayout} label="创建人">
-              {getFieldDecorator('createUser', {
-                initialValue: detail.createUser,
+              {getFieldDecorator('createName', {
+                initialValue: detail.createName,
               })(<Input disabled={true} placeholder="" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="系统编号">
@@ -245,16 +245,15 @@ class CustomerDetail extends PureComponent {
                 initialValue: detail.clientPhone,
               })(<Input disabled={true} placeholder="" />)}
             </FormItem>
-
-            <FormItem {...formAllItemLayout} label="创建时间">
-              {getFieldDecorator('createTime', {
-                initialValue: moment(detail.createTime),
-              })(<DatePicker
-                disabled={true}
-                format="YYYY-MM-DD HH:mm:ss"
-                style={{ width: '100%' }}
-              />)}
-            </FormItem>
+            {/*<FormItem {...formAllItemLayout} label="创建时间">*/}
+              {/*{getFieldDecorator('createTime', {*/}
+                {/*initialValue: moment(detail.createTime),*/}
+              {/*})(<DatePicker*/}
+                {/*disabled={true}*/}
+                {/*format="YYYY-MM-DD HH:mm:ss"*/}
+                {/*style={{ width: '100%' }}*/}
+              {/*/>)}*/}
+            {/*</FormItem>*/}
             <FormItem {...formAllItemLayout} label="更新时间">
               {getFieldDecorator('updateTime', {
                 initialValue: moment(detail.updateTime),
@@ -264,11 +263,11 @@ class CustomerDetail extends PureComponent {
                 style={{ width: '100%' }}
               />)}
             </FormItem>
-            <FormItem {...formAllItemLayout} label="最后跟进时间" className={styles.bottomBorder}>
+            <FormItem {...formAllItemLayout} label="下次跟进时间" className={styles.bottomBorder}>
               {getFieldDecorator('nextFollowTime', {
                 initialValue: detail.nextFollowTime ? moment(detail.nextFollowTime) : '' ,
               })(<DatePicker
-                disabled={detail.nextFollowTime ? true : edit}
+                disabled={edit}
                 style={{ width: '100%' }}
                 format="YYYY-MM-DD HH:mm:ss"
               />)}

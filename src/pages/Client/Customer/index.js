@@ -324,9 +324,6 @@ class AllOrdersList extends PureComponent {
     }
 
     if(sorts){
-
-      console.log(sorts,"###########33")
-
       if(sorts.field == "clientLevel" || sorts.field == 'clientStatus'){
         payload.sort = sorts.order=='ascend' ? '00':'01'
       }
@@ -388,7 +385,6 @@ class AllOrdersList extends PureComponent {
       case  'customer': queryType = '1';break;//'全部客户',
       case  'public': queryType = '2';break; //'全部公海',
     }
-    console.log(clientLevels)
     return (
       <div className={"default_search_form"}>
         <Form.Item label="姓名">
@@ -452,15 +448,15 @@ class AllOrdersList extends PureComponent {
             )}
           </Form.Item>
         ):''}
-        <Form.Item label="省市区">
-          {getFieldDecorator('cityparam', {
-          })(
-            <Cascader style={{ width: 200 }}
-              options={CITY}
-              onChange={this.onChange}
-            />
-          )}
-        </Form.Item>
+        {/*<Form.Item label="省市区">*/}
+          {/*{getFieldDecorator('cityparam', {*/}
+          {/*})(*/}
+            {/*<Cascader style={{ width: 200 }}*/}
+              {/*options={CITY}*/}
+              {/*onChange={this.onChange}*/}
+            {/*/>*/}
+          {/*)}*/}
+        {/*</Form.Item>*/}
         <div>
           <Form.Item label="创建时间">
             {getFieldDecorator('createTime', {
@@ -524,6 +520,7 @@ class AllOrdersList extends PureComponent {
       updateType:type
     })
   }
+
   handleCancelUpdateConfirmTag = () => {
     this.setState({
       updateConfirmTagVisible:false,
@@ -549,7 +546,8 @@ class AllOrdersList extends PureComponent {
       if(res.code === 200){
         message.success(res.msg);
         this.setState({
-          updateConfirmTagVisible:false
+          updateConfirmTagVisible:false,
+          selectedRows:[]
         });
         this.getDataList();
       }else{
@@ -563,7 +561,6 @@ class AllOrdersList extends PureComponent {
   // 放入公海
   putPool = () => {
     const {selectedRows} = this.state;
-
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
@@ -578,6 +575,9 @@ class AllOrdersList extends PureComponent {
     }).then(res=>{
       if (res.success) {
         message.info(res.msg);
+        this.setState({
+          selectedRows: [],
+        });
         this.getDataList();
       }
     })
@@ -612,7 +612,7 @@ class AllOrdersList extends PureComponent {
     const { dispatch } = this.props;
     let param = {
       ...params,
-      startTime:params.startTime,
+      createTime:params.createTime,
       endTime:params.endTime
     };
     dispatch({
@@ -912,6 +912,9 @@ class AllOrdersList extends PureComponent {
   handleCancelTransfer = (type) => {
     // getlist代表点击保存成功关闭弹窗后需要刷新列表
     if(type === "getlist"){
+      this.setState({
+        selectedRows: [],
+      });
       this.getDataList();
     }
     this.setState({
@@ -999,12 +1002,6 @@ class AllOrdersList extends PureComponent {
     });
   };
 
-  components = {
-    header: {
-      cell: ResizeableTitle,
-    },
-  };
-
   onDrop = info => {
     const dropKey = info.node.props.eventKey;
     const dragKey = info.dragNode.props.eventKey;
@@ -1082,7 +1079,6 @@ class AllOrdersList extends PureComponent {
           }
           list = arr;
         }
-        console.log(list,"@@@@@@@@@@@@@@@@@@@@@@@")
         this.setState({
           checkedOptions:checked,
           columns:list,
@@ -1201,6 +1197,12 @@ class AllOrdersList extends PureComponent {
     return v
   }
 
+  components = {
+    header: {
+      cell: ResizeableTitle,
+    },
+  };
+
   render() {
     const code = 'allOrdersList';
 
@@ -1248,6 +1250,7 @@ class AllOrdersList extends PureComponent {
       checkedOptions,
       plainOptions,
       columns,
+      queryUrlKey,
       routerKey
     } = this.state;
 
@@ -1444,10 +1447,13 @@ class AllOrdersList extends PureComponent {
       }
     )
 
-
-
-
-
+    list = list.map((col, index) => ({
+      ...col,
+      onHeaderCell: column => ({
+        width: column.width,
+        onResize: this.handleResize(index),
+      }),
+    }));
 
 
     const TabPanes = () => (
@@ -1519,6 +1525,7 @@ class AllOrdersList extends PureComponent {
         {exportVisible?(
           <Export
             exportVisible={exportVisible}
+            queryUrlKey={queryUrlKey}
             handleCancelExport={this.handleCancelExport}
           />
         ):""}

@@ -159,28 +159,52 @@ class Import extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values.file = this.state.fileList[0];
-        values.createTime=this.state.createTime;
+
+        if(this.state.createTime){
+          values.createTime=this.state.createTime;
+        }else {
+          values.createTime=moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+        }
+
         if(!values.salesman){
           values.salesman=null
         }
         if(!values.createTime){
           values.createTime=null
         }
+        if(!values.clientStatus){
+          values.clientStatus=null
+        }
+        if(!values.clientLevel){
+          values.clientLevel=null
+        }
         if(values.addrCoding){
           values.province = values.addrCoding[0];
           values.city = values.addrCoding[1]
           values.area = values.addrCoding[2];
         }
-        for(let key in values){
-          if(values[key] === "" || values[key] === null || values[key] === undefined){
-
-          }else {
-            params[key] = values[key]
-          }
+        if(!values.addrCoding){
+          values.province =null;
+          values.city = null
+          values.area = null;
         }
-        delete params.addrCoding;
+
+        // for(let key in values){
+        //
+        //   console.log(values[key])
+        //
+        //   if(values[key] === "" || values[key] === null || values[key] === undefined){
+        //
+        //   }else {
+        //     params[key] = values[key]
+        //   }
+        // }
+
+        delete values.addrCoding;
+
         if(values.file){
-          importClient(params).then(res=>{
+
+          importClient(values).then(res=>{
             this.setState({
               loading:false,
             })

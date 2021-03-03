@@ -13,6 +13,8 @@ import { Base64 } from 'js-base64';
 import { ORDERSOURCE } from './data';
 import styles from './index.less';
 import axios from 'axios'
+import { getDataInfo } from '../../../services/order/customer';
+import { setListData } from '../../../utils/publicMethod';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -47,7 +49,7 @@ class Export extends PureComponent {
 
       },
       checked:false,
-      startTime:'',
+      createTime:'',
       endTime:'',
       retransmission:true,
       timer:0,
@@ -58,25 +60,34 @@ class Export extends PureComponent {
   }
 
   componentWillMount() {
-    const { globalParameters,exportVisible } = this.props;
-    console.log(globalParameters.detailData)
-    if(globalParameters.detailData.startTime){
+    const { globalParameters,exportVisible,queryUrlKey } = this.props;
+    const { exportDataList } = this.state;
+    if(globalParameters.detailData.createTime){
       this.setState({
         seleteTimeRange:5,
         downloadExcelParam:{
-          startTime:moment(globalParameters.detailData.startTime).format('YYYY-MM-DD')+" 00:00:00",
+          createTime:moment(globalParameters.detailData.createTime).format('YYYY-MM-DD')+" 00:00:00",
           endTime:moment(globalParameters.detailData.endTime).format('YYYY-MM-DD')+" 23:59:59"
         }
       })
     }
+
+    let list=''
+    if(queryUrlKey === 'allPool'){
+      list = exportDataList.filter(item => {
+        return item.code != 'salesman'
+      })
+    }else {
+      list = exportDataList
+    }
+
     // 获取详情数据
     this.setState({
       params:globalParameters.detailData,
-      exportVisible:exportVisible
+      exportVisible:exportVisible,
+      exportDataList:list
     })
   }
-
-
 
   verification = (value) =>{
     if(value === null || value === undefined || value === "" || value === NaN || JSON.stringify(value) === "{}" || JSON.stringify(value) === "[]"){
@@ -87,13 +98,15 @@ class Export extends PureComponent {
 
   getDataList = () => {
     const {params,downloadExcelParam} = this.state;
-    console.log(downloadExcelParam)
+    const { queryUrlKey } = this.props;
     let param={
       ...params,
       ...downloadExcelParam
     }
-    console.log(param)
-    getList(param).then(res=>{
+    for(let key in param){
+      param[key] = param[key] === undefined ? null : param[key]
+    }
+    getDataInfo(queryUrlKey,param).then(res=>{
       console.log(res)
       if(res.data.records.length > 0){
         this.setState({
@@ -103,7 +116,20 @@ class Export extends PureComponent {
       }else {
         message.error('当前条件下暂无可导出的数据,请修改查询条件');
       }
+
     })
+
+    // getList(param).then(res=>{
+    //   console.log(res)
+    //   if(res.data.records.length > 0){
+    //     this.setState({
+    //       exportFileVisible:true,
+    //       retransmission: false
+    //     })
+    //   }else {
+    //     message.error('当前条件下暂无可导出的数据,请修改查询条件');
+    //   }
+    // })
   }
 
 
@@ -112,16 +138,16 @@ class Export extends PureComponent {
     const {downloadExcelParam,checkedList,exportDataList,seleteTimeRange}=this.state;
     const oneMonth =31*24*3600*1000;
     if(seleteTimeRange === 1 ){
-      downloadExcelParam.startTime=moment().format('YYYY-MM-DD')+" 00:00:00";
+      downloadExcelParam.createTime=moment().format('YYYY-MM-DD')+" 00:00:00";
       downloadExcelParam.endTime=moment().format('YYYY-MM-DD')+" 23:59:59";
     }
-    if(this.verification(downloadExcelParam.startTime)){
+    if(this.verification(downloadExcelParam.createTime)){
       message.error('请选择导出时间范围');
       return false;
     }else if(this.verification(downloadExcelParam.endTime)){
       message.error('请选择导出时间范围');
       return false;
-    }else if((new Date(downloadExcelParam.endTime).getTime()-new Date(downloadExcelParam.startTime).getTime()) > oneMonth){
+    }else if((new Date(downloadExcelParam.endTime).getTime()-new Date(downloadExcelParam.createTime).getTime()) > oneMonth){
       message.error('导出时间范围不可超过31天');
       return false;
     }else if(this.verification(checkedList)){
@@ -193,7 +219,7 @@ class Export extends PureComponent {
 
   handleCancelExportFile = () =>{
     const {downloadExcelParam,seleteTimeRange}=this.state;
-    //downloadExcelParam.startTime='';
+    //downloadExcelParam.createTime='';
     //downloadExcelParam.endTime='';
     this.setState({
       exportFileVisible:false,
@@ -220,19 +246,18 @@ class Export extends PureComponent {
       message.error('验证码不能大于6位数');
       return false;
     }
-
-
     let param={
       ...params,
       ...downloadExcelParam,
-      code:verificationCode
+      code:verificationCode,
+      startTime:downloadExcelParam.createTime
     }
+    delete param.createTime;
 
     // param.deptId = getCookie("dept_id");
-    console.log(param)
     axios({
       method: "post",
-      url:`/api/client_info/clientinfo/exportClient`,
+      url:`/api//client_info/clientinfo/exportClient`,
       data:param,
       headers: {
         "content-type": "application/json; charset=utf-8",
@@ -327,37 +352,37 @@ class Export extends PureComponent {
     const downloadExcelParam={};
     // 本日
     if(item.code === 1){
-      downloadExcelParam.startTime = moment().format('YYYY-MM-DD')+" 00:00:00";
+      downloadExcelParam.createTime = moment().format('YYYY-MM-DD')+" 00:00:00";
       downloadExcelParam.endTime = moment().format('YYYY-MM-DD')+" 23:59:59";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 2){
       // 昨日
-      downloadExcelParam.startTime = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 00:00:00";
+      downloadExcelParam.createTime = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 00:00:00";
       downloadExcelParam.endTime = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 23:59:59";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 3){
       // 本周
-      downloadExcelParam.startTime = moment().startOf('week').format('YYYY-MM-DD') +" 00:00:00";
+      downloadExcelParam.createTime = moment().startOf('week').format('YYYY-MM-DD') +" 00:00:00";
       downloadExcelParam.endTime = moment().endOf('week').format('YYYY-MM-DD')+" 23:59:59";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 4){
       // 本月
-      downloadExcelParam.startTime = moment().startOf('month').format('YYYY-MM-DD') +" 00:00:00";
+      downloadExcelParam.createTime = moment().startOf('month').format('YYYY-MM-DD') +" 00:00:00";
       downloadExcelParam.endTime = moment().endOf('month').format('YYYY-MM-DD') +" 00:00:00";
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 5){
-      downloadExcelParam.startTime = params.startTime;
+      downloadExcelParam.createTime = params.createTime;
       downloadExcelParam.endTime = params.endTime;
-      if(!params.startTime){
-        params.startTime=""
+      if(!params.createTime){
+        params.createTime=""
       }
       if(!params.endTime){
         params.endTime=""
@@ -371,8 +396,8 @@ class Export extends PureComponent {
 
   onOk = (value) => {
     const downloadExcelParam={};
-    downloadExcelParam.startTime = moment(value[0]).format('YYYY-MM-DD HH:mm');
-    downloadExcelParam.endTime = moment(value[1]).format('YYYY-MM-DD HH:mm');
+    downloadExcelParam.createTime = moment(value[0]).format('YYYY-MM-DD HH:mm:ss');
+    downloadExcelParam.endTime = moment(value[1]).format('YYYY-MM-DD HH:mm:ss');
     this.setState({
       downloadExcelParam:downloadExcelParam
     })
@@ -398,6 +423,7 @@ class Export extends PureComponent {
       params,
       checkedList
     } = this.state;
+
 
     return (
       <>
@@ -436,8 +462,8 @@ class Export extends PureComponent {
                                     hideDisabledOptions: true,
                                   }}
                                   defaultValue={
-                                    params.startTime ?
-                                      [moment(params.startTime, 'YYYY-MM-DD HH:mm:ss'), moment(params.endTime, 'YYYY-MM-DD HH:mm:ss')]
+                                    params.createTime ?
+                                      [moment(params.createTime, 'YYYY-MM-DD HH:mm:ss'), moment(params.endTime, 'YYYY-MM-DD HH:mm:ss')]
                                       :""}
                                   format="YYYY-MM-DD HH:mm:ss"
                                   onOk={this.onOk}

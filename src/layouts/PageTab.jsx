@@ -165,10 +165,15 @@ class App extends Component {
     const { tabs, children } = this.props;
     const { pathname, pageName } = tabs;
     const { pages } = this.state;
-    const myPage = Object.assign([], pages);
+    let myPage = Object.assign([], pages);
     // 如果是新开标签页，push到tabs标签页数组中，并设置当前激活页面
+
     if (pathname !== '/' && !pages.some(page => page.key === pathname)) {
-      myPage.push({ key: pathname, title: pageName, content: children });
+      if(pathname == '/dashboard/workplace'){
+        myPage = [{ key: pathname, title: pageName, content: children }]
+      }else{
+        myPage.push({ key: pathname, title: pageName, content: children });
+      }
     }
     const keys = {};
     myPage.forEach(item => {
@@ -278,7 +283,7 @@ class App extends Component {
                           this.reflash(pane.key);
                         }}
                       >
-                        {pane.title === '首页' ? (<Icon type="home" />):(<Icon type="file" />)}
+                        {(pane.title === '首页' || pane.title === '工作台') ? (<Icon type="home" />):(<Icon type="file" />)}
                         {pane.title}
                       </span>
                     </Tooltip>
