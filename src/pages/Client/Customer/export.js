@@ -118,18 +118,6 @@ class Export extends PureComponent {
       }
 
     })
-
-    // getList(param).then(res=>{
-    //   console.log(res)
-    //   if(res.data.records.length > 0){
-    //     this.setState({
-    //       exportFileVisible:true,
-    //       retransmission: false
-    //     })
-    //   }else {
-    //     message.error('当前条件下暂无可导出的数据,请修改查询条件');
-    //   }
-    // })
   }
 
 
