@@ -34,13 +34,7 @@ class BaseView extends Component {
   };
 
   componentWillMount() {
-    // if(this.props.TabsKey != this.state.TabsKey){
-    //   this.setState({
-    //     TabsKey: this.props.TabsKey
-    //   },()=>{
-        this.setBaseInfo();
-    //   })
-    // }
+    this.setBaseInfo();
   }
 
   setBaseInfo = () => {

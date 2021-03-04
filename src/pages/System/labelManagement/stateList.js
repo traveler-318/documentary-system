@@ -176,11 +176,6 @@ class PayBrandList extends PureComponent {
       {
         title: '排序',
         dataIndex: 'sortNumber',
-        render: (res,rows,index) => {
-          return(
-            index+1
-          )
-        },
       },
       {
         title: '状态',
