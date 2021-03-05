@@ -421,7 +421,7 @@ class Logistics extends PureComponent {
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="总达标金额">
                   {getFieldDecorator('amountMark', {
-                    initialValue: data.amountMark,
+                    initialValue: details.amountMark,
                     rules: [
                       {
                         required: true,
@@ -432,7 +432,7 @@ class Logistics extends PureComponent {
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="未达标周期">
                   {getFieldDecorator('timeoutTime', {
-                    initialValue: data.timeoutTime,
+                    initialValue: details.timeoutTime,
                     rules: [
                       {
                         required: true,
