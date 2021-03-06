@@ -5,6 +5,7 @@ import {
 import React, { PureComponent } from 'react';
 import {getProductDetail,processupdate} from '../../../services/order/ordermaintenance'
 import { connect } from 'dva';
+import { UPDATEORDERSTATU,UPDATEORDERSTATU2 } from './data.js';
 
 const FormItem = Form.Item;
 
@@ -42,16 +43,15 @@ class Update extends PureComponent {
     }).then(res=>{
       if(res.success){
         let d = res.data;
-        if(!d.tasksMark){
+        if(d.tasksMark === "0"){
           this.setState({
-            isUpdate:false,
-            message:'当前产品没有阶段指标，不能进行阶段流程操作!'
+            customs:UPDATEORDERSTATU2
           })
-          return false;
+        }else{
+          this.setState({
+            customs:UPDATEORDERSTATU
+          })
         }
-        this.setState({
-          customs:[d.customOne,d.customTwo,d.customThree]
-        })
       }
     })
   }
@@ -80,7 +80,7 @@ class Update extends PureComponent {
       form: { getFieldDecorator }
     } = this.props;
     const {
-      detail,customs,isUpdate,message
+      detail,customs
     } = this.state;
 
     const formAllItemLayout = {
@@ -104,12 +104,11 @@ class Update extends PureComponent {
           <Button key="back" onClick={this.props.handleCancel}>
             取消
           </Button>,
-          <Button key="submit" disabled={!isUpdate} type="primary" onClick={this.handleSubmit}>
+          <Button key="submit" type="primary" onClick={this.handleSubmit}>
             确定
           </Button>,
         ]}
       >
-        {isUpdate ? (
           <Form>
             <FormItem {...formAllItemLayout} label="阶段">
               {getFieldDecorator('clientLevel', {
@@ -118,15 +117,12 @@ class Update extends PureComponent {
                 <Select placeholder={"请选择阶段"}>
                   {/*<Select.Option value={'0'} disabled={true}>待维护</Select.Option>*/}
                   {customs.map((item,i)=>{
-                    return (<Select.Option value={(i+1)+''}>{item}</Select.Option>)
+                    return (<Select.Option value={item.key}>{item.name}</Select.Option>)
                   })}
                 </Select>
               )}
             </FormItem>
           </Form>
-        ):(
-          <div>{message}</div>
-        )}
 
       </Modal>
     );
