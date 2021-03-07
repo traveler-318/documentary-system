@@ -161,7 +161,8 @@ class Export extends PureComponent {
     // this.getDataList()
 
     this.setState({
-      exportFileVisible:true
+      exportFileVisible:true,
+      retransmission: false
     })
     getPhone().then(res=>{
       this.setState({
@@ -182,6 +183,9 @@ class Export extends PureComponent {
   getVerificationCode = () =>{
     const tenantId=getCookie("tenantId");
     const userName=getCookie("userName");
+
+    console.log("1111111111")
+
     getVCode(userName,tenantId,2).then(res=>{
       //   console.log(res)
       if(res.code=== 200){
