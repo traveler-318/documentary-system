@@ -408,6 +408,7 @@ class AllOrdersList extends PureComponent {
         <div>
           <Form.Item label="时间类型">
             {getFieldDecorator('timeType', {
+              initialValue:1,
             })(
               <Select placeholder={"时间类型"} style={{ width: 130 }}>
                 <Option key={2} value={2}>跟进时间</Option>
@@ -573,6 +574,8 @@ class AllOrdersList extends PureComponent {
 
   // 导出
   exportFile = () => {
+    message.info('开发中');
+    return false;
     const {params}=this.state;
     const { dispatch } = this.props;
     let param = {
