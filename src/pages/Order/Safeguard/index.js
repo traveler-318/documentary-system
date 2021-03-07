@@ -218,6 +218,8 @@ class AllOrdersList extends PureComponent {
         selectedRowKeys:[]
       })
     })
+
+    this.onSelectRow([],[])
   }
   // 根据组织获取对应的业务员数据
   getSalesmanList = (value = "all_all") => {
@@ -406,6 +408,7 @@ class AllOrdersList extends PureComponent {
         <div>
           <Form.Item label="时间类型">
             {getFieldDecorator('timeType', {
+              initialValue:1,
             })(
               <Select placeholder={"时间类型"} style={{ width: 130 }}>
                 <Option key={2} value={2}>跟进时间</Option>
@@ -510,9 +513,13 @@ class AllOrdersList extends PureComponent {
   flowUpdate = () => {
     const {selectedRows} = this.state;
 
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
+    if (selectedRows.length === 0) {
+      return message.info('请先选择一条数据!');
     }
+    if (selectedRows.length > 1) {
+      return message.info('只能选择一条数据!');
+    }
+
     const { dispatch } = this.props;
     dispatch({
       type: `globalParameters/setDetailData`,
@@ -527,6 +534,9 @@ class AllOrdersList extends PureComponent {
     this.setState({
       isUpdate:false
     })
+  }
+  flowUpdateSuccess = () =>{
+    this.flowUpdateCancel()
     this.getDataList()
   }
 
@@ -534,9 +544,13 @@ class AllOrdersList extends PureComponent {
   statusUpdate = () => {
     const {selectedRows} = this.state;
 
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
+    if (selectedRows.length === 0) {
+      return message.info('请先选择一条数据!');
     }
+    if (selectedRows.length > 1) {
+      return message.info('只能选择一条数据!');
+    }
+
     const { dispatch } = this.props;
     dispatch({
       type: `globalParameters/setDetailData`,
@@ -551,11 +565,17 @@ class AllOrdersList extends PureComponent {
     this.setState({
       isUpdateStatus:false
     })
+  }
+  statusUpdateSuccess =() =>{
+    this.statusUpdateCancel();
     this.getDataList()
   }
 
+
   // 导出
   exportFile = () => {
+    message.info('开发中');
+    return false;
     const {params}=this.state;
     const { dispatch } = this.props;
     let param = {
@@ -940,16 +960,16 @@ class AllOrdersList extends PureComponent {
     })
   }
 
-  // handleResize = index => (e, { size }) => {
-  //   this.setState(({ columns }) => {
-  //     const nextColumns = [...columns];
-  //     nextColumns[index] = {
-  //       ...nextColumns[index],
-  //       width: size.width,
-  //     };
-  //     return { columns: nextColumns };
-  //   });
-  // };
+  handleResize = index => (e, { size }) => {
+    this.setState(({ columns }) => {
+      const nextColumns = [...columns];
+      nextColumns[index] = {
+        ...nextColumns[index],
+        width: size.width,
+      };
+      return { columns: nextColumns };
+    });
+  };
 
 
   // SN激活导入弹窗
@@ -1307,13 +1327,13 @@ class AllOrdersList extends PureComponent {
           },
         }
     )
-    // const columns = this.state.columns.map((col, index) => ({
-    //   ...col,
-    //   onHeaderCell: column => ({
-    //     width: column.width,
-    //     onResize: this.handleResize(index),
-    //   }),
-    // }));
+    const tableColumns = list.map((col, index) => ({
+      ...col,
+      onHeaderCell: column => ({
+        width: column.width,
+        onResize: this.handleResize(index),
+      }),
+    }));
 
     return (
       <Panel>
@@ -1347,7 +1367,7 @@ class AllOrdersList extends PureComponent {
             renderSearchForm={this.renderSearchForm}
             loading={loading}
             data={data}
-            columns={list}
+            columns={tableColumns}
             scroll={{ x: 1000 }}
             renderLeftButton={()=>this.renderLeftButton(tabKey)}
             // renderRightButton={this.renderRightButton}
@@ -1387,13 +1407,13 @@ class AllOrdersList extends PureComponent {
         ):""}
 
         {isUpdate?(
-          <Update isUpdate={isUpdate} handleCancel={this.flowUpdateCancel}>
+          <Update isUpdate={isUpdate} handleSuccess={this.flowUpdateSuccess} handleCancel={this.flowUpdateCancel}>
 
           </Update>
         ):''}
 
         {isUpdateStatus?(
-          <UpdateStatus isUpdate={isUpdateStatus} clientStatus={clientStatus} handleCancel={this.statusUpdateCancel}/>
+          <UpdateStatus isUpdate={isUpdateStatus} clientStatus={clientStatus} handleSuccess={this.statusUpdateSuccess} handleCancel={this.statusUpdateCancel}/>
         ):''}
 
         {/* 导出 */}

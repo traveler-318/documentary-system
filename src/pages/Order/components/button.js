@@ -28,7 +28,7 @@ const { SubMenu } = Menu;
 class SearchButton extends PureComponent {
 
   constructor(props) {
-   
+
     super(props);
     this.state = {
         buttons:[],
@@ -36,7 +36,7 @@ class SearchButton extends PureComponent {
   }
 
   componentWillMount() {
-    
+
     this.setState({
         buttons:getButton(this.props.code)
     })
@@ -69,7 +69,7 @@ class SearchButton extends PureComponent {
   );
   moreMenu = (moreList) => {
       return (
-       
+
       <Menu onClick={this.handleMenuClick}>
           {
               moreList.map(item=>{
@@ -94,21 +94,19 @@ class SearchButton extends PureComponent {
                   }
               })
           }
-        
-         
+
+
       </Menu>
     )
   };
 
   render() {
     const {buttons} = this.state;
-    
+
     const actionButtons = buttons.filter(button => button.action === 2 || button.action === 3);
 
     const { tabKey } = this.props;
 
-    
-    
     let moreList = [];
     if(tabKey === 'null'){
         actionButtons.map(item=>{
@@ -117,70 +115,102 @@ class SearchButton extends PureComponent {
             }
         })
     }
+
+    let i = -1;
+    let tabActionButtons = [];
+    if(tabKey === '3'){
+      actionButtons.map(item=>{
+        if(item.code === "subscribe"){
+          tabActionButtons[0] =item
+        }else if(item.code === 'export'){
+          tabActionButtons[1] =item
+        }
+      })
+    }else if(tabKey === '2'){
+      actionButtons.map(item=>{
+        if(item.code === "subscribe"){
+          tabActionButtons[1] =item
+        }else if(item.code === 'export'){
+          tabActionButtons[2] =item
+        }else if(item.code === 'deliver-goods'){
+          tabActionButtons[0] =item
+        }
+      })
+    }else{
+      tabActionButtons =actionButtons;
+    }
     console.log(buttons,tabKey,moreList,"获取按钮")
     return (
       <>
         {
-            actionButtons.map((item,index)=>{
+          tabActionButtons.map((item,index)=>{
                 // console.log(item,tabKey,"item")
                 // if(tabKey === 'null' && (item.code === "place-an-order" || item.code === "transfer")){
-                    
+
                 //     moreList.push(item);
                 //     this.setState({
                 //         moreList
                 //     })
                 // }
                 if(tabKey === '0' && (item.code === "add" || item.code === "examine" || item.code === "synchronization")){
+                  i++;
                 // 待审核
                     return (
-                        <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{
+                        <Button type="primary" type={i<2?'primary':''} icon={item.source} onClick={()=>{
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
                 }else if(tabKey === '1' && item.code === "examine"){
+                  i++;
                     // 已初审
                     return (
-                        <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{
+                        <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
                 }else if(tabKey === '2' && (item.code === "deliver-goods" || item.code === "subscribe")){
+                  i++;
                     // 已终审
                     return (
-                        <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{
+                        <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
                 }else if(tabKey === '3' && item.code === "subscribe"){
+                  i++;
                     // 已发货
                     return (
-                        <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{
+                        <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
                     // {/* 在途中什么都没有 */}
                 }else if(tabKey === '5' && item.code === "bell"){
+                  i++;
                     // 已签收
                     return (
-                        <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{
+                        <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
                 }else if(tabKey === '6' && item.code === "bell"){
+                  i++;
                     // 跟进中
                     return (
-                        <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{
+                        <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
                 }else if(tabKey === '10' && item.code === 'Claim'){
+                  i++;
                     // 已过期
                     return (
-                        <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{
+                        <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
                 }else if(tabKey === 'null' && (item.code === "add" || item.code === "deliver-goods" || item.code === "bell" || item.code === 'Import' || item.code === 'overdue' || item.code === 'status-change'|| item.code === 'timeConsuming')){
+                  i++;
                     // 全部
                     if(item.code === 'Import'){
                         return (
@@ -192,7 +222,7 @@ class SearchButton extends PureComponent {
                         )
                     }else{
                         return (
-                            <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{
+                            <Button type={i<2?'primary':''} icon={item.source} onClick={()=>{
                                 this.handleClick(item.code)
                             }}>{item.name}</Button>
                         )
@@ -202,8 +232,9 @@ class SearchButton extends PureComponent {
                 {/* 已退回什么都没有 */}
                 {/* 已取消什么都没有 */}
                 if(item.code === 'export'){
+                  i++;
                     return (
-                        <Button type={index===0?'primary':''} icon={item.source} onClick={()=>{
+                        <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )

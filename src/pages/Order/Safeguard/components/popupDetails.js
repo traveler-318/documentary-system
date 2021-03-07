@@ -423,11 +423,7 @@ class OrdersEdit extends PureComponent {
     return text
   }
 
-  clientStatusName(){
-    const {detail} = this.state;
-    let s = this.props.clientStatus.find(item=>item.id == detail.clientStatus);
-    return s? s.labelName :''
-  }
+
   validatePhone = (rule, value, callback) => {
     if (!(/^1[3456789]\d{9}$/.test(value))) {
       callback(new Error('请输入正确的手机号格式'));
@@ -440,6 +436,8 @@ class OrdersEdit extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
+
+    const clientStatus = this.props.clientStatus;
 
     const {
       data,
@@ -501,7 +499,7 @@ class OrdersEdit extends PureComponent {
                           },
                         ],
                         initialValue: detail.userName,
-                      })(<Input disabled={detail.confirmTag === '0' || detail.confirmTag === '1' || detail.confirmTag === '2' ? edit : true} placeholder="请输入客户姓名" />)}
+                      })(<Input disabled={true} placeholder="请输入客户姓名" />)}
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="手机号">
                       {getFieldDecorator('userPhone', {
@@ -509,12 +507,12 @@ class OrdersEdit extends PureComponent {
                           { required: true, validator: this.validatePhone },
                         ],
                         initialValue: detail.userPhone,
-                      })(<Input disabled={detail.confirmTag === '0' || detail.confirmTag === '1' || detail.confirmTag === '2' ? edit : true} placeholder="" />)}
+                      })(<Input disabled={true} placeholder="" />)}
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="备用手机号">
                       {getFieldDecorator('backPhone', {
                         initialValue: detail.backPhone,
-                      })(<Input disabled={detail.backPhone ? true : edit} placeholder="" />)}
+                      })(<Input disabled={true} placeholder="" />)}
                     </FormItem>
 
                     <FormItem {...formAllItemLayout} label="所在地区">
@@ -524,7 +522,7 @@ class OrdersEdit extends PureComponent {
                         <Cascader
                           // defaultValue={[detail.province, detail.city, detail.area]}
                           options={CITY}
-                          disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2') ? edit : true}
+                          disabled={true}
                           onChange={this.onChange}
                         />
                       )}
@@ -537,7 +535,7 @@ class OrdersEdit extends PureComponent {
                           },
                         ],
                         initialValue: detail.userAddress,
-                      })(<Input title={detail.userAddress} disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2') ? edit : true} placeholder="请输入收货地址" />)}
+                      })(<Input title={detail.userAddress} disabled={true} placeholder="请输入收货地址" />)}
                     </FormItem>
                     {/*                  <FormItem {...formAllItemLayout} label="客戶状态">
                     {getFieldDecorator('userAddress', {
@@ -582,14 +580,14 @@ class OrdersEdit extends PureComponent {
                     <FormItem {...formAllItemLayout} label="SN">
                       {getFieldDecorator('productCoding', {
                         initialValue: detail.productCoding,
-                      })(<Input disabled={edit} placeholder="" />)}
+                      })(<Input disabled placeholder="" />)}
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="产品类型">
                       {getFieldDecorator('productType', {
                         initialValue: detail.productType?[...detail.productType.split("/"),detail.productName]:null,
                       })(
                         <Cascader
-                          disabled={edit}
+                          disabled
                           options={productList}
                           fieldNames={{ label: 'value'}}
                           onChange={(value, selectedOptions)=>{
@@ -616,7 +614,7 @@ class OrdersEdit extends PureComponent {
                       })(
                         <Select
                           style={{height:45,float:"right"}}
-                          disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
+                          disabled
                           placeholder={"请选择物流公司"}>
                           {Object.keys(LOGISTICSCOMPANY).map(key=>{
                             return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
@@ -628,7 +626,7 @@ class OrdersEdit extends PureComponent {
                       {getFieldDecorator('logisticsNumber', {
                         initialValue: detail.logisticsNumber,
                       })(<Input
-                        disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
+                        disabled
                         placeholder="请输入物流单号" />)}
                     </FormItem>
                     {/*<FormItem {...formAllItemLayout} label="开启提醒"  className={styles.salesman}>*/}
@@ -644,7 +642,7 @@ class OrdersEdit extends PureComponent {
                     <FormItem {...formAllItemLayout} label="微信号">
                       {getFieldDecorator('wechatId', {
                         initialValue: detail.wechatId,
-                      })(<Input disabled={detail.wechatId ? true : edit} placeholder="" />)}
+                      })(<Input disabled={edit} placeholder="" />)}
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="备注">
                       {getFieldDecorator('orderNote', {
@@ -677,6 +675,7 @@ class OrdersEdit extends PureComponent {
                     <TabPane tab="概况" key="1">
                       <Survey
                         detail={detail}
+                        clientStatus={clientStatus}
                         getEditDetails={this.getEditDetails}
                       />
                     </TabPane>

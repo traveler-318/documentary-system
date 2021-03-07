@@ -66,8 +66,8 @@ class Transaction extends PureComponent {
       },
       {
         title: '交易时间',
-        dataIndex: 'tradingHours',
-        key: 'tradingHours',
+        dataIndex: 'tradingHour',
+        key: 'tradingHour',
       }
     ];
 

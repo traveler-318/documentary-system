@@ -9,15 +9,26 @@
 
 // 订单状态
 export const ORDERSTATUS = [
-    // {"name":"待维护",key:'0'},
+    {"name":"待维护",key:'0'},
     {"name":"阶段1",key:'1'},
     {"name":"阶段2",key:'2'},//已审核
     {"name":"阶段3",key:'3'},
-    // {"name":"未达标",key:'4'},
-    // {"name":"已达标",key:'5'},
+    {"name":"未达标",key:'4'},
+    {"name":"已达标",key:'5'},
     {"name":"全部",key:null},
 ]
 
+export const UPDATEORDERSTATU = [
+  {"name":"阶段1",key:'1'},
+  {"name":"阶段2",key:'2'},//已审核
+  {"name":"阶段3",key:'3'},
+  {"name":"未达标",key:'4'},
+  {"name":"已达标",key:'5'},
+]
+export const UPDATEORDERSTATU2 = [
+  {"name":"未达标",key:'4'},
+  {"name":"已达标",key:'5'},
+]
 
 export const ORDERTYPPE = [
     {name:"全部",key:null},
