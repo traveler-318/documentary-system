@@ -172,7 +172,6 @@ class Survey extends PureComponent {
       })
   };
   handleChange(val){
-    console.log(val)
     this.setState({
       followType:val
     })
@@ -217,7 +216,6 @@ class Survey extends PureComponent {
     _param.followRecords = JSON.stringify({
       list:followRecords
     })
-    console.log(_param)
 
     // if(detail.confirmTag === '4'){
     followupdate(_param).then(res=>{
@@ -243,7 +241,6 @@ class Survey extends PureComponent {
   }
 
   handleReminderTimeBack = (data) => {
-    console.log(data)
     if(data){
       this.setState({
         reminderTime:data,
@@ -273,7 +270,6 @@ class Survey extends PureComponent {
     let key = e.key;
     const { phrases,describe } = this.state;
     let val = phrases[key];
-    console.log(val)
     if(describe){
       this.showConfirm(val);
       return false;
@@ -299,6 +295,57 @@ class Survey extends PureComponent {
       onCancel() {
       },
     });
+  }
+
+  clientStatusName(){
+    const {detail} = this.state;
+    let s = this.props.clientStatus.find(item=>item.id == detail.clientStatus);
+    return s? s.labelName :''
+  }
+
+  transdate (time) {
+    let date = new Date();
+    date.setFullYear(time.substring(0, 4));
+    date.setMonth(time.substring(5, 7) - 1);
+    date.setDate(time.substring(8, 10));
+    date.setHours(time.substring(11, 13));
+    date.setMinutes(time.substring(14, 16));
+    date.setSeconds(time.substring(17, 19));
+    return Date.parse(date) / 1000;
+  }
+
+  timediff ($begin_time) {
+    if(!$begin_time) return '';
+    let $end_time = Date.parse(new Date())/ 1000;
+    $begin_time = this.transdate($begin_time);
+    let $starttime = $begin_time
+    let $endtime = $end_time
+    //计算天数
+    let $timediff = $endtime - $starttime;
+    var $days = parseInt($timediff / 86400);
+    //计算小时数
+    var $remain = $timediff % 86400;
+    var $hours = parseInt($remain / 3600);
+    //计算分钟数
+    var $remain = $remain % 3600;
+    var $mins = parseInt($remain / 60);
+    //计算秒数
+    // var $secs = $remain % 60;
+    // $days=>天
+    // $hours=>时
+    // $mins=>分
+    // $secs=>秒
+    let $res = '';
+    if($days>0){
+      $res += $days+'天';
+    }
+    if($hours>0){
+      $res += $hours+'小时';
+    }
+    if($hours>0){
+      $res += $mins+'分钟';
+    }
+    return $res
   }
 
   render() {
@@ -345,7 +392,7 @@ class Survey extends PureComponent {
             <Col span={6}>
               <Card bordered={true} style={{lineHeight:'30px',height:'70px',backgroundColor:'#F1F6FC'}}>
                 <div style={{fontWeight:'bold'}}>维护状态</div>
-                <div>{this.clientStatusName}</div>
+                <div>{this.clientStatusName()}</div>
               </Card>
             </Col>
             <Col span={6}>
@@ -363,7 +410,7 @@ class Survey extends PureComponent {
             <Col span={6}>
               <Card bordered={true} style={{lineHeight:'30px',height:'70px',backgroundColor:'#F1F6FC'}}>
                 <div style={{fontWeight:'bold'}}>距离上次跟进</div>
-                <div>{detail.followTime}</div>
+                <div>{this.timediff(detail.followTime)}</div>
               </Card>
             </Col>
           </Row>
