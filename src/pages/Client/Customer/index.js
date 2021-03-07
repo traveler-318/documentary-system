@@ -546,6 +546,8 @@ class AllOrdersList extends PureComponent {
         message.success(res.msg);
         this.setState({
           updateConfirmTagVisible:false,
+          updateStatusId:'',
+          updatelevelId:'',
           selectedRows:[]
         });
         this.getDataList();
