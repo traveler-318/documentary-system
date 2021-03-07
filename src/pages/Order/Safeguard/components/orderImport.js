@@ -69,37 +69,38 @@ class OrderImport extends PureComponent {
   };
 
   handleTemplate = () => {
-    axios({
-      method: "get",
-      url:`/api/tracking/ordermaintenance/exportTradingExcel`,
-      // data:param,
-      headers: {
-        "content-type": "application/json; charset=utf-8",
-        "Authorization": `Basic ${Base64.encode(`${clientId}:${clientSecret}`)}`,
-        "Blade-Auth": getToken(),
-        "token": getToken(),
-      },
-      // 设置responseType对象格式为blob
-      responseType: "blob"
-    }).then(res => {
-      console.log(res)
-      if(!res.data.code){
-        let data = res.data;
-        let fileReader = new FileReader();
-        fileReader.readAsText(data, 'utf-8');
-        let _this = this
-        fileReader.onload = function() {
-          try {
-            let jsonData = JSON.parse(this.result);  // 说明是普通对象数据，后台转换失败
-            message.error(jsonData.data);
-          }catch(err){
-            _this.downLoadBlobFile(res)
-          }
-        };
-      }else {
-        message.error("导出失败");
-      }
-    })
+    window.open("http://gendanbao.ruanmao.cn/%E5%AF%BC%E5%85%A5%E4%BA%A4%E6%98%93%E9%87%8F%E6%A8%A1%E6%9D%BF.xlsx")
+    // axios({
+    //   method: "get",
+    //   url:`/api/tracking/ordermaintenance/exportTradingExcel`,
+    //   // data:param,
+    //   headers: {
+    //     "content-type": "application/json; charset=utf-8",
+    //     "Authorization": `Basic ${Base64.encode(`${clientId}:${clientSecret}`)}`,
+    //     "Blade-Auth": getToken(),
+    //     "token": getToken(),
+    //   },
+    //   // 设置responseType对象格式为blob
+    //   responseType: "blob"
+    // }).then(res => {
+    //   console.log(res)
+    //   if(!res.data.code){
+    //     let data = res.data;
+    //     let fileReader = new FileReader();
+    //     fileReader.readAsText(data, 'utf-8');
+    //     let _this = this
+    //     fileReader.onload = function() {
+    //       try {
+    //         let jsonData = JSON.parse(this.result);  // 说明是普通对象数据，后台转换失败
+    //         message.error(jsonData.data);
+    //       }catch(err){
+    //         _this.downLoadBlobFile(res)
+    //       }
+    //     };
+    //   }else {
+    //     message.error("导出失败");
+    //   }
+    // })
   };
   // 下载方法
   downLoadBlobFile = (res) =>{

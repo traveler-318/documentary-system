@@ -17,8 +17,8 @@ export default class Panel extends PureComponent {
       <div>
         {action}
         <Button
-          type="default"
-          style={{ color: '#189dff', border: '1px solid #189dff' }}
+          // type="default"
+          // style={{ color: '#189dff', border: '1px solid #189dff' }}
           onClick={this.back}
         >
           <FormattedMessage id="button.back.name" />
