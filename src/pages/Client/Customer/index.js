@@ -68,6 +68,7 @@ import OrderImport from './components/import';
 import { getCookie } from '../../../utils/support';
 import { getLabelList } from '@/services/user';
 import { CITY } from '@/utils/city';
+import SearchButton from './components/button';
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
 const { TextArea } = Input;
@@ -177,8 +178,6 @@ class AllOrdersList extends PureComponent {
     let key = this.props.route.key;
     let type = null;
     const currentUser = getCurrentUser();
-
-    console.log(key)
 
     switch (key) {
       case  'customer': type = 'list';break;//'全部客户',
@@ -693,61 +692,102 @@ class AllOrdersList extends PureComponent {
 
   }
 
-  // 左侧操作按钮
-  renderLeftButton = (tabKey) => {
+  btnButtonBack = (code) => {
+    console.log(code)
     let {routerKey} = this.state;
     let key = null;
     switch (routerKey) {
       case  'customer': key = 1;break;//'全部客户',
       case  'public': key = 2;break; //'全部公海',
     }
+    if(code === "add"){
+      router.push(`/client/customer/add/`+key);
+    }else if(code === "putPool"){
+      // 放入公海
+      this.putPool()
+    }else if(code === "transfer"){
+      // 转移客户
+      this.handleShowTransfer()
+    }else if(code === "receive"){
+      // 领取
+      this.receive()
+    }else if(code === "state"){
+      // 客户状态
+      this.bulkModification('state')
+    }else if(code === "leve"){
+      // 客户级别
+      this.bulkModification('leve')
+    }else if(code === "Import"){
+      // 导入
+      this.handleOrderImport()
+    }else if(code === "export"){
+      // 导出
+      this.exportFile()
+    }
+  }
 
-    return (
-        <div>
-            <Button type="primary" icon="plus" onClick={()=>{
-              router.push(`/client/customer/add/`+key);
-            }}>添加</Button>
-            <Button
-              icon="interaction"
-              onClick={this.handleShowTransfer}
-            >转移客户</Button>
-           {key == 1?(
-             <Button
-               icon="laptop"
-               onClick={this.putPool}
-             >放入公海</Button>
-           ):(
-             <Button
-               icon="laptop"
-               onClick={this.receive}
-             >领取</Button>
-           )}
-           {key == 1?(
-             <><Button
-               icon="highlight"
-               onClick={()=>this.bulkModification('state')}
-             >客户状态</Button>
-               <Button
-             icon="highlight"
-             onClick={()=>this.bulkModification('leve')}
-             >客户级别</Button>
-             </>
-           ):(
-             ''
-           )}
+  // 左侧操作按钮
+  renderLeftButton = (tabKey) => {
+    let {routerKey} = this.state;
+    if(routerKey === 'customer'){
+      routerKey = 'allcustomer'
+    }else if(routerKey === 'public'){
+      routerKey = 'allpublic'
+    }
+
+    return (<>
+      <SearchButton
+        btnButtonBack={this.btnButtonBack}
+        tabKey={tabKey}
+        code={routerKey}
+      />
+    </>)
 
 
-            <Button
-              icon="upload"
-              onClick={this.handleOrderImport}
-            >导入</Button>
-            <Button
-            icon="download"
-            type={(tabKey === "0" || tabKey === "1" || tabKey === "2" || tabKey === "5" || tabKey === "6") ? "" : "primary"}
-            onClick={this.exportFile}
-            >导出</Button>
-          </div>
-      )
+    // return (
+    //     <div>
+    //         <Button type="primary" icon="plus" onClick={()=>{
+    //           router.push(`/client/customer/add/`+key);
+    //         }}>添加</Button>
+    //         <Button
+    //           icon="interaction"
+    //           onClick={this.handleShowTransfer}
+    //         >转移客户</Button>
+    //        {key == 1?(
+    //          <Button
+    //            icon="laptop"
+    //            onClick={this.putPool}
+    //          >放入公海</Button>
+    //        ):(
+    //          <Button
+    //            icon="laptop"
+    //            onClick={this.receive}
+    //          >领取</Button>
+    //        )}
+    //        {key == 1?(
+    //          <><Button
+    //            icon="highlight"
+    //            onClick={()=>this.bulkModification('state')}
+    //          >客户状态</Button>
+    //            <Button
+    //          icon="highlight"
+    //          onClick={()=>this.bulkModification('leve')}
+    //          >客户级别</Button>
+    //          </>
+    //        ):(
+    //          ''
+    //        )}
+    //         <Button
+    //           icon="upload"
+    //           onClick={this.handleOrderImport}
+    //         >导入</Button>
+    //         <Button
+    //         icon="download"
+    //         type={(tabKey === "0" || tabKey === "1" || tabKey === "2" || tabKey === "5" || tabKey === "6") ? "" : "primary"}
+    //         onClick={this.exportFile}
+    //         >导出</Button>
+    //       </div>
+    //   )
   };
 
   // 删除
