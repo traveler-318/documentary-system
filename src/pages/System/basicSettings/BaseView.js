@@ -151,7 +151,7 @@ class BaseView extends Component {
                   return (
                     <TabPane tab={item.name} key={item.key}>
                       {
-                        TabsKey === "1" ? (
+                        (TabsKey === item.key && TabsKey === '1') ? (
                           <BasicConfiguration
                           TabsKey={TabsKey}
                           ref={form => {
@@ -159,12 +159,12 @@ class BaseView extends Component {
                           }}
                           />
                         ) : 
-                        TabsKey === "2" ? (
+                        (TabsKey === item.key && TabsKey === '2') ? (
                           <Empty 
                             style={{margin:"40px 8px"}}
                           />
                         ) : 
-                        TabsKey === "3" ? (
+                        (TabsKey === item.key && TabsKey === '3') ? (
                           <FunctionConfiguration
                           TabsKey={TabsKey}
                           ref={form => {
@@ -172,7 +172,7 @@ class BaseView extends Component {
                           }}
                           />
                         ) : 
-                        TabsKey === "4" ? (
+                        (TabsKey === item.key && TabsKey === '4') ? (
                           <AfterSalesConfiguration
                           TabsKey={TabsKey}
                           ref={form => {
@@ -180,12 +180,12 @@ class BaseView extends Component {
                           }}
                           />
                         ) : 
-                        TabsKey === "5" ? (
+                        (TabsKey === item.key && TabsKey === '5') ? (
                           <Empty 
                             style={{margin:"40px 8px"}}
                           />
                         ) : 
-                        TabsKey === "6" ? (
+                        (TabsKey === item.key && TabsKey === '6') ? (
                           <VersionInformation 
                           TabsKey={TabsKey}
                             style={{margin:"40px 8px"}}
