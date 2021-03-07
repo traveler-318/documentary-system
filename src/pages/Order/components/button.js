@@ -107,8 +107,6 @@ class SearchButton extends PureComponent {
 
     const { tabKey } = this.props;
 
-
-
     let moreList = [];
     if(tabKey === 'null'){
         actionButtons.map(item=>{
