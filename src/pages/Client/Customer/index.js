@@ -693,7 +693,6 @@ class AllOrdersList extends PureComponent {
   }
 
   btnButtonBack = (code) => {
-    console.log(code)
     let {routerKey} = this.state;
     let key = null;
     switch (routerKey) {

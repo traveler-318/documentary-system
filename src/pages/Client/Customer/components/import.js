@@ -155,7 +155,6 @@ class Import extends PureComponent {
 
   handleOrderSave = () => {
     const {form,queryUrlKey} = this.props;
-    const params={}
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values.file = this.state.fileList[0];
@@ -190,12 +189,10 @@ class Import extends PureComponent {
             values.area = null;
           }
         }
-
-
+        values.queryUrlKey = queryUrlKey;
         delete values.addrCoding;
 
         if(values.file){
-
           importClient(values).then(res=>{
             this.setState({
               loading:false,
