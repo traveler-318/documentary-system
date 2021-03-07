@@ -428,7 +428,7 @@ class Logistics extends PureComponent {
                         validator:this.amountMarkChange,
                       },
                     ],
-                  })(<Input placeholder="请输入总达标金额" />)}
+                  })(<Input placeholder="请输入总达标金额" disabled={details.amountMark ==='0' || details.amountMark ==='' ? false : true}/>)}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="未达标周期">
                   {getFieldDecorator('timeoutTime', {
@@ -439,7 +439,7 @@ class Logistics extends PureComponent {
                         validator:this.timeoutTimeChange,
                       },
                     ],
-                  })(<Input placeholder="请输入未达标周期" />)}
+                  })(<Input placeholder="请输入未达标周期" disabled={details.timeoutTime ==='0' || details.timeoutTime ==='' ? false : true}/>)}
                 </FormItem></>) : ''
               }
             </Form>
