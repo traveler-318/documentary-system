@@ -423,11 +423,7 @@ class OrdersEdit extends PureComponent {
     return text
   }
 
-  clientStatusName(){
-    const {detail} = this.state;
-    let s = this.props.clientStatus.find(item=>item.id == detail.clientStatus);
-    return s? s.labelName :''
-  }
+
   validatePhone = (rule, value, callback) => {
     if (!(/^1[3456789]\d{9}$/.test(value))) {
       callback(new Error('请输入正确的手机号格式'));
@@ -440,6 +436,8 @@ class OrdersEdit extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
+
+    const clientStatus = this.props.clientStatus;
 
     const {
       data,
@@ -677,6 +675,7 @@ class OrdersEdit extends PureComponent {
                     <TabPane tab="概况" key="1">
                       <Survey
                         detail={detail}
+                        clientStatus={clientStatus}
                         getEditDetails={this.getEditDetails}
                       />
                     </TabPane>
