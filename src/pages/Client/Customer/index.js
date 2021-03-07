@@ -523,6 +523,8 @@ class AllOrdersList extends PureComponent {
   handleCancelUpdateConfirmTag = () => {
     this.setState({
       updateConfirmTagVisible:false,
+      updateStatusId:'',
+      updatelevelId:'',
       radioChecked:''
     })
   }
