@@ -184,8 +184,6 @@ class Export extends PureComponent {
     const tenantId=getCookie("tenantId");
     const userName=getCookie("userName");
 
-    console.log("1111111111")
-
     getVCode(userName,tenantId,2).then(res=>{
       //   console.log(res)
       if(res.code=== 200){
@@ -259,6 +257,7 @@ class Export extends PureComponent {
       ...params,
       code:verificationCode,
       exportType:type,
+      fileds:downloadExcelParam.fileds,
       startTime:params.createTime
     }
     delete param.createTime;
