@@ -125,20 +125,25 @@ class Export extends PureComponent {
   dataExport = () => {
     const {downloadExcelParam,checkedList,exportDataList,seleteTimeRange}=this.state;
     const oneMonth =31*24*3600*1000;
-    if(seleteTimeRange === 1 ){
-      downloadExcelParam.createTime=moment().format('YYYY-MM-DD')+" 00:00:00";
-      downloadExcelParam.endTime=moment().format('YYYY-MM-DD')+" 23:59:59";
-    }
-    if(this.verification(downloadExcelParam.createTime)){
-      message.error('请选择导出时间范围');
-      return false;
-    }else if(this.verification(downloadExcelParam.endTime)){
-      message.error('请选择导出时间范围');
-      return false;
-    }else if((new Date(downloadExcelParam.endTime).getTime()-new Date(downloadExcelParam.createTime).getTime()) > oneMonth){
-      message.error('导出时间范围不可超过31天');
-      return false;
-    }else if(this.verification(checkedList)){
+    // if(seleteTimeRange === 1 ){
+    //   downloadExcelParam.createTime=moment().format('YYYY-MM-DD')+" 00:00:00";
+    //   downloadExcelParam.endTime=moment().format('YYYY-MM-DD')+" 23:59:59";
+    // }
+    // if(this.verification(downloadExcelParam.createTime)){
+    //   message.error('请选择导出时间范围');
+    //   return false;
+    // }else if(this.verification(downloadExcelParam.endTime)){
+    //   message.error('请选择导出时间范围');
+    //   return false;
+    // }else if((new Date(downloadExcelParam.endTime).getTime()-new Date(downloadExcelParam.createTime).getTime()) > oneMonth){
+    //   message.error('导出时间范围不可超过31天');
+    //   return false;
+    // }else if(this.verification(checkedList)){
+    //   message.error('请选择导出字段');
+    //   return false;
+    // }
+
+    if(this.verification(checkedList)){
       message.error('请选择导出字段');
       return false;
     }
@@ -153,8 +158,11 @@ class Export extends PureComponent {
       downloadExcelParam
     })
     // 验证当前条件下是否有数据
-    this.getDataList()
+    // this.getDataList()
 
+    this.setState({
+      exportFileVisible:true
+    })
     getPhone().then(res=>{
       this.setState({
         phone:res.data
@@ -222,6 +230,7 @@ class Export extends PureComponent {
   exportFilePopup =(cellBack) =>{
     // 验证是否获取短信验证码
     const {smsType,downloadExcelParam,params,verificationCode}=this.state;
+    const  {queryUrlKey}=this.props;
     if(smsType){
       message.error('导出数据需要短信验证，请先获取短信验证码！');
       return false;
@@ -234,13 +243,49 @@ class Export extends PureComponent {
       message.error('验证码不能大于6位数');
       return false;
     }
+
+    let type=''
+    if(queryUrlKey === 'list'){
+      type = '0'
+    }else {
+      type = '1'
+    }
+
     let param={
       ...params,
-      ...downloadExcelParam,
       code:verificationCode,
-      startTime:downloadExcelParam.createTime
+      exportType:type,
+      startTime:params.createTime
     }
     delete param.createTime;
+
+    if(!param.clientLevel){
+      param.clientLevel = null
+    }
+    if(!param.clientName){
+      param.clientName = null
+    }
+    if(!param.clientPhone){
+      param.clientPhone = null
+    }
+    if(!param.clientStatus){
+      param.clientStatus = null
+    }
+    if(!param.createUser){
+      param.createUser = null
+    }
+    if(!param.endTime){
+      param.endTime = null
+    }
+    if(!param.followTime){
+      param.followTime = null
+    }
+    if(!param.salesman){
+      param.salesman = null
+    }
+    if(!param.startTime){
+      param.startTime = null
+    }
 
     // param.deptId = getCookie("dept_id");
     axios({
@@ -432,6 +477,7 @@ class Export extends PureComponent {
           ]}
         >
           <div style={{padding:"0 30px"}}>
+{/*
             <Row gutter={24} style={{marginBottom:20}}>
               <Col span={4}>导出范围：</Col>
               <Col span={20}>
@@ -460,6 +506,7 @@ class Export extends PureComponent {
                 }
               </Col>
             </Row>
+*/}
             <Row gutter={24}>
               <Col span={4}>导出字段：</Col>
               <Col span={20}>

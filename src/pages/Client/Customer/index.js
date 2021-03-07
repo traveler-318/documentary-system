@@ -608,7 +608,7 @@ class AllOrdersList extends PureComponent {
   }
   // 导出
   exportFile = () => {
-    const {params}=this.state;
+    const {params,data}=this.state;
     const { dispatch } = this.props;
     let param = {
       ...params,
@@ -619,6 +619,11 @@ class AllOrdersList extends PureComponent {
       type: `globalParameters/setDetailData`,
       payload: param,
     });
+
+    if(data.list.length === 0){
+      message.error('当前条件下暂无可导出的数据,请修改查询条件');
+      return false;
+    }
 
     this.setState({
       exportVisible:true
@@ -1550,6 +1555,7 @@ class AllOrdersList extends PureComponent {
         {OrderImportVisible?(
           <OrderImport
             OrderImportVisible={OrderImportVisible}
+            queryUrlKey={queryUrlKey}
             handleOrderImportCancel={this.handleOrderImportCancel}
           />
         ):""}
