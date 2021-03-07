@@ -90,6 +90,9 @@ class BaseView extends Component {
           if(values.transferNumber < 30){
             return message.error('此时间段距离签收时间比较短,用户进入下一个客户周期,建议时间调整为 30-90天')
           }
+
+          console.log(values,"valuesvaluesvaluesvalues")
+
           const property ={
             daysOverdue:values.daysOverdue,
             transferNumber:values.transferNumber,
