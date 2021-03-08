@@ -144,8 +144,6 @@ class BaseView extends Component {
 
     const { avatar, loading ,details} = this.state;
 
-    console.log(details.authenticationStatus,"213213213")
-
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
