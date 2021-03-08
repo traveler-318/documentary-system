@@ -28,14 +28,16 @@ export async function deleteData(params) {
 
 //导入
 export async function importClient(params) {
-  const { salesman, file, clientStatus,clientLevel,createTime,province,city,area } = params;
+  const { salesman, file, clientStatus,clientLevel,createTime,province,city,area,queryUrlKey } = params;
   const formData = new FormData();
-  formData.append('salesman', salesman);
-  formData.append('clientLevel', clientLevel);
-  formData.append('clientStatus', clientStatus);
-  formData.append('province', province);
-  formData.append('city', city);
-  formData.append('area', area);
+  if(queryUrlKey === 'list'){
+    formData.append('salesman', salesman);
+    formData.append('clientLevel', clientLevel);
+    formData.append('clientStatus', clientStatus);
+    formData.append('province', province);
+    formData.append('city', city);
+    formData.append('area', area);
+  }
   formData.append('createTime', createTime);
   formData.append('file', file);
   return request('/api/client_info/clientinfo/importClient', {

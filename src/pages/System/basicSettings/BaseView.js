@@ -87,9 +87,12 @@ class BaseView extends Component {
           if(values.daysOverdue < 10){
             return message.error('此时间段距离签收时间比较短,用户激活时间比较紧迫,建议时间调整为 10-60天')
           }
-          if(values.transferNumber < 30){
-            return message.error('此时间段距离签收时间比较短,用户进入下一个客户周期,建议时间调整为 30-90天')
+          if(values.transferNumber < 7){
+            return message.error('此时间段距离签收时间比较短,用户进入下一个客户周期,建议时间调整为 7-90天')
           }
+
+          console.log(values,"valuesvaluesvaluesvalues")
+
           const property ={
             daysOverdue:values.daysOverdue,
             transferNumber:values.transferNumber,
@@ -148,7 +151,7 @@ class BaseView extends Component {
                   return (
                     <TabPane tab={item.name} key={item.key}>
                       {
-                        TabsKey === "1" ? (
+                        (TabsKey === item.key && TabsKey === '1') ? (
                           <BasicConfiguration
                           TabsKey={TabsKey}
                           ref={form => {
@@ -156,12 +159,12 @@ class BaseView extends Component {
                           }}
                           />
                         ) : 
-                        TabsKey === "2" ? (
+                        (TabsKey === item.key && TabsKey === '2') ? (
                           <Empty 
                             style={{margin:"40px 8px"}}
                           />
                         ) : 
-                        TabsKey === "3" ? (
+                        (TabsKey === item.key && TabsKey === '3') ? (
                           <FunctionConfiguration
                           TabsKey={TabsKey}
                           ref={form => {
@@ -169,7 +172,7 @@ class BaseView extends Component {
                           }}
                           />
                         ) : 
-                        TabsKey === "4" ? (
+                        (TabsKey === item.key && TabsKey === '4') ? (
                           <AfterSalesConfiguration
                           TabsKey={TabsKey}
                           ref={form => {
@@ -177,12 +180,12 @@ class BaseView extends Component {
                           }}
                           />
                         ) : 
-                        TabsKey === "5" ? (
+                        (TabsKey === item.key && TabsKey === '5') ? (
                           <Empty 
                             style={{margin:"40px 8px"}}
                           />
                         ) : 
-                        TabsKey === "6" ? (
+                        (TabsKey === item.key && TabsKey === '6') ? (
                           <VersionInformation 
                           TabsKey={TabsKey}
                             style={{margin:"40px 8px"}}

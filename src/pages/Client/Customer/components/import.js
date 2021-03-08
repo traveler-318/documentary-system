@@ -154,8 +154,7 @@ class Import extends PureComponent {
   };
 
   handleOrderSave = () => {
-    const {form} = this.props;
-    const params={}
+    const {form,queryUrlKey} = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values.file = this.state.fileList[0];
@@ -166,44 +165,34 @@ class Import extends PureComponent {
           values.createTime=moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
         }
 
-        if(!values.salesman){
-          values.salesman=null
+        if(queryUrlKey === 'list'){
+          if(!values.salesman){
+            values.salesman=null
+          }
+          if(!values.createTime){
+            values.createTime=null
+          }
+          if(!values.clientStatus){
+            values.clientStatus=null
+          }
+          if(!values.clientLevel){
+            values.clientLevel=null
+          }
+          if(values.addrCoding){
+            values.province = values.addrCoding[0];
+            values.city = values.addrCoding[1]
+            values.area = values.addrCoding[2];
+          }
+          if(!values.addrCoding){
+            values.province =null;
+            values.city = null
+            values.area = null;
+          }
         }
-        if(!values.createTime){
-          values.createTime=null
-        }
-        if(!values.clientStatus){
-          values.clientStatus=null
-        }
-        if(!values.clientLevel){
-          values.clientLevel=null
-        }
-        if(values.addrCoding){
-          values.province = values.addrCoding[0];
-          values.city = values.addrCoding[1]
-          values.area = values.addrCoding[2];
-        }
-        if(!values.addrCoding){
-          values.province =null;
-          values.city = null
-          values.area = null;
-        }
-
-        // for(let key in values){
-        //
-        //   console.log(values[key])
-        //
-        //   if(values[key] === "" || values[key] === null || values[key] === undefined){
-        //
-        //   }else {
-        //     params[key] = values[key]
-        //   }
-        // }
-
+        values.queryUrlKey = queryUrlKey;
         delete values.addrCoding;
 
         if(values.file){
-
           importClient(values).then(res=>{
             this.setState({
               loading:false,
@@ -247,7 +236,8 @@ class Import extends PureComponent {
       form: { getFieldDecorator },
       OrderImportVisible,
       confirmLoading,
-      handleOrderImportCancel
+      handleOrderImportCancel,
+      queryUrlKey
     } = this.props;
 
     const {
@@ -338,45 +328,49 @@ class Import extends PureComponent {
             {/* <FormItem {...formItemLayout} label="数据覆盖">
               <Switch checkedChildren="是" unCheckedChildren="否" onChange={this.onSwitchChange} />
             </FormItem> */}
-            <Form.Item {...formItemLayout} label="客户级别">
-              {getFieldDecorator('clientLevel')(
-                <Select>
-                  {clientLevels.map(d => (
-                    <Select.Option key={d.id} value={d.id}>
-                      {d.labelName}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-            </Form.Item>
-            <Form.Item {...formItemLayout} label="客户状态">
-              {getFieldDecorator('clientStatus')(
-                <Select>
-                  {clientStatus.map(d => (
-                    <Select.Option key={d.id} value={d.id}>
-                      {d.labelName}
-                    </Select.Option>
-                  ))}
-                </Select>
-              )}
-            </Form.Item>
-            <Form.Item {...formItemLayout} label="所在地区：">
-              {getFieldDecorator('addrCoding')(
-                <Cascader
-                  options={CITY}
-                />
-              )}
-            </Form.Item>
-            <Form.Item {...formItemLayout} label="销售">
-              {getFieldDecorator('salesman', {
-              })(
-                <Select placeholder={"请选择销售"} style={{ width: 120 }}>
-                  {salesmanList.map((item,index)=>{
-                    return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
-                  })}
-                </Select>
-              )}
-            </Form.Item>
+
+            {queryUrlKey != 'allPool' ? (<>
+              <Form.Item {...formItemLayout} label="客户级别">
+                {getFieldDecorator('clientLevel')(
+                  <Select>
+                    {clientLevels.map(d => (
+                      <Select.Option key={d.id} value={d.id}>
+                        {d.labelName}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                )}
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="客户状态">
+                {getFieldDecorator('clientStatus')(
+                  <Select>
+                    {clientStatus.map(d => (
+                      <Select.Option key={d.id} value={d.id}>
+                        {d.labelName}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                )}
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="所在地区：">
+                {getFieldDecorator('addrCoding')(
+                  <Cascader
+                    options={CITY}
+                  />
+                )}
+              </Form.Item>
+              <Form.Item {...formItemLayout} label="销售">
+                {getFieldDecorator('salesman', {
+                })(
+                  <Select placeholder={"请选择销售"} style={{ width: 120 }}>
+                    {salesmanList.map((item,index)=>{
+                      return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
+                    })}
+                  </Select>
+                )}
+              </Form.Item>
+            </>) : '' }
+
             <FormItem {...formItemLayout} label="创建时间">
               {getFieldDecorator('createTime')(
                 <DatePicker
