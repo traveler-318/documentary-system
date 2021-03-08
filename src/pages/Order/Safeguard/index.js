@@ -33,6 +33,7 @@ import Update from '@/pages/Order/Safeguard/update';
 import UpdateStatus from '@/pages/Order/Safeguard/components/updateStatus';
 import func from '../../../utils/Func';
 import { setListData } from '../../../utils/publicMethod';
+import { getButton } from '../../../utils/authority';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY, LOGISTICSSTATUS } from './data.js';
 import {
   deleteData,
@@ -598,35 +599,71 @@ class AllOrdersList extends PureComponent {
   }
 
 
+  handleClick(code){
+    switch (code) {
+      case 'clientLevel': //阶段变更
+        this.flowUpdate();
+        break;
+      case 'clientStatus'://标签变更
+        this.statusUpdate();
+        break;
+      case 'message'://短信提醒
+        this.batchReminders();
+        break;
+      case 'upload'://导入交易量
+        this.handleOrderImport();
+        break;
+      case 'export'://导出
+        this.exportFile();
+        break;
+    }
+  }
+
   // 左侧操作按钮
   renderLeftButton = (tabKey) => {
+    let buttons = getButton('safeguard');
+    const actionButtons = buttons.filter(button => button.action === 2 || button.action === 3);
+
     return (
-        <div>
-            {/*<Button type="primary" icon="plus" onClick={()=>{*/}
-            {/*  router.push(`/order/safeguard/add`);*/}
-            {/*}}>添加</Button>*/}
-            <Button
-              icon="menu-unfold"
-              onClick={this.flowUpdate}
-            >阶段变更</Button>
-            <Button
-              icon="menu-unfold"
-              onClick={this.statusUpdate}
-            >标签变更</Button>
-            <Button
-              icon="message"
-              onClick={this.batchReminders}
-            >短信提醒</Button>
-            <Button
-              icon="upload"
-              onClick={this.handleOrderImport}
-            >导入交易量</Button>
-            <Button
-            icon="download"
-            onClick={this.exportFile}
-            >导出</Button>
-          </div>
-      )
+      <>
+        {
+          actionButtons.map((item,index)=>{
+              return (
+                <Button icon={item.source} onClick={()=>{
+                  this.handleClick(item.code)
+                }}>{item.name}</Button>
+              )
+          })
+        }
+      </>
+    )
+    // return (
+    //     <div>
+    //         {/*<Button type="primary" icon="plus" onClick={()=>{*/}
+    //         {/*  router.push(`/order/safeguard/add`);*/}
+    //         {/*}}>添加</Button>*/}
+    //         <Button
+    //           icon="menu-unfold"
+    //           onClick={this.flowUpdate}
+    //         >阶段变更</Button>
+    //         <Button
+    //           icon="menu-unfold"
+    //           onClick={this.statusUpdate}
+    //         >标签变更</Button>
+    //         <Button
+    //           icon="message"
+    //           onClick={this.batchReminders}
+    //         >短信提醒</Button>
+    //         <Button
+    //           icon="upload"
+    //           onClick={this.handleOrderImport}
+    //         >导入交易量</Button>
+    //         <Button
+    //         icon="download"
+    //         onClick={this.exportFile}
+    //         >导出</Button>
+    //       </div>
+    //   )
   };
 
   // 删除
