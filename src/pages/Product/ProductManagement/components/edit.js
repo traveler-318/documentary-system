@@ -41,7 +41,8 @@ class Logistics extends PureComponent {
       payPanyName:"",
       productTypeName:"",
       handleImgVisible:false,
-      Imglist:[]
+      Imglist:[],
+      radioValue:''
     };
   }
 
@@ -50,6 +51,10 @@ class Logistics extends PureComponent {
     const {details} = this.props;
 
     this.getProductcategoryLists(details.payPanyId)
+
+    this.setState({
+      radioValue:Number(details.tasksMark)
+    })
 
     getPaypanyList({
       size:100,
@@ -122,7 +127,7 @@ class Logistics extends PureComponent {
           deptId:getCookie("dept_id"),
           id:details.id,
           price:values.price ? Number(values.price) : null,
-          settlePrice:values.settlePrice ? Number(values.settlePrice) : null,
+          // settlePrice:values.settlePrice ? Number(values.settlePrice) : null,
           originalName:Imglist.originalName
         };
         console.log(params)
@@ -147,6 +152,32 @@ class Logistics extends PureComponent {
     }else{
       return callback();
     }
+  };
+
+  onChangeRadio = e => {
+    this.setState({
+      radioValue: e.target.value,
+    });
+  };
+
+  amountMarkChange = (rule, value, callback) => {
+    var re = /^[0-9]+$/ ;
+    if (!re.test(value)) {
+      callback('请输入正整数!');
+    }else if(!value){
+      callback('请输入总达标金额');
+    }
+    return callback();
+  };
+
+  timeoutTimeChange = (rule, value, callback) => {
+    var re = /^[0-9]+$/ ;
+    if (!re.test(value)) {
+      callback('请输入正整数!');
+    }else if(!value){
+      callback('请输入未达标周期');
+    }
+    return callback();
   };
 
   onChange = (key,row,type) => {
@@ -213,6 +244,7 @@ class Logistics extends PureComponent {
       paypanyList,
       handleImgVisible,
       productcategoryList,
+      radioValue
     } = this.state;
 
     const formAllItemLayout = {
@@ -341,21 +373,75 @@ class Logistics extends PureComponent {
                   ],
                 })(<Input placeholder="请输入排序编号" />)}
               </FormItem> */}
-              <FormItem {...formAllItemLayout} label="一阶段">
-                {getFieldDecorator('customOne', {
-                  initialValue: details.customOne,
-                })(<Input placeholder="请输入一阶段" disabled={details.customOne ==='0' || details.customOne ==='' ? false : true} />)}
+
+              <FormItem {...formAllItemLayout} label='任务功能'>
+                {getFieldDecorator('tasksMark', {
+                  initialValue: radioValue,
+                })(
+                  <Radio.Group onChange={this.onChangeRadio} value={radioValue}>
+                    <Radio key={1} value={1}>开启</Radio>
+                    <Radio key={0} value={0}>关闭</Radio>
+                  </Radio.Group>
+                )}
               </FormItem>
-              <FormItem {...formAllItemLayout} label="二阶段">
-                {getFieldDecorator('customTwo', {
-                  initialValue: details.customTwo,
-                })(<Input placeholder="请输入二阶段" disabled={details.customTwo ==='0' || details.customTwo ==='' ? false : true} />)}
-              </FormItem>
-              <FormItem {...formAllItemLayout} label="三阶段">
-                {getFieldDecorator('customThree', {
-                  initialValue: details.customThree,
-                })(<Input placeholder="请输入三阶段" disabled={details.customThree ===0 || details.customThree ==='' ? false : true} />)}
-              </FormItem>
+
+              {radioValue === 1 ? (<>
+                <FormItem {...formAllItemLayout} label="一阶段">
+                  {getFieldDecorator('customOne', {
+                    initialValue: details.customOne,
+                    rules: [
+                      {
+                        required: true,
+                        message:'请输入一阶段',
+                      },
+                    ],
+                  })(<Input placeholder="请输入一阶段" disabled={details.customOne ==='0' || details.customOne ==='' ? false : true} />)}
+                </FormItem>
+                <FormItem {...formAllItemLayout} label="二阶段">
+                  {getFieldDecorator('customTwo', {
+                    initialValue: details.customTwo,
+                    rules: [
+                      {
+                        required: true,
+                        message:'请输入二阶段',
+                      },
+                    ],
+                  })(<Input placeholder="请输入二阶段" disabled={details.customTwo ==='0' || details.customTwo ==='' ? false : true} />)}
+                </FormItem>
+                <FormItem {...formAllItemLayout} label="三阶段">
+                  {getFieldDecorator('customThree', {
+                    initialValue: details.customThree,
+                    rules: [
+                      {
+                        required: true,
+                        message:'请输入三阶段',
+                      },
+                    ],
+                  })(<Input placeholder="请输入三阶段" disabled={details.customThree ==='0' || details.customThree ==='' ? false : true} />)}
+                </FormItem>
+                <FormItem {...formAllItemLayout} label="总达标金额">
+                  {getFieldDecorator('amountMark', {
+                    initialValue: details.amountMark,
+                    rules: [
+                      {
+                        required: true,
+                        validator:this.amountMarkChange,
+                      },
+                    ],
+                  })(<Input placeholder="请输入总达标金额" disabled={details.amountMark ==='0' || details.amountMark ==='' ? false : true}/>)}
+                </FormItem>
+                <FormItem {...formAllItemLayout} label="未达标周期">
+                  {getFieldDecorator('timeoutTime', {
+                    initialValue: details.timeoutTime,
+                    rules: [
+                      {
+                        required: true,
+                        validator:this.timeoutTimeChange,
+                      },
+                    ],
+                  })(<Input placeholder="请输入未达标周期" disabled={details.timeoutTime ==='0' || details.timeoutTime ==='' ? false : true}/>)}
+                </FormItem></>) : ''
+              }
             </Form>
           </div>
 

@@ -56,7 +56,6 @@ class BaseView extends Component {
 
   salesmanInfo = (userInfo) => {
     getSalesmanInfo().then(resp => {
-      console.log(resp)
       const { form } = this.props;
 
       const _data = {...resp.data,...userInfo}
@@ -144,7 +143,7 @@ class BaseView extends Component {
 
     const { avatar, loading ,details} = this.state;
 
-    console.log(details.daysOverdue)
+    console.log(details.authenticationStatus,"213213213")
 
     const formItemLayout = {
       labelCol: {
@@ -253,7 +252,9 @@ class BaseView extends Component {
                   )}
                 </FormItem>
                 <FormItem {...formItemLayout} label={'下单验证'}>
-                  {getFieldDecorator('authenticationStatus')(
+                  {getFieldDecorator('authenticationStatus', {
+                    initialValue: details.authenticationStatus,
+                  })(
                     <Radio.Group>
                       <Radio key={2} value={2}>本机+短信</Radio>
                       <Radio key={1} value={1}>短信</Radio>

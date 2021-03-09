@@ -87,7 +87,6 @@ let modal;
 
 const ResizeableTitle = props => {
   const { onResize, width, ...restProps } = props;
-
   if (!width) {
     return <th {...restProps} />;
   }
@@ -927,7 +926,6 @@ class AllOrdersList extends PureComponent {
           text += `${selectedRows[i].userName}(${selectedRows[i].userPhone})订单物流信息有误，请修改物流信息\n`
         }
 
-        console.log(text)
         if(idSame){
           const item={};
           if(selectedRows[i].logisticsCompany && selectedRows[i].logisticsNumber && !selectedRows[i].logisticsStatus){
@@ -1036,7 +1034,6 @@ class AllOrdersList extends PureComponent {
 
 
   btnButtonBack = (code) => {
-    console.log(code,"codecodecode")
     if(code === "SN-import"){
       this.handleExcelImport()
     }else if(code === "text-import"){
@@ -1685,12 +1682,6 @@ class AllOrdersList extends PureComponent {
     })
   };
 
-  components = {
-    header: {
-      cell: ResizeableTitle,
-    },
-  };
-
   onDrop = info => {
     const dropKey = info.node.props.eventKey;
     const dragKey = info.dragNode.props.eventKey;
@@ -1735,9 +1726,7 @@ class AllOrdersList extends PureComponent {
   // 菜单列表头获取
   getOrderMenuHead = () => {
     const {tabKey}=this.state;
-    console.log(tabKey)
     orderMenuHead(0).then(resp=>{
-      console.log(resp)
       if(resp.code === 200){
         const list=resp.data.menuJson;
         const checked=[];
@@ -1897,6 +1886,13 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+
+  components = {
+    header: {
+      cell: ResizeableTitle,
+    },
+  };
+
   render() {
     const code = 'allOrdersList';
 
@@ -1965,7 +1961,7 @@ class AllOrdersList extends PureComponent {
           />;
       });
 
-    const list=[];
+    let list=[];
     columns.map((item, index) => {
       list.push(item)
     });
@@ -2056,7 +2052,7 @@ class AllOrdersList extends PureComponent {
       }
     )
 
-    const column=[
+    const column11=[
       {
         title: '姓名',
         dataIndex: 'userName',
@@ -2297,13 +2293,13 @@ class AllOrdersList extends PureComponent {
     },
   ]
 
-    // const columns = this.state.columns.map((col, index) => ({
-    //   ...col,
-    //   onHeaderCell: column => ({
-    //     width: column.width,
-    //     onResize: this.handleResize(index),
-    //   }),
-    // }));
+    list = list.map((col, index) => ({
+      ...col,
+      onHeaderCell: column => ({
+        width: column.width,
+        onResize: this.handleResize(index),
+      }),
+    }));
 
     const TabPanes = () => (
       <div className={styles.tabs}>
