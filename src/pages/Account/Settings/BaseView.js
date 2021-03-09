@@ -106,7 +106,12 @@ class BaseView extends Component {
       <Panel title="个人设置" back="/" action={action}>
         <Form style={{ marginTop: 8 }} hideRequiredMark>
           <div style={{background:"#ffffff"}}>
-            <Tabs defaultActiveKey={TabsKey} onChange={this.onChangeTabsKey}>
+          <BasicConfiguration
+            ref={form => {
+              this.BasicView = form;
+            }}
+          />
+            {/* <Tabs defaultActiveKey={TabsKey} onChange={this.onChangeTabsKey}>
               {
                 topTabPane.map(item=>{
                   return (
@@ -163,7 +168,7 @@ class BaseView extends Component {
                   )
                 })
               }
-            </Tabs>
+            </Tabs> */}
           </div>
           
         </Form>
