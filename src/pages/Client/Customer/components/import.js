@@ -163,7 +163,8 @@ class Import extends PureComponent {
           values.createTime=this.state.createTime;
         }else {
           // values.createTime=moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
-          values.createTime=null;
+          // values.createTime=null;
+          delete values.createTime;
         }
 
         if(queryUrlKey === 'list'){
