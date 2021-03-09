@@ -85,13 +85,15 @@ class BaseView extends Component {
         if (!err) {
 
           if(values.daysOverdue < 10){
-            return message.error('此时间段距离签收时间比较短,用户激活时间比较紧迫,建议时间调整为 10-60天')
+            if(values.daysOverdue != 0){
+              return message.error('此时间段距离签收时间比较短,用户激活时间比较紧迫,建议时间调整为 10-60天')
+            }
           }
           if(values.transferNumber < 7){
-            return message.error('此时间段距离签收时间比较短,用户进入下一个客户周期,建议时间调整为 7-90天')
+            if(values.transferNumber != 0){
+              return message.error('此时间段距离签收时间比较短,用户进入下一个客户周期,建议时间调整为 7-90天')
+            }
           }
-
-          console.log(values,"valuesvaluesvaluesvalues")
 
           const property ={
             daysOverdue:values.daysOverdue,
