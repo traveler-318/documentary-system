@@ -103,7 +103,6 @@ class Logistics extends PureComponent {
           settlePrice:values.settlePrice ? Number(values.settlePrice) : null,
           originalName:Imglist.originalName
         };
-        console.log(params)
         getProductattributeAdd(params).then(res=>{
           if(res.code === 200){
             message.success(res.msg);

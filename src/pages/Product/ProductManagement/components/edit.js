@@ -354,7 +354,7 @@ class Logistics extends PureComponent {
               <FormItem {...formAllItemLayout} label="三阶段">
                 {getFieldDecorator('customThree', {
                   initialValue: details.customThree,
-                })(<Input placeholder="请输入三阶段" disabled={details.customThree ==='0' || details.customThree ==='' ? false : true} />)}
+                })(<Input placeholder="请输入三阶段" disabled={details.customThree ===0 || details.customThree ==='' ? false : true} />)}
               </FormItem>
             </Form>
           </div>
