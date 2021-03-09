@@ -783,21 +783,19 @@ class AllOrdersList extends PureComponent {
   }
 
   // 认领
-  bulkClaim = () => {
-    const {selectedRows} = this.state;
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
-    }
-    if(selectedRows.length > 1){
-      return message.info('只能选择一条数据');
-    }
-    let list=[];
-    selectedRows.map( item =>{
-      list.push({
-        id:item.id,
-        confirmTag: 6
-      })
-    })
+  bulkClaim = (row) => {
+    // const {selectedRows} = this.state;
+    // if(selectedRows.length <= 0){
+    //   return message.info('请至少选择一条数据');
+    // }
+    // if(selectedRows.length > 1){
+    //   return message.info('只能选择一条数据');
+    // }
+    // let list=[];
+    // list.push({
+    //   id:row.id,
+    //   confirmTag: 6
+    // })
     Modal.confirm({
       title: '提示',
       content: "是否进行流程状态确认？此操作不可逆转!",
@@ -807,7 +805,7 @@ class AllOrdersList extends PureComponent {
       keyboard:false,
       onOk:() => {
         return new Promise((resolve, reject) => {
-          updateConfirmTag({id:selectedRows[0].id,confirmTag:6}).then(res=>{
+          updateConfirmTag({id:row.id,confirmTag:6}).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
               this.setState({
@@ -2028,7 +2026,10 @@ class AllOrdersList extends PureComponent {
               <a onClick={()=>this.handleSMS(row)}>短信</a>
               <Divider type="vertical" />
               <a onClick={()=>this.handleVoice(row)}>语音</a>
-
+              {tabKey === '10' ? (<>
+                <Divider type="vertical" />
+                <a onClick={()=>this.bulkClaim(row)}>认领</a>
+              </>) : ''}
               {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
 
               {/* <a>跟进</a>
