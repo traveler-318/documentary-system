@@ -104,14 +104,12 @@ class Logistics extends PureComponent {
           // settlePrice:values.settlePrice ? Number(values.settlePrice) : null,
           originalName:Imglist.originalName
         };
-        console.log(values,"!!!!!!!!!")
-        console.log(params,"@@@@@@@@@@")
-        // getProductattributeAdd(params).then(res=>{
-        //   if(res.code === 200){
-        //     message.success(res.msg);
-        //     router.push('/product/productManagement');
-        //   }
-        // })
+        getProductattributeAdd(params).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+            router.push('/product/productManagement');
+          }
+        })
       }
     });
   };

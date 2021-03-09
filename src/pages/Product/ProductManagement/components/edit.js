@@ -439,7 +439,7 @@ class Logistics extends PureComponent {
                         validator:this.timeoutTimeChange,
                       },
                     ],
-                  })(<Input placeholder="请输入未达标周期" disabled={details.timeoutTime ==='0' || details.timeoutTime ==='' ? false : true}/>)}
+                  })(<Input placeholder="请输入未达标周期" disabled={details.timeoutTime ===0 || details.timeoutTime ==='' ? false : true}/>)}
                 </FormItem></>) : ''
               }
             </Form>
