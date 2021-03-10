@@ -448,7 +448,7 @@ class AllOrdersList extends PureComponent {
     const {selectedRows} = this.state;
     const { dispatch } = this.props;
     const  tips=[];
-    
+
     if(selectedRows.length <= 0){
       return  message.info('请至少选择一条数据');
     }
@@ -587,7 +587,8 @@ class AllOrdersList extends PureComponent {
         return new Promise((resolve, reject) => {
           updateConfirmTag({
             id:confirmTagList[0].id,
-            confirmTag:radioChecked
+            confirmTag:radioChecked,
+            outOrderNo:confirmTagList[0].outOrderNo
           }).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
@@ -685,7 +686,7 @@ class AllOrdersList extends PureComponent {
       });
     }
 
-    
+
   }
   toExamines = (confirmTag) => {
     const {selectedRows} = this.state;
@@ -701,7 +702,7 @@ class AllOrdersList extends PureComponent {
         type = true;
       }
     })
-    
+
     if(type){
       Modal.confirm({
         title: '提醒',
@@ -783,21 +784,19 @@ class AllOrdersList extends PureComponent {
   }
 
   // 认领
-  bulkClaim = () => {
-    const {selectedRows} = this.state;
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
-    }
-    if(selectedRows.length > 1){
-      return message.info('只能选择一条数据');
-    }
-    let list=[];
-    selectedRows.map( item =>{
-      list.push({
-        id:item.id,
-        confirmTag: 6
-      })
-    })
+  bulkClaim = (row) => {
+    // const {selectedRows} = this.state;
+    // if(selectedRows.length <= 0){
+    //   return message.info('请至少选择一条数据');
+    // }
+    // if(selectedRows.length > 1){
+    //   return message.info('只能选择一条数据');
+    // }
+    // let list=[];
+    // list.push({
+    //   id:row.id,
+    //   confirmTag: 6
+    // })
     Modal.confirm({
       title: '提示',
       content: "是否进行流程状态确认？此操作不可逆转!",
@@ -807,7 +806,7 @@ class AllOrdersList extends PureComponent {
       keyboard:false,
       onOk:() => {
         return new Promise((resolve, reject) => {
-          updateConfirmTag({id:selectedRows[0].id,confirmTag:6}).then(res=>{
+          updateConfirmTag({id:row.id,confirmTag:6}).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
               this.setState({
@@ -1179,7 +1178,7 @@ class AllOrdersList extends PureComponent {
       }else{
         // return message.error('当前系统已经绑定您指定的同步账号,请联系管理员进行排查!');
         const {confirmLoading} = this.state;
-        
+
         Modal.confirm({
           title: '提醒',
           content: "当前系统已经绑定您指定的同步账号,确定同步数据吗？",
@@ -1209,7 +1208,7 @@ class AllOrdersList extends PureComponent {
                 }
               })
             }).catch(() => console.log('Oops errors!'));
-            
+
           },
           onCancel() {},
         });
@@ -1576,7 +1575,7 @@ class AllOrdersList extends PureComponent {
       excelVisible: false,
     });
   }
-  
+
   // 文本导入弹窗
   handleTextImport = () =>{
     this.setState({
@@ -1956,8 +1955,8 @@ class AllOrdersList extends PureComponent {
             // display:"none",
             right: '10px',
             marginTop: '3px'}}
-          type="menu" />} 
-          title={item.title} 
+          type="menu" />}
+          title={item.title}
           />;
       });
 
@@ -2028,7 +2027,10 @@ class AllOrdersList extends PureComponent {
               <a onClick={()=>this.handleSMS(row)}>短信</a>
               <Divider type="vertical" />
               <a onClick={()=>this.handleVoice(row)}>语音</a>
-
+              {tabKey === '10' ? (<>
+                <Divider type="vertical" />
+                <a onClick={()=>this.bulkClaim(row)}>认领</a>
+              </>) : ''}
               {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
 
               {/* <a>跟进</a>
@@ -2324,7 +2326,7 @@ class AllOrdersList extends PureComponent {
                 <TabPane tab={
                   <span>
                     {((
-                      item.key === params.confirmTag || 
+                      item.key === params.confirmTag ||
                       JSON.stringify(item.key) === params.confirmTag
                       ) && (
                         item.key === '0' ||
@@ -2351,7 +2353,7 @@ class AllOrdersList extends PureComponent {
               )
             })}
           </Tabs>
-        
+
           <Grid
             code={code}
             form={form}
