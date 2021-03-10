@@ -452,7 +452,13 @@ class LogisticsConfiguration extends PureComponent {
                     sessionStorage.setItem('imgBase64', response.data)
                     window.open(`#/order/allOrders/img`);
                     // 刷新详情数据
-                    this.getDetailsData(listID[currentIndex].id);
+                    if(currentIndex<listID.length-1){
+                      this.setState({
+                        currentIndex:currentIndex+1
+                      },()=>{
+                        this.getDetailsData(listID[currentIndex+1].id);
+                      });
+                    }
                   }else{
                     message.error(response.msg);
                     this.setState({
