@@ -448,7 +448,7 @@ class AllOrdersList extends PureComponent {
     const {selectedRows} = this.state;
     const { dispatch } = this.props;
     const  tips=[];
-    
+
     if(selectedRows.length <= 0){
       return  message.info('请至少选择一条数据');
     }
@@ -587,7 +587,8 @@ class AllOrdersList extends PureComponent {
         return new Promise((resolve, reject) => {
           updateConfirmTag({
             id:confirmTagList[0].id,
-            confirmTag:radioChecked
+            confirmTag:radioChecked,
+            outOrderNo:confirmTagList[0].outOrderNo
           }).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
@@ -685,7 +686,7 @@ class AllOrdersList extends PureComponent {
       });
     }
 
-    
+
   }
   toExamines = (confirmTag) => {
     const {selectedRows} = this.state;
@@ -701,7 +702,7 @@ class AllOrdersList extends PureComponent {
         type = true;
       }
     })
-    
+
     if(type){
       Modal.confirm({
         title: '提醒',
@@ -1179,7 +1180,7 @@ class AllOrdersList extends PureComponent {
       }else{
         // return message.error('当前系统已经绑定您指定的同步账号,请联系管理员进行排查!');
         const {confirmLoading} = this.state;
-        
+
         Modal.confirm({
           title: '提醒',
           content: "当前系统已经绑定您指定的同步账号,确定同步数据吗？",
@@ -1209,7 +1210,7 @@ class AllOrdersList extends PureComponent {
                 }
               })
             }).catch(() => console.log('Oops errors!'));
-            
+
           },
           onCancel() {},
         });
@@ -1576,7 +1577,7 @@ class AllOrdersList extends PureComponent {
       excelVisible: false,
     });
   }
-  
+
   // 文本导入弹窗
   handleTextImport = () =>{
     this.setState({
@@ -1956,8 +1957,8 @@ class AllOrdersList extends PureComponent {
             // display:"none",
             right: '10px',
             marginTop: '3px'}}
-          type="menu" />} 
-          title={item.title} 
+          type="menu" />}
+          title={item.title}
           />;
       });
 
@@ -2324,7 +2325,7 @@ class AllOrdersList extends PureComponent {
                 <TabPane tab={
                   <span>
                     {((
-                      item.key === params.confirmTag || 
+                      item.key === params.confirmTag ||
                       JSON.stringify(item.key) === params.confirmTag
                       ) && (
                         item.key === '0' ||
@@ -2351,7 +2352,7 @@ class AllOrdersList extends PureComponent {
               )
             })}
           </Tabs>
-        
+
           <Grid
             code={code}
             form={form}
