@@ -392,7 +392,9 @@ class LogisticsConfiguration extends PureComponent {
       return false;
     }
 
-    if(!detail.taskId){ 
+    console.log(listID[currentIndex].id,"listID[currentIndex].idlistID[currentIndex].id")
+
+    if(!detail.taskId){
        form.validateFieldsAndScroll((err, values) => {
          if(!values.logisticsCompany){
            values.logisticsCompany=null
@@ -404,14 +406,13 @@ class LogisticsConfiguration extends PureComponent {
          values.productTypeId = productTypeId;
          values.productId = productId;
          if (!err) {
-          console.log("先保存数据")
-          
+          console.log(localPrintStatus,"先保存数据")
+
           // 先保存数据
           this.saveData(values,()=>{
             // 获取物流配置
             this.getDefaultData((res)=>{
               console.log(res,"获取物流配置成功");
-
               // 禁止编辑
               this.setState({
                 disabledType:true
@@ -442,7 +443,6 @@ class LogisticsConfiguration extends PureComponent {
                   }
                 )
               // }
-
               if(localPrintStatus === 1){
                 param.localPrintStatus=1;
                 const { dispatch } = this.props;
@@ -452,7 +452,13 @@ class LogisticsConfiguration extends PureComponent {
                     sessionStorage.setItem('imgBase64', response.data)
                     window.open(`#/order/allOrders/img`);
                     // 刷新详情数据
-                    this.getDetailsData(listID[currentIndex].id);
+                    if(currentIndex<listID.length-1){
+                      this.setState({
+                        currentIndex:currentIndex+1
+                      },()=>{
+                        this.getDetailsData(listID[currentIndex+1].id);
+                      });
+                    }
                   }else{
                     message.error(response.msg);
                     this.setState({
@@ -496,7 +502,7 @@ class LogisticsConfiguration extends PureComponent {
       this.setState({
         disabledType:true
       })
-      
+
       if(listID[currentIndex].logisticsPrintType === "1" || listID[currentIndex].logisticsPrintType === "2"){
           // 本地打印
           localPrinting({
