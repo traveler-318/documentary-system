@@ -164,16 +164,16 @@ class BaseView extends Component {
                     ],
                   })(<Input disabled />)}
                 </FormItem> */}
-                <FormItem {...formItemLayout} label={'网关域名'}>
-                  {getFieldDecorator('serverAddress', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请输入网关域名',
-                      },
-                    ],
-                  })(<Input />)}
-                </FormItem>
+                {/*<FormItem {...formItemLayout} label={'网关域名'}>*/}
+                  {/*{getFieldDecorator('serverAddress', {*/}
+                    {/*rules: [*/}
+                      {/*{*/}
+                        {/*required: true,*/}
+                        {/*message: '请输入网关域名',*/}
+                      {/*},*/}
+                    {/*],*/}
+                  {/*})(<Input />)}*/}
+                {/*</FormItem>*/}
                 <FormItem {...formItemLayout} label={'短信签名'}>
                   {getFieldDecorator('smsSignature')(
                     <Input />
