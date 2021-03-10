@@ -58,8 +58,7 @@ class BaseView extends Component {
     getSalesmanInfo().then(resp => {
       const { form } = this.props;
 
-      const _data = {...resp.data,...userInfo};
-
+      const _data = {...resp.data,...userInfo}
       Object.keys(form.getFieldsValue()).forEach(key => {
         const obj = {};
         obj[key] = _data[key];
@@ -143,8 +142,6 @@ class BaseView extends Component {
     } = this.props;
 
     const { avatar, loading ,details} = this.state;
-
-    console.log(details.authenticationStatus,"213213213")
 
     const formItemLayout = {
       labelCol: {
