@@ -15,7 +15,9 @@ import {
   Radio,
   Cascader,
   TreeSelect,
-  Descriptions, Icon,
+  Descriptions, 
+  Icon,
+  Badge
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
@@ -1115,6 +1117,12 @@ class AllOrdersList extends PureComponent {
           if(item.dataIndex === "province" || item.dataIndex === 'clientLevel'|| item.dataIndex === 'clientStatus'|| item.dataIndex === 'nextFollowTime'|| item.dataIndex === 'createTime') {
             item.sorter=true
           }
+          // 
+          if(item.dataIndex === "clientLevel" || item.dataIndex === "clientStatus") {
+            item.render = (key, row) => {
+              return this.setType(row)
+            }
+          }
           checked.push(item.dataIndex)
         })
 
@@ -1127,6 +1135,10 @@ class AllOrdersList extends PureComponent {
           }
           list = arr;
         }
+
+        console.log(list,"listlistlistlist")
+        // <Badge color={color} text={color} />
+
         this.setState({
           checkedOptions:checked,
           columns:list,
@@ -1137,6 +1149,46 @@ class AllOrdersList extends PureComponent {
       }
     })
   }
+
+  setType = (row) => {
+    if(row.dataIndex === "clientLevel"){
+      return(
+        <div className={styles.badgeType}>
+          <Badge color={row.levelColor} text={row.clientLevel} />
+        </div>
+      )
+    }else{
+      return(
+        <div className={styles.badgeType}>
+          <Badge color={row.statusColor} text={row.clientStatus} />
+        </div>
+      )
+    }
+    
+  }
+
+  
+
+
+  // setCityVal = (row) =>{
+  //   let v = "";
+  //   CITY.map(c=>{
+  //       if(c.value == row.province){
+  //         v = c.label+'/';
+  //         c.children.map(p=>{
+  //           if(p.value == row.city) {
+  //             v += p.label+'/';
+  //             p.children.map(a=>{
+  //               if(a.value == row.area) {
+  //                 v += a.label;
+  //               }
+  //             })
+  //           }
+  //         })
+  //       }
+  //   })
+  //   return v
+  // }
 
   getOrderMenuTemplate = () => {
     orderMenuTemplate(2).then(res=>{

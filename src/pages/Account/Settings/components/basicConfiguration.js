@@ -19,7 +19,6 @@ import { getUserInfo, updateInfo, unbundling, binding, testOpenid } from '../../
 import { getToken } from '../../../../utils/authority';
 import BindingQRCode from './bindingQRCode'
 import styles from './index.less';
-
 const FormItem = Form.Item;
 const { TextArea } = Input;
 let timers = null;
@@ -92,10 +91,9 @@ class BaseView extends Component {
     const { userId, avatar } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        console.log(values,"values")
         const params = {
-          id: userId,
           ...values,
-          avatar,
         };
         updateInfo(params).then(resp => {
           if (resp.success) {
@@ -338,7 +336,19 @@ class BaseView extends Component {
               />
             ):""
           }
-          
+          <Row gutter={24}>
+              <Col span={12}>
+                <Row gutter={24}>
+                  <Col span={6}>
+                    {/* <Button type="primary" style={{marginBottom:10,float:"right"}} onClick={this.handleSubmit}>保存</Button> */}
+                  </Col>
+                  <Col span={18}>
+                    <Button type="primary" style={{marginBottom:10}} onClick={this.handleSubmit}>保存</Button>
+                  </Col>
+                </Row>
+              </Col>
+              <Col span={12}></Col>
+          </Row>
         </div>
     );
   }
