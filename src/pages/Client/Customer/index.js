@@ -1120,7 +1120,7 @@ class AllOrdersList extends PureComponent {
           // 
           if(item.dataIndex === "clientLevel" || item.dataIndex === "clientStatus") {
             item.render = (key, row) => {
-              return this.setType(row)
+              return this.setType(row,item.dataIndex)
             }
           }
           checked.push(item.dataIndex)
@@ -1150,8 +1150,8 @@ class AllOrdersList extends PureComponent {
     })
   }
 
-  setType = (row) => {
-    if(row.dataIndex === "clientLevel"){
+  setType = (row,dataIndex) => {
+    if(dataIndex === "clientLevel"){
       return(
         <div className={styles.badgeType}>
           <Badge color={row.levelColor} text={row.clientLevel} />

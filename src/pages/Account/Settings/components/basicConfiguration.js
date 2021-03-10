@@ -98,6 +98,7 @@ class BaseView extends Component {
         updateInfo(params).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
+            this.setBaseInfo();
           } else {
             message.error(resp.msg || '提交失败');
           }
