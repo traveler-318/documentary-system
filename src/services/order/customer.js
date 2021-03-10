@@ -38,7 +38,9 @@ export async function importClient(params) {
     formData.append('city', city);
     formData.append('area', area);
   }
-  formData.append('createTime', createTime);
+  if(createTime){
+    formData.append('createTime', createTime);
+  }
   formData.append('file', file);
   return request('/api/client_info/clientinfo/importClient', {
     method: 'POST',
