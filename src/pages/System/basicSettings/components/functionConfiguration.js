@@ -200,7 +200,42 @@ class BaseView extends Component {
                     title="用户订单激活后，超过*天，订单就自动流转到待维护，等待后续继续跟进刷卡等其他状态。"
                   ><Icon type='question-circle-o' style={{position: 'absolute',right: '-23px',top: '3px'}} /></Tooltip>
                 </FormItem>
-              <FormItem {...formItemLayout} label={'系统告警'}>
+                <FormItem {...formItemLayout} label={'网关域名'}>
+                  {getFieldDecorator('domainAddress', {
+                    initialValue: details.domainAddress,
+                  })(<Input />)}
+                </FormItem>
+
+                <FormItem {...formItemLayout} label={'打印机类型'}>
+                  {getFieldDecorator('localPrintStatus')(
+                    <Radio.Group>
+                      <Radio key={1} value={1}>本地打印</Radio>
+                      <Radio key={0} value={0}>云打印</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem {...formItemLayout} label={'下单验证'}>
+                  {getFieldDecorator('authenticationStatus', {
+                    initialValue: details.authenticationStatus,
+                  })(
+                    <Radio.Group>
+                      <Radio key={2} value={2}>本机+短信</Radio>
+                      <Radio key={1} value={1}>短信</Radio>
+                      <Radio key={0} value={0}>无</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem style={{display:"none"}}>
+                  {getFieldDecorator('id')(
+                    <Input />
+                  )}
+                </FormItem>
+              </Col>
+
+              {/* ------------------------------------------ */}
+
+              <Col span={12}>
+                <FormItem {...formItemLayout} label={'系统告警'}>
                   {getFieldDecorator('alarmStatus')(
                     <Radio.Group>
                       <Radio key={1} value={1}>启用</Radio>
@@ -241,35 +276,9 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
-                <FormItem {...formItemLayout} label={'打印机类型'}>
-                  {getFieldDecorator('localPrintStatus')(
-                    <Radio.Group>
-                      <Radio key={1} value={1}>本地打印</Radio>
-                      <Radio key={0} value={0}>云打印</Radio>
-                    </Radio.Group>
-                  )}
-                </FormItem>
-                <FormItem {...formItemLayout} label={'下单验证'}>
-                  {getFieldDecorator('authenticationStatus', {
-                    initialValue: details.authenticationStatus,
-                  })(
-                    <Radio.Group>
-                      <Radio key={2} value={2}>本机+短信</Radio>
-                      <Radio key={1} value={1}>短信</Radio>
-                      <Radio key={0} value={0}>无</Radio>
-                    </Radio.Group>
-                  )}
-                </FormItem>
-                <FormItem style={{display:"none"}}>
-                  {getFieldDecorator('id')(
-                    <Input />
-                  )}
-                </FormItem>
-              </Col>
 
-              {/* ------------------------------------------ */}
 
-              <Col span={12} style={{marginTop:151}}>
+
               <FormItem style={{display:"none"}}>
                   {getFieldDecorator('id')(
                     <Input />
@@ -280,6 +289,7 @@ class BaseView extends Component {
                     <Input />
                   )}
                 </FormItem>
+
               </Col>
           </Row>
         </div>
