@@ -29,6 +29,7 @@ import {
 import { importClient } from '../../../../services/order/customer';
 import { getAccessToken, getToken } from '../../../../utils/authority';
 import { CITY } from '@/utils/city';
+import { CLIENTTYPE } from '../data';
 
 
 const FormItem = Form.Item;
@@ -382,6 +383,21 @@ class Import extends PureComponent {
                   onChange={this.onChange}
                   onOk={this.onOk}
                 />
+              )}
+            </FormItem>
+            <FormItem {...formItemLayout} label="客户来源">
+              {getFieldDecorator('clientSource',{
+                rules: [
+                  { required: true, message: '请选择客户来源' },
+                ],
+              })(
+                <Select>
+                  {CLIENTTYPE.map(d => (
+                    <Select.Option key={d.key} value={d.key+''}>
+                      {d.val}
+                    </Select.Option>
+                  ))}
+                </Select>
               )}
             </FormItem>
             <Form.Item {...formItemLayout} label="模板下载">
