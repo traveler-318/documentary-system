@@ -71,7 +71,7 @@ class PayBrandAdd extends PureComponent {
 
 
   componentWillMount() {
-   
+
     this.setState({
       labelColor: this.props.details.color
     })
@@ -104,7 +104,7 @@ class PayBrandAdd extends PureComponent {
         const params = {
           ...values,
           color: this.state.labelColor,
-          labelType: type === "label" ? 0 : type === "grade" ?  1 : type === "state" ? 2 : "",
+          labelType: type === "label" ? 0 : type === "grade" ?  1 : type === "state" ? 2 : type ==="source"? 3 : "",
           id:details.id
         };
         console.log(params)
@@ -177,7 +177,8 @@ class PayBrandAdd extends PureComponent {
                   },
                 ],
               })(<Input style={{paddingLeft: 30, borderColor:labelColor}} placeholder="请输入标签名称" />)}
-              <span style={{
+
+              {type ==="source"?'':(<span style={{
                 display:'inline-block',
                 width:"20px",
                 height:'20px',
@@ -186,30 +187,34 @@ class PayBrandAdd extends PureComponent {
                 position: 'absolute',
                 left: 6,
                 top: 0
-              }}></span>
+              }}></span>)}
+
             </FormItem>
-            <FormItem {...formAllItemLayout} label="标签颜色">
-              {getFieldDecorator('color', {
-              })(<div>
-                {colorList.map(item=>{
-                  return (
-                    <span style={{
-                      display:'inline-block',
-                      width:"20px",
-                      height:'20px',
-                      marginRight: 8,
-                      background:item.color,
-                      borderRadius: '50%',
-                      float: 'left',
-                      marginTop: 10,
-                      cursor: 'pointer'
-                    }}
-                      onClick={()=>{this.changeColor(item)}}
-                    ></span>
-                  )
-                })}
-              </div>)}
-            </FormItem>
+            {type ==="source"?'':(
+              <FormItem {...formAllItemLayout} label="标签颜色">
+                {getFieldDecorator('color', {
+                })(<div>
+                  {colorList.map(item=>{
+                    return (
+                      <span style={{
+                        display:'inline-block',
+                        width:"20px",
+                        height:'20px',
+                        marginRight: 8,
+                        background:item.color,
+                        borderRadius: '50%',
+                        float: 'left',
+                        marginTop: 10,
+                        cursor: 'pointer'
+                      }}
+                            onClick={()=>{this.changeColor(item)}}
+                      ></span>
+                    )
+                  })}
+                </div>)}
+              </FormItem>
+            )}
+
             <FormItem {...formAllItemLayout} label="标签排序">
               {getFieldDecorator('sortNumber', {
                 initialValue: details.sortNumber,

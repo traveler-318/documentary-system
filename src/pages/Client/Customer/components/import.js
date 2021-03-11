@@ -28,6 +28,7 @@ import {
 } from '../../../../services/newServices/order';
 import { importClient } from '../../../../services/order/customer';
 import { getAccessToken, getToken } from '../../../../utils/authority';
+import { getLabelList } from '@/services/user';
 import { CITY } from '@/utils/city';
 import { CLIENTTYPE } from '../data';
 
@@ -53,6 +54,7 @@ class Import extends PureComponent {
 
       clientLevels:[],//客户级别数组
       clientStatus:[],//客户等级数组
+      clientSources:[],//客戶來源
     };
   }
 
@@ -66,6 +68,21 @@ class Import extends PureComponent {
     },()=>{
     });
     this.getSalesman()
+    this.getLabels();
+  }
+
+  getLabels = () =>{
+    //获取客户來源
+    getLabelList({
+      size:100,
+      current:1,
+      labelType:3
+    }).then(res=>{
+      this.setState({
+        clientSources:res.data.records || []
+      })
+    })
+
   }
 
   getSalesman = () => {
@@ -245,7 +262,8 @@ class Import extends PureComponent {
 
     const {
       clientStatus,
-      clientLevels
+      clientLevels,
+      clientSources
     } = this.state;
 
     const {isCovered,salesmanList,fileList,loading} = this.state;
@@ -315,7 +333,7 @@ class Import extends PureComponent {
             style={{botton:"-77px",right:"-10px",zIndex:1000,top:0}}
             spinning={loading}
           >
-          <Form style={{ marginTop: 8 }} hideRequiredMark>
+          <Form style={{ marginTop: 8 }}>
             <Form.Item {...formItemLayout} label="模板上传">
               <Dragger
                 {...propss}
@@ -385,21 +403,25 @@ class Import extends PureComponent {
                 />
               )}
             </FormItem>
-            <FormItem {...formItemLayout} label="客户来源">
+            <FormItem {...formItemLayout} label="数据来源">
               {getFieldDecorator('clientSource',{
                 rules: [
-                  { required: true, message: '请选择客户来源' },
+                  { required: true, message: '请选择数据来源' },
                 ],
               })(
                 <Select>
-                  {CLIENTTYPE.map(d => (
-                    <Select.Option key={d.key} value={d.key+''}>
-                      {d.val}
+                  {clientSources.map(d => (
+                    <Select.Option key={d.id} value={d.id}>
+                      {d.labelName}
                     </Select.Option>
                   ))}
                 </Select>
               )}
             </FormItem>
+            {clientSources.length == 0 ?(
+              <div style={{color:"red",paddingLeft:'33px'}}>请到系统管理—>标签管理—>数据来源创建类型</div>
+            ):''}
+
             <Form.Item {...formItemLayout} label="模板下载">
               <Button type="primary" icon="download" size="small" onClick={this.handleTemplate}>
                 点击下载
