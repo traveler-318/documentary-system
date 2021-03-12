@@ -180,6 +180,31 @@ class ProductList extends PureComponent {
     })
   }
 
+  // 复制链接
+  handleCopy = (row) => {
+    const { globalParameters } = this.props;
+    const { codeUrl } = this.state;
+    const url = codeUrl+globalParameters.detailData.userAccount+"_"+row.id+"_"+row.price;
+    console.log(url)
+    const input = document.createElement('input');
+    input.setAttribute('id','copyId');
+    input.value= url
+    document.querySelector('body').appendChild(input)
+    const range = document.createRange();
+    range.selectNode(document.getElementById('copyId'));
+    const selection = window.getSelection();
+    if(selection.rangeCount> 0)selection.removeAllRanges();
+    selection.addRange(range);
+    const successful=document.execCommand('copy');
+    document.getElementById('copyId').remove()
+    if(successful){
+      message.success('复制成功！')
+    }else{
+      message.warning('复制失败！')
+    }
+
+  }
+
   changeRechargeAmount = (e) => {
     this.setState({
       RechargeAmount:e,
@@ -214,11 +239,12 @@ class ProductList extends PureComponent {
         {
           title: '产品名称',
           dataIndex: 'productName',
-          width:200
+          width:180
         },
         {
           title: '金额',
           dataIndex: 'price',
+          width:100
         },
         {
             title: '推广码',
@@ -228,6 +254,8 @@ class ProductList extends PureComponent {
                 <a onClick={()=>this.handleSubmit(row)}>二维码</a>
                 <Divider type="vertical" />
                 <a onClick={()=>this.handlePreview(row)}>预览</a>
+                <Divider type="vertical" />
+                <a onClick={()=>this.handleCopy(row)}>复制链接</a>
               </>)
             },
         },
@@ -238,7 +266,7 @@ class ProductList extends PureComponent {
         <Modal
           title="支付金额"
           visible={handleAggregateCodeVisible}
-          width={450}
+          width={530}
           onCancel={handleCancelAggregateCode}
           maskClosable={false}
           footer={null}
