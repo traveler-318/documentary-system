@@ -46,7 +46,8 @@ import {
   // 物品信息
   getGoodsList,
   // 附加信息
-  getAdditionalList
+  getAdditionalList,
+  getlogisticsTemplate
 } from '../../../services/newServices/logistics'
 
 const FormItem = Form.Item;
@@ -91,7 +92,9 @@ class LogisticsConfiguration extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productId :null,
-      disabledType:false
+      disabledType:false,
+
+      templates:[],//模板数组
     };
   }
 
@@ -107,6 +110,7 @@ class LogisticsConfiguration extends PureComponent {
     // 获取详情数据
     this.getDetailsData(globalParameters.listParam[0].id);
 
+    this.getlogisticsTemplate();
     // 拼装对应产品
     // this.assemblingData();
     this.getTreeList();
@@ -133,6 +137,19 @@ class LogisticsConfiguration extends PureComponent {
     }
 
   }
+
+  // 获取模板信息
+  getlogisticsTemplate(){
+    getlogisticsTemplate().then(res=>{
+      if(res.code === 200){
+        this.setState({
+          templates:res.data.records
+        });
+      }else {
+        message.error(res.msg);
+      }
+    })
+  };
 
   getDetailsData = (id,type) => {
     getDetails({id}).then(res=>{
@@ -593,10 +610,13 @@ class LogisticsConfiguration extends PureComponent {
       currentIndex,
       listID,
       handlePrintingClick,
-      disabledType
+      disabledType,
+      templates
     } = this.state;
 
     console.log(listID,"listID")
+
+    console.log(templates,'templates')
 
     const formItemLayout = {
       labelCol: {
@@ -710,7 +730,7 @@ class LogisticsConfiguration extends PureComponent {
                       },
                     ],
                   })(
-                  <Select 
+                  <Select
                   disabled={disabledType}
                   placeholder={"请选择类型"}>
                     {ORDERTYPE.map(item=>{
@@ -746,12 +766,15 @@ class LogisticsConfiguration extends PureComponent {
                     //   },
                     // ],
                   })(
-                  <Select 
+                  <Select
                     disabled={disabledType}
                     placeholder={"请选择物流公司"}>
-                    {Object.keys(LOGISTICSCOMPANY).map(key=>{
-                      return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
+                    {templates.map((item,index) =>{
+                      return (<Option key={index || 0} value={item.templateId}>{item.templateName}</Option>)
                     })}
+                    {/*{Object.keys(LOGISTICSCOMPANY).map(key=>{*/}
+                    {/*  return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)*/}
+                    {/*})}*/}
                   </Select>
                   )}
                 </FormItem>
@@ -764,7 +787,7 @@ class LogisticsConfiguration extends PureComponent {
                     //     message: '请输入物流单号',
                     //   },
                     // ],
-                  })(<Input 
+                  })(<Input
                     disabled={disabledType}
                   placeholder="请输入物流单号" />)}
                 </FormItem>
