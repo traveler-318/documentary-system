@@ -127,7 +127,6 @@ class OrderImport extends PureComponent {
 
   handleOrderSave = () => {
     const {form} = this.props;
-    const params={}
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values.file = this.state.fileList[0];
@@ -141,15 +140,8 @@ class OrderImport extends PureComponent {
         if(!values.createTime){
           values.createTime=null
         }
-        for(let key in values){
-          if(values[key] === "" || values[key] === null || values[key] === undefined){
-
-          }else {
-            params[key] = values[key]
-          }
-        }
         if(values.file){
-          importOrder(params).then(res=>{
+          importOrder(values).then(res=>{
             this.setState({
               loading:false,
             })
