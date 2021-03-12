@@ -219,6 +219,7 @@ class AuthorityList extends PureComponent {
       message.error('当前销售二维码未绑定售后人员，请配置售后人员后再次尝试。');
       return false;
     }
+
     const { dispatch } = this.props;
     dispatch({
       type: `globalParameters/setDetailData`,
