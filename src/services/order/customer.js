@@ -28,7 +28,7 @@ export async function deleteData(params) {
 
 //导入
 export async function importClient(params) {
-  const { salesman, file, clientStatus,clientLevel,createTime,province,city,area,queryUrlKey } = params;
+  const { salesman, file, clientStatus,clientLevel,createTime,province,city,area,queryUrlKey,clientSource } = params;
   const formData = new FormData();
   if(queryUrlKey === 'list'){
     formData.append('salesman', salesman);
@@ -41,6 +41,8 @@ export async function importClient(params) {
   if(createTime){
     formData.append('createTime', createTime);
   }
+
+  formData.append('clientSource', clientSource);
   formData.append('file', file);
   return request('/api/client_info/clientinfo/importClient', {
     method: 'POST',
