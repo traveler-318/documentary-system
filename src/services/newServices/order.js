@@ -338,7 +338,9 @@ export async function importOrder(params) {
   formData.append('salesman', salesman);
   formData.append('orderType', orderType);
   formData.append('payAmount', payAmount);
-  formData.append('createTime', createTime);
+  if(createTime){
+    formData.append('createTime', createTime);
+  }
   formData.append('file', file);
   return request('/api/order/order/importOrder', {
     method: 'POST',

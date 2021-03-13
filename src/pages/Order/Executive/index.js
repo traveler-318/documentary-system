@@ -241,19 +241,20 @@ class AllOrdersList extends PureComponent {
   // ============ 查询 ===============
   handleSearch = (params) => {
     console.log(params,"查询参数")
-    const { dateRange,sorts } = params;
+    const { dateRange,sorts,printTime } = params;
 
     const { tabKey, salesmanList } = this.state;
     let payload = {
       ...params,
     };
     if (dateRange) {
-      payload = {
-        ...params,
-        startTime: dateRange ? func.format(dateRange[0], dateFormat) : null,
-        endTime: dateRange ? func.format(dateRange[1], dateFormat) : null,
-      };
+      payload.startTime= dateRange ? func.format(dateRange[0], dateFormat) : null;
+      payload.endTime= dateRange ? func.format(dateRange[1], dateFormat) : null;
       // payload.dateRange = null;
+    }
+    if(printTime){
+      payload.printStartTime= printTime ? func.format(printTime[0], dateFormat) : null;
+      payload.printEndTime= printTime ? func.format(printTime[1], dateFormat) : null;
     }
 
     if(sorts){
@@ -294,11 +295,16 @@ class AllOrdersList extends PureComponent {
     payload.productId = payload.productType ? payload.productType[2] : payload.productId ? payload.productId  : null;
 
     delete payload.dateRange;
+    delete payload.printTime;
     delete payload.productType;
 
     for(let key in payload){
       payload[key] = payload[key] === "" ? null : payload[key]
     }
+
+    console.log(payload,"!!!!!!!!!!!!!!!111")
+
+
     this.setState({
       params:payload
     },()=>{
@@ -413,6 +419,12 @@ class AllOrdersList extends PureComponent {
           <div>
             <Form.Item label="下单时间">
               {getFieldDecorator('dateRange', {
+              })(
+                <RangePicker showTime size={"default"} />
+              )}
+            </Form.Item>
+            <Form.Item label="发货时间">
+              {getFieldDecorator('printTime', {
               })(
                 <RangePicker showTime size={"default"} />
               )}

@@ -225,6 +225,16 @@ class BaseView extends Component {
                     </Radio.Group>
                   )}
                 </FormItem>
+                <FormItem {...formItemLayout} label={'浏览器跳转'}>
+                  {getFieldDecorator('wechatBrowserStatus', {
+                    initialValue: details.wechatBrowserStatus,
+                  })(
+                    <Radio.Group>
+                      <Radio key={1} value={1}>是</Radio>
+                      <Radio key={0} value={0}>否</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
                 <FormItem style={{display:"none"}}>
                   {getFieldDecorator('id')(
                     <Input />
