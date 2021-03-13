@@ -460,10 +460,17 @@ class LogisticsConfiguration extends PureComponent {
                   }
                 )
               // }
+
+              if((/[\u4E00-\u9FA5]/g.test(param.tempid))){
+                message.error('打印模板不正确,请刷新或者联系售后处理')
+                return false;
+              }
+
               if(localPrintStatus === 1){
                 param.localPrintStatus=1;
                 const { dispatch } = this.props;
                 console.log(param)
+
                 logisticsPrintRequest(param).then(response=>{
                   if(response.code === 200){
                     sessionStorage.setItem('imgBase64', response.data)
@@ -613,10 +620,6 @@ class LogisticsConfiguration extends PureComponent {
       disabledType,
       templates
     } = this.state;
-
-    console.log(listID,"listID")
-
-    console.log(templates,'templates')
 
     const formItemLayout = {
       labelCol: {
