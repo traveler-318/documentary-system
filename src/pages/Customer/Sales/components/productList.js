@@ -20,8 +20,9 @@ import { getCodeUrl } from '../../../../services/newServices/sales';
 import {
     getProductattributeList,
 } from '../../../../services/newServices/product';
-import { setListData } from '../../../../utils/publicMethod';
+import { copyToClipboard, setListData } from '../../../../utils/publicMethod';
 import QRCode  from 'qrcode.react';
+import copy from 'copy-to-clipboard';
 
 
 const FormItem = Form.Item;
@@ -186,18 +187,8 @@ class ProductList extends PureComponent {
     const { codeUrl } = this.state;
     const url = codeUrl+globalParameters.detailData.userAccount+"_"+row.id+"_"+row.price;
     console.log(url)
-    const input = document.createElement('input');
-    input.setAttribute('id','copyId');
-    input.value= url
-    document.querySelector('body').appendChild(input)
-    const range = document.createRange();
-    range.selectNode(document.getElementById('copyId'));
-    const selection = window.getSelection();
-    if(selection.rangeCount> 0)selection.removeAllRanges();
-    selection.addRange(range);
-    const successful=document.execCommand('copy');
-    document.getElementById('copyId').remove()
-    if(successful){
+    copy(url);
+    if(url){
       message.success('复制成功！')
     }else{
       message.warning('复制失败！')

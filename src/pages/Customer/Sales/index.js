@@ -120,14 +120,22 @@ class AuthorityList extends PureComponent {
 
   // ============ 修改默认开关 =========
 
-  onStatus = (value,key) => {
+  onStatus = (value,key,keys) => {
     console.log(value)
     const refresh = this.getDataList;
     const data= value === 0 ? 1 : 0;
-    const params = {
-      id:key.id,
-      salesmanStatus:data
-    };
+    let params=''
+    if(keys === 1){
+      params = {
+        id:key.id,
+        wechatBrowserStatus:data
+      };
+    }else {
+      params = {
+        id:key.id,
+        salesmanStatus:data
+      };
+    }
     Modal.confirm({
       title: '修改确认',
       content: '是否要修改该状态??',
@@ -136,7 +144,6 @@ class AuthorityList extends PureComponent {
       cancelText: '取消',
       async onOk() {
         updateStatus(params).then(resp=>{
-          console.log(resp)
           if (resp.success) {
            message.success(resp.msg);
            refresh()
@@ -404,12 +411,22 @@ class AuthorityList extends PureComponent {
         },
       },
       {
+        title: '微信跳浏览器',
+        dataIndex: 'wechatBrowserStatus',
+        width: 140,
+        render: (res,key) => {
+          return(
+            <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key,1)} />
+          )
+        },
+      },
+      {
         title: '默认开关',
         dataIndex: 'salesmanStatus',
         width: 100,
         render: (res,key) => {
           return(
-            <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key)} />
+            <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key,2)} />
           )
         },
       },
@@ -428,7 +445,7 @@ class AuthorityList extends PureComponent {
       {
         title: '公众号通知',
         dataIndex: 'openid',
-        width: 150,
+        width: 100,
         render: (res,row) => {
           return(
             <div>
