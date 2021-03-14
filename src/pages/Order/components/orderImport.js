@@ -315,7 +315,14 @@ class OrderImport extends PureComponent {
               )}
             </Form.Item>
             <FormItem {...formItemLayout} label="创建时间">
-              {getFieldDecorator('createTime')(
+              {getFieldDecorator('createTime',{
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择时间',
+                  },
+                ],
+              })(
                 <DatePicker
                   showTime={{ format: 'HH:mm:ss' }}
                   format="YYYY-MM-DD HH:mm:ss"
