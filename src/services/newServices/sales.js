@@ -101,3 +101,10 @@ export async function getCodeUrl() {
     method: 'GET',
   });
 }
+
+export async function encryptionCodeUrl(params) {
+  return request(`/api/agent/salesman/encryptionCodeUrl`, {
+    method: 'post',
+    body: params,
+  });
+}

@@ -16,7 +16,7 @@ import router from 'umi/router';
 
 import { tenantMode } from '../../../../defaultSettings';
 import { getCookie } from '../../../../utils/support';
-import { getCodeUrl } from '../../../../services/newServices/sales';
+import { getCodeUrl,encryptionCodeUrl } from '../../../../services/newServices/sales';
 import {
     getProductattributeList,
 } from '../../../../services/newServices/product';
@@ -186,13 +186,22 @@ class ProductList extends PureComponent {
     const { globalParameters } = this.props;
     const { codeUrl } = this.state;
     const url = codeUrl+globalParameters.detailData.userAccount+"_"+row.id+"_"+row.price;
-    console.log(url)
-    copy(url);
-    if(url){
-      message.success('复制成功！')
-    }else{
-      message.warning('复制失败！')
-    }
+
+    const params = globalParameters.detailData.userAccount+"_"+row.id+"_"+row.price;
+
+    encryptionCodeUrl(params).then(res=>{
+      if(res.code === 200){
+        copy(res.data);
+        if(res.data){
+          message.success('复制成功！')
+        }else{
+          message.warning('复制失败！')
+        }
+      }else {
+        message.error(res.msg)
+      }
+    })
+
 
   }
 
