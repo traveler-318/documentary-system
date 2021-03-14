@@ -28,7 +28,7 @@ export async function deleteData(params) {
 
 //导入
 export async function importClient(params) {
-  const { salesman, file, clientStatus,clientLevel,createTime,province,city,area,queryUrlKey,clientSource } = params;
+  const { salesman, file, clientStatus,clientLevel,createTime,province,city,area,queryUrlKey,clientSource,createUser } = params;
   const formData = new FormData();
   if(queryUrlKey === 'list'){
     formData.append('salesman', salesman);
@@ -41,7 +41,7 @@ export async function importClient(params) {
   if(createTime){
     formData.append('createTime', createTime);
   }
-
+  formData.append('createUser', createUser);
   formData.append('clientSource', clientSource);
   formData.append('file', file);
   return request('/api/client_info/clientinfo/importClient', {
@@ -118,7 +118,14 @@ export async function queryCreator() {
   });
 }
 
-//客户订单
+// 同级用户
+export async function getSameLevelUser() {
+  return request('/api/client_info/clientinfo/getSameLevelUser', {
+    method: 'POST',
+  });
+}
+
+// 客户订单
 export async function clientOrder(params) {
   return request(`/api/client_info/clientinfo/clientOrder`, {
     method: 'POST',

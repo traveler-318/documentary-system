@@ -51,6 +51,7 @@ import {
   deleteData,
   statusOrLevel,
   putPool,
+  getSameLevelUser,
   receive
 }from '../../../services/order/customer';
 
@@ -171,7 +172,8 @@ class AllOrdersList extends PureComponent {
       confirmTagList:[],
       _listArr:[],
       organizationTree:[],
-      createUsers:[]
+      createUsers:[],
+      sameLevelUser:[]
     };
   }
 
@@ -216,6 +218,14 @@ class AllOrdersList extends PureComponent {
       })
     })
   }
+
+  // sameLevelUser = () => {
+  //   getSameLevelUser().then(res=>{
+  //     this.setState({
+  //       sameLevelUser:res.data
+  //     })
+  //   })
+  // }
 
   getDataList = () => {
     const {params,queryUrlKey} = this.state;
@@ -379,7 +389,7 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers,routerKey } = this.state;
+    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers,routerKey,sameLevelUser } = this.state;
 
     let queryType = null;
     switch (routerKey) {
@@ -449,6 +459,17 @@ class AllOrdersList extends PureComponent {
             )}
           </Form.Item>
         ):''}
+        {/*<Form.Item label="主管">*/}
+          {/*{getFieldDecorator('createUser', {*/}
+          {/*})(*/}
+            {/*<Select placeholder={"请选择主管"} style={{ width: 200 }}>*/}
+              {/*{sameLevelUser.map((item,index)=>{*/}
+                {/*return (<Option key={index} value={item.userId}>{item.name}</Option>)*/}
+              {/*})}*/}
+            {/*</Select>*/}
+          {/*)}*/}
+        {/*</Form.Item>*/}
+
         {/*<Form.Item label="省市区">*/}
           {/*{getFieldDecorator('cityparam', {*/}
           {/*})(*/}
