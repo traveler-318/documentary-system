@@ -772,12 +772,12 @@ class LogisticsConfiguration extends PureComponent {
                   <Select
                     disabled={disabledType}
                     placeholder={"请选择物流公司"}>
-                    {templates.map((item,index) =>{
-                      return (<Option key={index || 0} value={item.templateId}>{item.templateName}</Option>)
-                    })}
-                    {/*{Object.keys(LOGISTICSCOMPANY).map(key=>{*/}
-                    {/*  return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)*/}
+                    {/*{templates.map((item,index) =>{*/}
+                      {/*return (<Option key={index || 0} value={item.templateId}>{item.templateName}</Option>)*/}
                     {/*})}*/}
+                    {Object.keys(LOGISTICSCOMPANY).map(key=>{
+                      return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
+                    })}
                   </Select>
                   )}
                 </FormItem>
