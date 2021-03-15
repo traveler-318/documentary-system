@@ -223,6 +223,9 @@ class Import extends PureComponent {
             values.area = null;
           }
         }
+        if(!values.directorId){
+          values.directorId = null;
+        }
         values.queryUrlKey = queryUrlKey;
         delete values.addrCoding;
 
@@ -407,22 +410,17 @@ class Import extends PureComponent {
               </Form.Item>
             </>) : '' }
 
-            {userName ==="admin" ? (<>
-              <FormItem {...formItemLayout} label="主管">
-                {getFieldDecorator('createUser', {
-                  rules: [
-                    { required: true, message: '请选择主管' },
-                  ],
-                })(
-                  <Select placeholder={"请选择主管"} style={{ width: 200 }}>
-                    {sameLevelUser.map((item,index)=>{
-                      return (<Option key={index} value={item.userId}>{item.name}</Option>)
-                    })}
-                  </Select>
-                )}
-              </FormItem>
-            </>):""}
+            <FormItem {...formItemLayout} label="主管">
+              {getFieldDecorator('directorId', {
 
+              })(
+                <Select placeholder={"请选择主管"} style={{ width: 200 }}>
+                  {sameLevelUser.map((item,index)=>{
+                    return (<Option key={index} value={item.userId}>{item.name}</Option>)
+                  })}
+                </Select>
+              )}
+            </FormItem>
 
             <FormItem {...formItemLayout} label="创建时间">
               {getFieldDecorator('createTime')(
