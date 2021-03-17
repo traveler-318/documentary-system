@@ -650,6 +650,23 @@ export default [
         ],
       },
       {
+        path: '/numberDetection',
+        routes: [
+          {
+            path: '/numberDetection/statistics',
+            routes: [
+              { path: '/numberDetection/statistics', component: './NumberDetection/Statistics/index' },
+            ],
+          },
+          {
+            path: '/numberDetection/detection',
+            routes: [
+              { path: '/numberDetection/detection', component: './NumberDetection/Detection/index' },
+            ],
+          },
+        ],
+      },
+      {
         path: '/client',
         routes: [
           { path: '/client/allcustomer', component: './Client/Customer/index',key:'customer' },

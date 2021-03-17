@@ -302,8 +302,6 @@ class AllOrdersList extends PureComponent {
       payload[key] = payload[key] === "" ? null : payload[key]
     }
 
-    console.log(payload,"!!!!!!!!!!!!!!!111")
-
 
     this.setState({
       params:payload
