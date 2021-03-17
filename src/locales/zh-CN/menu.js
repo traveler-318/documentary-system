@@ -6,6 +6,9 @@ export default {
   'menu.client.allpublic': '全部公海',
   'menu.client.subordinatepublic': '下属公海',
   'menu.client.mypublic': '我的公海',
+  'menu.numberDetection': '号码检测',
+  'menu.numberDetection.statistics': '检测统计',
+  'menu.numberDetection.detection': '号码检测',
 
   'menu.order': '订单管理',
   'menu.order.allOrders': '全部订单',

@@ -139,3 +139,11 @@ export async function clientOperationRecord(params) {
     body: params,
   });
 }
+
+export async function createOrder(params) {
+  return request(`/api/client_info/clientinfo/createOrder`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
