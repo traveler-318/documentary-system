@@ -44,7 +44,9 @@ class OrderList extends PureComponent {
     const params={
       clientPhone:detail.clientPhone,
       size:p.size,
-      current:p.current
+      current:p.current,
+      clientId: detail.id,
+      associateOrderId: detail.associateOrderId,
     }
     clientOrder(params).then(res=>{
       const data = res.data.records;

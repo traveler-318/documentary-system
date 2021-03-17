@@ -42,7 +42,8 @@ class OrdersEdit extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productId:null,
-      detailsId:null
+      detailsId:null,
+      orderListLength:0
     };
   }
 
@@ -88,7 +89,9 @@ class OrdersEdit extends PureComponent {
     const params={
       clientPhone:detail.clientPhone,
       size:10,
-      current:1
+      current:1,
+      clientId: detail.id,
+      associateOrderId: detail.associateOrderId,
     }
     clientOrder(params).then(res=>{
       const data = res.data;
