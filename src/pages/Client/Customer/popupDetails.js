@@ -6,7 +6,7 @@ import styles from '../../Order/components/edit.less';
 import {
   updateReminds
 } from '../../../services/newServices/order';
-import {getDetail,updateData,clientOrder,clientOperationRecord} from '../../../services/order/customer';
+import {getDetail,updateData,clientOrder,clientOperationRecord,createOrder} from '../../../services/order/customer';
 import TabTrends from '@/pages/Client/Customer/components/tabTrends';
 import OrderListNew from './components/OrderListNew';
 import Ownership from './components/Ownership';
@@ -42,7 +42,8 @@ class OrdersEdit extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productId:null,
-      detailsId:null
+      detailsId:null,
+      orderListLength:0
     };
   }
 
@@ -88,7 +89,9 @@ class OrdersEdit extends PureComponent {
     const params={
       clientPhone:detail.clientPhone,
       size:10,
-      current:1
+      current:1,
+      clientId: detail.id,
+      associateOrderId: detail.associateOrderId,
     }
     clientOrder(params).then(res=>{
       const data = res.data;
@@ -193,6 +196,33 @@ class OrdersEdit extends PureComponent {
         message.error(res.msg);
       }
     })
+  };
+
+  addOrder = () =>{
+    const { detail } = this.state;
+    console.log(detail)
+    Modal.confirm({
+      title: '提醒',
+      content: "确定将要创建此客户的订单？",
+      okText: '确定',
+      okType: 'primary',
+      cancelText: '取消',
+      onOk() {
+        const params={
+          clientPhone: detail.clientPhone,
+          clientName: detail.clientName,
+          clientAddress: detail.clientAddress,
+        }
+        createOrder(params).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+          }else {
+            message.error(res.msg);
+          }
+        })
+      },
+      onCancel() {},
+    });
   };
 
   handleChange = value => {
@@ -301,7 +331,9 @@ class OrdersEdit extends PureComponent {
               <Col span={16} style={{ padding: 0 }} className={styles.rightContent}>
                 <Row className={styles.titleBtn}>
                   <Col span={16}>
-                    <Button icon="plus" onClick={()=>{message.info('开发中')}}>订单</Button>
+                    <Button icon="plus" onClick={()=>{
+                      this.addOrder()
+                    }}>订单</Button>
                     <Button icon="plus" onClick={()=>{message.info('开发中')}}>产品</Button>
                     <Button icon="plus" onClick={()=>{message.info('开发中')}}>联系人</Button>
                     <Button icon="plus" onClick={()=>{message.info('开发中')}}>工单</Button>

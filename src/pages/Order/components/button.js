@@ -211,7 +211,7 @@ class SearchButton extends PureComponent {
                 //         }}>{item.name}</Button>
                 //     )
                 // }
-                else if(tabKey === 'null' && (item.code === "add" || item.code === "deliver-goods" || item.code === "bell" || item.code === 'Import' || item.code === 'overdue' || item.code === 'status-change'|| item.code === 'timeConsuming')){
+                else if(tabKey === 'null' && (item.code === "add" || item.code === "deliver-goods" || item.code === "bell" || item.code === 'Import' || item.code === 'overdue' || item.code === 'timeConsuming')){
                   i++;
                     // 全部
                     if(item.code === 'Import'){
@@ -234,6 +234,14 @@ class SearchButton extends PureComponent {
                 {/* 已退回什么都没有 */}
                 {/* 已取消什么都没有 */}
                 if(item.code === 'export'){
+                  i++;
+                    return (
+                        <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
+                            this.handleClick(item.code)
+                        }}>{item.name}</Button>
+                    )
+                }
+                if(item.code === 'status-change'){
                   i++;
                     return (
                         <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
