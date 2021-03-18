@@ -127,7 +127,7 @@ class Detection extends PureComponent {
           <div className={styles.contentBox_title}>
             <img src={result}></img>
             <span className={styles.text}>监测结果</span>
-            <span className={styles.titleRight}><Icon type="download" />下载模板</span>
+            <span className={styles.titleRight}><Icon type="download" />全部下载</span>
           </div>
           <Row type="flex" justify="space-between">
             <Col className={styles.gutterRowBox} span={7}>
