@@ -15,7 +15,7 @@ import {
   Radio,
   Cascader,
   TreeSelect,
-  Descriptions, 
+  Descriptions,
   Icon,
   Badge
 } from 'antd';
@@ -113,6 +113,7 @@ class AllOrdersList extends PureComponent {
     this.state = {
       clientLevels:[],//客户级别数组
       clientStatus:[],//客户等级数组
+      clientSources:[],//数据来源数组
       cityparam:{},
 
       // 反选数据
@@ -298,6 +299,17 @@ class AllOrdersList extends PureComponent {
         clientStatus:res.data.records
       })
     })
+
+    //获取客户來源
+    getLabelList({
+      size:100,
+      current:1,
+      labelType:3
+    }).then(res=>{
+      this.setState({
+        clientSources:res.data.records || []
+      })
+    })
   }
 
 
@@ -389,7 +401,7 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers,routerKey,sameLevelUser } = this.state;
+    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers,clientSources,routerKey,sameLevelUser } = this.state;
 
     let queryType = null;
     switch (routerKey) {
@@ -459,6 +471,20 @@ class AllOrdersList extends PureComponent {
             )}
           </Form.Item>
         ):''}
+
+        <Form.Item label="数据来源">
+          {getFieldDecorator('clientSource', {
+          })(
+            <Select placeholder={"请选择数据来源"} style={{ width: 200 }}>
+              {clientSources.map(d => (
+                <Select.Option key={d.id} value={d.id}>
+                  {d.labelName}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
+
         {/*<Form.Item label="主管">*/}
           {/*{getFieldDecorator('createUser', {*/}
           {/*})(*/}
@@ -1138,7 +1164,7 @@ class AllOrdersList extends PureComponent {
           if(item.dataIndex === "province" || item.dataIndex === 'clientLevel'|| item.dataIndex === 'clientStatus'|| item.dataIndex === 'nextFollowTime'|| item.dataIndex === 'createTime') {
             item.sorter=true
           }
-          // 
+          //
           if(item.dataIndex === "clientLevel" || item.dataIndex === "clientStatus") {
             item.render = (key, row) => {
               return this.setType(row,item.dataIndex)
@@ -1185,10 +1211,10 @@ class AllOrdersList extends PureComponent {
         </div>
       )
     }
-    
+
   }
 
-  
+
 
 
   // setCityVal = (row) =>{
