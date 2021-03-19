@@ -787,12 +787,21 @@ class AllOrdersList extends PureComponent {
       routerKey = 'allpublic'
     }
 
+    let roleName = getCookie("ROLENAME");
+
     return (<>
       <SearchButton
         btnButtonBack={this.btnButtonBack}
         tabKey={tabKey}
         code={routerKey}
       />
+      {roleName === 'admin'?(
+        <Button
+          icon="delete"
+          onClick={this.batchDelete}
+        >批量删除</Button>
+      ):''}
+
     </>)
 
 
@@ -841,9 +850,20 @@ class AllOrdersList extends PureComponent {
     //       </div>
     //   )
   };
+  //批量删除
+  batchDelete = () =>{
+    const { selectedRows } = this.state;
 
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+
+    let ids = selectedRows.map(item=>item.id);
+    this.handleDelect(ids.join(","));
+
+  }
   // 删除
-  handleDelect = (row) => {
+  handleDelect = (id) => {
     const refresh = this.refreshTable;
     Modal.confirm({
       title: '删除确认',
@@ -854,7 +874,7 @@ class AllOrdersList extends PureComponent {
       keyboard:false,
       async onOk() {
         deleteData({
-          ids:row.id
+          ids:id
         }).then(res=>{
           message.success(res.msg);
           refresh();
@@ -1529,12 +1549,13 @@ class AllOrdersList extends PureComponent {
       list.push(item)
     });
 
+    let roleName = getCookie("ROLENAME");
     list.push(
       {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 90,
+        width: 140,
         filterDropdown: ({ confirm, clearFilters }) => (
           <div style={{ padding: 8 }}>
             <Tree
@@ -1586,8 +1607,12 @@ class AllOrdersList extends PureComponent {
               <a onClick={()=>this.handleJournal(row)}>日志</a>
               <Divider type="vertical" />
               <a onClick={()=>this.handleDetails(row)}>详情</a>
-              {/*<Divider type="vertical" />*/}
-              {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
+              {roleName === 'admin'?(
+                <>
+                  <Divider type="vertical" />
+                  <a onClick={()=>this.handleDelect(row.id)}>删除</a>
+                </>
+              ):''}
             </div>
           )
         },
