@@ -60,6 +60,7 @@ import Export from './export'
 import PopupDetails from './popupDetails'
 
 import TransferCustomers from './components/TransferCustomers'
+import Distribution from './components/distribution'
 import ImportData from '../../Order/components/ImportData';
 import Excel from '../../Order/components/excel';
 import Text from '../../Order/components/text';
@@ -133,6 +134,8 @@ class AllOrdersList extends PureComponent {
       exportVisible:false,
       // 转移客户
       TransferVisible:false,
+      // 分配主管
+      DistributionVisible:false,
       // 批量物流下单弹窗
       LogisticsConfigVisible:false,
       // 详情弹窗
@@ -174,7 +177,8 @@ class AllOrdersList extends PureComponent {
       _listArr:[],
       organizationTree:[],
       createUsers:[],
-      sameLevelUser:[]
+      sameLevelUser:[],
+      userName:getCookie("userName")
     };
   }
 
@@ -190,13 +194,14 @@ class AllOrdersList extends PureComponent {
     }
     this.setState({
       routerKey:key,
-      queryUrlKey:type,
+      queryUrlKey:type
     })
     this.getLabels();
     this.currenttree();
     this.getOrderMenuTemplate();
     this.getOrderMenuHead();
     this.getCreator();
+    this.sameLevelUser();
   }
 
   getCreator(){
@@ -219,14 +224,6 @@ class AllOrdersList extends PureComponent {
       })
     })
   }
-
-  // sameLevelUser = () => {
-  //   getSameLevelUser().then(res=>{
-  //     this.setState({
-  //       sameLevelUser:res.data
-  //     })
-  //   })
-  // }
 
   getDataList = () => {
     const {params,queryUrlKey} = this.state;
@@ -312,7 +309,13 @@ class AllOrdersList extends PureComponent {
     })
   }
 
-
+  sameLevelUser = () => {
+    getSameLevelUser().then(res=>{
+      this.setState({
+        sameLevelUser:res.data
+      })
+    })
+  }
 
 
   // ============ 查询 ===============
@@ -401,7 +404,7 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers,clientSources,routerKey,sameLevelUser } = this.state;
+    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers,clientSources,routerKey,sameLevelUser,userName } = this.state;
 
     let queryType = null;
     switch (routerKey) {
@@ -484,17 +487,17 @@ class AllOrdersList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-
-        {/*<Form.Item label="主管">*/}
+        {/*<Form.Item label="分配主管">*/}
           {/*{getFieldDecorator('createUser', {*/}
           {/*})(*/}
-            {/*<Select placeholder={"请选择主管"} style={{ width: 200 }}>*/}
+            {/*<Select placeholder={"分配主管"} style={{ width: 200 }}>*/}
               {/*{sameLevelUser.map((item,index)=>{*/}
                 {/*return (<Option key={index} value={item.userId}>{item.name}</Option>)*/}
               {/*})}*/}
             {/*</Select>*/}
           {/*)}*/}
         {/*</Form.Item>*/}
+
 
         {/*<Form.Item label="省市区">*/}
           {/*{getFieldDecorator('cityparam', {*/}
@@ -760,6 +763,9 @@ class AllOrdersList extends PureComponent {
     }else if(code === "transfer"){
       // 转移客户
       this.handleShowTransfer()
+    }else if(code === "Distribution"){
+      // 分配主管
+      this.handleShowDistribution()
     }else if(code === "receive"){
       // 领取
       this.receive()
@@ -1025,6 +1031,8 @@ class AllOrdersList extends PureComponent {
       TransferVisible:true
     })
   }
+
+
   // 转移客户
   handleCancelTransfer = (type) => {
     // getlist代表点击保存成功关闭弹窗后需要刷新列表
@@ -1038,6 +1046,39 @@ class AllOrdersList extends PureComponent {
       TransferVisible:false
     })
   }
+
+  // 打开分配主管弹窗
+  handleShowDistribution = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+
+    dispatch({
+      type: `globalParameters/setListId`,
+      payload: selectedRows,
+    });
+    this.setState({
+      DistributionVisible:true
+    })
+  }
+
+  // 关闭分配主管弹窗
+  handleCancelDistribution = (type) => {
+    // getlist代表点击保存成功关闭弹窗后需要刷新列表
+    if(type === "getlist"){
+      this.setState({
+        selectedRows: [],
+      });
+      this.getDataList();
+    }
+    this.setState({
+      DistributionVisible:false
+    })
+  }
+
 
   // 反选数据
   onChangeCheckbox = () => {
@@ -1202,8 +1243,6 @@ class AllOrdersList extends PureComponent {
           }
           list = arr;
         }
-
-        console.log(list,"listlistlistlist")
         // <Badge color={color} text={color} />
 
         this.setState({
@@ -1411,6 +1450,7 @@ class AllOrdersList extends PureComponent {
       confirmTagList,
       LogisticsAlertVisible,
       TransferVisible,
+      DistributionVisible,
       tips,
       clientStatus,
       clientLevels,
@@ -1707,6 +1747,14 @@ class AllOrdersList extends PureComponent {
           <TransferCustomers
             TransferVisible={TransferVisible}
             handleCancelTransfer={this.handleCancelTransfer}
+          />
+        ):""}
+
+        {/* 分配主管 */}
+        {DistributionVisible?(
+          <Distribution
+            DistributionVisible={DistributionVisible}
+            handleCancelDistribution={this.handleCancelDistribution}
           />
         ):""}
 

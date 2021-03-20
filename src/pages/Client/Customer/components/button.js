@@ -20,6 +20,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 import { getButton } from '../../../../utils/authority';
+import { getCookie } from '../../../../utils/support';
 const { SubMenu } = Menu;
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -31,7 +32,9 @@ class SearchButton extends PureComponent {
 
     super(props);
     this.state = {
-        buttons:[],
+      buttons:[],
+      userName:getCookie("userName")
+
     };
   }
 
@@ -47,7 +50,7 @@ class SearchButton extends PureComponent {
       this.props.btnButtonBack(code)
   }
   render() {
-    const {buttons} = this.state;
+    const {buttons,userName} = this.state;
 
     const actionButtons = buttons.filter(button => button.action === 2 || button.action === 3);
 
@@ -66,6 +69,15 @@ class SearchButton extends PureComponent {
                   this.handleClick(item.code)
                 }}>{item.name}</Button>
               )
+            }else if(item.code === "Distribution"){
+              if(userName === 'admin'){
+                i++;
+                return (
+                  <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
+                    this.handleClick(item.code)
+                  }}>{item.name}</Button>
+                )
+              }
             }else {
               i++;
               return (
@@ -74,6 +86,7 @@ class SearchButton extends PureComponent {
                 }}>{item.name}</Button>
               )
             }
+
           })
         }
       </>
