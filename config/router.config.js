@@ -193,6 +193,13 @@ export default [
         ],
       },
       {
+        path: '/branchManage',
+        routes: [
+          { path: '/branchManage/branchOffice', component: './BranchOffice/index' },
+          { path: '/branchManage/branchOrder', component: './BranchOrder/index' },
+        ],
+      },
+      {
         path: '/authority',
         routes: [
           {
