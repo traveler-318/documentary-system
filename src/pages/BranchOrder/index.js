@@ -28,6 +28,7 @@ import { Resizable } from 'react-resizable';
 
 import Panel from '../../components/Panel';
 import Grid from '../../components/Sword/Grid';
+import QueryParamPage from '@/pages/BranchOrder/components/QueryParamPage';
 import func from '../../utils/Func';
 import { setListData } from '../../utils/publicMethod';
 import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGISTICSCOMPANY, LOGISTICSSTATUS } from './components/data.js';
@@ -217,10 +218,6 @@ class BranchOffice extends PureComponent {
 
   getDataList = () => {
     const {params} = this.state;
-    if(!params.tenantId){
-      message.info('请选择分公司');
-     return false;
-    }
     this.setState({
       loading:true,
     })
@@ -262,7 +259,6 @@ class BranchOffice extends PureComponent {
   }
   // ============ 查询 ===============
   handleSearch = (params) => {
-    console.log(params,"查询参数")
     const { dateRange,sorts,printTime } = params;
 
     const { tabKey, salesmanList } = this.state;
@@ -341,141 +337,11 @@ class BranchOffice extends PureComponent {
     const { getFieldDecorator } = form;
 
     const { salesmanList, salesmangroup, params, productList,orderList,organizationTree } = this.state;
-
     return (
-      <div className={"default_search_form"}>
-        <Form.Item label="姓名">
-          {getFieldDecorator('userName',{
-          })(<Input placeholder="请输入姓名" />)}
-        </Form.Item>
-        <Form.Item label="手机号">
-          {getFieldDecorator('userPhone',{
-          })(<Input placeholder="请输入手机号" />)}
-        </Form.Item>
-        <Form.Item label="SN">
-              {getFieldDecorator('productCoding',{
-          })(<Input placeholder="请输入SN" />)}
-            </Form.Item>
-        <Form.Item label="订单类型">
-          {getFieldDecorator('orderType', {
-            })(
-            <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
-              {ORDERTYPPE.map(item=>{
-                return (<Option value={item.key}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
-        {/*<Form.Item label="组织">*/}
-          {/*{getFieldDecorator('groupId', {*/}
-              {/*})(*/}
-              {/*<Select*/}
-                {/*placeholder={"请选择分组"}*/}
-                {/*style={{ width: 120 }}*/}
-                {/*onChange={this.changeGroup}*/}
-              {/*>*/}
-                {/*{salesmangroup.map((item,key)=>{*/}
-                  {/*return (<Option value={key}>{item}</Option>)*/}
-                {/*})}*/}
-              {/*</Select>*/}
-            {/*)}*/}
-        {/*</Form.Item>*/}
-        {/*<Form.Item label="所属组织">*/}
-        {/*  {getFieldDecorator('organizationId', {*/}
-        {/*  })(*/}
-        {/*    <TreeSelect*/}
-        {/*      style={{ width: 200 }}*/}
-        {/*      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}*/}
-        {/*      onChange={this.changeGroup}*/}
-        {/*      treeData={organizationTree}*/}
-        {/*      allowClear*/}
-        {/*      showSearch*/}
-        {/*      treeNodeFilterProp="title"*/}
-        {/*      placeholder="请选择所属组织"*/}
-        {/*    />*/}
-        {/*  )}*/}
-        {/*</Form.Item>*/}
-        <Form.Item label="分公司">
-          {getFieldDecorator('tenantId', {
-          })(
-            <Select placeholder={"请选择分公司"} style={{ width: 120 }}
-                    onChange={this.changeGroup}>
-                {orderList.map(item=>{
-                  return (<Select.Option value={item.tenantId}>{item.tenantName}</Select.Option>)
-                })}
-            </Select>
-          )}
-        </Form.Item>
-        <Form.Item label="销售">
-          {getFieldDecorator('salesman', {
-              })(
-            <Select mode="multiple" placeholder={"请选择销售"} style={{ width: 200 }}>
-              {salesmanList.map((item,index)=>{
-                return (<Select.Option key={index} value={item.user_account}>{item.user_name}</Select.Option>)
-              })}
-            </Select>
-            )}
-        </Form.Item>
-        <Form.Item label="订单来源">
-          {getFieldDecorator('orderSource', {
-          })(
-            <Select placeholder={"请选择订单来源"} style={{ width: 120 }}>
-              {ORDERSOURCE.map(item=>{
-                return (<Option value={item.key}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
-        <Form.Item label="物流状态">
-          {getFieldDecorator('logisticsStatus', {
-            initialValue: params.logisticsStatus ? params.logsticsStatus : "全部",
-          })(
-            <Select placeholder={"请选择物流状态"} style={{ width: 120 }}>
-              {LOGISTICSSTATUS.map(item=>{
-                return (<Option value={item.key}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
-        <Form.Item label="产品分类">
-          {getFieldDecorator('productType', {
-            })(
-              <Cascader
-                style={{ width: 260 }}
-                options={productList}
-                fieldNames={{ label: 'value',value: "id"}}
-                changeOnSelect={true}
-              ></Cascader>
-          )}
-        </Form.Item>
-          <div>
-            <Form.Item label="下单时间">
-              {getFieldDecorator('dateRange', {
-              })(
-                <RangePicker showTime size={"default"} />
-              )}
-            </Form.Item>
-            <Form.Item label="发货时间">
-              {getFieldDecorator('printTime', {
-              })(
-                <RangePicker showTime size={"default"} />
-              )}
-            </Form.Item>
-
-
-            <div style={{ float: 'right' }}>
-              <Button type="primary" htmlType="submit">
-                <FormattedMessage id="button.search.name" />
-              </Button>
-              <Button style={{ marginLeft: 8 }} onClick={()=>{
-                // this.getSalesman();
-                onReset()
-              }}>
-                <FormattedMessage id="button.reset.name" />
-              </Button>
-            </div>
-          </div>
-      </div>
+      <QueryParamPage getFieldDecorator={getFieldDecorator}
+                      params={params}
+                      onReset={onReset}
+                      form={form}  />
     );
   };
   // ====== 首次打印提示弹框 ======
