@@ -167,7 +167,7 @@ class FaceSheetAdd extends PureComponent {
               <Col span={10}>
                 <FormItem {...formItemLayout} label="模板ID：">
                   {getFieldDecorator('tempid', {
-                    initialValue: data.tempids,
+                    // initialValue: data.tempids,
                     rules: [
                       {
                         required: true,
