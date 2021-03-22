@@ -96,7 +96,7 @@ class QueryParamPage extends PureComponent {
           })(
             <Select placeholder={"请选择订单类型"} style={{ width: 120 }}>
               {ORDERTYPPE.map(item=>{
-                return (<Option value={item.key}>{item.name}</Option>)
+                return (<Select.Option value={item.key}>{item.name}</Select.Option>)
               })}
             </Select>
           )}
@@ -104,7 +104,7 @@ class QueryParamPage extends PureComponent {
         <Form.Item label="分公司">
           {getFieldDecorator('tenantId', {
           })(
-            <Select placeholder={"请选择分公司"} style={{ width: 120 }}
+            <Select placeholder={"请选择分公司"} style={{ width: 200 }}
                     onChange={this.changeGroup}>
               {branchDatas.map(item=>{
                 return (<Select.Option value={item.tenantId}>{item.tenantName}</Select.Option>)
@@ -127,7 +127,7 @@ class QueryParamPage extends PureComponent {
           })(
             <Select placeholder={"请选择订单来源"} style={{ width: 120 }}>
               {ORDERSOURCE.map(item=>{
-                return (<Option value={item.key}>{item.name}</Option>)
+                return (<Select.Option value={item.key}>{item.name}</Select.Option>)
               })}
             </Select>
           )}
@@ -138,7 +138,7 @@ class QueryParamPage extends PureComponent {
           })(
             <Select placeholder={"请选择物流状态"} style={{ width: 120 }}>
               {LOGISTICSSTATUS.map(item=>{
-                return (<Option value={item.key}>{item.name}</Option>)
+                return (<Select.Option value={item.key}>{item.name}</Select.Option>)
               })}
             </Select>
           )}

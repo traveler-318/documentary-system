@@ -113,7 +113,7 @@ class BranchOffice extends PureComponent {
             columns={columns}
             scroll={{ x: 1000 }}
             counterElection={false}
-            multipleChoice={false}
+            multipleChoice={true}
 
             // multipleChoice={true}
           />
