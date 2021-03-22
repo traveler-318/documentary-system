@@ -65,7 +65,7 @@ import styles from './index.less';
 import Export from './components/export'
 // import TransferCustomers from './components/TransferCustomers'
 // import LogisticsConfig from './components/LogisticsConfig'
-// import PopupDetails from '../components/popupDetails'
+import PopupDetails from '../Order/components/popupDetails'
 //
 // import ImportData from '../components/ImportData';
 // import Excel from '../components/excel';
@@ -89,23 +89,6 @@ const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 let modal;
 
-const ResizeableTitle = props => {
-  const { onResize, width, ...restProps } = props;
-  if (!width) {
-    return <th {...restProps} />;
-  }
-
-  return (
-    <Resizable
-      width={width}
-      height={0}
-      onResize={onResize}
-      draggableOpts={{ enableUserSelectHack: false }}
-    >
-      <th {...restProps} />
-    </Resizable>
-  );
-};
 
 @connect(({ globalParameters }) => ({
   globalParameters,
@@ -132,24 +115,8 @@ class BranchOffice extends PureComponent {
       productList:[],
       // 导出
       exportVisible:false,
-      // 转移客户
-      TransferVisible:false,
-      // 批量物流下单弹窗
-      LogisticsConfigVisible:false,
       // 详情弹窗
       detailsVisible:false,
-      // 日志弹窗
-      journalVisible:false,
-      journalList:{},
-      // 短信弹窗
-      SMSVisible:false,
-      smsList:{},
-      // 耗时检测弹窗
-      timeConsumingVisible:false,
-      timeConsumingList:{},
-      // 语音弹窗
-      VoiceVisible:false,
-      voice:{},
       // 免押宝导入弹窗
       noDepositVisible:false,
       confirmLoading: false,
@@ -174,46 +141,14 @@ class BranchOffice extends PureComponent {
       voiceStatusVisible:false,
       confirmTagList:[],
       _listArr:[],
-      organizationTree:[],
-
-      orderList:[],//分公司数据
+      organizationTree:[]
     };
   }
 
   // ============ 初始化数据 ===============
   componentWillMount() {
-
-    this.getTreeList();
-    this.currenttree();
     this.getOrderMenuHead();
     this.getOrderMenuTemplate();
-
-    this.getBranchTree();
-  }
-
-  getTreeList = () => {
-    productTreelist().then(res=>{
-      this.setState({productList:res.data})
-    })
-  }
-
-  getBranchTree = () =>{
-    branchTree().then(res=>{
-      this.setState({orderList:res.data})
-      if(res.data && res.data.length>0){
-        this.props.form.setFieldsValue({
-          tenantId: res.data[0].tenantId
-        });
-      }
-    })
-  }
-  // 组织列表
-  currenttree = () => {
-    getCurrenttree().then(res=>{
-      this.setState({
-        organizationTree:res.data
-      })
-    })
   }
 
   getDataList = () => {
@@ -231,32 +166,6 @@ class BranchOffice extends PureComponent {
     })
   }
 
-  // 选择组织
-  changeGroup = (value) => {
-    if(value){
-      this.getBranchSalesman(value);
-      this.setState({
-        salesmanList:[]
-      })
-      // this.props.form.setFieldsValue({
-      //   // salesman: `全部`
-      //   salesman: ['全部']
-      // });
-    }
-  }
-  // 根据组织获取对应的业务员数据
-  getBranchSalesman(value){
-    branchSalesman({
-      tenantId:value || null
-    }).then(res=>{
-      if(res.code === 200){
-        res.data.unshift({key:'全部',value:''});
-        this.setState({
-          salesmanList:res.data
-        })
-      }
-    })
-  }
   // ============ 查询 ===============
   handleSearch = (params) => {
     const { dateRange,sorts,printTime } = params;
@@ -336,7 +245,7 @@ class BranchOffice extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, salesmangroup, params, productList,orderList,organizationTree } = this.state;
+    const { params} = this.state;
     return (
       <QueryParamPage getFieldDecorator={getFieldDecorator}
                       params={params}
@@ -344,308 +253,7 @@ class BranchOffice extends PureComponent {
                       form={form}  />
     );
   };
-  // ====== 首次打印提示弹框 ======
-  handleLogisticsAlert =() =>{
-    this.setState({
-      LogisticsAlertVisible:false
-    })
-  }
 
-
-
-  // =========首次打印===========
-  first = () => {
-    const {selectedRows} = this.state;
-    const { dispatch } = this.props;
-    const  tips=[];
-
-    if(selectedRows.length <= 0){
-      return  message.info('请至少选择一条数据');
-    }
-
-    if(selectedRows.length > 20){
-      message.info('最多批量操作20条数据');
-    }else{
-      for(let i=0; i<selectedRows.length; i++){
-        const item={}
-        if(selectedRows[i].taskId){
-          item.name="客户"+selectedRows[i].userName+"订单已打印过!只能进行重复打印!"
-          tips.push(item);
-        }
-      }
-      if(tips.length > 0 ){
-        this.setState({
-          tips:tips,
-          LogisticsFirst:0,
-          LogisticsAlertVisible:true
-        })
-        return false;
-      }
-      dispatch({
-        type: `globalParameters/setDetailData`,
-        payload: selectedRows,
-      });
-      this.setState({
-        LogisticsConfigVisible:true
-      })
-    }
-
-  }
-  // =========重复打印=============
-  repeat = () =>{
-    const {selectedRows} = this.state;
-    const { dispatch } = this.props;
-    const  tips=[];
-    const  tips1=[]
-    // 当前时间戳
-    const timestamp = (new Date()).getTime();
-    const timeInterval = 24 * 60 * 60 * 1000 * 2;
-
-    if(selectedRows.length <= 0){
-      return  message.info('请至少选择一条数据');
-    }
-
-    if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
-      if(selectedRows.length > 1){
-       return  message.info('您已开启本地打印，一次最多打印一条数据');
-      }
-    }
-
-    if(selectedRows.length > 20){
-      message.info('最多批量操作20条数据');
-    }else{
-      for(let i=0; i<selectedRows.length; i++){
-        const time = timestamp - (new Date(selectedRows[i].taskCreateTime)).getTime();
-        if(!selectedRows[i].taskId || selectedRows[i].logisticsPrintType === "0"){
-          const item1={};
-          item1.name=selectedRows[i].userName+"客户没有首次打印记录,不能进行重复打印!";
-          tips.push(item1)
-        }else if( time > timeInterval){
-          const item2={};
-          item2.name=selectedRows[i].userName+"客户的订单 距离首次时间超过2天 禁止打印！";
-          tips.push(item2)
-        }
-      }
-      if(tips.length > 0 ){
-        this.setState({
-          tips:tips,
-          LogisticsFirst:1,
-          LogisticsAlertVisible:true
-        })
-        return false;
-      }
-      let param = [];
-      for(let i=0; i<selectedRows.length; i++){
-        param.push(selectedRows[i].taskId)
-      }
-
-      if(selectedRows[0].logisticsPrintType === "1" || selectedRows[0].logisticsPrintType === "2"){
-          // 本地打印
-          localPrinting({
-            id:selectedRows[0].id,
-            logisticsPrintType:selectedRows[0].logisticsPrintType
-          }).then(res=>{
-            if(res.code === 200){
-              sessionStorage.setItem('imgBase64', res.data)
-              window.open(`#/order/allOrders/img`);
-            }else{
-              message.error(res.msg);
-            }
-          })
-      }else{
-        logisticsRepeatPrint(param).then(res=>{
-          if(res.code === 200){
-            message.success(res.msg);
-          }
-        })
-      }
-    }
-  }
-  // 对错误订单的状态进行变更操作
-  changeUpdateConfirmTag = (row) => {
-    this.setState({
-      confirmTagList:row,
-      updateConfirmTagVisible:true,
-    })
-  }
-  handleCancelUpdateConfirmTag = () => {
-    this.setState({
-      updateConfirmTagVisible:false,
-      radioChecked:''
-    })
-  }
-  onChangeRadio = (e) => {
-    this.setState({
-      radioChecked: e.target.value
-    })
-  }
-
-  handleSubmitUpdateConfirmTag = (e) => {
-    const { radioChecked, confirmTagList } = this.state;
-    if(!radioChecked){
-      return message.error("请选择需要更改的状态");
-    }
-
-    Modal.confirm({
-      title: '提醒',
-      content: "此次操作无法再次变更,确认操作!",
-      okText: '确定',
-      okType: 'primary',
-      cancelText: '取消',
-      keyboard:false,
-      onOk:() => {
-        return new Promise((resolve, reject) => {
-          updateConfirmTag({
-            id:confirmTagList[0].id,
-            confirmTag:radioChecked,
-            outOrderNo:confirmTagList[0].outOrderNo
-          }).then(res=>{
-            if(res.code === 200){
-              message.success(res.msg);
-              this.setState({
-                updateConfirmTagVisible:false
-              });
-              this.getDataList();
-              resolve();
-            }else{
-              message.error(res.msg);
-              reject();
-            }
-          })
-
-        }).catch(() => console.log('Oops errors!'));
-
-      },
-      onCancel() {},
-    });
-
-
-  }
-  // =========关闭物流弹窗========
-  handleCancelLogisticsConfig = () => {
-    this.setState({
-      LogisticsConfigVisible:false
-    })
-  }
-  // 批量审核
-  batchAudit = () => {
-    const {selectedRows,tabKey} = this.state;
-
-    const toExamines = this.toExamines;
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
-    }
-
-    let type = false, _data = [];
-    selectedRows.map(item=>{
-      if(item.confirmTag === '0' || item.confirmTag === '1'){
-        _data.push(item.id)
-      }else{
-        type = true;
-      }
-    })
-    if(!_data || _data.length === 0){
-      // modal.destroy();
-      return message.error("您选择的数据中未包含未审核的数据");
-    }
-
-    if(tabKey === "0"){
-      // 待审核
-      modal = Modal.confirm({
-        title: '提醒',
-        // content: "确定审核此订单吗？",
-        okText: '初审',
-        cancelText: '终审',
-        cancelButtonProps: {
-          type:"primary"
-        },
-        keyboard:false,
-        content:<div>
-          确定审核此订单吗？
-          <Button key="submit" type="danger" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{toExamines('9');}} >拒绝</Button>
-          <Button key="submit" style={{ position: 'absolute',right: '250px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button>
-          </div>,
-        onOk() {
-          toExamines('1');
-        },
-        onCancel() {
-          toExamines('2');
-        },
-      });
-    }else if(tabKey === "1"){
-      // 一审
-      modal = Modal.confirm({
-        title: '提醒',
-        // content: "确定审核此订单吗？",
-        okText: '终审',
-        cancelText: '拒绝',
-        cancelButtonProps: {
-          type:"danger"
-        },
-        content:<div>
-          确定审核此订单吗？
-          <Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button>
-          </div>,
-        onOk() {
-          // toExamines('1');
-          toExamines('2');
-        },
-        onCancel() {
-          toExamines('9');
-        },
-      });
-    }
-
-
-  }
-  toExamines = (confirmTag) => {
-    const {selectedRows} = this.state;
-    let type = false, _data = [];
-    const setAudit = this.setAudit;
-    selectedRows.map(item=>{
-      if(item.confirmTag === '0' || item.confirmTag === '1'){
-        const list={}
-        list.id=item.id;
-        list.outOrderNo=item.outOrderNo;
-        _data.push(list)
-      }else{
-        type = true;
-      }
-    })
-
-    if(type){
-      Modal.confirm({
-        title: '提醒',
-        content: "您选择的数据中包含已审核的数据，我们将不会对这些数据操作",
-        okText: '确定',
-        okType: 'info',
-        cancelText: '取消',
-        keyboard:false,
-        onOk() {
-          setAudit(_data,confirmTag)
-        },
-        onCancel() {
-          setAudit(_data,confirmTag)
-        },
-      });
-    }else{
-      setAudit(_data,confirmTag)
-    }
-  }
-  setAudit = (_data,confirmTag) => {
-    toExamine({
-      confirmTag,
-      orderIdAndNo:_data
-    }).then(res=>{
-      if(res.code === 200){
-        message.success(res.msg);
-        this.getDataList();
-        modal.destroy();
-      }else {
-        message.error(res.msg);
-      }
-    })
-  }
   // 导出
   exportFile = () => {
     const {params}=this.state;
@@ -676,137 +284,6 @@ class BranchOffice extends PureComponent {
     }
     this.handleShowLogistics(selectedRows)
   }
-
-  // 订单状态进行修改
-  bulkModification = () => {
-    const {selectedRows} = this.state;
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
-    }
-    if(selectedRows.length > 1){
-      return message.info('只能选择一条数据');
-    }
-    if(selectedRows[0].confirmTag === "0" || selectedRows[0].confirmTag === "1" || selectedRows[0].confirmTag === "10" ){
-      message.info('当前订单状态不适用变更操作');
-    }else {
-      this.changeUpdateConfirmTag(selectedRows);
-    }
-  }
-
-  // 认领
-  bulkClaim = (row) => {
-    // const {selectedRows} = this.state;
-    // if(selectedRows.length <= 0){
-    //   return message.info('请至少选择一条数据');
-    // }
-    // if(selectedRows.length > 1){
-    //   return message.info('只能选择一条数据');
-    // }
-    // let list=[];
-    // list.push({
-    //   id:row.id,
-    //   confirmTag: 6
-    // })
-    Modal.confirm({
-      title: '提示',
-      content: "是否进行流程状态确认？此操作不可逆转!",
-      okText: '确定',
-      okType: 'primary',
-      cancelText: '取消',
-      keyboard:false,
-      onOk:() => {
-        return new Promise((resolve, reject) => {
-          updateConfirmTag({id:row.id,confirmTag:6}).then(res=>{
-            if(res.code === 200){
-              message.success(res.msg);
-              this.setState({
-                updateConfirmTagVisible:false
-              });
-              this.getDataList();
-              resolve();
-            }else{
-              message.error(res.msg);
-              reject();
-            }
-          })
-        }).catch(() => console.log('Oops errors!'));
-      },
-      onCancel() {},
-    });
-
-  }
-
-
-
-  // 逾期提醒
-  overdueClick = () => {
-    const {selectedRows} = this.state;
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
-    }
-    this.voiceStatusConfirmTag(selectedRows);
-  }
-
-  // 逾期开关
-  voiceStatusConfirmTag = (row) => {
-    this.setState({
-      voiceStatusVisible:true
-    })
-  }
-
-  handleCancelvoiceStatus = () => {
-    this.setState({
-      voiceStatusVisible:false,
-      radioChecked:''
-    })
-  }
-
-  // 逾期开关修改提交
-  handleSubmitVoiceStatus= () => {
-    const {selectedRows,radioChecked} = this.state;
-
-    if(radioChecked === '' || radioChecked === undefined){
-      return message.error("请选择需要更改的状态");
-    }
-    let list=[];
-    selectedRows.map( item =>{
-      list.push({
-        id:item.id,
-        voiceStatus: radioChecked
-      })
-    })
-
-    Modal.confirm({
-      title: '提醒',
-      content: "此次操作无法再次变更,确认操作!",
-      okText: '确定',
-      okType: 'primary',
-      cancelText: '取消',
-      keyboard:false,
-      onOk:() => {
-        return new Promise((resolve, reject) => {
-          updateVoiceStatus(list).then(res=>{
-            if(res.code === 200){
-              message.success(res.msg);
-              this.setState({
-                voiceStatusVisible:false
-              });
-              this.getDataList();
-              resolve();
-            }else{
-              message.error(res.msg);
-              reject();
-            }
-          })
-
-        }).catch(() => console.log('Oops errors!'));
-
-      },
-      onCancel() {},
-    });
-  }
-
-
 
   btnButtonBack = (code) => {
     if(code === "deliver-goods"){
@@ -854,30 +331,6 @@ class BranchOffice extends PureComponent {
   refreshTable = () => {
     this.getDataList();
   }
-
-
-  handleCancelNoDeposit = () => {
-    this.setState({
-      noDepositVisible:false
-    })
-  }
-
-  // 修改数据
-  handleEdit = (row) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: `globalParameters/setDetailData`,
-      payload: row,
-    });
-    router.push(`/order/executive/edit/${row.id}`);
-  }
-
-  renderRightButton = () => (
-    <>
-      <Button icon="ordered-list">排序</Button>
-      <Button icon="unordered-list">列表</Button>
-    </>
-  );
 
   // 物流订阅
   logisticsSubscribe =(row) =>{
@@ -938,16 +391,6 @@ class BranchOffice extends PureComponent {
     });
   }
 
-  getText = (key, type) => {
-    let text = ""
-    type.map(item=>{
-      if(item.key === key){
-        text = item.name
-        return item.name
-      }
-    })
-
-  }
   // 订单状态
   getORDERSTATUS = (key) => {
     let text = ""
@@ -1071,68 +514,6 @@ class BranchOffice extends PureComponent {
     })
   }
 
-  // 打开日志弹窗
-  handleJournal = (row) => {
-    this.setState({
-      journalVisible:true,
-      journalList:row
-    })
-  }
-  // 关闭日志弹窗
-  handleCancelJournal = () => {
-    this.setState({
-      journalVisible:false
-    })
-  }
-
-  // 打开短信弹窗
-  handleSMS = (row) => {
-    this.setState({
-      SMSVisible:true,
-      smsList:row
-    })
-  }
-  // 关闭短信弹窗
-  handleCancelSMS = () => {
-    this.setState({
-      SMSVisible:false
-    })
-  }
-
-  // 打开耗时检测弹窗
-  handleTimeConsuming = () => {
-    const { selectedRows } = this.state;
-    if(selectedRows.length > 1){
-      return message.info('最多只能选择一条数据查看');
-    }
-    this.setState({
-      timeConsumingVisible:true,
-      timeConsumingList:selectedRows
-    })
-  }
-
-  // 关闭耗时检测弹窗
-  handleCancelTimeConsuming = () => {
-    this.setState({
-      timeConsumingVisible:false
-    })
-  }
-
-  // 打开语音列表弹窗
-  handleVoice = (row) => {
-    this.setState({
-      VoiceVisible:true,
-      voice:row
-    })
-  }
-  // 关闭语音列表弹窗
-  handleCancelVoice = () => {
-    this.setState({
-      VoiceVisible:false
-    })
-  }
-
-
   // 打开物流弹窗
   handleShowLogistics = (data) => {
     const { dispatch } = this.props;
@@ -1143,34 +524,6 @@ class BranchOffice extends PureComponent {
     });
     router.push('/order/executive/logisticsConfiguration');
 
-  }
-
-  // 打开转移客户弹窗
-  handleShowTransfer = () => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
-    }
-
-    dispatch({
-      type: `globalParameters/setListId`,
-      payload: selectedRows,
-    });
-    this.setState({
-      TransferVisible:true
-    })
-  }
-  // 转移客户
-  handleCancelTransfer = (type) => {
-    // getlist代表点击保存成功关闭弹窗后需要刷新列表
-    if(type === "getlist"){
-      this.getDataList();
-    }
-    this.setState({
-      TransferVisible:false
-    })
   }
 
   // 反选数据
@@ -1201,45 +554,6 @@ class BranchOffice extends PureComponent {
       return { columns: nextColumns };
     });
   };
-
-
-  // SN激活导入弹窗
-  handleExcelImport = () =>{
-    this.setState({
-      excelVisible: true,
-    });
-  }
-
-  handleExcelCancel = () =>{
-    this.setState({
-      excelVisible: false,
-    });
-  }
-
-  // 文本导入弹窗
-  handleTextImport = () =>{
-    this.setState({
-      textVisible: true,
-    });
-  }
-
-  handleTextCancel = () =>{
-    this.setState({
-      textVisible: false,
-    });
-  }
-  // 订单导入弹窗
-  handleOrderImport = () =>{
-    this.setState({
-      OrderImportVisible: true,
-    });
-  }
-
-  handleOrderImportCancel = () =>{
-    this.setState({
-      OrderImportVisible: false,
-    });
-  }
 
   onCheck = (checkedKeys) => {
     this.setState({
@@ -1525,13 +839,6 @@ class BranchOffice extends PureComponent {
     })
   }
 
-
-  components = {
-    header: {
-      cell: ResizeableTitle,
-    },
-  };
-
   render() {
     const code = 'allOrdersList';
 
@@ -1539,43 +846,13 @@ class BranchOffice extends PureComponent {
       form,
     } = this.props;
 
-    const formAllItemLayout = {
-      labelCol: {
-        span: 4,
-      },
-      wrapperCol: {
-        span: 20,
-      },
-    };
-
     const {
       data,
       loading,
       tabKey,
       exportVisible,
-      TransferVisible,
-      LogisticsConfigVisible,
-      selectedRows,
       detailsVisible,
-      journalVisible,
-      SMSVisible,
-      timeConsumingVisible,
-      timeConsumingList,
-      smsList,
-      VoiceVisible,
-      voice,
-      journalList,
       selectedRowKeys,
-      noDepositVisible,
-      updateConfirmTagVisible,
-      voiceStatusVisible,
-      textVisible,
-      excelVisible,
-      OrderImportVisible,
-      confirmTagList,
-      LogisticsFirst,
-      LogisticsAlertVisible,
-      tips,
       countSice,
       plainOptions,
       checkedOptions,
@@ -1609,7 +886,7 @@ class BranchOffice extends PureComponent {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 250,
+        width: 100,
         filterDropdown: ({ confirm, clearFilters }) => (
           <div style={{ padding: 8 }}>
             <Tree
@@ -1664,247 +941,6 @@ class BranchOffice extends PureComponent {
         },
       }
     )
-
-    const column11=[
-      {
-        title: '姓名',
-        dataIndex: 'userName',
-        width: 80,
-        render: (key,row)=>{
-          return (
-          <div className={styles.userName}>
-          {
-            row.expireClaim === '1' ? (<p><span>过期</span></p>):""
-          }
-          <span>{key}</span>
-          </div>
-          )
-        }
-      },
-      {
-        title: '手机号',
-        dataIndex: 'userPhone',
-        width: 100,
-      },
-      {
-        title: '收货地址',
-        dataIndex: 'userAddress',
-        width: 160,
-        ellipsis: true,
-      },
-      {
-        title: '订单状态',
-        dataIndex: 'confirmTag',
-        width: 80,
-        render: (key,row)=>{
-          // 待审核、已激活、已取消、已退回-不可切换状态
-          if(key == '0' || key == '7' || key == '8' || key == '9'){
-            return (
-              <div>
-                <Tag color={this.getORDERSCOLOR(key)}>
-                  {this.getORDERSTATUS(key)}
-                </Tag>
-              </div>
-            )
-          }else{
-              return (
-                <div style={{cursor: 'pointer'}}>
-                  <Tag color={this.getORDERSCOLOR(key)}>
-                  {this.getORDERSTATUS(key)}
-                  </Tag>
-                </div>
-              )
-          }
-        }
-    },
-    {
-      title: '订单状态(免押宝)',
-        dataIndex: 'mianyaStatus',
-      width: 130,
-      render: (key,row)=>{
-      let type=''
-      if (key === 0) {
-        type ='未授权';
-      } else if(key === 1){
-        type ='已授权';
-      }else if(key === 2){
-        type ='解冻';
-      }else if(key === 3){
-        type ='扣款';
-      }
-      return (
-        type
-      )
-    }
-    },
-    {
-      title: '机器状态(免押宝) ',
-        dataIndex: 'machineStatus',
-      width: 130,
-      render: (key,row)=>{
-      let type=''
-      if (key === 0) {
-        type ='未激活';
-      } else if(key === 1){
-        type ='已激活';
-      }else if(key === 2){
-        type ='已退回';
-      }else if(key === 3){
-        type ='被投诉';
-      }
-      return (
-        type
-      )
-    }
-    },
-    {
-      title: '订单金额',
-        dataIndex: 'payAmount',
-      width: 80,
-    },
-    {
-      title: '产品分类',
-        dataIndex: 'productType',
-      width: 130,
-    },
-    {
-      title: '产品型号',
-        dataIndex: 'productName',
-      width: 100,
-    },
-    {
-      title: 'SN',
-        dataIndex: 'productCoding',
-      width: 180,
-      ellipsis: true,
-    },
-    {
-      title: '订单类型',
-        dataIndex: 'orderType',
-      width: 80,
-      render: (key)=>{
-      return (
-        <div>{this.getORDERTYPE(key)} </div>
-      )
-    }
-    },
-    {
-      title: '订单来源',
-        dataIndex: 'orderSource',
-      width: 80,
-      render: (key)=>{
-      return (
-        <div>{this.getORDERSOURCE(key)} </div>
-      )
-    }
-    },
-    {
-      title: '销售',
-        dataIndex: 'salesman',
-      width: 80,
-    },
-    {
-      title: '快递公司',
-        dataIndex: 'logisticsCompany',
-      width: 130,
-    },
-    {
-      title: '快递单号',
-        dataIndex: 'logisticsNumber',
-      width: 150,
-    },
-    {
-      title: '物流状态',
-        dataIndex: 'logisticsStatus',
-      width: 100,
-      render: (key)=>{
-      return (
-        <div>{this.getLogisticsStatusValue(key)} </div>
-      )
-    }
-    },
-    {
-      title: '下单时间',
-        dataIndex: 'createTime',
-      width: 150,
-    },
-    {
-      title: '操作',
-        key: 'operation',
-      fixed: 'right',
-      width: 250,
-      filterDropdown: ({ confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
-        <Tree
-          checkable
-          draggable
-          blockNode
-          selectable={false}
-          onCheck={this.onCheck}
-          checkedKeys={checkedOptions}
-          onDrop={this.onDrop.bind(this)}
-        >
-          {loop(plainOptions)}
-        </Tree>
-        <div>
-          <Button
-            type="primary"
-            size="small"
-            onClick={() => this.handleSubmit(confirm)}
-            style={{ width: "60px", marginRight: "10px" }}
-          >
-            确定
-          </Button>
-          <Button
-            size="small"
-            onClick={() => this.handleReset(clearFilters)}
-            style={{ width: "60px" }}
-          >
-            取消
-          </Button>
-        </div>
-      </div>
-    ),
-      filterIcon: filtered => <Icon type="setting" theme="filled" />,
-      onFilterDropdownVisibleChange: this.onFilterDropdownVisibleChange.bind(
-        this
-      ),
-      render: (text,row) => {
-      return(
-        <div>
-          <a onClick={()=>this.handleDetails(row)}>详情</a>
-          <Divider type="vertical" />
-          {
-            row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? (<><a onClick={()=>this.logisticsSubscribe(row)}>订阅</a><Divider type="vertical" /></>):''
-          }
-          <a onClick={()=>this.handleJournal(row)}>日志</a>
-          <Divider type="vertical" />
-          <a onClick={()=>this.handleSMS(row)}>短信</a>
-          <Divider type="vertical" />
-          <a onClick={()=>this.handleVoice(row)}>语音</a>
-
-          {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
-
-          {/* <a>跟进</a>
-                      <Divider type="vertical" />
-                      <a onClick={()=>this.handleEdit(row)}>编辑</a>
-                      <Divider type="vertical" />
-                      <a>置顶</a>
-                      <Divider type="vertical" />
-                      <a>归档</a>
-                      <Divider type="vertical" /> */}
-
-          {/* <Divider type="vertical" /> */}
-          {/* <a onClick={()=>this.handleShowLogistics([row])}>发货</a> */}
-          {/* <Divider type="vertical" />
-                      <a >短信</a> */}
-          {/* <Divider type="vertical" /> */}
-          {/* <a onClick={()=>this.handleReminds([row])}>提醒</a> */}
-        </div>
-      )
-    },
-    },
-  ]
 
     list = list.map((col, index) => ({
       ...col,
@@ -1968,9 +1004,7 @@ class BranchOffice extends PureComponent {
             counterElection={true}
             onChangeCheckbox={this.onChangeCheckbox}
             selectedKey={selectedRowKeys}
-            tblProps={
-              {components:this.components}
-            }
+
             // multipleChoice={true}
           />
           {/* 详情 */}
@@ -1981,31 +1015,6 @@ class BranchOffice extends PureComponent {
             />
           ):""}
         </div>
-        {/* 日志弹框 */}
-        {journalVisible?(
-          <Journal
-            journalVisible={journalVisible}
-            journalList={journalList}
-            handleCancelJournal={this.handleCancelJournal}
-          />
-        ):""}
-        {/* 短信弹框 */}
-        {SMSVisible?(
-          <SMS
-            SMSVisible={SMSVisible}
-            smsList={smsList}
-            handleCancelSMS={this.handleCancelSMS}
-          />
-        ):""}
-
-        {/* 语音列表弹框 */}
-        {VoiceVisible?(
-          <VoiceList
-            VoiceVisible={VoiceVisible}
-            voice={voice}
-            handleCancelVoice={this.handleCancelVoice}
-          />
-        ):""}
 
         {/* 导出 */}
         {exportVisible?(
@@ -2014,158 +1023,6 @@ class BranchOffice extends PureComponent {
             handleCancelExport={this.handleCancelExport}
           />
         ):""}
-
-        {/* 设备 */}
-        {TransferVisible?(
-          <TransferCustomers
-            TransferVisible={TransferVisible}
-            handleCancelTransfer={this.handleCancelTransfer}
-          />
-        ):""}
-        {/* 批量物流下单 */}
-        {LogisticsConfigVisible?(
-          <LogisticsConfig
-            LogisticsConfigVisible={LogisticsConfigVisible}
-            LogisticsConfigList={selectedRows}
-            handleCancelLogisticsConfig={this.handleCancelLogisticsConfig}
-          />
-        ):""}
-
-        {/* 免押宝导入弹窗 */}
-        {noDepositVisible?(
-          <ImportData
-            noDepositVisible={noDepositVisible}
-            handleCancelNoDeposit={this.handleCancelNoDeposit}
-          />
-        ):""}
-        {/* SN激活导入弹窗 */}
-        {excelVisible?(
-          <Excel
-            excelVisible={excelVisible}
-            handleExcelCancel={this.handleExcelCancel}
-          />
-        ):""}
-
-        {/* 文本导入弹窗 */}
-        {textVisible?(
-          <Text
-            textVisible={textVisible}
-            handleTextCancel={this.handleTextCancel}
-          />
-        ):""}
-        {/* 订单导入弹窗 */}
-        {OrderImportVisible?(
-          <OrderImport
-          OrderImportVisible={OrderImportVisible}
-          handleOrderImportCancel={this.handleOrderImportCancel}
-          />
-        ):""}
-
-        {/* 耗时检测弹框 */}
-        {timeConsumingVisible?(
-          <TimeConsuming
-            timeConsumingVisible={timeConsumingVisible}
-            timeConsumingList={timeConsumingList}
-            handleDetails={this.handleDetails}
-            handleCancelTimeConsuming={this.handleCancelTimeConsuming}
-          />
-        ):""}
-
-
-
-        <Modal
-          title="提示"
-          visible={LogisticsAlertVisible}
-          maskClosable={false}
-          width={500}
-          onCancel={this.handleLogisticsAlert}
-          footer={[
-            <Button key="back" onClick={this.handleLogisticsAlert}>
-              取消
-            </Button>,
-            <Button key="submit" type="primary" onClick={()=>this.handleLogisticsAlert()}>
-              确定
-            </Button>,
-          ]}
-        >
-          <div>
-            {tips.map(item=>{
-              return(
-              <p>{item.name}</p>
-              )
-            })}
-          </div>
-        </Modal>
-
-        <Modal
-          title="状态变更"
-          visible={updateConfirmTagVisible}
-          maskClosable={false}
-          destroyOnClose
-          width={660}
-          onCancel={this.handleCancelUpdateConfirmTag}
-          footer={[
-            <Button key="back" onClick={this.handleCancelUpdateConfirmTag}>
-              取消
-            </Button>,
-            <Button key="submit" type="primary" onClick={()=>this.handleSubmitUpdateConfirmTag()}>
-              确定
-            </Button>,
-          ]}
-        >
-          <Form>
-            <FormItem {...formAllItemLayout} label="订单状态">
-              {confirmTagList.map(item=>{
-                return (
-                  <>
-                    {item.confirmTag === "10" ? (
-                      <Radio.Group onChange={this.onChangeRadio}>
-                        <Radio value={6}>认领</Radio>
-                      </Radio.Group>
-                    ) : (
-                      <Radio.Group onChange={this.onChangeRadio}>
-                        <Radio value={6}>跟进中</Radio>
-                        <Radio value={7}>已激活</Radio>
-                        <Radio value={8}>已退回</Radio>
-                        <Radio value={9}>已取消</Radio>
-                        <Radio value={11}>退回中</Radio>
-                      </Radio.Group>
-                    )}
-                  </>
-                )
-              })}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="修改原因">
-              <TextArea rows={2} disabled />
-            </FormItem>
-          </Form>
-        </Modal>
-
-        <Modal
-          title="逾期开关"
-          visible={voiceStatusVisible}
-          maskClosable={false}
-          destroyOnClose
-          width={400}
-          onCancel={this.handleCancelvoiceStatus}
-          footer={[
-            <Button key="back" onClick={this.handleCancelvoiceStatus}>
-              取消
-            </Button>,
-            <Button key="submit" type="primary" onClick={()=>this.handleSubmitVoiceStatus()}>
-              确定
-            </Button>,
-          ]}
-        >
-          <Form>
-            <FormItem {...formAllItemLayout} label="开启提醒">
-              <Radio.Group onChange={this.onChangeRadio}>
-                <Radio value={1}>是</Radio>
-                <Radio value={0}>否</Radio>
-              </Radio.Group>
-            </FormItem>
-          </Form>
-        </Modal>
 
       </Panel>
     );

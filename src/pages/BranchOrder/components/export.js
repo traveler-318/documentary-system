@@ -7,7 +7,7 @@ import router from 'umi/router';
 import { tenantMode, clientId, clientSecret } from '../../../defaultSettings';
 import { getCookie } from '../../../utils/support';
 import { getList,getVCode,exportOrder,getPhone } from '../../../services/newServices/order'
-// import { exportData,currentTime } from './data.js';
+import { exportData,currentTime } from './data.js';
 import { getToken } from '../../../utils/authority';
 import { Base64 } from 'js-base64';
 // import { ORDERSOURCE } from './data';
