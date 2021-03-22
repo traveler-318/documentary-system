@@ -62,6 +62,13 @@ export async function moveSalesman(params) {
     body: params,
   });
 }
+//分配主管
+export async function allotToDirector(params) {
+  return request('/api/client_info/clientinfo/allotToDirector', {
+    method: 'POST',
+    body: params,
+  });
+}
 
 //客户放入公海
 export async function putPool(params) {

@@ -19,8 +19,7 @@ import {
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
-import { getButton } from '../../../../utils/authority';
-import { getCookie } from '../../../../utils/support';
+import { getButton } from '../../../utils/authority';
 const { SubMenu } = Menu;
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -32,9 +31,7 @@ class SearchButton extends PureComponent {
 
     super(props);
     this.state = {
-      buttons:[],
-      userName:getCookie("userName")
-
+        buttons:[],
     };
   }
 
@@ -44,50 +41,45 @@ class SearchButton extends PureComponent {
         buttons:getButton(this.props.code)
     })
 
+    console.log(this.props.code,"获取按钮code")
+
   }
 
   handleClick = (code) => {
       this.props.btnButtonBack(code)
   }
+
+
   render() {
-    const {buttons,userName} = this.state;
+    const {buttons} = this.state;
 
     const actionButtons = buttons.filter(button => button.action === 2 || button.action === 3);
 
     const { tabKey } = this.props;
-    let i = -1;
+
+    let moreList = [];
+    if(tabKey === 'null'){
+        actionButtons.map(item=>{
+            if((item.code === "place-an-order" || item.code === "transfer")){
+                moreList.push(item)
+            }
+        })
+    }
+
+    let tabActionButtons = [];
+    tabActionButtons =actionButtons;
+    console.log(buttons,tabKey,moreList,"获取按钮")
     return (
       <>
         {
-          actionButtons.map((item,index)=>{
-            console.log(item,tabKey,"item")
-            if(item.code === "add"){
-              i++;
-              // 添加
-              return (
-                <Button type="primary" icon={item.source} onClick={()=>{
-                  this.handleClick(item.code)
-                }}>{item.name}</Button>
-              )
-            }else if(item.code === "Distribution"){
-              if(userName === 'admin'){
-                i++;
+          tabActionButtons.map((item,index)=>{
                 return (
-                  <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
+                  <Button type={index<1?'primary':''} icon={item.source} onClick={()=>{
                     this.handleClick(item.code)
                   }}>{item.name}</Button>
                 )
-              }
-            }else {
-              i++;
-              return (
-                <Button icon={item.source} onClick={()=>{
-                  this.handleClick(item.code)
-                }}>{item.name}</Button>
-              )
-            }
 
-          })
+            })
         }
       </>
     );
