@@ -63,13 +63,15 @@ class QueryParamPage extends PureComponent {
     branchSalesman({
       tenantId:value || null
     }).then(res=>{
-      if(res.code === 200){
-        if(res.data.length>0){
+      if(res.code === 200 && res.data.length>0){
           res.data.unshift({user_account:'',user_name:'全部'});
           this.setState({
             salesmanList:res.data
           })
-        }
+      }else{
+        this.setState({
+          salesmanList:[]
+        })
       }
     })
   }
