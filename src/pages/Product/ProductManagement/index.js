@@ -29,6 +29,7 @@ import Add from './components/add'
 import Edit from './components/edit'
 import moment from 'moment';
 import Img from './components/Img'
+import ParentProduct from './components/parentProduct'
 import styles from './index.less';
 
 
@@ -141,6 +142,35 @@ class ProductManagement extends PureComponent {
           width: 150,
         },
         {
+          title: '允许代理',
+          dataIndex: 'openAuthorization',
+          width: 150,
+          render: (key,row)=>{
+            console.log("===="+key)
+            return (
+              <div>
+                {
+                  key === 1 ? "是":"否"
+                }
+              </div>
+            )
+          }
+        },
+        {
+          title: '是否代理',
+          dataIndex: 'agentProducts',
+          width: 150,
+          render: (key,row)=>{
+            return (
+              <div>
+                {
+                  key === 1 ? "是":"否"
+                }
+              </div>
+            )
+          }
+        },
+        {
           title: '创建时间',
           dataIndex: 'createTime',
           width: 200,
@@ -165,7 +195,10 @@ class ProductManagement extends PureComponent {
             return(
               <div>
                 {/* <Divider type="vertical" /> */}
-                <a onClick={()=>this.handleEdit(row)}>修改</a>
+                {row.agentProducts == 1 ?'':(
+                  <a onClick={()=>this.handleEdit(row)}>修改</a>
+                )}
+
                 {/* <Divider type="vertical" />
                 <a onClick={()=>this.handleClick(row)}>删除</a> */}
               </div>
@@ -181,7 +214,9 @@ class ProductManagement extends PureComponent {
       handleAddVisible:false,
       details:{},
       handleEditVisible:false,
-      handleImgDetailsVisible:false
+      handleImgDetailsVisible:false,
+
+      handleProductVisible:false,//代理产品
     };
   }
 
@@ -286,6 +321,18 @@ class ProductManagement extends PureComponent {
     });
   };
 
+  //打开产品代理弹框
+  openProduct = () => {
+    this.setState({
+      handleProductVisible:true
+    })
+  }
+  cancelProduct = () =>{
+    this.setState({
+      handleProductVisible:false
+    })
+  }
+
  // 新增弹框
   handleAdd = () => {
     this.setState({
@@ -307,9 +354,10 @@ class ProductManagement extends PureComponent {
 
   renderRightButton = () => {
     return(
-      <div>
-        <Button type="primary" onClick={()=>this.handleAdd()}>添加</Button>
-      </div>
+        <div>
+          <Button onClick={()=>this.openProduct()}>代理产品</Button>
+          <Button type="primary" onClick={()=>this.handleAdd()}>添加</Button>
+        </div>
     )
   };
 
@@ -358,6 +406,7 @@ class ProductManagement extends PureComponent {
       loading,
       handleEditVisible,
       handleImgDetailsVisible,
+      handleProductVisible,
       details,
       ImgDetails,
       handleCancelEdit
@@ -413,6 +462,13 @@ class ProductManagement extends PureComponent {
             handleCancelImgDetails={this.handleCancelImgDetails}
           />
         ):""}
+
+        {handleProductVisible?(
+          <ParentProduct visible={handleProductVisible}
+                         handleCancelProduct={this.cancelProduct}
+                         refreshDataList={this.getDataList}
+                         handleImg={(row)=>this.handleImg(row)}/>
+        ):''}
       </Panel>
     );
   }

@@ -92,3 +92,23 @@ export async function getProductattributeRemove(params) {
 export async function getImg(page,size) {
   return request(`/api/blade-resource/attach/list?current=`+page+`&size=`+size);
 }
+
+//获取代理列表
+export async function getProductAgentlist(params) {
+  return request(`/api/business/productattribute/agentlist`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
+/**
+ * 保存代理数据
+ * @param params [id,productTypeId]
+ * @returns {Promise<void>}
+ */
+export async function getProductAgentsave(params) {
+  return request(`/api/business/productattribute/saveagent`, {
+    method: 'POST',
+    body: params,
+  });
+}
