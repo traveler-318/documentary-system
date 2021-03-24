@@ -24,6 +24,7 @@ import Grid from '../../../components/Sword/Grid';
 import {
   getProductattributeList,
   getProductattributeRemove,
+  getProductattributeUpdate
 } from '../../../services/newServices/product';
 import Add from './components/add'
 import Edit from './components/edit'
@@ -144,22 +145,17 @@ class ProductManagement extends PureComponent {
         {
           title: '允许代理',
           dataIndex: 'openAuthorization',
-          width: 150,
+          width: 120,
           render: (key,row)=>{
-            console.log("===="+key)
             return (
-              <div>
-                {
-                  key === 1 ? "是":"否"
-                }
-              </div>
+              <Switch checkedChildren="是" unCheckedChildren="否" checked={key === 1} onChange={(checked)=>this.authorizationChange(checked,row)}/>
             )
           }
         },
         {
-          title: '是否代理',
+          title: '代理产品',
           dataIndex: 'agentProducts',
-          width: 150,
+          width: 120,
           render: (key,row)=>{
             return (
               <div>
@@ -262,6 +258,19 @@ class ProductManagement extends PureComponent {
 
   renderSearchForm = onReset => {
 
+  };
+
+  authorizationChange(checked,row){
+    row.openAuthorization = checked? 1:0;
+    getProductattributeUpdate({
+      id:row.id,
+      openAuthorization:checked? 1:0
+    }).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg);
+        this.getDataList()
+      }
+    })
   };
 
   // ============ 删除 ===============
