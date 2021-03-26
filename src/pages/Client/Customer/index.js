@@ -207,9 +207,11 @@ class AllOrdersList extends PureComponent {
   getCreator(){
     queryCreator().then(res=>{
       if(res.success){
-        this.setState({
-          createUsers:res.data
-        })
+        if(JSON.stringify(res.data) != "{}"){
+          this.setState({
+            createUsers:res.data
+          })
+        }
       }
     }).catch(()=>{
 
