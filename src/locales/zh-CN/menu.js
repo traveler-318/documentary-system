@@ -29,6 +29,10 @@ export default {
   'menu.orders.afterSaleOrder': '售后订单',
   // 'menu.order.orderList': '全部订单',
 
+  'menu.branchManage':'分公司管理',
+  'menu.branchManage.branchOffice':'分公司管理',
+  'menu.branchManage.branchOrder':'分公司订单',
+
   'menu.logistics': '物流配置',
   'menu.logistics.authority': '授权配置',
   'menu.logistics.faceSheet': '打印模板',

@@ -216,7 +216,7 @@ class Background extends PureComponent {
           title="选择图片"
           maskClosable={false}
           visible={handleImgVisible}
-          width={550}
+          width={600}
           onCancel={handleCancelImg}
           footer={[
             <Button key="back" onClick={handleCancelImg}>

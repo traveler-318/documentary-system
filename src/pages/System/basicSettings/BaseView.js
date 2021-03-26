@@ -101,6 +101,7 @@ class BaseView extends Component {
             authenticationStatus:values.authenticationStatus,
             domainAddress:values.domainAddress,
             wechatBrowserStatus:values.wechatBrowserStatus,
+            localPrintStatus:values.localPrintStatus,
             deptId:values.deptId
           }
           propertyUpdate(property).then(resp => {

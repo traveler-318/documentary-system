@@ -272,9 +272,9 @@ class BaseView extends Component {
                 <FormItem {...formItemLayout} label={'提醒类型'}>
                   {getFieldDecorator('smsStatus')(
                     <Radio.Group>
-                      <Radio key={0} value={0}>关闭</Radio>
-                      <Radio key={1} value={1}>短信</Radio>
                       <Radio key={2} value={2}>短信+语音</Radio>
+                      <Radio key={1} value={1}>短信</Radio>
+                      <Radio key={0} value={0}>关闭</Radio>
                     </Radio.Group>
                   )}
                 </FormItem>
