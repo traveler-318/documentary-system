@@ -142,30 +142,30 @@ class ProductManagement extends PureComponent {
           dataIndex: 'customThree',
           width: 150,
         },
-        {
-          title: '允许代理',
-          dataIndex: 'openAuthorization',
-          width: 120,
-          render: (key,row)=>{
-            return (
-              <Switch checkedChildren="是" unCheckedChildren="否" checked={key === 1} onChange={(checked)=>this.authorizationChange(checked,row)}/>
-            )
-          }
-        },
-        {
-          title: '代理产品',
-          dataIndex: 'agentProducts',
-          width: 120,
-          render: (key,row)=>{
-            return (
-              <div>
-                {
-                  key === 1 ? "是":"否"
-                }
-              </div>
-            )
-          }
-        },
+        // {
+        //   title: '允许代理',
+        //   dataIndex: 'openAuthorization',
+        //   width: 120,
+        //   render: (key,row)=>{
+        //     return (
+        //       <Switch checkedChildren="是" unCheckedChildren="否" checked={key === 1} onChange={(checked)=>this.authorizationChange(checked,row)}/>
+        //     )
+        //   }
+        // },
+        // {
+        //   title: '代理产品',
+        //   dataIndex: 'agentProducts',
+        //   width: 120,
+        //   render: (key,row)=>{
+        //     return (
+        //       <div>
+        //         {
+        //           key === 1 ? "是":"否"
+        //         }
+        //       </div>
+        //     )
+        //   }
+        // },
         {
           title: '创建时间',
           dataIndex: 'createTime',
@@ -364,7 +364,7 @@ class ProductManagement extends PureComponent {
   renderRightButton = () => {
     return(
         <div>
-          <Button onClick={()=>this.openProduct()}>代理产品</Button>
+          {/*<Button onClick={()=>this.openProduct()}>代理产品</Button>*/}
           <Button type="primary" onClick={()=>this.handleAdd()}>添加</Button>
         </div>
     )
