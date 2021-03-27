@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent} from 'react';
 import { connect } from 'dva';
 import {
   Button,
@@ -54,7 +54,7 @@ import {
   orderMenuTemplate,
   updateOrderHead
 } from '../../../services/newServices/order';
-
+import moment from 'moment';
 // getList as getSalesmanLists,
 import { getSalesmangroup } from '../../../services/newServices/sales';
 import styles from './index.less';
@@ -170,7 +170,7 @@ class AllOrdersList extends PureComponent {
       voiceStatusVisible:false,
       confirmTagList:[],
       _listArr:[],
-      organizationTree:[]
+      organizationTree:[],
     };
   }
 
@@ -310,6 +310,12 @@ class AllOrdersList extends PureComponent {
     })
   };
 
+  disabledDate = (current) => {
+    let selectV = moment().format('YYYY-MM-DD HH:mm:ss');
+    return current < moment(selectV).subtract(2, 'months') || current > moment(selectV).add(2,'month') || current > moment().endOf('day')
+
+  }
+
   // ============ 查询表单 ===============
   renderSearchForm = onReset => {
     const {
@@ -418,7 +424,7 @@ class AllOrdersList extends PureComponent {
             <Form.Item label="下单时间">
               {getFieldDecorator('dateRange', {
               })(
-                <RangePicker showTime size={"default"} />
+                <RangePicker showTime size={"default"} disabledDate={this.disabledDate} />
               )}
             </Form.Item>
             <Form.Item label="发货时间">

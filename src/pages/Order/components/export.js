@@ -111,20 +111,21 @@ class Export extends PureComponent {
   dataExport = () => {
     const {downloadExcelParam,checkedList,exportDataList,seleteTimeRange}=this.state;
     const oneMonth =31*24*3600*1000;
-    if(seleteTimeRange === 1 ){
-      downloadExcelParam.startTime=moment().format('YYYY-MM-DD')+" 00:00:00";
-      downloadExcelParam.endTime=moment().format('YYYY-MM-DD')+" 23:59:59";
-    }
-    if(this.verification(downloadExcelParam.startTime)){
-      message.error('请选择导出时间范围');
-      return false;
-    }else if(this.verification(downloadExcelParam.endTime)){
-      message.error('请选择导出时间范围');
-      return false;
-    }else if((new Date(downloadExcelParam.endTime).getTime()-new Date(downloadExcelParam.startTime).getTime()) > oneMonth){
-      message.error('导出时间范围不可超过31天');
-      return false;
-    }else if(this.verification(checkedList)){
+    // if(seleteTimeRange === 1 ){
+    //   downloadExcelParam.startTime=moment().format('YYYY-MM-DD')+" 00:00:00";
+    //   downloadExcelParam.endTime=moment().format('YYYY-MM-DD')+" 23:59:59";
+    // }
+    // if(this.verification(downloadExcelParam.startTime)){
+    //   message.error('请选择导出时间范围');
+    //   return false;
+    // }else if(this.verification(downloadExcelParam.endTime)){
+    //   message.error('请选择导出时间范围');
+    //   return false;
+    // }else if((new Date(downloadExcelParam.endTime).getTime()-new Date(downloadExcelParam.startTime).getTime()) > oneMonth){
+    //   message.error('导出时间范围不可超过31天');
+    //   return false;
+    // }
+    if(this.verification(checkedList)){
       message.error('请选择导出字段');
       return false;
     }
@@ -139,8 +140,12 @@ class Export extends PureComponent {
       downloadExcelParam
     })
     // 验证当前条件下是否有数据
-    this.getDataList()
+    // this.getDataList()
 
+    this.setState({
+      exportFileVisible:true,
+      retransmission: false
+    })
     getPhone().then(res=>{
       this.setState({
         phone:res.data
@@ -406,7 +411,6 @@ class Export extends PureComponent {
           maskClosable={false}
           width={760}
           onCancel={()=>this.handleCancel()}
-          maskClosable={false}
           footer={[
             <Button key="back" onClick={()=>this.handleCancel()}>
               取消
@@ -417,34 +421,34 @@ class Export extends PureComponent {
           ]}
         >
           <div style={{padding:"0 30px"}}>
-            <Row gutter={24} style={{marginBottom:20}}>
-              <Col span={4}>导出范围：</Col>
-              <Col span={20}>
-                {rangeList.map((item,index)=>{
-                  return (<span key={index} onClick={()=>this.changeTimeRange(item)} className={(index === 0 && seleteTimeRange === item.code) ? `${styles.range_item} ${styles.range_left_btn} ${styles.range_selete}` :
-                    ((index+1) === rangeList.length && seleteTimeRange === item.code) ? `${styles.range_item} ${styles.range_right_btn} ${styles.range_selete}` :
-                      (seleteTimeRange === item.code) ? `${styles.range_item} ${styles.range_selete}` :
-                        index === 0 ? `${styles.range_item} ${styles.range_left_btn}` :
-                          (index+1) === rangeList.length ? `${styles.range_item} ${styles.range_right_btn}` :
-                            `${styles.range_item}`} >{item.value}</span>)
-                })}
-                {
-                  seleteTimeRange === 5 ?
-                    (<RangePicker style={{marginTop:20}}
-                      showTime={{
-                        hideDisabledOptions: true,
-                      }}
-                      defaultValue={
-                        params.startTime ?
-                      [moment(params.startTime, 'YYYY-MM-DD HH:mm:ss'), moment(params.endTime, 'YYYY-MM-DD HH:mm:ss')]
-                      :""}
-                      format="YYYY-MM-DD HH:mm:ss"
-                      onOk={this.onOk}
-                    />)
-                    :""
-                }
-              </Col>
-            </Row>
+            {/*<Row gutter={24} style={{marginBottom:20}}>*/}
+              {/*<Col span={4}>导出范围：</Col>*/}
+              {/*<Col span={20}>*/}
+                {/*{rangeList.map((item,index)=>{*/}
+                  {/*return (<span key={index} onClick={()=>this.changeTimeRange(item)} className={(index === 0 && seleteTimeRange === item.code) ? `${styles.range_item} ${styles.range_left_btn} ${styles.range_selete}` :*/}
+                    {/*((index+1) === rangeList.length && seleteTimeRange === item.code) ? `${styles.range_item} ${styles.range_right_btn} ${styles.range_selete}` :*/}
+                      {/*(seleteTimeRange === item.code) ? `${styles.range_item} ${styles.range_selete}` :*/}
+                        {/*index === 0 ? `${styles.range_item} ${styles.range_left_btn}` :*/}
+                          {/*(index+1) === rangeList.length ? `${styles.range_item} ${styles.range_right_btn}` :*/}
+                            {/*`${styles.range_item}`} >{item.value}</span>)*/}
+                {/*})}*/}
+                {/*{*/}
+                  {/*seleteTimeRange === 5 ?*/}
+                    {/*(<RangePicker style={{marginTop:20}}*/}
+                      {/*showTime={{*/}
+                        {/*hideDisabledOptions: true,*/}
+                      {/*}}*/}
+                      {/*defaultValue={*/}
+                        {/*params.startTime ?*/}
+                      {/*[moment(params.startTime, 'YYYY-MM-DD HH:mm:ss'), moment(params.endTime, 'YYYY-MM-DD HH:mm:ss')]*/}
+                      {/*:""}*/}
+                      {/*format="YYYY-MM-DD HH:mm:ss"*/}
+                      {/*onOk={this.onOk}*/}
+                    {/*/>)*/}
+                    {/*:""*/}
+                {/*}*/}
+              {/*</Col>*/}
+            {/*</Row>*/}
             <Row gutter={24}>
               <Col span={4}>导出字段：</Col>
               <Col span={20}>
