@@ -159,8 +159,8 @@ class Export extends PureComponent {
 
   // 获取验证码
   getVerificationCode = () =>{
-    const tenantId=getCookie("tenantId");
-    const userName=getCookie("userName");
+    const tenantId=getCookie("tenantId") || null;
+    const userName=getCookie("userName") || null;
     getVCode(userName,tenantId,2).then(res=>{
     //   console.log(res)
       if(res.code === 200){
