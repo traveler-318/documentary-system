@@ -67,7 +67,6 @@ class UserEdit extends PureComponent {
             const params = {
               id,
               ...values,
-              roleId: func.join(values.roleId),
               organizationId: values.organizationId.toString(),
               deptId: func.join(values.deptId),
               postId: func.join(values.postId),
@@ -83,7 +82,7 @@ class UserEdit extends PureComponent {
 
   handleChange = value => {
     const { dispatch, form } = this.props;
-    form.resetFields(['roleId', 'deptId', 'postId']);
+    form.resetFields([ 'deptId', 'postId']);
     dispatch(USER_CHANGE_INIT({ tenantId: value }));
   };
 
@@ -325,7 +324,7 @@ class UserEdit extends PureComponent {
                       allowClear
                       showSearch
                       treeNodeFilterProp="title"
-                      multiple
+                      // multiple
                       placeholder="请选择所属角色"
                     />
                   )}

@@ -57,7 +57,6 @@ class UserAdd extends PureComponent {
             onOk:() => {
               const params = {
                 ...values,
-                roleId: func.join(values.roleId),
                 deptId: values.deptId,
                 postId: func.join(values.postId),
                 birthday: func.format(values.birthday),
@@ -74,7 +73,7 @@ class UserAdd extends PureComponent {
 
   handleChange = value => {
     const { dispatch, form } = this.props;
-    form.resetFields(['roleId', 'deptId', 'postId']);
+    form.resetFields([ 'deptId', 'postId']);
     dispatch(USER_CHANGE_INIT({ tenantId: value }));
   };
 
@@ -338,7 +337,7 @@ class UserAdd extends PureComponent {
                       allowClear
                       showSearch
                       treeNodeFilterProp="title"
-                      multiple
+                      // multiple
                       placeholder="请选择所属角色"
                     />
                   )}
