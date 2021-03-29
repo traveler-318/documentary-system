@@ -179,35 +179,35 @@ class LogisticsConfiguration extends PureComponent {
   // 获取打印的默认数据
   getDefaultData = (callBack) => {
     const promise1 = new Promise((resolve, reject) => {
-      getList({current:1,size:10}).then(res=>{
+      getList({current:1,size:100,status:1}).then(res=>{
         let _datas = res.data.records
         resolve(_datas,"senderItem")
       })
     })
 
     const promise2 = new Promise((resolve, reject) => {
-      getSurfacesingleList({current:1,size:10}).then(res=>{
+      getSurfacesingleList({current:1,size:100,status:1}).then(res=>{
         let _datas = res.data.records
         resolve(_datas,"printTemplateItem")
       })
     })
 
     const promise3 = new Promise((resolve, reject) => {
-      getDeliveryList({current:1,size:10}).then(res=>{
+      getDeliveryList({current:1,size:100,status:1}).then(res=>{
       let _datas = res.data.records
         resolve(_datas)
       })
     })
 
     const promise4 = new Promise((resolve, reject) => {
-      getGoodsList({current:1,size:10}).then(res=>{
+      getGoodsList({current:1,size:100,status:1}).then(res=>{
         let _datas = res.data.records
         resolve(_datas)
       })
     })
 
     const promise5 = new Promise((resolve, reject) => {
-      getAdditionalList({current:1,size:10}).then(res=>{
+      getAdditionalList({current:1,size:100,status:1}).then(res=>{
         let _datas = res.data.records
         resolve(_datas)
       })

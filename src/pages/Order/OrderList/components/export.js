@@ -159,8 +159,8 @@ class Export extends PureComponent {
 
   // 获取验证码
   getVerificationCode = () =>{
-    const tenantId=getCookie("tenantId");
-    const userName=getCookie("userName");
+    const tenantId=getCookie("tenantId") || null;
+    const userName=getCookie("userName") || null;
     getVCode(userName,tenantId,2).then(res=>{
     //   console.log(res)
       if(res.code === 200){
@@ -259,7 +259,21 @@ class Export extends PureComponent {
       }else {
         message.error("导出失败");
       }
-
+    }).catch((res)=>{
+      if (res.config.responseType ==='blob') {
+        const data = res.response.data;
+        const reader = new FileReader();
+        reader.onload = evt => {
+        try {
+          const resultObj = JSON.parse(evt.target.result);
+          message.error(resultObj.msg || "导出失败");
+          // resultOb是解码后的数据，然后再进行提示处理
+        } catch (error) {}
+        };
+        reader.readAsText(data);
+      }else{
+        message.error("导出失败");
+      }
     })
   }
 
