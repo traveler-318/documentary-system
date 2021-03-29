@@ -304,7 +304,6 @@ class Export extends PureComponent {
       // 设置responseType对象格式为blob
       responseType: "blob"
     }).then(res => {
-      console.log(res)
       if(!res.data.code){
         let data = res.data;
         let fileReader = new FileReader();
@@ -318,10 +317,23 @@ class Export extends PureComponent {
           }
         };
       }else {
-        message.error(res.data.msg || "导出失败");
+        message.error("导出失败");
       }
     }).catch((res)=>{
-      console.log(res,"res")
+      if (res.config.responseType ==='blob') {
+        const data = res.response.data;
+        const reader = new FileReader();
+        reader.onload = evt => {
+        try {
+          const resultObj = JSON.parse(evt.target.result);
+          message.error(resultObj.msg || "导出失败");
+          // resultOb是解码后的数据，然后再进行提示处理
+        } catch (error) {}
+        };
+        reader.readAsText(data);
+      }else{
+        message.error("导出失败");
+      }
     })
   }
 
