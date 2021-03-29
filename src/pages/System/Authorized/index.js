@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import {
-  Form,
+  Button, Divider,
+  Form, Icon, Tree,
 } from 'antd';
 
 import Panel from '../../../components/Panel';
@@ -11,6 +12,8 @@ import {
   subordinateList
 } from '../../../services/authorized';
 import { getCookie } from '../../../utils/support';
+import SearchButton from '@/pages/BranchOrder/components/button';
+import router from 'umi/router';
 
 // import styles from './index.less';
 
@@ -50,7 +53,7 @@ class SystemAuthorized extends PureComponent {
       loading:true,
     })
     subordinateList(params).then(res=>{
-      if(res.code ==200){
+      if(res && res.code ==200){
         this.setState({
           countSice:res.data.total,
           data:setListData(res.data),
@@ -62,6 +65,17 @@ class SystemAuthorized extends PureComponent {
     })
   }
 
+  // 左上批量操作按钮
+  renderLeftButton = (tabKey) => {
+      return (
+        <Button type='primary' icon='plus' onClick={()=>{
+          this.handleAdd()
+        }}>创建授权</Button>
+      )
+  };
+  handleAdd = () =>{
+    router.push(`/system/authorized/add`);
+  }
 
   render() {
     const code = 'SystemAuthorizedList';
@@ -77,19 +91,19 @@ class SystemAuthorized extends PureComponent {
 
     const columns = [
       {
+        title: '授权令牌',
+        dataIndex: 'authorizationId',
+        key: 'authorizationId'
+      },
+      {
         title: '租户名称',
-        dataIndex: 'tenantName',
-        key: 'tenantName'
+        dataIndex: 'authorizationTenantName',
+        key: 'authorizationTenantName',
       },
       {
-        title: '业务员个数',
-        dataIndex: 'currentQuota',
-        key: 'currentQuota',
-      },
-      {
-        title: '数据授权',
-        dataIndex: 'dataAuthorization',
-        key: 'dataAuthorization',
+        title: '授权类型',
+        dataIndex: 'authorizationOperationType',
+        key: 'authorizationOperationType',
         render: (key,row)=>{
           return (
             <div>
@@ -101,9 +115,45 @@ class SystemAuthorized extends PureComponent {
         }
       },
       {
-        title: '账户余额',
-        dataIndex: 'remainingMoney',
-        key: 'remainingMoney',
+        title: '状态',
+        dataIndex: 'authorizationStatus',
+        key: 'authorizationStatus',
+        render: (key,row)=>{
+          return (
+            <div>
+              {
+                key === '1' ? "启用":"禁用"
+              }
+            </div>
+          )
+        }
+      },
+      {
+        title: '到期时间',
+        dataIndex: 'timeoutTime',
+        key: 'timeoutTime',
+      },
+      {
+        title: '创建时间',
+        dataIndex: 'createTime',
+        key: 'createTime',
+      },
+      {
+        title: '操作',
+        key: 'operation',
+        fixed: 'right',
+        width: 250,
+        render: (text,row) => {
+          return(
+            <div>
+              {/*<a onClick={()=>this.handleDetails(row)}>详情</a>*/}
+              {/*<Divider type="vertical" />*/}
+              {/*<a onClick={()=>this.handleJournal(row)}>日志</a>*/}
+              {/*<Divider type="vertical" />*/}
+              {/*<a onClick={()=>this.handleSMS(row)}>短信</a>*/}
+            </div>
+          )
+        },
       }
     ];
 
@@ -119,6 +169,7 @@ class SystemAuthorized extends PureComponent {
             scroll={{ x: 1000 }}
             counterElection={false}
             multipleChoice={true}
+            renderLeftButton={()=>this.renderLeftButton()}
 
             // multipleChoice={true}
           />
