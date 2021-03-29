@@ -44,8 +44,11 @@ class ParentProduct extends PureComponent {
           productList:res.data.records,
           total:res.data.total
         })
+      }else if(res.code  == 400){
+        this.props.handleCancelProduct();
+        // message.error(res.msg);
       }else {
-        message.error(res.msg);
+        // message.error(res.msg);
       }
     })
   }

@@ -32,6 +32,8 @@ export default {
   'menu.branchManage':'分公司管理',
   'menu.branchManage.branchOffice':'分公司管理',
   'menu.branchManage.branchOrder':'分公司订单',
+  'menu.branchManage.authorized':'分公司授权',
+
 
   'menu.logistics': '物流配置',
   'menu.logistics.authority': '授权配置',
@@ -71,6 +73,8 @@ export default {
   'menu.authority.data_scope': '数据权限',
   'menu.authority.api_scope': '接口权限',
   'menu.system': '系统管理',
+
+  'menu.system.authorized':'授权管理',
   'menu.system.user': '用户管理',
   'menu.system.dept': '公司管理',
   'menu.system.organization': '组织管理',

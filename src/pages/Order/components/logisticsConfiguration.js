@@ -93,7 +93,7 @@ class LogisticsConfiguration extends PureComponent {
       productTypeId:null,
       productId :null,
       disabledType:false,
-
+      loading:false,
       templates:[],//模板数组
     };
   }
@@ -289,23 +289,41 @@ class LogisticsConfiguration extends PureComponent {
       console.log(senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem)
       if(JSON.stringify(authorizationItem) === "{}"){
         // 授权配置
+        this.setState({
+          loading:false
+        })
         return message.error("请设置默认基础授权配置");
       }else if(JSON.stringify(printTemplateItem) === "{}"){
         // 打印模板
+        this.setState({
+          loading:false
+        })
         return message.error("请设置默认打印模板");
       }else if(JSON.stringify(senderItem) === "{}"){
         // 寄件配置
+        this.setState({
+          loading:false
+        })
         return message.error("请设置默认寄件人信息");
       }else if(JSON.stringify(goodsItem) === "{}"){
         // 物品
+        this.setState({
+          loading:false
+        })
         return message.error("请设置默认物品信息");
       }else if(JSON.stringify(additionalItem) === "{}"){
         // 附加信息
+        this.setState({
+          loading:false
+        })
         return message.error("请设置默认附加信息");
       }
 
       if(authorizationItem.online === '0'){
         message.success('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
+        this.setState({
+          loading:false
+        });
         return false;
       }
 
@@ -371,9 +389,15 @@ class LogisticsConfiguration extends PureComponent {
           callBack()
         }else{
           this.saveSuccess(res.msg);
+          this.setState({
+            loading:false
+          })
         }
       }else{
         message.error(res.msg);
+        this.setState({
+          loading:false
+        })
       }
     })
   };
@@ -382,6 +406,9 @@ class LogisticsConfiguration extends PureComponent {
     e.preventDefault();
     const { form } = this.props;
     const { detail, payPanyId, productTypeId, productId, } = this.state;
+    this.setState({
+      loading:true
+    })
     form.validateFieldsAndScroll((err, values) => {
       if(!values.logisticsCompany){
         values.logisticsCompany=null
@@ -396,6 +423,10 @@ class LogisticsConfiguration extends PureComponent {
       console.log(values)
       if (!err) {
         this.saveData(values)
+      }else{
+        this.setState({
+          loading:false
+        })
       }
     });
   };
@@ -408,6 +439,10 @@ class LogisticsConfiguration extends PureComponent {
       message.info("当前已有物流信息不能执行打印操作");
       return false;
     }
+
+    this.setState({
+      loading:true
+    })
 
     console.log(listID[currentIndex].id,"listID[currentIndex].idlistID[currentIndex].id")
 
@@ -462,7 +497,10 @@ class LogisticsConfiguration extends PureComponent {
               // }
 
               if((/[\u4E00-\u9FA5]/g.test(param.tempid))){
-                message.error('打印模板不正确,请刷新或者联系售后处理')
+                this.setState({
+                  loading:false
+                });
+                message.error('打印模板不正确,请刷新或者联系售后处理');
                 return false;
               }
 
@@ -471,6 +509,9 @@ class LogisticsConfiguration extends PureComponent {
                 const { dispatch } = this.props;
                 console.log(param)
                 logisticsPrintRequest(param).then(response=>{
+                  this.setState({
+                    loading:false
+                  })
                   if(response.code === 200){
                     sessionStorage.setItem('imgBase64', response.data)
                     window.open(`#/order/allOrders/img`);
@@ -493,6 +534,9 @@ class LogisticsConfiguration extends PureComponent {
                 param.localPrintStatus=0;
                 console.log(param)
                 logisticsPrintRequest(param).then(response=>{
+                  this.setState({
+                    loading:false
+                  })
                   if(response.code === 200){
                     this.saveSuccess(response.msg);
                   }else{
@@ -504,6 +548,10 @@ class LogisticsConfiguration extends PureComponent {
                 })
               }
             });
+          })
+        }else{
+          this.setState({
+            loading:false
           })
         }
       });
@@ -518,7 +566,10 @@ class LogisticsConfiguration extends PureComponent {
       const time = timestamp - (new Date(listID[currentIndex].taskCreateTime)).getTime();
       if( time > timeInterval){
         message.info(listID[currentIndex].userName+"客户的订单 距离首次时间超过2天 禁止打印！");
-        return false
+        this.setState({
+          loading:false
+        })
+        return false;
       }
 
       // 禁止编辑
@@ -532,6 +583,9 @@ class LogisticsConfiguration extends PureComponent {
             id:listID[currentIndex].id,
             logisticsPrintType:listID[currentIndex].logisticsPrintType
           }).then(res=>{
+            this.setState({
+              loading:false
+            })
             if(res.code === 200){
               sessionStorage.setItem('imgBase64', res.data)
               window.open(`#/order/allOrders/img`);
@@ -544,6 +598,9 @@ class LogisticsConfiguration extends PureComponent {
           })
       }else{
         logisticsRepeatPrint([listID[currentIndex].taskId]).then(res=>{
+          this.setState({
+            loading:false
+          })
           if(res.code === 200){
             message.success(res.msg);
           }else {

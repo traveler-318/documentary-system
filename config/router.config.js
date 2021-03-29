@@ -197,6 +197,7 @@ export default [
         routes: [
           { path: '/branchManage/branchOffice', component: './BranchOffice/index' },
           { path: '/branchManage/branchOrder', component: './BranchOrder/index' },
+          { path: '/branchManage/authorized', component: './Authorized/index' },
         ],
       },
       {
@@ -229,6 +230,7 @@ export default [
       {
         path: '/system',
         routes: [
+          { path: '/system/authorized', component: './System/Authorized/index' },
           {
             path: '/system/user',
             routes: [
