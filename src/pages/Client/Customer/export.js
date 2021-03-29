@@ -320,6 +320,8 @@ class Export extends PureComponent {
       }else {
         message.error(res.data.msg || "导出失败");
       }
+    }).catch((res)=>{
+      console.log(res,"res")
     })
   }
 
