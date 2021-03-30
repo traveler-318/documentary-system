@@ -1,4 +1,5 @@
 import request from '../utils/request';
+import func from '@/utils/Func';
 
 //授权查看列表【上级】
 export async function superiorlist(params) {
@@ -38,3 +39,11 @@ export async function subordinateUpdate(params) {
     body: params,
   });
 }
+
+export async function subordinateRemove(params) {
+  return request('/api/external/authorized/remove', {
+    method: 'POST',
+    body: func.toFormData(params),
+  });
+}
+

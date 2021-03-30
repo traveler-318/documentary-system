@@ -2,20 +2,19 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import {
   Button, Divider,
-  Form, Icon, Tree,
+  Form, Icon, message, Modal, Tree,
 } from 'antd';
 
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
+import Authorization from './authorization';
 import { setListData } from '../../../utils/publicMethod';
 import {
-  subordinateList
+  subordinateList,subordinateUpdate,subordinateRemove
 } from '../../../services/authorized';
 import { getCookie } from '../../../utils/support';
-import SearchButton from '@/pages/BranchOrder/components/button';
 import router from 'umi/router';
-
-// import styles from './index.less';
+import { remove } from '@/services/region';
 
 
 @connect(({ globalParameters }) => ({
@@ -73,9 +72,55 @@ class SystemAuthorized extends PureComponent {
         }}>创建授权</Button>
       )
   };
+  //创建授权
   handleAdd = () =>{
     router.push(`/system/authorized/add`);
   }
+
+  //启用禁用
+  handleChangeStatus = (row) => {
+    let status = row.authorizationStatus == 1 ? 2 :1;
+    const text = status == 2 ? '禁用':'启用'
+    Modal.confirm({
+      title: '配置'+text+'确认',
+      content: '是否将改配置'+text+'?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        const response = await subordinateUpdate({ id: row.id,authorizationStatus:status });
+        if (response.success) {
+          message.success(response.msg);
+          this.getDataList();
+        } else {
+          message.error(response.msg || text+'失败');
+        }
+      },
+      onCancel() {},
+    });
+  }
+
+  //删除
+  handleDelete = (row) => {
+    const id = row.id;
+    Modal.confirm({
+      title: '删除确认',
+      content: '确定删除该条记录?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        subordinateRemove({ ids: id }).then(resp => {
+          if (resp.success) {
+            message.success(resp.msg);
+          } else {
+            message.error(resp.msg || '删除失败');
+          }
+        });
+      },
+      onCancel() {},
+    });
+  };
 
   render() {
     const code = 'SystemAuthorizedList';
@@ -100,20 +145,20 @@ class SystemAuthorized extends PureComponent {
         dataIndex: 'authorizationTenantName',
         key: 'authorizationTenantName',
       },
-      {
-        title: '授权类型',
-        dataIndex: 'authorizationOperationType',
-        key: 'authorizationOperationType',
-        render: (key,row)=>{
-          return (
-            <div>
-              {
-                key === '1' ? "是":"否"
-              }
-            </div>
-          )
-        }
-      },
+      // {
+      //   title: '授权类型',
+      //   dataIndex: 'authorizationOperationType',
+      //   key: 'authorizationOperationType',
+      //   render: (key,row)=>{
+      //     return (
+      //       <div>
+      //         {
+      //           key === '1' ? "是":"否"
+      //         }
+      //       </div>
+      //     )
+      //   }
+      // },
       {
         title: '状态',
         dataIndex: 'authorizationStatus',
@@ -142,13 +187,13 @@ class SystemAuthorized extends PureComponent {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 250,
+        width: 150,
         render: (text,row) => {
           return(
             <div>
-              {/*<a onClick={()=>this.handleDetails(row)}>详情</a>*/}
-              {/*<Divider type="vertical" />*/}
-              {/*<a onClick={()=>this.handleJournal(row)}>日志</a>*/}
+              <a onClick={()=>this.handleChangeStatus(row)}>{row.authorizationStatus == '1' ? '禁用':'启用'}</a>
+              <Divider type="vertical" />
+              <a onClick={()=>this.handleDelete(row)}>删除</a>
               {/*<Divider type="vertical" />*/}
               {/*<a onClick={()=>this.handleSMS(row)}>短信</a>*/}
             </div>
@@ -174,7 +219,7 @@ class SystemAuthorized extends PureComponent {
             // multipleChoice={true}
           />
         </div>
-
+        {/*<Authorization isVisible={}/>*/}
       </Panel>
     );
   }
