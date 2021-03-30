@@ -1,16 +1,19 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import {
+  Button,
   Form,
+  Tag,
 } from 'antd';
 
 import Panel from '../../components/Panel';
 import Grid from '../../components/Sword/Grid';
 import { setListData } from '../../utils/publicMethod';
 import {
-  superiorlist
+  superiorlist,
 } from '../../services/authorized';
 import { getCookie } from '../../utils/support';
+import router from 'umi/router';
 
 // import styles from './index.less';
 
@@ -24,15 +27,15 @@ class Authorized extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:{},
-      loading:false,
-      params:{
-        size:10,
-        current:1,
-        orderBy:false
+      data: {},
+      loading: false,
+      params: {
+        size: 10,
+        current: 1,
+        orderBy: false,
       },
 
-      superiorlist:[],//分公司数据
+      superiorlist: [],//分公司数据
     };
   }
 
@@ -43,27 +46,37 @@ class Authorized extends PureComponent {
 
 
   getDataList = () => {
-    const {params} = this.state;
+    const { params } = this.state;
     this.setState({
-      loading:true,
-    })
-    params.deptId = getCookie("dept_id");
-    params.tenantId = getCookie("tenantId");
-    superiorlist(params).then(res=>{
-      console.log(res)
-      return false;
-      if(res.code==200){
+      loading: true,
+    });
+    params.deptId = getCookie('dept_id');
+    params.tenantId = getCookie('tenantId');
+    superiorlist(params).then(res => {
+      if (res.code == 200) {
         this.setState({
-          countSice:res.data.total,
-          data:setListData(res.data),
-          loading:false,
-          selectedRowKeys:[]
-        })
+          countSice: res.data.total,
+          data: setListData(res.data),
+          loading: false,
+          selectedRowKeys: [],
+        });
       }
 
-    })
-  }
+    });
+  };
 
+  // 左上批量操作按钮
+  renderLeftButton = (tabKey) => {
+    return (
+      <Button type='primary' icon='plus' onClick={() => {
+        this.handleAdd();
+      }}>添加</Button>
+    );
+  };
+  //添加
+  handleAdd = () => {
+    router.push(`/branchManage/authorized/add`);
+  };
 
   render() {
     const code = 'AuthorizedList';
@@ -79,42 +92,36 @@ class Authorized extends PureComponent {
 
     const columns = [
       {
-        title: '授权令牌',
-        dataIndex: 'authorizationId',
-        key: 'authorizationId'
+        title: '公司ID',
+        dataIndex: 'authorizationTenantId',
+        key: 'authorizationTenantId',
       },
       {
-        title: '租户名称',
+        title: '机构名称',
         dataIndex: 'authorizationTenantName',
         key: 'authorizationTenantName',
       },
+      // {
+      //   title: '机构类型',
+      //   dataIndex: 'authorizationOperationType',
+      //   key: 'authorizationOperationType',
+      //   render: (key,row)=>{
+      //     return (
+      //       <div>
+      //         {
+      //           key === '1' ? "是":"否"
+      //         }
+      //       </div>
+      //     )
+      //   }
+      // },
       {
-        title: '授权类型',
-        dataIndex: 'authorizationOperationType',
-        key: 'authorizationOperationType',
-        render: (key,row)=>{
-          return (
-            <div>
-              {
-                key === '1' ? "是":"否"
-              }
-            </div>
-          )
-        }
-      },
-      {
-        title: '状态',
-        dataIndex: 'authorizationStatus',
-        key: 'authorizationStatus',
-        render: (key,row)=>{
-          return (
-            <div>
-              {
-                key === '1' ? "启用":"禁用"
-              }
-            </div>
-          )
-        }
+        title: '绑定状态',
+        dataIndex: 'bindingState',
+        key: 'bindingState',
+        render: (key, row) => {
+          return key === '0' ? (<Tag color="orange">已断开</Tag>) : <Tag color="green">已绑定</Tag>;
+        },
       },
       {
         title: '到期时间',
@@ -131,8 +138,8 @@ class Authorized extends PureComponent {
         key: 'operation',
         fixed: 'right',
         width: 250,
-        render: (text,row) => {
-          return(
+        render: (text, row) => {
+          return (
             <div>
               {/*<a onClick={()=>this.handleDetails(row)}>详情</a>*/}
               {/*<Divider type="vertical" />*/}
@@ -140,9 +147,9 @@ class Authorized extends PureComponent {
               {/*<Divider type="vertical" />*/}
               {/*<a onClick={()=>this.handleSMS(row)}>短信</a>*/}
             </div>
-          )
+          );
         },
-      }
+      },
     ];
 
     return (
@@ -157,6 +164,7 @@ class Authorized extends PureComponent {
             scroll={{ x: 1000 }}
             counterElection={false}
             multipleChoice={true}
+            renderLeftButton={() => this.renderLeftButton()}
 
             // multipleChoice={true}
           />
@@ -166,4 +174,5 @@ class Authorized extends PureComponent {
     );
   }
 }
+
 export default Authorized;

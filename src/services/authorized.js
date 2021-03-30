@@ -16,6 +16,14 @@ export async function superiorupdate(params) {
   });
 }
 
+//新增【上级】
+export async function superiorSave(params) {
+  return request('/api/external/authorized/submit', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 //授权配置列表【下级】
 export async function subordinateList(params) {
   return request('/api/external/authorized/list', {

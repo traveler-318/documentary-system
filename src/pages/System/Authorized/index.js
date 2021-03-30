@@ -137,13 +137,8 @@ class SystemAuthorized extends PureComponent {
     const columns = [
       {
         title: '授权令牌',
-        dataIndex: 'authorizationId',
-        key: 'authorizationId'
-      },
-      {
-        title: '租户名称',
-        dataIndex: 'authorizationTenantName',
-        key: 'authorizationTenantName',
+        dataIndex: 'authorizationToken',
+        key: 'authorizationToken'
       },
       // {
       //   title: '授权类型',
@@ -172,6 +167,17 @@ class SystemAuthorized extends PureComponent {
             </div>
           )
         }
+      },
+
+      {
+        title: '被授权公司ID',
+        dataIndex: 'authorizationTenantId',
+        key: 'authorizationTenantId',
+      },
+      {
+        title: '被授权公司',
+        dataIndex: 'authorizationTenantName',
+        key: 'authorizationTenantName',
       },
       {
         title: '到期时间',

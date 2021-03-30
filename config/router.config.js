@@ -198,6 +198,7 @@ export default [
           { path: '/branchManage/branchOffice', component: './BranchOffice/index' },
           { path: '/branchManage/branchOrder', component: './BranchOrder/index' },
           { path: '/branchManage/authorized', component: './Authorized/index' },
+          { path: '/branchManage/authorized/add', component: './Authorized/add' },
         ],
       },
       {
