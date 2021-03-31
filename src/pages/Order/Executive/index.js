@@ -171,6 +171,7 @@ class AllOrdersList extends PureComponent {
       confirmTagList:[],
       _listArr:[],
       organizationTree:[],
+      beginTime:''
     };
   }
 
@@ -311,9 +312,14 @@ class AllOrdersList extends PureComponent {
   };
 
   disabledDate = (current) => {
-    let selectV = moment().format('YYYY-MM-DD HH:mm:ss');
-    return current < moment(selectV).subtract(2, 'months') || current > moment(selectV).add(2,'month') || current > moment().endOf('day')
+    const { beginTime } = this.state;
+    return current < moment(beginTime).subtract(2, 'months') || current > moment(beginTime).add(2,'month')
+  }
 
+  DateOnChange = (dates) => {
+    this.setState({
+      beginTime:moment(dates[0]).format('YYYY-MM-DD HH:mm:ss')
+    })
   }
 
   // ============ 查询表单 ===============
@@ -424,7 +430,7 @@ class AllOrdersList extends PureComponent {
             <Form.Item label="下单时间">
               {getFieldDecorator('dateRange', {
               })(
-                <RangePicker showTime size={"default"} disabledDate={this.disabledDate} />
+                <RangePicker showTime size={"default"} disabledDate={this.disabledDate} onCalendarChange={this.DateOnChange} />
               )}
             </Form.Item>
             <Form.Item label="发货时间">

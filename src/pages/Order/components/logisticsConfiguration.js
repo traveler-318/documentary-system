@@ -508,7 +508,6 @@ class LogisticsConfiguration extends PureComponent {
                 param.localPrintStatus=1;
                 const { dispatch } = this.props;
                 console.log(param)
-
                 logisticsPrintRequest(param).then(response=>{
                   this.setState({
                     loading:false
