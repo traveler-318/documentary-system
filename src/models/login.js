@@ -33,7 +33,7 @@ export default {
           message: response.error_description,
         });
       } else {
-        yield put({ 
+        yield put({
           type: 'changeLoginStatus',
           payload: {
             status: true,
@@ -54,6 +54,8 @@ export default {
         setCookie("tenantId",response.tenant_id)
         //账户名字
         setCookie("userName",response.user_name)
+        //角色名字
+        setCookie("ROLENAME",response.role_name)
         // --------结束
         const responseRoutes = yield call(dynamicRoutes);
         const responseButtons = yield call(dynamicButtons);

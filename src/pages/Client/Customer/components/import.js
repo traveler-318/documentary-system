@@ -398,29 +398,32 @@ class Import extends PureComponent {
                   />
                 )}
               </Form.Item>
-              <Form.Item {...formItemLayout} label="销售">
-                {getFieldDecorator('salesman', {
-                })(
-                  <Select placeholder={"请选择销售"} style={{ width: 120 }}>
-                    {salesmanList.map((item,index)=>{
-                      return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)
-                    })}
-                  </Select>
-                )}
-              </Form.Item>
+              {/*<Form.Item {...formItemLayout} label="销售">*/}
+                {/*{getFieldDecorator('salesman', {*/}
+                {/*})(*/}
+                  {/*<Select placeholder={"请选择销售"} style={{ width: 120 }}>*/}
+                    {/*{salesmanList.map((item,index)=>{*/}
+                      {/*return (<Option key={index} value={item.userAccount}>{item.userName}</Option>)*/}
+                    {/*})}*/}
+                  {/*</Select>*/}
+                {/*)}*/}
+              {/*</Form.Item>*/}
             </>) : '' }
 
-            <FormItem {...formItemLayout} label="主管">
-              {getFieldDecorator('directorId', {
+            {/*{userName === 'admin' ? (<>*/}
+              {/*<FormItem {...formItemLayout} label="分配主管">*/}
+                {/*{getFieldDecorator('directorId', {*/}
 
-              })(
-                <Select placeholder={"请选择主管"} style={{ width: 200 }}>
-                  {sameLevelUser.map((item,index)=>{
-                    return (<Option key={index} value={item.userId}>{item.name}</Option>)
-                  })}
-                </Select>
-              )}
-            </FormItem>
+                {/*})(*/}
+                  {/*<Select placeholder={"分配主管"} style={{ width: 200 }}>*/}
+                    {/*{sameLevelUser.map((item,index)=>{*/}
+                      {/*return (<Option key={index} value={item.userId}>{item.name}</Option>)*/}
+                    {/*})}*/}
+                  {/*</Select>*/}
+                {/*)}*/}
+              {/*</FormItem>*/}
+            {/*</> ): ''}*/}
+
 
             <FormItem {...formItemLayout} label="创建时间">
               {getFieldDecorator('createTime')(

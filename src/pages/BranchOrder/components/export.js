@@ -4,13 +4,14 @@ import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
 
-import { tenantMode, clientId, clientSecret } from '../../../../defaultSettings';
-import { getCookie } from '../../../../utils/support';
-import { getList,getVCode,exportOrder,getPhone } from '../../../../services/newServices/order'
+import { tenantMode, clientId, clientSecret } from '../../../defaultSettings';
+import { getCookie } from '../../../utils/support';
+import { getList,getVCode,exportOrder,getPhone } from '../../../services/newServices/order'
 import { exportData,currentTime } from './data.js';
-import { getToken } from '../../../../utils/authority';
+import { getToken } from '../../../utils/authority';
 import { Base64 } from 'js-base64';
-import styles from './index.less';
+// import { ORDERSOURCE } from './data';
+import styles from '../index.less';
 import axios from 'axios'
 
 const FormItem = Form.Item;
@@ -229,7 +230,7 @@ class Export extends PureComponent {
     console.log(param)
     axios({
       method: "post",
-      url:`/api/tracking/ordermaintenance/exportOrder`,
+      url:`/api/order/order/exportOrder`,
       data:param,
       headers: {
         "content-type": "application/json; charset=utf-8",
@@ -254,7 +255,7 @@ class Export extends PureComponent {
           }
         };
       }else {
-        message.error(res.data.msg || "导出失败");
+        message.error("导出失败");
       }
     }).catch((res)=>{
       if (res.config.responseType ==='blob') {
@@ -277,7 +278,7 @@ class Export extends PureComponent {
   // 下载方法
   downLoadBlobFile = (res) =>{
     var elink = document.createElement('a');
-    elink.download = '达标订单'+currentTime()+'.xlsx';
+    elink.download = currentTime()+'.xlsx';
     elink.style.display = 'none';
     var blob = new Blob([res.data]);
     elink.href = URL.createObjectURL(blob);

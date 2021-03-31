@@ -303,6 +303,11 @@ class Tenant extends PureComponent {
         ),
       },
       {
+        title: '创建时间',
+        dataIndex: 'createTime',
+        width: 170,
+      },
+      {
         title: '过期时间',
         dataIndex: 'expireTime',
         width: 165,

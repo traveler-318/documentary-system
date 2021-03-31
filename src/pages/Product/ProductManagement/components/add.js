@@ -30,7 +30,8 @@ class Logistics extends PureComponent {
     super(props);
     this.state = {
       data:{
-        sortNumber:0
+        sortNumber:0,
+        // openAuthorization:0
       },
       params:{
         size:10,
@@ -356,7 +357,17 @@ class Logistics extends PureComponent {
                   ],
                 })(<Input placeholder="请输入排序编号" />)}
               </FormItem> */}
-
+              {/*<FormItem {...formAllItemLayout} label='产品共享'>*/}
+                {/*{getFieldDecorator('openAuthorization', {*/}
+                  {/*initialValue: data.openAuthorization,*/}
+                {/*})(*/}
+                  {/*<Radio.Group value={radioValue}>*/}
+                    {/*<Radio key={1} value={1}>开启</Radio>*/}
+                    {/*<Radio key={0} value={0}>关闭</Radio>*/}
+                  {/*</Radio.Group>*/}
+                {/*)}*/}
+                {/*/!*<Tooltip title='H5页面顶部标题，用户下单扫码的时候可以看到'><Icon type='question-circle-o' /></Tooltip>*!/*/}
+              {/*</FormItem>*/}
               <FormItem {...formAllItemLayout} label='任务功能'>
                 {getFieldDecorator('tasksMark', {
                   initialValue: data.tasksMark,

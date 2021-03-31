@@ -15,7 +15,7 @@ import {
   Radio,
   Cascader,
   TreeSelect,
-  Descriptions, 
+  Descriptions,
   Icon,
   Badge
 } from 'antd';
@@ -60,6 +60,7 @@ import Export from './export'
 import PopupDetails from './popupDetails'
 
 import TransferCustomers from './components/TransferCustomers'
+import Distribution from './components/distribution'
 import ImportData from '../../Order/components/ImportData';
 import Excel from '../../Order/components/excel';
 import Text from '../../Order/components/text';
@@ -113,6 +114,7 @@ class AllOrdersList extends PureComponent {
     this.state = {
       clientLevels:[],//客户级别数组
       clientStatus:[],//客户等级数组
+      clientSources:[],//数据来源数组
       cityparam:{},
 
       // 反选数据
@@ -132,6 +134,8 @@ class AllOrdersList extends PureComponent {
       exportVisible:false,
       // 转移客户
       TransferVisible:false,
+      // 分配主管
+      DistributionVisible:false,
       // 批量物流下单弹窗
       LogisticsConfigVisible:false,
       // 详情弹窗
@@ -173,7 +177,8 @@ class AllOrdersList extends PureComponent {
       _listArr:[],
       organizationTree:[],
       createUsers:[],
-      sameLevelUser:[]
+      sameLevelUser:[],
+      userName:getCookie("userName")
     };
   }
 
@@ -189,21 +194,24 @@ class AllOrdersList extends PureComponent {
     }
     this.setState({
       routerKey:key,
-      queryUrlKey:type,
+      queryUrlKey:type
     })
     this.getLabels();
     this.currenttree();
     this.getOrderMenuTemplate();
     this.getOrderMenuHead();
     this.getCreator();
+    this.sameLevelUser();
   }
 
   getCreator(){
     queryCreator().then(res=>{
       if(res.success){
-        this.setState({
-          createUsers:res.data
-        })
+        if(JSON.stringify(res.data) != "{}"){
+          this.setState({
+            createUsers:res.data
+          })
+        }
       }
     }).catch(()=>{
 
@@ -218,14 +226,6 @@ class AllOrdersList extends PureComponent {
       })
     })
   }
-
-  // sameLevelUser = () => {
-  //   getSameLevelUser().then(res=>{
-  //     this.setState({
-  //       sameLevelUser:res.data
-  //     })
-  //   })
-  // }
 
   getDataList = () => {
     const {params,queryUrlKey} = this.state;
@@ -298,9 +298,26 @@ class AllOrdersList extends PureComponent {
         clientStatus:res.data.records
       })
     })
+
+    //获取客户來源
+    getLabelList({
+      size:100,
+      current:1,
+      labelType:3
+    }).then(res=>{
+      this.setState({
+        clientSources:res.data.records || []
+      })
+    })
   }
 
-
+  sameLevelUser = () => {
+    getSameLevelUser().then(res=>{
+      this.setState({
+        sameLevelUser:res.data
+      })
+    })
+  }
 
 
   // ============ 查询 ===============
@@ -389,7 +406,7 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers,routerKey,sameLevelUser } = this.state;
+    const { salesmanList, organizationTree,clientLevels,clientStatus,createUsers,clientSources,routerKey,sameLevelUser,userName } = this.state;
 
     let queryType = null;
     switch (routerKey) {
@@ -459,16 +476,30 @@ class AllOrdersList extends PureComponent {
             )}
           </Form.Item>
         ):''}
-        {/*<Form.Item label="主管">*/}
+
+        <Form.Item label="数据来源">
+          {getFieldDecorator('clientSource', {
+          })(
+            <Select placeholder={"请选择数据来源"} style={{ width: 200 }}>
+              {clientSources.map(d => (
+                <Select.Option key={d.id} value={d.id}>
+                  {d.labelName}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
+        {/*<Form.Item label="分配主管">*/}
           {/*{getFieldDecorator('createUser', {*/}
           {/*})(*/}
-            {/*<Select placeholder={"请选择主管"} style={{ width: 200 }}>*/}
+            {/*<Select placeholder={"分配主管"} style={{ width: 200 }}>*/}
               {/*{sameLevelUser.map((item,index)=>{*/}
                 {/*return (<Option key={index} value={item.userId}>{item.name}</Option>)*/}
               {/*})}*/}
             {/*</Select>*/}
           {/*)}*/}
         {/*</Form.Item>*/}
+
 
         {/*<Form.Item label="省市区">*/}
           {/*{getFieldDecorator('cityparam', {*/}
@@ -734,6 +765,9 @@ class AllOrdersList extends PureComponent {
     }else if(code === "transfer"){
       // 转移客户
       this.handleShowTransfer()
+    }else if(code === "Distribution"){
+      // 分配主管
+      this.handleShowDistribution()
     }else if(code === "receive"){
       // 领取
       this.receive()
@@ -761,12 +795,21 @@ class AllOrdersList extends PureComponent {
       routerKey = 'allpublic'
     }
 
+    let roleName = getCookie("ROLENAME");
+
     return (<>
       <SearchButton
         btnButtonBack={this.btnButtonBack}
         tabKey={tabKey}
         code={routerKey}
       />
+      {roleName === 'admin'?(
+        <Button
+          icon="delete"
+          onClick={this.batchDelete}
+        >批量删除</Button>
+      ):''}
+
     </>)
 
 
@@ -815,9 +858,20 @@ class AllOrdersList extends PureComponent {
     //       </div>
     //   )
   };
+  //批量删除
+  batchDelete = () =>{
+    const { selectedRows } = this.state;
 
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+
+    let ids = selectedRows.map(item=>item.id);
+    this.handleDelect(ids.join(","));
+
+  }
   // 删除
-  handleDelect = (row) => {
+  handleDelect = (id) => {
     const refresh = this.refreshTable;
     Modal.confirm({
       title: '删除确认',
@@ -828,7 +882,7 @@ class AllOrdersList extends PureComponent {
       keyboard:false,
       async onOk() {
         deleteData({
-          ids:row.id
+          ids:id
         }).then(res=>{
           message.success(res.msg);
           refresh();
@@ -979,6 +1033,8 @@ class AllOrdersList extends PureComponent {
       TransferVisible:true
     })
   }
+
+
   // 转移客户
   handleCancelTransfer = (type) => {
     // getlist代表点击保存成功关闭弹窗后需要刷新列表
@@ -992,6 +1048,39 @@ class AllOrdersList extends PureComponent {
       TransferVisible:false
     })
   }
+
+  // 打开分配主管弹窗
+  handleShowDistribution = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+
+    dispatch({
+      type: `globalParameters/setListId`,
+      payload: selectedRows,
+    });
+    this.setState({
+      DistributionVisible:true
+    })
+  }
+
+  // 关闭分配主管弹窗
+  handleCancelDistribution = (type) => {
+    // getlist代表点击保存成功关闭弹窗后需要刷新列表
+    if(type === "getlist"){
+      this.setState({
+        selectedRows: [],
+      });
+      this.getDataList();
+    }
+    this.setState({
+      DistributionVisible:false
+    })
+  }
+
 
   // 反选数据
   onChangeCheckbox = () => {
@@ -1138,7 +1227,7 @@ class AllOrdersList extends PureComponent {
           if(item.dataIndex === "province" || item.dataIndex === 'clientLevel'|| item.dataIndex === 'clientStatus'|| item.dataIndex === 'nextFollowTime'|| item.dataIndex === 'createTime') {
             item.sorter=true
           }
-          // 
+          //
           if(item.dataIndex === "clientLevel" || item.dataIndex === "clientStatus") {
             item.render = (key, row) => {
               return this.setType(row,item.dataIndex)
@@ -1156,8 +1245,6 @@ class AllOrdersList extends PureComponent {
           }
           list = arr;
         }
-
-        console.log(list,"listlistlistlist")
         // <Badge color={color} text={color} />
 
         this.setState({
@@ -1185,10 +1272,10 @@ class AllOrdersList extends PureComponent {
         </div>
       )
     }
-    
+
   }
 
-  
+
 
 
   // setCityVal = (row) =>{
@@ -1365,6 +1452,7 @@ class AllOrdersList extends PureComponent {
       confirmTagList,
       LogisticsAlertVisible,
       TransferVisible,
+      DistributionVisible,
       tips,
       clientStatus,
       clientLevels,
@@ -1503,12 +1591,13 @@ class AllOrdersList extends PureComponent {
       list.push(item)
     });
 
+    let roleName = getCookie("ROLENAME");
     list.push(
       {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 90,
+        width: 140,
         filterDropdown: ({ confirm, clearFilters }) => (
           <div style={{ padding: 8 }}>
             <Tree
@@ -1560,8 +1649,12 @@ class AllOrdersList extends PureComponent {
               <a onClick={()=>this.handleJournal(row)}>日志</a>
               <Divider type="vertical" />
               <a onClick={()=>this.handleDetails(row)}>详情</a>
-              {/*<Divider type="vertical" />*/}
-              {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
+              {roleName === 'admin'?(
+                <>
+                  <Divider type="vertical" />
+                  <a onClick={()=>this.handleDelect(row.id)}>删除</a>
+                </>
+              ):''}
             </div>
           )
         },
@@ -1656,6 +1749,14 @@ class AllOrdersList extends PureComponent {
           <TransferCustomers
             TransferVisible={TransferVisible}
             handleCancelTransfer={this.handleCancelTransfer}
+          />
+        ):""}
+
+        {/* 分配主管 */}
+        {DistributionVisible?(
+          <Distribution
+            DistributionVisible={DistributionVisible}
+            handleCancelDistribution={this.handleCancelDistribution}
           />
         ):""}
 
