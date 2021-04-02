@@ -58,6 +58,7 @@ class UserAdd extends PureComponent {
               const params = {
                 ...values,
                 deptId: values.deptId,
+                // roleId: func.join(values.roleId),
                 postId: func.join(values.postId),
                 birthday: func.format(values.birthday),
               };

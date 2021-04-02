@@ -447,6 +447,9 @@ class AllOrdersList extends PureComponent {
               </Button>
               <Button style={{ marginLeft: 8 }} onClick={()=>{
                 // this.getSalesman();
+                this.setState({
+                  beginTime:''
+                })
                 onReset()
               }}>
                 <FormattedMessage id="button.reset.name" />
