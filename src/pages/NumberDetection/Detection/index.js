@@ -105,7 +105,58 @@ class Detection extends PureComponent {
         message.error(res.msg)
       }
     })
+  }
 
+  download = (key) =>{
+    const {batch} = this.state;
+    if(!batch){
+      message.error("没有数据可下载，请先批量检测")
+      return false;
+    }
+    const params={
+      batch:batch,
+      batchType:key
+    }
+    // batchCheckResult(params).then(res=>{
+    //   console.log(res)
+    //   // if(res.code === 200){
+    //   //
+    //   // }else {
+    //   //   message.error(res.msg)
+    //   // }
+    // })
+
+    axios({
+      method: "post",
+      url:`/api/phoneNumber/check/batchCheckResult`,
+      data:params,
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Authorization": `Basic ${Base64.encode(`${clientId}:${clientSecret}`)}`,
+        "Blade-Auth": getToken(),
+        "token": getToken(),
+      },
+      // 设置responseType对象格式为blob
+      responseType: "blob"
+    }).then(res => {
+      console.log(res)
+      if(!res.data.code){
+        let data = res.data;
+        let fileReader = new FileReader();
+        fileReader.readAsText(data, 'utf-8');
+        let _this = this
+        fileReader.onload = function() {
+          try {
+            let jsonData = JSON.parse(this.result);  // 说明是普通对象数据，后台转换失败
+            message.error(jsonData.data);
+          }catch(err){
+            _this.downLoadBlobFile(res)
+          }
+        };
+      }else {
+        message.error(res.data.msg);
+      }
+    })
   }
 
   // 下载方法
@@ -274,7 +325,7 @@ class Detection extends PureComponent {
           <div className={styles.contentBox_title}>
             <img src={result}></img>
             <span className={styles.text}>监测结果</span>
-            <span className={styles.titleRight}><Icon type="download" />全部下载</span>
+            <span className={styles.titleRight} onClick={()=>this.download(0)}><Icon type="download" />全部下载</span>
           </div>
           <Row type="flex" justify="space-between">
             <Col className={styles.gutterRowBox} span={7}>
@@ -282,18 +333,18 @@ class Detection extends PureComponent {
               <p>实号</p>
               <div>
                 <Button type="danger" style={{marginRight:10}}>导入客户</Button>
-                <Button type="primary">下载</Button>
+                <Button type="primary" onClick={()=>this.download(1)}>下载</Button>
               </div>
             </Col>
             <Col className={styles.gutterRowBox} span={7}>
               <p className={styles.numBer}>{RTnotExistCount}</p>
               <p>空号</p>
-              <div><Button type="primary">下载</Button></div>
+              <div><Button type="primary" onClick={()=>this.download(2)}>下载</Button></div>
             </Col>
             <Col className={styles.gutterRowBox} span={7}>
               <p className={styles.numBer}>{RTshutDownCount}</p>
               <p>风险号</p>
-              <div><Button type="primary">下载</Button></div>
+              <div><Button type="primary" onClick={()=>this.download(3)}>下载</Button></div>
             </Col>
           </Row>
           <div className={styles.TipsTop}>
