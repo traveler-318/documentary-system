@@ -27,7 +27,7 @@ import tips from '../../../assets/detection/tips.svg'
 
 import result from '../../../assets/detection/result.svg'
 import axios from 'axios';
-import {getPhone,importPhoneFile} from '../../../services/detection';
+import {getPhone,importPhoneFile,todayStats,batchCheckResult} from '../../../services/detection';
 import { clientId, clientSecret } from '../../../defaultSettings';
 import { Base64 } from 'js-base64';
 
@@ -49,12 +49,23 @@ class Detection extends PureComponent {
       phone:'-',
       status:'-',
       carrier:'-',
+      normalCount: "0",
+      notExistCount: "0",
+      shutDownCount: "0",
+      sum: "0",
+      batch:'',
+      RTnormalCount: "0",
+      RTnotExistCount: "0",
+      RTshutDownCount: "0",
+
     };
   }
 
   // ============ 初始化数据 ===============
   componentWillMount() {
 
+    console.log(new Date().getTime())
+    this.getTodayStats()
   }
 
   BatchTesting = () => {
@@ -73,18 +84,52 @@ class Detection extends PureComponent {
     // this.state.fileList[0];
     const params={
       file:this.state.fileList[0],
-      type:0
+      type:0,
+      batch:new Date().getTime()
     }
     this.setState({
       loading:true,
+      batch:new Date().getTime()
     })
-    const formData = new FormData();
-    formData.append('type', 0);
-    formData.append('file', this.state.fileList[0]);
+    importPhoneFile(params).then(res=>{
+      console.log(res)
+      if(res.code === 200){
+        this.setState({
+          RTnormalCount: res.data.normalCount,
+          RTnotExistCount: res.data.notExistCount,
+          RTshutDownCount: res.data.shutDownCount,
+          loading:false,
+          BatchTestingVisible:false,
+        })
+      }else {
+        message.error(res.msg)
+      }
+    })
+  }
+
+  download = (key) =>{
+    const {batch} = this.state;
+    if(!batch){
+      message.error("没有数据可下载，请先批量检测")
+      return false;
+    }
+    const params={
+      batch:batch,
+      batchType:key
+    }
+    // batchCheckResult(params).then(res=>{
+    //   console.log(res)
+    //   // if(res.code === 200){
+    //   //
+    //   // }else {
+    //   //   message.error(res.msg)
+    //   // }
+    // })
+
     axios({
       method: "post",
-      url:`/api/phoneNumber/check/importPhoneFile`,
-      data:formData,
+      url:`/api/phoneNumber/check/batchCheckResult`,
+      data:params,
       headers: {
         "content-type": "application/json; charset=utf-8",
         "Authorization": `Basic ${Base64.encode(`${clientId}:${clientSecret}`)}`,
@@ -106,17 +151,10 @@ class Detection extends PureComponent {
             message.error(jsonData.data);
           }catch(err){
             _this.downLoadBlobFile(res)
-            _this.setState({
-              loading:false,
-              BatchTestingVisible:false,
-            })
           }
         };
       }else {
         message.error(res.data.msg);
-        this.setState({
-          loading:false,
-        })
       }
     })
   }
@@ -149,6 +187,18 @@ class Detection extends PureComponent {
     })
   }
 
+  getTodayStats = () => {
+    todayStats().then(res=>{
+      console.log(res)
+      this.setState({
+        normalCount: res.data.normalCount,
+        notExistCount: res.data.notExistCount,
+        shutDownCount: res.data.shutDownCount,
+        sum: res.data.sum
+      })
+    })
+  }
+
   handleTemplate = () => {
     // console.log(`http://121.37.251.134:9010/order/order/exportOrderTemplate`)
     // window.location.href = `http://121.37.251.134:9010/order/order/exportOrderTemplate`
@@ -165,7 +215,11 @@ class Detection extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const {BatchTestingVisible,fileList,phone,status,carrier,loading} = this.state;
+    const {BatchTestingVisible,
+      fileList,phone,status,carrier,
+      loading,normalCount,notExistCount,shutDownCount,sum,
+      RTnormalCount,RTnotExistCount,RTshutDownCount,
+    } = this.state;
 
     const propss = {
       onRemove: file => {
@@ -203,7 +257,7 @@ class Detection extends PureComponent {
                 <img src={zonghaoma}></img>
               </div>
               <div className={styles.rightBox}>
-                <p className={styles.numBer}>0</p>
+                <p className={styles.numBer}>{sum}</p>
                 <p>今日监测总号码数</p>
               </div>
             </Col>
@@ -212,7 +266,7 @@ class Detection extends PureComponent {
                 <img src={shihao}></img>
               </div>
               <div className={styles.rightBox}>
-                <p className={styles.numBer}>0</p>
+                <p className={styles.numBer}>{normalCount}</p>
                 <p>今日监测实号数</p>
               </div>
             </Col>
@@ -221,7 +275,7 @@ class Detection extends PureComponent {
                 <img src={konghao}></img>
               </div>
               <div className={styles.rightBox}>
-                <p className={styles.numBer}>0</p>
+                <p className={styles.numBer}>{notExistCount}</p>
                 <p>今日监测空号数</p>
               </div>
             </Col>
@@ -230,7 +284,7 @@ class Detection extends PureComponent {
                 <img src={fengxianhao}></img>
               </div>
               <div className={styles.rightBox}>
-                <p className={styles.numBer}>0</p>
+                <p className={styles.numBer}>{shutDownCount}</p>
                 <p>今日监测风险号数</p>
               </div>
             </Col>
@@ -271,26 +325,26 @@ class Detection extends PureComponent {
           <div className={styles.contentBox_title}>
             <img src={result}></img>
             <span className={styles.text}>监测结果</span>
-            <span className={styles.titleRight}><Icon type="download" />全部下载</span>
+            <span className={styles.titleRight} onClick={()=>this.download(0)}><Icon type="download" />全部下载</span>
           </div>
           <Row type="flex" justify="space-between">
             <Col className={styles.gutterRowBox} span={7}>
-              <p className={styles.numBer}>0</p>
+              <p className={styles.numBer}>{RTnormalCount}</p>
               <p>实号</p>
               <div>
                 <Button type="danger" style={{marginRight:10}}>导入客户</Button>
-                <Button type="primary">下载</Button>
+                <Button type="primary" onClick={()=>this.download(1)}>下载</Button>
               </div>
             </Col>
             <Col className={styles.gutterRowBox} span={7}>
-              <p className={styles.numBer}>0</p>
+              <p className={styles.numBer}>{RTnotExistCount}</p>
               <p>空号</p>
-              <div><Button type="primary">下载</Button></div>
+              <div><Button type="primary" onClick={()=>this.download(2)}>下载</Button></div>
             </Col>
             <Col className={styles.gutterRowBox} span={7}>
-              <p className={styles.numBer}>0</p>
+              <p className={styles.numBer}>{RTshutDownCount}</p>
               <p>风险号</p>
-              <div><Button type="primary">下载</Button></div>
+              <div><Button type="primary" onClick={()=>this.download(3)}>下载</Button></div>
             </Col>
           </Row>
           <div className={styles.TipsTop}>

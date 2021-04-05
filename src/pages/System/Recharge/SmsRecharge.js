@@ -12,7 +12,7 @@ import Voice from './components/Voice';
 import Logistics from './components/Logistics';
 import ConsumptionDetails from './components/ConsumptionDetails';
 import Printing from './components/Printing';
-import { getUserInfo } from '../../../services/user';
+import { getSMSBalance } from '../../../services/user';
 
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
@@ -52,10 +52,10 @@ class SmsRecharge extends PureComponent {
   }
 
   getParam = () => {
-    getUserInfo().then(resp => {
+    getSMSBalance().then(resp => {
       if (resp.code === 200) {
         console.log(resp)
-        this.setState({ remainingMoney: resp.data.remainingMoney});
+        this.setState({ remainingMoney: resp.data}); 
       } else {
         message.error(resp.msg || '获取数据失败');
       }

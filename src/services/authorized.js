@@ -54,4 +54,26 @@ export async function subordinateRemove(params) {
     body: func.toFormData(params),
   });
 }
+//发送短信验证
+export async function smsSend(params) {
+  return request('/api/sms/send', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+//操作开关
+export async function switchverification(params) {
+  return request('/api/external/authorized/switchverification', {
+    method: 'POST',
+    body: params,
+  });
+}
+//查看密钥
+export async function lookkey(params) {
+  return request('/api/external/authorized/lookkey', {
+    method: 'POST',
+    body: params,
+  });
+}
 
