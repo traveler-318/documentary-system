@@ -10,13 +10,14 @@ import Grid from '../../../components/Sword/Grid';
 import Authorization from './authorization';
 import { setListData } from '../../../utils/publicMethod';
 import {
-  subordinateList,subordinateUpdate,subordinateRemove
+  subordinateList,subordinateRemove,switchverification,lookkey
 } from '../../../services/authorized';
 import { getCookie } from '../../../utils/support';
 import router from 'umi/router';
+import SystemAuthorizedVerification from './SystemAuthorizedVerification';
 import { remove } from '@/services/region';
 
-
+let ViewData = {};
 @connect(({ globalParameters }) => ({
   globalParameters,
 }))
@@ -35,6 +36,10 @@ class SystemAuthorized extends PureComponent {
       },
 
       subordinateList:[],//分公司数据
+      isTipVisible:false,//密匙提示框显示、隐藏
+      authorizaDataInfo:{},//密匙提示内容
+      isVerification:false,//验证码窗口
+      verificationType:1,//验证框类型 开关:1  查看:2
     };
   }
 
@@ -77,10 +82,57 @@ class SystemAuthorized extends PureComponent {
     router.push(`/system/authorized/add`);
   }
 
+  //查看secrent
+  handleViewSecret =(row) =>{
+    ViewData = row;
+    this.setState({
+      isVerification:true,
+      verificationType:2
+    })
+  }
+  //短信验证通过
+  verificationSuccess = (smsCode) =>{
+    const {verificationType} = this.state;
+    this.setState({
+      isVerification:false,
+    })
+    if(verificationType == 2){
+      const params={
+        id:ViewData.id,
+        smsCode:smsCode,
+      }
+      lookkey(params).then(res=>{
+        if(res && res.code ==200){
+          this.setState({
+            isTipVisible:true,
+            authorizaDataInfo:res.data
+          })
+        }
+      })
+    }else{
+      switchverification({
+        id: ViewData.id,
+        authorizationStatus:ViewData.states,
+        smsCode:smsCode
+      }).then(res=>{
+        if (res && res.code == 200) {
+          this.getDataList();
+        }
+      });
+    }
+  }
+
+  handleCancelVerification =() => {
+    this.setState({
+      isVerification:false
+    })
+  }
   //启用禁用
   handleChangeStatus = (row) => {
     let status = row.authorizationStatus == 1 ? 2 :1;
-    const text = status == 2 ? '禁用':'启用'
+    const text = status == 2 ? '禁用':'启用';
+
+    const _this = this;
     Modal.confirm({
       title: '配置'+text+'确认',
       content: '是否将改配置'+text+'?',
@@ -88,16 +140,21 @@ class SystemAuthorized extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        const response = await subordinateUpdate({ id: row.id,authorizationStatus:status });
-        if (response.success) {
-          message.success(response.msg);
-          this.getDataList();
-        } else {
-          message.error(response.msg || text+'失败');
-        }
+        ViewData = row;
+        ViewData.states = status
+        _this.setState({
+          isVerification:true,
+          verificationType:1
+        })
       },
       onCancel() {},
     });
+  }
+
+  cancelAuthorization(){
+    this.setState({
+      isTipVisible:false
+    })
   }
 
   //删除
@@ -132,6 +189,10 @@ class SystemAuthorized extends PureComponent {
     const {
       data,
       loading,
+      isTipVisible,
+      isVerification,
+      authorizaDataInfo,
+      verificationType
     } = this.state;
 
     const columns = [
@@ -193,10 +254,12 @@ class SystemAuthorized extends PureComponent {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 150,
+        width: 200,
         render: (text,row) => {
           return(
             <div>
+              <a onClick={()=>this.handleViewSecret(row)}>查看secret</a>
+              <Divider type="vertical" />
               <a onClick={()=>this.handleChangeStatus(row)}>{row.authorizationStatus == '1' ? '禁用':'启用'}</a>
               <Divider type="vertical" />
               <a onClick={()=>this.handleDelete(row)}>删除</a>
@@ -225,7 +288,13 @@ class SystemAuthorized extends PureComponent {
             // multipleChoice={true}
           />
         </div>
-        {/*<Authorization isVisible={}/>*/}
+        {isTipVisible &&
+        (<Authorization authorizaDataInfo={authorizaDataInfo} handleCancel={this.cancelAuthorization}/>
+        )}
+        {isVerification && (
+          <SystemAuthorizedVerification isVerification={isVerification} sendType={verificationType} handleVerification = {this.verificationSuccess}
+                                        handleCancelVerification={this.handleCancelVerification}/>
+        )}
       </Panel>
     );
   }
