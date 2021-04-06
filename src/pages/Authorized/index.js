@@ -2,16 +2,15 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import {
   Button,
-  Form,
+  Form, message,
   Tag,
 } from 'antd';
 
 import Panel from '../../components/Panel';
 import Grid from '../../components/Sword/Grid';
 import { setListData } from '../../utils/publicMethod';
-import {
-  superiorlist,
-} from '../../services/authorized';
+import { superiorlist,superiorupdate } from '../../services/authorized';
+import AuthorizedProductPage from './productPage';
 import { getCookie } from '../../utils/support';
 import router from 'umi/router';
 
@@ -34,8 +33,9 @@ class Authorized extends PureComponent {
         current: 1,
         orderBy: false,
       },
-
+      selectedRows:[],//列表选择数组
       superiorlist: [],//分公司数据
+      isOpenProduct:false,//是否打开产品列表
     };
   }
 
@@ -65,18 +65,66 @@ class Authorized extends PureComponent {
     });
   };
 
+  onSelectRow = (rows,keys) => {
+    this.setState({
+      selectedRows: rows,
+    });
+  };
+
   // 左上批量操作按钮
   renderLeftButton = (tabKey) => {
     return (
-      <Button type='primary' icon='plus' onClick={() => {
-        this.handleAdd();
-      }}>添加</Button>
+      <>
+        <Button type='primary' icon='plus' onClick={() => {
+          this.handleAdd();
+        }}>添加</Button>
+        <Button icon='edit' onClick={() => {
+          this.licensedProducts();
+        }}>授权产品</Button>
+      </>
     );
   };
   //添加
   handleAdd = () => {
     router.push(`/branchManage/authorized/add`);
   };
+
+  //授权产品
+  licensedProducts = () =>{
+    const { selectedRows } = this.state;
+
+    if(selectedRows.length != 1){
+      return message.info('请选择一条数据');
+    }
+
+    this.setState({
+      isOpenProduct:true
+    })
+  }
+
+  //确定授权产品
+  handleOkProduct = (ids) =>{
+    console.log(ids)
+    const { selectedRows } = this.state;
+    superiorupdate({
+      id:selectedRows[0].id,
+      authorizationProductidId:ids.join(",")
+    }).then(res=>{
+      if(res && res.code == 200){
+        message.info(res.msg);
+        this.getDataList()
+      }
+    })
+
+    this.handleCancelProduct();
+  }
+
+  //关闭授权产品
+  handleCancelProduct =() =>{
+    this.setState({
+      isOpenProduct:false
+    })
+  }
 
   render() {
     const code = 'AuthorizedList';
@@ -88,18 +136,19 @@ class Authorized extends PureComponent {
     const {
       data,
       loading,
+      isOpenProduct
     } = this.state;
 
     const columns = [
       {
         title: '公司ID',
-        dataIndex: 'authorizationTenantId',
-        key: 'authorizationTenantId',
+        dataIndex: 'tenantId',
+        key: 'tenantId',
       },
       {
         title: '机构名称',
-        dataIndex: 'authorizationTenantName',
-        key: 'authorizationTenantName',
+        dataIndex: 'tenantName',
+        key: 'tenantName',
       },
       // {
       //   title: '机构类型',
@@ -163,13 +212,12 @@ class Authorized extends PureComponent {
             columns={columns}
             scroll={{ x: 1000 }}
             counterElection={false}
-            multipleChoice={true}
+            onSelectRow={this.onSelectRow}
             renderLeftButton={() => this.renderLeftButton()}
-
-            // multipleChoice={true}
           />
         </div>
 
+        {isOpenProduct?<AuthorizedProductPage isVisible={isOpenProduct} handleOkProduct={this.handleOkProduct} handleCancelProduct={this.handleCancelProduct}/>:''}
       </Panel>
     );
   }

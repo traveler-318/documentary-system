@@ -196,11 +196,6 @@ class SystemAuthorized extends PureComponent {
     } = this.state;
 
     const columns = [
-      {
-        title: '授权令牌',
-        dataIndex: 'authorizationToken',
-        key: 'authorizationToken'
-      },
       // {
       //   title: '授权类型',
       //   dataIndex: 'authorizationOperationType',
@@ -215,20 +210,6 @@ class SystemAuthorized extends PureComponent {
       //     )
       //   }
       // },
-      {
-        title: '状态',
-        dataIndex: 'authorizationStatus',
-        key: 'authorizationStatus',
-        render: (key,row)=>{
-          return (
-            <div>
-              {
-                key === '1' ? "启用":"禁用"
-              }
-            </div>
-          )
-        }
-      },
 
       {
         title: '被授权公司ID',
@@ -244,6 +225,20 @@ class SystemAuthorized extends PureComponent {
         title: '到期时间',
         dataIndex: 'timeoutTime',
         key: 'timeoutTime',
+      },
+      {
+        title: '状态',
+        dataIndex: 'authorizationStatus',
+        key: 'authorizationStatus',
+        render: (key,row)=>{
+          return (
+            <div>
+              {
+                key === '1' ? "启用":"禁用"
+              }
+            </div>
+          )
+        }
       },
       {
         title: '创建时间',
