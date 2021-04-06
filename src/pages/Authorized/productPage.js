@@ -6,7 +6,7 @@ import {
 } from 'antd';
 import Grid from '../../components/Sword/Grid';
 import {
-  getProductattributeList
+  getProductattributeList,
 } from '../../services/newServices/product';
 import moment from 'moment';
 import Img from '@/pages/Product/ProductManagement/components/Img';
@@ -19,18 +19,19 @@ class AuthorizedProductPage extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data:{ },
-      loading:false,
-      selectDataArr:[],
+      data: {},
+      loading: false,
+      submitLoading:false,
+      selectDataArr: [],
       columns: [
         {
           title: '编号',
           dataIndex: '',
           width: 60,
-          render: (res,rows,index) => {
-            return(
-              index+1
-            )
+          render: (res, rows, index) => {
+            return (
+              index + 1
+            );
           },
         },
         {
@@ -42,16 +43,16 @@ class AuthorizedProductPage extends PureComponent {
           title: '页面背景',
           dataIndex: 'h5Background',
           width: 80,
-          render: (res,row) => {
-            return(
+          render: (res, row) => {
+            return (
               <div>
                 {
                   res === '' ?
                     (res)
-                    :(<a onClick={()=>this.handleImg(row)}>查看</a>)
+                    : (<a onClick={() => this.handleImg(row)}>查看</a>)
                 }
               </div>
-            )
+            );
           },
         },
         {
@@ -94,24 +95,25 @@ class AuthorizedProductPage extends PureComponent {
           dataIndex: 'createTime',
           width: 180,
           render: (res) => {
-            return(
+            return (
               <div>
                 {
                   res === '' ?
                     (res)
-                    :(moment(res).format('YYYY-MM-DD HH:mm:ss'))
+                    : (moment(res).format('YYYY-MM-DD HH:mm:ss'))
                 }
               </div>
-            )
+            );
           },
-        }
+        },
       ],
-      params:{
-        size:10,
-        current:1
+      params: {
+        size: 10,
+        current: 1,
       },
-      handleImgDetailsVisible:false,
-      ImgDetails:''
+      handleImgDetailsVisible: false,
+      ImgDetails: '',
+      selectedRowKeys:[]
     };
   }
 
@@ -120,49 +122,60 @@ class AuthorizedProductPage extends PureComponent {
   componentWillMount() {
     this.getDataList();
 
+    const {selectedRows} = this.props;
+    const dataIntArr=selectedRows.map(item => {
+      return +item;
+    });
+    this.setState({
+      selectedRowKeys:dataIntArr
+    })
   }
 
   getDataList = () => {
-    const {params} = this.state;
+    const { params } = this.state;
     this.setState({
-      loading:true
-    })
-    getProductattributeList(params).then(res=>{
+      loading: true,
+    });
+    getProductattributeList(params).then(res => {
       this.setState({
-        loading:false
-      })
+        loading: false,
+      });
+      let datas = res.data.records.map(item => {
+        item.selections = true;
+        return item;
+      });
       this.setState({
-        data:{
-          list:res.data.records,
-          pagination:{
+        data: {
+          list: datas,
+          pagination: {
             current: res.data.current,
             pageSize: res.data.size,
-            total: res.data.total
-          }
-        }
-      })
-    })
-  }
+            total: res.data.total,
+          },
+        },
+      });
+    });
+  };
 
-  onSelectRow = (rows,key) => {
+  onSelectRow = (rows, key) => {
     this.setState({
-      selectDataArr: rows
+      selectDataArr: rows,
+      selectedRowKeys: key,
     });
   };
 
   // 图片弹框
   handleImg = (row) => {
-    console.log(row)
     this.setState({
-      handleImgDetailsVisible:true,
-      ImgDetails:row.h5Background
-    })
-  }
+      handleImgDetailsVisible: true,
+      ImgDetails: row.h5Background,
+    });
+  };
   handleCancelImgDetails = () => {
     this.setState({
-      handleImgDetailsVisible:false
-    })
-  }
+      handleImgDetailsVisible: false,
+    });
+  };
 
   handleResize = index => (e, { size }) => {
     this.setState(({ columns }) => {
@@ -175,28 +188,37 @@ class AuthorizedProductPage extends PureComponent {
     });
   };
 
-  handleSubmit = ()=>{
-    const { selectDataArr } = this.state;
+  handleSubmit = () => {
+    const { selectedRowKeys } = this.state;
     const { handleOkProduct } = this.props;
 
-    if(selectDataArr.length <= 0){
+    if (selectedRowKeys.length <= 0) {
       return message.info('请至少选择一条数据');
     }
 
-    console.log(selectDataArr)
-    handleOkProduct(selectDataArr.map(item=>item.id));
-  }
+    this.setState({
+      submitLoading:true
+    })
+    handleOkProduct(selectedRowKeys,()=>{
+      console.log(this)
+      this.setState({
+        submitLoading:false
+      })
+    });
+  };
 
   render() {
     const {
-      form,isVisible,handleCancelProduct
+      form, isVisible, handleCancelProduct,
     } = this.props;
 
     const {
       data,
       loading,
       handleImgDetailsVisible,
-      ImgDetails
+      ImgDetails,
+      selectedRowKeys,
+      submitLoading
     } = this.state;
 
 
@@ -211,7 +233,7 @@ class AuthorizedProductPage extends PureComponent {
     return (
       <Modal
         className={'authorized-product-page'}
-        title="选择产品"
+        title="授权产品"
         width={'80%'}
         visible={isVisible}
         maskClosable={false}
@@ -219,7 +241,7 @@ class AuthorizedProductPage extends PureComponent {
           <Button key="back" onClick={handleCancelProduct}>
             取消
           </Button>,
-          <Button key="submit" type="primary" onClick={(e)=>this.handleSubmit(e)}>
+          <Button key="submit" type="primary"  loading={submitLoading} onClick={(e) => this.handleSubmit(e)}>
             确定
           </Button>,
         ]}
@@ -228,21 +250,24 @@ class AuthorizedProductPage extends PureComponent {
         <Grid
           form={form}
           data={data}
+          counterElection={false}
+          selectedKey={selectedRowKeys}
           onSelectRow={this.onSelectRow}
           loading={loading}
           columns={columns}
           scroll={{ x: 1000 }}
         />
         {/* 查看图片 */}
-        {handleImgDetailsVisible?(
+        {handleImgDetailsVisible ? (
           <Img
             handleImgDetailsVisible={handleImgDetailsVisible}
             ImgDetails={ImgDetails}
             handleCancelImgDetails={this.handleCancelImgDetails}
           />
-        ):""}
+        ) : ''}
       </Modal>
     );
   }
 }
+
 export default AuthorizedProductPage;

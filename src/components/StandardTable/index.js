@@ -131,7 +131,7 @@ class StandardTable extends PureComponent {
       : false;
 
     const rowSelection = {
-      selectedRowKeys:counterElection?this.props.selectedRowKeys:selectedRowKeys,
+      selectedRowKeys:this.props.selectedRowKeys?this.props.selectedRowKeys:selectedRowKeys,
       onChange: this.handleRowSelectChange,
       getCheckboxProps: record => ({
         disabled: record.disabled,
@@ -172,7 +172,7 @@ class StandardTable extends PureComponent {
               }
               type="info"
               showIcon
-            />  
+            />
           </div>
         ) : null}
         <Table
@@ -181,7 +181,7 @@ class StandardTable extends PureComponent {
           dataSource={list}
           pagination={paginationProps}
           onChange={this.handleTableChange}
-          
+
           {...rest}
           {...rest.tblProps}
           {...expandProps}
