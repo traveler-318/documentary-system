@@ -330,6 +330,14 @@ export async function ordertimeinfotask(params) {
   });
 }
 
+// 批量发货时间
+export async function addDeliveryTime(params) {
+  return request("/api/order/order/addDeliveryTime",{
+    method: 'POST',
+    body: params,
+  });
+}
+
 
 // 订单导入
 export async function importOrder(params) {

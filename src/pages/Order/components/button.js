@@ -249,6 +249,14 @@ class SearchButton extends PureComponent {
                         }}>{item.name}</Button>
                     )
                 }
+                if(item.code === 'deliverGoodsTime'){
+                  i++;
+                    return (
+                        <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
+                            this.handleClick(item.code)
+                        }}>{item.name}</Button>
+                    )
+                }
             })
         }
         {
