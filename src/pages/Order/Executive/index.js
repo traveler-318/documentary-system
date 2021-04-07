@@ -1538,7 +1538,7 @@ class AllOrdersList extends PureComponent {
       if(deliverGoodsTimeList[i].taskCreateTime){
         userName+=deliverGoodsTimeList[i].userName+"，";
       }else {
-        tips.push(deliverGoodsTimeList[i].productId)
+        tips.push(deliverGoodsTimeList[i].id)
       }
     }
     if(userName){
