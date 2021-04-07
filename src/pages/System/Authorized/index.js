@@ -91,7 +91,7 @@ class SystemAuthorized extends PureComponent {
     })
   }
   //短信验证通过
-  verificationSuccess = (smsCode) =>{
+  verificationSuccess = (json) =>{
     const {verificationType} = this.state;
     this.setState({
       isVerification:false,
@@ -99,7 +99,9 @@ class SystemAuthorized extends PureComponent {
     if(verificationType == 2){
       const params={
         id:ViewData.id,
-        smsCode:smsCode,
+        smsCode:json.code,
+        phone:json.phone,
+        sendType:verificationType
       }
       lookkey(params).then(res=>{
         if(res && res.code ==200){
@@ -113,7 +115,9 @@ class SystemAuthorized extends PureComponent {
       switchverification({
         id: ViewData.id,
         authorizationStatus:ViewData.states,
-        smsCode:smsCode
+        smsCode:json.code,
+        phone:json.phone,
+        sendType:verificationType
       }).then(res=>{
         if (res && res.code == 200) {
           this.getDataList();

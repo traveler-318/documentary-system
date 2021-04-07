@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Form, Input, Row, Col, Button, message } from 'antd';
+import { Modal, Form, Input, Row, Col, Button, message,Icon } from 'antd';
 import { connect } from 'dva';
 
 import { smsSend } from '../../../services/authorized';
@@ -15,9 +15,11 @@ class SystemAuthorizedVerification extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      isSendCode:false,
       phone:'',
-      timer:60,
+      verificationCode:'',
+      smsType:true,
+      retransmission:false,
+      timer:0,
       loading:false
     };
   }
@@ -49,43 +51,55 @@ class SystemAuthorizedVerification extends PureComponent {
         message.success(res.msg);
         this.setTimer();
         this.setState({
-          isSendCode:true,
+          smsType:false,
+          retransmission: true,
+          timer:60
         })
       }else{
         message.error(res.msg);
       }
     })
   }
-  setTimer = () => {
+  setTimer(){
     setTimeout(()=>{
-      let { timer } = this.state;
+      const {timer,retransmission}= this.state
       if(timer === 0){
         this.setState({
-          isSendCode:false,
-          timer:60
+          retransmission: false,
         })
       }else{
-        timer = timer - 1;
-
         this.setState({
-          timer
-        },()=>{
-          this.setTimer();
+          timer: this.state.timer - 1,
         })
+        this.setTimer();
       }
     },1000)
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { form } = this.props;
-    form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        this.props.handleVerification(values.code);
-      }
-    });
+    const {smsType,verificationCode,phone}=this.state;
+    if(smsType){
+      message.error('需要短信验证，请先获取短信验证码！');
+      return false;
+    }
+    if(verificationCode.length < 6){
+      message.error('验证码不能小于6位数');
+      return false;
+    }
+    if(verificationCode.length > 6){
+      message.error('验证码不能大于6位数');
+      return false;
+    }
+
+    this.props.handleVerification({code:verificationCode,phone:phone});
   };
 
+  codeChange =(e) =>{
+    this.setState({
+      verificationCode:e.target.value
+    })
+  }
 
   render() {
     const {
@@ -96,61 +110,46 @@ class SystemAuthorizedVerification extends PureComponent {
 
     const {
       loading,
-      isSendCode,
+      verificationCode,
+      retransmission,
       timer,
       phone
     } = this.state;
 
-    const formAllItemLayout = {
-      labelCol: {
-        span: 4,
-      },
-      wrapperCol: {
-        span: 20,
-      },
-    };
     return (
       <>
         <Modal
           title="安全验证"
           visible={isVerification}
           maskClosable={false}
-          width={430}
+          width={360}
           onCancel={handleCancelVerification}
           footer={[
             <Button key="back" onClick={handleCancelVerification}>
               取消
             </Button>,
-            <Button key="submit" type="primary" loading={loading} onClick={(e)=>this.handleSubmit(e)}>
+            <Button type="primary" loading={loading} onClick={(e)=>this.handleSubmit(e)}>
               确定
             </Button>,
           ]}
         >
-          <Form style={{ marginTop: 8 }}>
-            <Form.Item>
-              {getFieldDecorator('phone', {
-                initialValue: phone,
-              })(<Input disabled={true}/>)}
-            </Form.Item>
-            <Form.Item {...formAllItemLayout} label="验证码">
-              <Row gutter={8}>
-                <Col span={16}>
-                  {getFieldDecorator('code', {
-                    rules: [
-                      {
-                        len: 6,
-                        required: true,
-                        message: '请输入6位验证码',
-                      },
-                    ],
-                  })(<Input placeholder="请输入验证码" />)}
-                </Col>
-                <Col span={8}>
-                  <Button disabled={isSendCode} onClick={this.getCode}>获取验证码{timer!=60?`${timer}s`:""}</Button>
-                </Col>
-              </Row>
-            </Form.Item>
-          </Form>
+          <Input style={{marginBottom:20}}
+                 value={phone}
+                 disabled
+                 prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)'}} />}
+          />
+          <Input style={{width:'160px',marginRight:10}}
+                 placeholder='验证码'
+                 value={verificationCode}
+                 onChange={(e)=>this.codeChange(e)}
+                 prefix={<Icon type="safety-certificate" style={{ color: 'rgba(0,0,0,.25)' }} />}
+          />
+          <Button style={{float:'right'}} disabled={retransmission} onClick={()=>this.getCode()}>获取验证码
+            {
+              timer !== 0 ?
+                (<span>({timer}s)</span>)
+                :""
+            }</Button>
         </Modal>
       </>
     );
