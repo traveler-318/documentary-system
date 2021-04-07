@@ -108,23 +108,19 @@ class Detection extends PureComponent {
   }
 
   download = (key) =>{
-    const {batch} = this.state;
+    const {batch,RTnormalCount,RTnotExistCount,RTshutDownCount} = this.state;
     if(!batch){
       message.error("没有数据可下载，请先批量检测")
+      return false;
+    }
+    if(RTnormalCount === 0 || RTnotExistCount === 0 || RTshutDownCount === 0){
+      message.error("没有数据可下载")
       return false;
     }
     const params={
       batch:batch,
       batchType:key
     }
-    // batchCheckResult(params).then(res=>{
-    //   console.log(res)
-    //   // if(res.code === 200){
-    //   //
-    //   // }else {
-    //   //   message.error(res.msg)
-    //   // }
-    // })
 
     axios({
       method: "post",

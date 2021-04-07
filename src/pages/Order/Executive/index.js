@@ -1531,7 +1531,7 @@ class AllOrdersList extends PureComponent {
 
   addDeliveryTime = () => {
     const { deliverGoodsTimeList } = this.state;
-
+    const { form } = this.props;
     let tips=[];
     let userName='';
     for(let i=0; i<deliverGoodsTimeList.length; i++){
@@ -1541,31 +1541,50 @@ class AllOrdersList extends PureComponent {
         tips.push(deliverGoodsTimeList[i].productId)
       }
     }
-    console.log(deliverGoodsTimeList,"|||||||||||||")
-    console.log(tips,"|||||||||||||")
     if(userName){
       return message.info('当前已有订单 '+ userName.substring(0, userName.lastIndexOf('，')) +' 有打印时间，不能进行更新操作');
     }
+    form.validateFieldsAndScroll((err, values) => {
+      const params={
+        deliveryTime:func.format(values.deliveryTime),
+        orderIds:tips
+      }
+      if(values.deliveryTime){
+        const _this=this;
+        Modal.confirm({
+          title: '提醒',
+          content: "此次操作无法再次变更,确认操作!",
+          okText: '确定',
+          okType: 'primary',
+          cancelText: '取消',
+          keyboard:false,
+          onOk:() => {
+            return new Promise((resolve, reject) => {
+              addDeliveryTime(params).then(res=>{
+                if(res.code === 200){
+                  message.success(res.msg)
+                  _this.setState({
+                    deliverGoodsTimeVisible:false
+                  })
+                  _this.getDataList();
+                  resolve();
+                }else {
+                  message.error(res.msg)
+                  reject();
+                }
+              })
 
-    const params={
-      deliveryTime:'',
-      orderIds:tips
-    }
+            }).catch(() => console.log('Oops errors!'));
 
-    console.log(params)
+          },
+          onCancel() {},
+        });
+      }else {
+        message.error('请选择发货时间')
+      }
+    })
 
-    // addDeliveryTime(params).then(res=>{
-    //   if(res.code === 200){
-    //     message.success(res.msg)
-    //     this.getOrderMenuHead();
-    //     this.setState({
-    //         isClickHandleSearch: true,
-    //       },() => {
-    //         confirm();
-    //       }
-    //     )
-    //   }
-    // })
+
 
 
   }
@@ -1990,6 +2009,8 @@ class AllOrdersList extends PureComponent {
     const {
       form,
     } = this.props;
+
+    const { getFieldDecorator } = form;
 
     const formAllItemLayout = {
       labelCol: {
@@ -2677,7 +2698,9 @@ class AllOrdersList extends PureComponent {
         >
           <Form>
             <FormItem {...formAllItemLayout} label="发货时间">
-              <DatePicker style={{marginLeft:10}}/>
+              {getFieldDecorator('deliveryTime')(
+                <DatePicker style={{marginLeft:10}} showTime/>
+              )}
             </FormItem>
           </Form>
         </Modal>
