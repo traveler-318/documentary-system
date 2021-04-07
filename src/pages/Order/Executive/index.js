@@ -2699,7 +2699,7 @@ class AllOrdersList extends PureComponent {
           <Form>
             <FormItem {...formAllItemLayout} label="发货时间">
               {getFieldDecorator('deliveryTime')(
-                <DatePicker style={{marginLeft:10}} showTime/>
+                <DatePicker style={{marginLeft:10}} showTime={{ format: 'HH:mm:ss' }} format="YYYY-MM-DD HH:mm:ss" placeholder="请选择发货时间" />
               )}
             </FormItem>
           </Form>
