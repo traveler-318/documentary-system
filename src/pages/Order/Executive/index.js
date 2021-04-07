@@ -52,6 +52,7 @@ import {
   updateVoiceStatus,
   orderMenuHead,
   orderMenuTemplate,
+  addDeliveryTime,
   updateOrderHead
 } from '../../../services/newServices/order';
 import moment from 'moment';
@@ -143,6 +144,9 @@ class AllOrdersList extends PureComponent {
       // 耗时检测弹窗
       timeConsumingVisible:false,
       timeConsumingList:{},
+      //发货时间弹窗
+      deliverGoodsTimeVisible:false,
+      deliverGoodsTimeList:{},
       // 语音弹窗
       VoiceVisible:false,
       voice:{},
@@ -1109,6 +1113,9 @@ class AllOrdersList extends PureComponent {
     }else if(code === "timeConsuming"){
       // 耗时检测
       this.handleTimeConsuming()
+    }else if(code === "deliverGoodsTime"){
+      // 发货时间
+      this.handleDeliverGoodsTime()
     }
 
   }
@@ -1501,6 +1508,85 @@ class AllOrdersList extends PureComponent {
     this.setState({
       timeConsumingVisible:false
     })
+  }
+
+  // 打开发货时间弹窗
+  handleDeliverGoodsTime = () => {
+    const { selectedRows } = this.state;
+    if(selectedRows.length === 0){
+      return message.info('请至少选择一条数据');
+    }
+    this.setState({
+      deliverGoodsTimeVisible:true,
+      deliverGoodsTimeList:selectedRows
+    })
+  }
+
+  // 关闭发货时间弹窗
+  handleCancelDeliverGoodsTime = () => {
+    this.setState({
+      deliverGoodsTimeVisible:false
+    })
+  }
+
+  addDeliveryTime = () => {
+    const { deliverGoodsTimeList } = this.state;
+    const { form } = this.props;
+    let tips=[];
+    let userName='';
+    for(let i=0; i<deliverGoodsTimeList.length; i++){
+      if(deliverGoodsTimeList[i].taskCreateTime){
+        userName+=deliverGoodsTimeList[i].userName+"，";
+      }else {
+        tips.push(deliverGoodsTimeList[i].id)
+      }
+    }
+    if(userName){
+      return message.info('当前已有订单 '+ userName.substring(0, userName.lastIndexOf('，')) +' 有打印时间，不能进行更新操作');
+    }
+    form.validateFieldsAndScroll((err, values) => {
+      const params={
+        deliveryTime:func.format(values.deliveryTime),
+        orderIds:tips
+      }
+      if(values.deliveryTime){
+        const _this=this;
+        Modal.confirm({
+          title: '提醒',
+          content: "此次操作无法再次变更,确认操作!",
+          okText: '确定',
+          okType: 'primary',
+          cancelText: '取消',
+          keyboard:false,
+          onOk:() => {
+            return new Promise((resolve, reject) => {
+              addDeliveryTime(params).then(res=>{
+                if(res.code === 200){
+                  message.success(res.msg)
+                  _this.setState({
+                    deliverGoodsTimeVisible:false
+                  })
+                  _this.getDataList();
+                  resolve();
+                }else {
+                  message.error(res.msg)
+                  reject();
+                }
+              })
+
+            }).catch(() => console.log('Oops errors!'));
+
+          },
+          onCancel() {},
+        });
+      }else {
+        message.error('请选择发货时间')
+      }
+    })
+
+
+
+
   }
 
   // 打开语音列表弹窗
@@ -1924,6 +2010,8 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
+    const { getFieldDecorator } = form;
+
     const formAllItemLayout = {
       labelCol: {
         span: 4,
@@ -1946,6 +2034,7 @@ class AllOrdersList extends PureComponent {
       SMSVisible,
       timeConsumingVisible,
       timeConsumingList,
+      deliverGoodsTimeVisible,
       smsList,
       VoiceVisible,
       voice,
@@ -2497,8 +2586,6 @@ class AllOrdersList extends PureComponent {
           />
         ):""}
 
-
-
         <Modal
           title="提示"
           visible={LogisticsAlertVisible}
@@ -2589,6 +2676,31 @@ class AllOrdersList extends PureComponent {
                 <Radio value={1}>是</Radio>
                 <Radio value={0}>否</Radio>
               </Radio.Group>
+            </FormItem>
+          </Form>
+        </Modal>
+
+        <Modal
+          title="发货时间"
+          visible={deliverGoodsTimeVisible}
+          maskClosable={false}
+          destroyOnClose
+          width={400}
+          onCancel={this.handleCancelDeliverGoodsTime}
+          footer={[
+            <Button key="back" onClick={this.handleCancelDeliverGoodsTime}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" onClick={()=>this.addDeliveryTime()}>
+              确定
+            </Button>,
+          ]}
+        >
+          <Form>
+            <FormItem {...formAllItemLayout} label="发货时间">
+              {getFieldDecorator('deliveryTime')(
+                <DatePicker style={{marginLeft:10}} showTime={{ format: 'HH:mm:ss' }} format="YYYY-MM-DD HH:mm:ss" placeholder="请选择发货时间" />
+              )}
             </FormItem>
           </Form>
         </Modal>

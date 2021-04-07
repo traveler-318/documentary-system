@@ -77,3 +77,11 @@ export async function lookkey(params) {
   });
 }
 
+//查看详情
+export async function detail(params) {
+  return request('/api/external/authorized/detail', {
+    method: 'POST',
+    body: params,
+  });
+}
+

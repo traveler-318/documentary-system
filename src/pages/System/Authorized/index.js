@@ -91,7 +91,7 @@ class SystemAuthorized extends PureComponent {
     })
   }
   //短信验证通过
-  verificationSuccess = (smsCode) =>{
+  verificationSuccess = (json) =>{
     const {verificationType} = this.state;
     this.setState({
       isVerification:false,
@@ -99,7 +99,9 @@ class SystemAuthorized extends PureComponent {
     if(verificationType == 2){
       const params={
         id:ViewData.id,
-        smsCode:smsCode,
+        smsCode:json.code,
+        phone:json.phone,
+        sendType:verificationType
       }
       lookkey(params).then(res=>{
         if(res && res.code ==200){
@@ -113,7 +115,9 @@ class SystemAuthorized extends PureComponent {
       switchverification({
         id: ViewData.id,
         authorizationStatus:ViewData.states,
-        smsCode:smsCode
+        smsCode:json.code,
+        phone:json.phone,
+        sendType:verificationType
       }).then(res=>{
         if (res && res.code == 200) {
           this.getDataList();
@@ -196,11 +200,6 @@ class SystemAuthorized extends PureComponent {
     } = this.state;
 
     const columns = [
-      {
-        title: '授权令牌',
-        dataIndex: 'authorizationToken',
-        key: 'authorizationToken'
-      },
       // {
       //   title: '授权类型',
       //   dataIndex: 'authorizationOperationType',
@@ -215,20 +214,6 @@ class SystemAuthorized extends PureComponent {
       //     )
       //   }
       // },
-      {
-        title: '状态',
-        dataIndex: 'authorizationStatus',
-        key: 'authorizationStatus',
-        render: (key,row)=>{
-          return (
-            <div>
-              {
-                key === '1' ? "启用":"禁用"
-              }
-            </div>
-          )
-        }
-      },
 
       {
         title: '被授权公司ID',
@@ -244,6 +229,20 @@ class SystemAuthorized extends PureComponent {
         title: '到期时间',
         dataIndex: 'timeoutTime',
         key: 'timeoutTime',
+      },
+      {
+        title: '状态',
+        dataIndex: 'authorizationStatus',
+        key: 'authorizationStatus',
+        render: (key,row)=>{
+          return (
+            <div>
+              {
+                key === '1' ? "启用":"禁用"
+              }
+            </div>
+          )
+        }
       },
       {
         title: '创建时间',
