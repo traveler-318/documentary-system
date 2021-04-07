@@ -88,7 +88,7 @@ class UserEdit extends PureComponent {
   };
 
   validatePhone = (rule, value, callback) => {
-    if (!(/^[\d+]{6,13}$/.test(value))) {
+    if (!(/^[\d+]{6,11}$/.test(value))) {
       callback(new Error('请输入正确的手机号格式'));
     }else{
       callback();
