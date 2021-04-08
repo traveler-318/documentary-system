@@ -3,6 +3,7 @@ import { Form, Input, Card, Row, Col, Button, TreeSelect, Select, DatePicker, me
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
+import localforage from 'localforage';
 
 import Panel from '../../../../components/Panel';
 import FormDetailsTitle from '../../../../components/FormDetailsTitle';
@@ -415,8 +416,11 @@ class LogisticsConfiguration extends PureComponent {
                 console.log(param)
                 logisticsPrintRequest(param).then(response=>{
                   if(response.code === 200){
-                    sessionStorage.setItem('imgBase64', response.data)
-                    window.open(`#/order/allOrders/img`);
+                    sessionStorage.setItem('printingType', 'first');
+                    localforage.setItem('imgBase64', response.data).then((res)=>{
+                      console.log(res,"resresresres")
+                      window.open(`#/order/allOrders/img`);
+                    });
                     // 刷新详情数据
                     this.getDetailsData(listID[currentIndex].id);
                   }else{
@@ -459,8 +463,11 @@ class LogisticsConfiguration extends PureComponent {
             logisticsPrintType:listID[currentIndex].logisticsPrintType
           }).then(res=>{
             if(res.code === 200){
-              sessionStorage.setItem('imgBase64', res.data)
-              window.open(`#/order/allOrders/img`);
+              sessionStorage.setItem('printingType', 'first');
+              localforage.setItem('imgBase64', res.data).then((res)=>{
+                console.log(res,"resresresres")
+                window.open(`#/order/allOrders/img`);
+              });
             }else{
               message.error(res.msg);
             }
