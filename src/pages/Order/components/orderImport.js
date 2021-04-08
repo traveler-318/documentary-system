@@ -371,8 +371,14 @@ class OrderImport extends PureComponent {
             </FormItem>
             <FormItem {...formItemLayout} label="产品分类">
               {getFieldDecorator('productType', {
-                initialValue: null,
-              })(
+                    initialValue: null,
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择产品分类',
+                      },
+                    ],
+                  })(
                 <Cascader
                   options={productList}
                   fieldNames={{ label: 'value'}}
