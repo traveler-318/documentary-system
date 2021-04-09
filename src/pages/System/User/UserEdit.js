@@ -69,7 +69,7 @@ class UserEdit extends PureComponent {
               ...values,
               organizationId: values.organizationId.toString(),
               deptId: func.join(values.deptId),
-              roleId: func.join(values.roleId),
+              // roleId: func.join(values.roleId),
               postId: func.join(values.postId),
               birthday: func.format(values.birthday),
             };
