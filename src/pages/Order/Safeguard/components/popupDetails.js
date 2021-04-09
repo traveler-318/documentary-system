@@ -21,6 +21,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import styles from './edit.less';
 import { CITY } from '../../../../utils/city';
+import localforage from 'localforage';
 import {
   orderDetail,
   updateReminds,
@@ -393,8 +394,11 @@ class OrdersEdit extends PureComponent {
           repeatLoading:false
         });
         if(res.code === 200){
-          sessionStorage.setItem('imgBase64', res.data)
-          window.open(`#/order/allOrders/img`);
+          sessionStorage.setItem('printingType', 'Repeat');
+          localforage.setItem('imgBase64', res.data).then((res)=>{
+            console.log(res,"resresresres")
+            window.open(`#/order/allOrders/img`);
+          });
         }else{
           message.error(res.msg);
         }

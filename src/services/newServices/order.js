@@ -341,11 +341,16 @@ export async function addDeliveryTime(params) {
 
 // 订单导入
 export async function importOrder(params) {
-  const { salesman, file, orderType,payAmount,createTime } = params;
+  const { salesman, file, orderType,payAmount,createTime,productName,productType,payPanyId,productTypeId,productId } = params;
   const formData = new FormData();
   formData.append('salesman', salesman);
   formData.append('orderType', orderType);
   formData.append('payAmount', payAmount);
+  formData.append('productName', productName);
+  formData.append('productType', productType);
+  formData.append('payPanyId', payPanyId);
+  formData.append('productTypeId', productTypeId);
+  formData.append('productId', productId);
   if(createTime){
     formData.append('createTime', createTime);
   }

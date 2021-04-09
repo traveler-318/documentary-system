@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Button, Col, Tag, Badge, Form, Input, Row, Select, DatePicker, Divider, Dropdown, Menu, Icon, Modal, message, Tabs, Radio, Cascader } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
+import localforage from 'localforage';
 import { Resizable } from 'react-resizable';
 import { getCookie } from '../../../utils/support';
 import Panel from '../../../components/Panel';
@@ -699,8 +700,11 @@ class AllOrdersList extends PureComponent {
           logisticsPrintType:selectedRows[0].logisticsPrintType
         }).then(res=>{
           if(res.code === 200){
-            sessionStorage.setItem('imgBase64', res.data)
-            window.open(`#/order/allOrders/img`);
+            sessionStorage.setItem('printingType', 'Repeat');
+            localforage.setItem('imgBase64', res.data).then((res)=>{
+              console.log(res,"resresresres")
+              window.open(`#/order/allOrders/img`);
+            });
           }else{
             message.error(res.msg);
           }

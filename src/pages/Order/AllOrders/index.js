@@ -4,6 +4,7 @@ import { Button, Col, Form, Input, Badge, Row, Select, DatePicker, Divider, Drop
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import { Resizable } from 'react-resizable';
+import localforage from 'localforage';
 // 测试未推送
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
@@ -702,8 +703,11 @@ class AllOrdersList extends PureComponent {
             logisticsPrintType:selectedRows[0].logisticsPrintType
           }).then(res=>{
             if(res.code === 200){
-              sessionStorage.setItem('imgBase64', res.data)
-              window.open(`#/order/allOrders/img`);
+              sessionStorage.setItem('printingType', 'Repeat');
+              localforage.setItem('imgBase64', res.data).then((res)=>{
+                console.log(res,"resresresres")
+                window.open(`#/order/allOrders/img`);
+              });
             }else{
               message.error(res.msg);
             }

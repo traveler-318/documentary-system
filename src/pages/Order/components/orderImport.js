@@ -1,5 +1,21 @@
 import React, { PureComponent } from 'react';
-import { Modal, Checkbox, Form, Input, Icon, Select, Col, Button, DatePicker, message, Switch, Upload,Row, Spin } from 'antd';
+import {
+  Modal,
+  Checkbox,
+  Form,
+  Input,
+  Icon,
+  Select,
+  Col,
+  Button,
+  DatePicker,
+  message,
+  Switch,
+  Upload,
+  Row,
+  Spin,
+  Cascader,
+} from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -8,6 +24,7 @@ import axios from 'axios'
 import { tenantMode, clientId, clientSecret } from '../../../defaultSettings';
 import { ORDERTYPPE, exportData} from './data.js';
 import {
+  productTreelist,
   salesmanList,
 } from '../../../services/newServices/order';
 import { getList,getVCode,exportOrder,getPhone, importOrder } from '../../../services/newServices/order'
@@ -32,11 +49,16 @@ class OrderImport extends PureComponent {
       fileList:[],
       createTime:'',
       loading: false,
+      productList:[],
+      payPanyId:null,
+      productTypeId:null,
+      productId:null,
     };
   }
 
   componentWillMount() {
     this.getSalesman()
+    this.getTreeList();
   }
 
   getSalesman = () => {
@@ -127,6 +149,7 @@ class OrderImport extends PureComponent {
 
   handleOrderSave = () => {
     const {form} = this.props;
+    const {payPanyId, productTypeId, productId,}= this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values.file = this.state.fileList[0];
@@ -139,6 +162,13 @@ class OrderImport extends PureComponent {
         }
         if(!values.createTime){
           values.createTime=null
+        }
+        if(values.productType && values.productType != ""){
+          values.productName = values.productType[2];
+          values.productType = `${values.productType[0]}/${values.productType[1]}`;
+          values.payPanyId = payPanyId;
+          values.productTypeId = productTypeId;
+          values.productId = productId;
         }
         if(values.file){
           importOrder(values).then(res=>{
@@ -178,6 +208,13 @@ class OrderImport extends PureComponent {
     })
   }
 
+  getTreeList = () => {
+    productTreelist().then(res=>{
+      console.log(res.data,"productTreelist")
+      this.setState({productList:res.data})
+    })
+  }
+
 
   render() {
     const {
@@ -187,7 +224,7 @@ class OrderImport extends PureComponent {
       handleOrderImportCancel
     } = this.props;
 
-    const {isCovered,salesmanList,fileList,loading} = this.state;
+    const {isCovered,salesmanList,fileList,loading,productList} = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -330,6 +367,40 @@ class OrderImport extends PureComponent {
                   onChange={this.onChange}
                   onOk={this.onOk}
                 />
+              )}
+            </FormItem>
+            <FormItem {...formItemLayout} label="产品分类">
+              {getFieldDecorator('productType', {
+                    initialValue: null,
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择产品分类',
+                      },
+                    ],
+                  })(
+                <Cascader
+                  options={productList}
+                  fieldNames={{ label: 'value'}}
+                  onChange={(value, selectedOptions)=>{
+                    console.log(value, selectedOptions,"产品分类改变")
+                    this.setState({
+                      payPanyId:selectedOptions[0].id,
+                      productTypeId:selectedOptions[1].id,
+                      productId :selectedOptions[2].id,
+                    })
+                    const { form } = this.props;
+                    console.log(form,"1")
+                    console.log(form.getFieldsValue,"2");
+                    const region = form.getFieldsValue();
+                    console.log(region,"3");
+                    // if(!region.payamount || region.payamount === "" || region.payamount === null){
+                    form.setFieldsValue({
+                      payAmount:selectedOptions[2].payamount
+                    })
+                    // }
+                  }}
+                ></Cascader>
               )}
             </FormItem>
             <Form.Item {...formItemLayout} label="模板下载">

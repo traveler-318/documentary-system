@@ -31,6 +31,7 @@ import Edit from './components/edit'
 import moment from 'moment';
 import Img from './components/Img'
 import ParentProduct from './components/parentProduct'
+import AuthorizedCompanyPage from './components/companyPage'
 import styles from './index.less';
 
 
@@ -212,7 +213,9 @@ class ProductManagement extends PureComponent {
       handleEditVisible:false,
       handleImgDetailsVisible:false,
 
+      isCompany:false,//是否打开代理公司
       handleProductVisible:false,//代理产品
+      handleProductParams:{},
     };
   }
 
@@ -330,16 +333,39 @@ class ProductManagement extends PureComponent {
     });
   };
 
-  //打开产品代理弹框
-  openProduct = () => {
+  //打开代理公司
+  openCompany =() =>{
     this.setState({
-      handleProductVisible:true
+      isCompany:true
+    })
+  }
+
+  cancelCompany = () =>{
+    this.setState({
+      isCompany:false
+    })
+  }
+
+  //打开产品代理弹框
+  openProduct = (json) => {
+    console.log(json)
+    this.setState({
+      handleProductVisible:true,
+      handleProductParams:{
+        authorizationTenantId: json.authorizationTenantId,
+        authorizationProductidId:json.authorizationProductidId
+      }
     })
   }
   cancelProduct = () =>{
     this.setState({
       handleProductVisible:false
     })
+  }
+  handleOkProduct = () =>{
+    this.cancelCompany();
+    this.cancelProduct();
+    this.getDataList()
   }
 
  // 新增弹框
@@ -364,7 +390,7 @@ class ProductManagement extends PureComponent {
   renderRightButton = () => {
     return(
         <div>
-          {/*<Button onClick={()=>this.openProduct()}>代理产品</Button>*/}
+          <Button onClick={()=>this.openCompany()}>代理产品</Button>
           <Button type="primary" onClick={()=>this.handleAdd()}>添加</Button>
         </div>
     )
@@ -416,8 +442,10 @@ class ProductManagement extends PureComponent {
       handleEditVisible,
       handleImgDetailsVisible,
       handleProductVisible,
+      handleProductParams,
       details,
       ImgDetails,
+      isCompany,
       handleCancelEdit
     } = this.state;
 
@@ -474,10 +502,13 @@ class ProductManagement extends PureComponent {
 
         {handleProductVisible?(
           <ParentProduct visible={handleProductVisible}
+                         handleProductParams={handleProductParams}
                          handleCancelProduct={this.cancelProduct}
-                         refreshDataList={this.getDataList}
+                         handleOkProduct={this.handleOkProduct}
                          handleImg={(row)=>this.handleImg(row)}/>
         ):''}
+
+        {isCompany ? (<AuthorizedCompanyPage isVisible={isCompany} handleCancelCompany={this.cancelCompany} handleOkCompany={this.openProduct}/>):''}
       </Panel>
     );
   }
