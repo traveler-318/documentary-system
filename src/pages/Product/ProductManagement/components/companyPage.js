@@ -47,6 +47,19 @@ class AuthorizedCompanyPage extends PureComponent {
           title: '授权租户名称',
           dataIndex: 'authorizationTenantName',
           key: 'authorizationTenantName',
+        },
+        {
+          title: '操作',
+          key: 'operation',
+          fixed: 'right',
+          width: 80,
+          render: (res,row) => {
+            return(
+              <div>
+                  <a onClick={()=>this.handleProduct(row)}>产品列表</a>
+              </div>
+            )
+          },
         }
       ],
       params: {
@@ -89,12 +102,12 @@ class AuthorizedCompanyPage extends PureComponent {
     });
   };
 
-  onSelectRow = (rows, key) => {
-    this.setState({
-      selectDataArr: rows,
-      selectedRowKeys: key,
-    });
-  };
+  // onSelectRow = (rows, key) => {
+  //   this.setState({
+  //     selectDataArr: rows,
+  //     selectedRowKeys: key,
+  //   });
+  // };
 
   handleResize = index => (e, { size }) => {
     this.setState(({ columns }) => {
@@ -107,15 +120,9 @@ class AuthorizedCompanyPage extends PureComponent {
     });
   };
 
-  handleSubmit = () => {
-    const { selectedRowKeys,selectDataArr } = this.state;
+  handleProduct = (row) => {
     const { handleOkCompany } = this.props;
-
-    if (selectedRowKeys.length != 1) {
-      return message.info('请选择一条数据');
-    }
-
-    handleOkCompany(selectDataArr[0]);
+    handleOkCompany(row);
   };
 
   render() {
@@ -148,10 +155,7 @@ class AuthorizedCompanyPage extends PureComponent {
         footer={[
           <Button key="back" onClick={handleCancelCompany}>
             取消
-          </Button>,
-          <Button key="submit" type="primary" onClick={(e) => this.handleSubmit(e)}>
-            确定
-          </Button>,
+          </Button>
         ]}
         onCancel={handleCancelCompany}
       >
@@ -159,8 +163,9 @@ class AuthorizedCompanyPage extends PureComponent {
           form={form}
           data={data}
           counterElection={false}
-          selectedKey={selectedRowKeys}
-          onSelectRow={this.onSelectRow}
+          // selectedKey={selectedRowKeys}
+          multipleChoice={true}
+          // onSelectRow={this.onSelectRow}
           loading={loading}
           columns={columns}
           scroll={{ x: 900 }}
