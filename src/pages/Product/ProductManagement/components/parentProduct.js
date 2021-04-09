@@ -56,12 +56,8 @@ class ParentProduct extends PureComponent {
   }
 
   onOk = () => {
-    console.log(this.state.selectedRows)
-    const {id,productTypeId} = this.state.selectedRows[0];
-    getProductAgentsave({
-      id:id,
-      productTypeId:productTypeId
-    }).then(res=>{
+    const json = this.state.selectedRows[0];
+    getProductAgentsave(json).then(res=>{
       if(res.code  == 200){
         this.props.handleOkProduct();
       }else {
