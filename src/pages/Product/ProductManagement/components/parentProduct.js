@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Modal, Form,  Button,message,Table } from 'antd';
 import { connect } from 'dva';
-import {getProductAgentlist,getProductAgentsave} from '../../../../services/newServices/product';
+import {getProductAgentlist,matchinglist,getProductAgentsave} from '../../../../services/newServices/product';
 import moment from 'moment';
 
 
@@ -21,6 +21,7 @@ class ParentProduct extends PureComponent {
         current:1
       },
       total:0,
+      chooseProducts:[],
       productList:[],
       selectedRowKeys: [],
       selectedRows:[],
@@ -33,9 +34,22 @@ class ParentProduct extends PureComponent {
     this.setState({
       model:visible
     })
+    this.getChooseDataList();
     this.getDataList();
   }
 
+  getChooseDataList =() =>{
+    const { handleProductParams } = this.props;
+    matchinglist({
+      authorizationTenantId:handleProductParams.authorizationTenantId
+    }).then(res=>{
+      if(res.code  == 200){
+        this.setState({
+          chooseProducts:res.data
+        })
+      }
+    })
+  }
   getDataList = () => {
     const {params} = this.state;
     const { handleProductParams } = this.props;
@@ -179,13 +193,15 @@ class ParentProduct extends PureComponent {
     ];
 
     const {
-      model,productList,selectedRowKeys,params,total
+      model,productList,selectedRowKeys,params,total,chooseProducts
     } = this.state;
 
     const rowSelection = {
       type:'radio',
-      selectedRowKeys,
       onChange: this.onSelectChange,
+      getCheckboxProps: record => ({
+        disabled: chooseProducts.indexOf(record.id)>=0, // Column configuration not to be checked
+      }),
     };
 
 
