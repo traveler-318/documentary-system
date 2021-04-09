@@ -85,3 +85,10 @@ export async function detail(params) {
   });
 }
 
+//获取代理公司列表
+export async function authorizedcompanylist(params) {
+  return request(`/api/external/authorized/authorizedcompanylist`, {
+    method: 'POST',
+    body: params,
+  });
+}

@@ -38,7 +38,9 @@ class ParentProduct extends PureComponent {
 
   getDataList = () => {
     const {params} = this.state;
-    getProductAgentlist(params).then(res=>{
+    const { handleProductParams } = this.props;
+    let json = {...params,...handleProductParams};
+    getProductAgentlist(json).then(res=>{
       if(res.code  == 200){
         this.setState({
           productList:res.data.records,
@@ -61,7 +63,7 @@ class ParentProduct extends PureComponent {
       productTypeId:productTypeId
     }).then(res=>{
       if(res.code  == 200){
-        this.props.threfreshDataList();
+        this.props.handleOkProduct();
       }else {
         message.error(res.msg);
       }
