@@ -363,6 +363,7 @@ class ProductManagement extends PureComponent {
     })
   }
   handleOkProduct = () =>{
+    this.cancelCompany();
     this.cancelProduct();
     this.getDataList()
   }
