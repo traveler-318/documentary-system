@@ -29,10 +29,10 @@ export default {
   'menu.orders.afterSaleOrder': '售后订单',
   // 'menu.order.orderList': '全部订单',
 
-  'menu.branchManage':'分公司管理',
-  'menu.branchManage.branchOffice':'分公司管理',
-  'menu.branchManage.branchOrder':'分公司订单',
-  'menu.branchManage.authorized':'分公司授权',
+  'menu.branchManage':'渠道商管理',
+  'menu.branchManage.branchOffice':'渠道商管理',
+  'menu.branchManage.branchOrder':'渠道商订单',
+  'menu.branchManage.authorized':'渠道商授权',
 
 
   'menu.logistics': '物流配置',
@@ -72,9 +72,9 @@ export default {
   'menu.authority.role': '角色管理',
   'menu.authority.data_scope': '数据权限',
   'menu.authority.api_scope': '接口权限',
+  'menu.authority.authorized':'授权管理',
   'menu.system': '系统管理',
 
-  'menu.system.authorized':'授权管理',
   'menu.system.user': '用户管理',
   'menu.system.dept': '公司管理',
   'menu.system.organization': '组织管理',

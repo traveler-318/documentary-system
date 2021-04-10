@@ -204,6 +204,8 @@ export default [
       {
         path: '/authority',
         routes: [
+          { path: '/authority/authorized', component: './System/Authorized/index' },
+          { path: '/authority/authorized/add', component: './System/Authorized/add' },
           {
             path: '/authority/role',
             routes: [
@@ -231,8 +233,6 @@ export default [
       {
         path: '/system',
         routes: [
-          { path: '/system/authorized', component: './System/Authorized/index' },
-          { path: '/system/authorized/add', component: './System/Authorized/add' },
           {
             path: '/system/user',
             routes: [

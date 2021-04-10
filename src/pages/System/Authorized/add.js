@@ -15,7 +15,7 @@ import func from '@/utils/Func';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
-let backUrl = '/system/authorized';
+let backUrl = '/authority/authorized';
 
 @connect(({ user, loading }) => ({
   user,

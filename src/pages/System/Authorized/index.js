@@ -79,7 +79,7 @@ class SystemAuthorized extends PureComponent {
   };
   //创建授权
   handleAdd = () =>{
-    router.push(`/system/authorized/add`);
+    router.push(`/authority/authorized/add`);
   }
 
   //查看secrent
