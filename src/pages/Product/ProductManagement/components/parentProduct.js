@@ -207,7 +207,7 @@ class ParentProduct extends PureComponent {
 
     return (
         <Modal
-          title="代理产品"
+          title="供应商产品列表"
           visible={model}
           maskClosable={false}
           width='80%'

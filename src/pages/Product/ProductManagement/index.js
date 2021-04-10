@@ -28,6 +28,7 @@ import {
 } from '../../../services/newServices/product';
 import Add from './components/add'
 import Edit from './components/edit'
+import EditAddress from './components/editAddress'
 import moment from 'moment';
 import Img from './components/Img'
 import ParentProduct from './components/parentProduct'
@@ -192,7 +193,7 @@ class ProductManagement extends PureComponent {
             return(
               <div>
                 {/* <Divider type="vertical" /> */}
-                {row.agentProducts == 1 ?'':(
+                {row.agentProducts == 1 ?<a onClick={()=>this.handleEditAddress(row)}>修改地址</a>:(
                   <a onClick={()=>this.handleEdit(row)}>修改</a>
                 )}
 
@@ -211,6 +212,7 @@ class ProductManagement extends PureComponent {
       handleAddVisible:false,
       details:{},
       handleEditVisible:false,
+      handleEditAddressVisible:false,
       handleImgDetailsVisible:false,
 
       isCompany:false,//是否打开代理公司
@@ -319,6 +321,20 @@ class ProductManagement extends PureComponent {
       handleEditVisible:false
     })
   }
+
+  handleEditAddress = (row) => {
+    this.setState({
+      handleEditAddressVisible:true,
+      details:row
+    })
+  }
+
+  handleCancelEditAddress = () => {
+    this.setState({
+      handleEditAddressVisible:false
+    })
+  }
+
 
   onSelectRow = (rows,key) => {
     console.log(rows,"rows")
@@ -440,6 +456,7 @@ class ProductManagement extends PureComponent {
       data,
       loading,
       handleEditVisible,
+      handleEditAddressVisible,
       handleImgDetailsVisible,
       handleProductVisible,
       handleProductParams,
@@ -491,6 +508,15 @@ class ProductManagement extends PureComponent {
             handleCancelEdit={this.handleCancelEdit}
           />
         ):""}
+        {/* 修改地址 */}
+        {handleEditAddressVisible?(
+          <EditAddress
+            handleEditVisible={handleEditAddressVisible}
+            details={details}
+            handleCancelEdit={this.handleCancelEditAddress}
+          />
+        ):""}
+
         {/* 查看图片 */}
         {handleImgDetailsVisible?(
           <Img
