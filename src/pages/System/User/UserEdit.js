@@ -317,7 +317,7 @@ class UserEdit extends PureComponent {
                         message: '请选择所属角色',
                       },
                     ],
-                    initialValue: func.split(detail.roleId),
+                    initialValue: detail.roleId,
                   })(
                     <TreeSelect
                       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
