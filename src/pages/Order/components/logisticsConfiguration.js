@@ -449,6 +449,7 @@ class LogisticsConfiguration extends PureComponent {
 
     if(!detail.taskId){
        form.validateFieldsAndScroll((err, values) => {
+
          if(!values.logisticsCompany){
            values.logisticsCompany=null
          }
@@ -493,6 +494,9 @@ class LogisticsConfiguration extends PureComponent {
                     "out_order_no": listID[currentIndex].outOrderNo,
                     "id":listID[currentIndex].id,
                     'salesman':listID[currentIndex].salesman,
+                    'productCoding':values.productCoding,
+                    'orderTenantId':detail.tenantId,
+                    'orderDeptId':detail.deptId
                   }
                 )
               // }
