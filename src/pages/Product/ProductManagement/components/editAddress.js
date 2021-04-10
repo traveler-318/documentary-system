@@ -115,12 +115,12 @@ class EditAddress extends PureComponent {
                 {getFieldDecorator('consignorPhone', {
                   initialValue: details.consignorPhone,
                   rules: [
+                    // {
+                    //   required: true,
+                    //   message: '请输入发货人电话',
+                    // },
                     {
-                      required: true,
-                      message: '请输入发货人电话',
-                    },
-                    {
-                      pattern: /^[\d+]{6,13}$/,
+                      pattern: /^[\d+]{11,12}$/,
                       message: '请输入正确的电话'
                     }
                     // ,
