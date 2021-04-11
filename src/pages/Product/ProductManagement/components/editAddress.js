@@ -44,8 +44,8 @@ class EditAddress extends PureComponent {
       if (!err) {
 
         if(
-          (values.consignor && values.consignorPhone && values.deliveryAddress) || 
-          (!values.consignor && !values.consignorPhone && !values.deliveryAddress)
+          (values.consignor && values.consignorPhone) || 
+          (!values.consignor && !values.consignorPhone)
           ){
           const params = {
             ...values,
@@ -76,14 +76,14 @@ class EditAddress extends PureComponent {
               },
             });
           }
-          if(!values.deliveryAddress){
-            form.setFields({
-              deliveryAddress: {
-                value: values.deliveryAddress,
-                errors: [new Error('请输入发货地址')],
-              },
-            });
-          }
+          // if(!values.deliveryAddress){
+          //   form.setFields({
+          //     deliveryAddress: {
+          //       value: values.deliveryAddress,
+          //       errors: [new Error('请输入发货地址')],
+          //     },
+          //   });
+          // }
         }
       }
     });
@@ -147,11 +147,11 @@ class EditAddress extends PureComponent {
                   ],
                 })(<Input placeholder="请输入发货人电话" />)}
               </FormItem>
-              <FormItem {...formAllItemLayout} label="发货地址">
+              {/* <FormItem {...formAllItemLayout} label="发货地址">
                 {getFieldDecorator('deliveryAddress', {
                   initialValue: details.deliveryAddress,
                 })(<Input placeholder="请输入发货地址" />)}
-              </FormItem>
+              </FormItem> */}
 
             </Form>
           </div>
