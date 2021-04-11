@@ -43,9 +43,9 @@ class QueryParamPage extends PureComponent {
     branchTree().then(res=>{
       this.setState({branchDatas:res.data})
       if(res.data && res.data.length>0){
-        form.setFieldsValue({
-          tenantId: res.data[0].tenantId
-        });
+        // form.setFieldsValue({
+        //   tenantId: res.data[0].tenantId
+        // });
         this.changeGroup(res.data[0].tenantId);
       }
     })
