@@ -164,6 +164,10 @@ class SystemAuthorized extends PureComponent {
 
   //删除
   handleDelete = (row) => {
+    if(row.authorizationStatus === 1){
+      message.info("此数据未禁用，禁止删除")
+      return false;
+    }
     const id = row.id;
     Modal.confirm({
       title: '删除确认',
@@ -259,14 +263,14 @@ class SystemAuthorized extends PureComponent {
             <div>
               <a onClick={()=>this.handleViewSecret(row)}>查看secret</a>
               <Divider type="vertical" />
-              <a onClick={()=>this.handleChangeStatus(row)}>{row.authorizationStatus == '1' ? '禁用':'启用'}</a>
-              
+              <a onClick={()=>this.handleChangeStatus(row)}>{row.authorizationStatus == 1 ? '禁用':'启用'}</a>
+{/*               
               {row.authorizationStatus != 1 ? (
-                <>
+                <> */}
                   <Divider type="vertical" />
                   <a onClick={()=>this.handleDelete(row)}>删除</a>
-                </>
-              ):""}
+                {/* </>
+              ):""} */}
               
               {/*<Divider type="vertical" />*/}
               {/*<a onClick={()=>this.handleSMS(row)}>短信</a>*/}
