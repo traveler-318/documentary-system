@@ -462,102 +462,107 @@ class LogisticsConfiguration extends PureComponent {
          if (!err) {
           console.log(localPrintStatus,"先保存数据")
 
-          // 先保存数据
-          this.saveData(values,()=>{
+          // // 先保存数据
+          // this.saveData(values,()=>{
+          //   // 获取物流配置
+          //
+          // })
+
             // 获取物流配置
-            this.getDefaultData((res)=>{
-              console.log(res,"获取物流配置成功");
-              // 禁止编辑
-              this.setState({
-                disabledType:true
-              })
-              res.senderItem.printAddr = res.senderItem.administrativeAreas +""+ res.senderItem.printAddr;
-              // senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem
-              let param = {
-                recMans: [],
-                ...res.goodsItem,
-                ...res.printTemplateItem,
-                ...res.additionalItem,
-                sendMan:{
-                  ...res.senderItem,
-                },
-                subscribe:values.shipmentRemind, //物流订阅
-                shipmentRemind:values.smsConfirmation, //发货提醒
-                ...res.authorizationItem
-              };
-              // for(let i=0; i<listID.length; i++){
-                param.recMans.push(
-                  {
-                    "mobile": listID[currentIndex].userPhone,
-                    "name": listID[currentIndex].userName,
-                    "printAddr": listID[currentIndex].userAddress,
-                    "out_order_no": listID[currentIndex].outOrderNo,
-                    "id":listID[currentIndex].id,
-                    'salesman':listID[currentIndex].salesman,
-                    'productCoding':values.productCoding,
-                    'orderTenantId':detail.tenantId,
-                    'orderDeptId':detail.deptId
-                  }
-                )
-              // }
+           this.getDefaultData((res)=>{
+             console.log(res,"获取物流配置成功");
+             // 禁止编辑
+             this.setState({
+               disabledType:true
+             })
+             res.senderItem.printAddr = res.senderItem.administrativeAreas +""+ res.senderItem.printAddr;
+             // senderItem, printTemplateItem, authorizationItem, goodsItem, additionalItem
+             let param = {
+               recMans: [],
+               ...res.goodsItem,
+               ...res.printTemplateItem,
+               ...res.additionalItem,
+               sendMan:{
+                 ...res.senderItem,
+               },
+               subscribe:values.shipmentRemind, //物流订阅
+               shipmentRemind:values.smsConfirmation, //发货提醒
+               ...res.authorizationItem
+             };
+             // for(let i=0; i<listID.length; i++){
+             param.recMans.push(
+               {
+                 "mobile": listID[currentIndex].userPhone,
+                 "name": listID[currentIndex].userName,
+                 "printAddr": listID[currentIndex].userAddress,
+                 "out_order_no": listID[currentIndex].outOrderNo,
+                 "id":listID[currentIndex].id,
+                 'salesman':listID[currentIndex].salesman,
+                 'productCoding':values.productCoding,
+                 'orderTenantId':detail.tenantId,
+                 'orderDeptId':detail.deptId
+               }
+             )
+             // }
 
-              if((/[\u4E00-\u9FA5]/g.test(param.tempid))){
-                this.setState({
-                  loading:false
-                });
-                message.error('打印模板不正确,请刷新或者联系售后处理');
-                return false;
-              }
+             if((/[\u4E00-\u9FA5]/g.test(param.tempid))){
+               this.setState({
+                 loading:false
+               });
+               message.error('打印模板不正确,请刷新或者联系售后处理');
+               return false;
+             }
 
-              if(localPrintStatus === 1){
-                param.localPrintStatus=1;
-                const { dispatch } = this.props;
-                console.log(param)
-                logisticsPrintRequest(param).then(response=>{
-                  this.setState({
-                    loading:false
-                  })
-                  if(response.code === 200){
-                    sessionStorage.setItem('printingType', 'first');
-                    localforage.setItem('imgBase64', response.data).then((res)=>{
-                      console.log(res,"resresresres")
-                      window.open(`#/order/allOrders/img`);
-                    });
-                    
-                    // 刷新详情数据
-                    if(currentIndex<listID.length-1){
-                      this.setState({
-                        currentIndex:currentIndex+1
-                      },()=>{
-                        this.getDetailsData(listID[currentIndex+1].id);
-                      });
-                    }
-                  }else{
-                    message.error(response.msg);
-                    this.setState({
-                      disabledType:false
-                    });
-                  }
-                })
-              }else {
-                param.localPrintStatus=0;
-                console.log(param)
-                logisticsPrintRequest(param).then(response=>{
-                  this.setState({
-                    loading:false
-                  })
-                  if(response.code === 200){
-                    this.saveSuccess(response.msg);
-                  }else{
-                    message.error(response.msg);
-                    this.setState({
-                      disabledType:false
-                    });
-                  }
-                })
-              }
-            });
-          })
+             if(localPrintStatus === 1){
+               param.localPrintStatus=1;
+               const { dispatch } = this.props;
+               console.log(param)
+               logisticsPrintRequest(param).then(response=>{
+                 this.setState({
+                   loading:false
+                 })
+                 if(response.code === 200){
+                   sessionStorage.setItem('printingType', 'first');
+                   localforage.setItem('imgBase64', response.data).then((res)=>{
+                     console.log(res,"resresresres")
+                     window.open(`#/order/allOrders/img`);
+                   });
+
+                   // 刷新详情数据
+                   if(currentIndex<listID.length-1){
+                     this.setState({
+                       currentIndex:currentIndex+1
+                     },()=>{
+                       this.getDetailsData(listID[currentIndex+1].id);
+                     });
+                   }
+                 }else{
+                   message.error(response.msg);
+                   this.setState({
+                     disabledType:false
+                   });
+                 }
+               })
+             }else {
+               param.localPrintStatus=0;
+               console.log(param)
+               logisticsPrintRequest(param).then(response=>{
+                 this.setState({
+                   loading:false
+                 })
+                 if(response.code === 200){
+                   this.saveSuccess(response.msg);
+                 }else{
+                   message.error(response.msg);
+                   this.setState({
+                     disabledType:false
+                   });
+                 }
+               })
+             }
+           });
+
+
         }else{
           this.setState({
             loading:false
@@ -716,7 +721,7 @@ class LogisticsConfiguration extends PureComponent {
             保存
           </Button>
           <Button style={{marginRight:10}} disabled={handlePrintingClick} type="primary" onClick={this.handlePrinting} loading={loading}>
-            保存并打印
+            首次打印
           </Button>
           <Button icon="reload" onClick={this.handleSubmit} loading={loading}>
             重置
