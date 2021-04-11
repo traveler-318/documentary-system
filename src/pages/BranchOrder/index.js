@@ -522,7 +522,7 @@ class BranchOffice extends PureComponent {
       type: `globalParameters/setListId`,
       payload: data,
     });
-    router.push('/order/executive/logisticsConfiguration');
+    router.push('/branchManage/branchOrder/logisticsConfiguration');
 
   }
 

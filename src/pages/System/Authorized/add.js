@@ -132,7 +132,7 @@ class SystemAuthorizedAdd extends PureComponent {
               {getFieldDecorator('authorizationTenantId', {
                 rules: [
                   // { required: true, max:6, min:6, message: '请输入授权公司ID' },
-                  { validator: this.lengthVerification }
+                  { required: true, validator: this.lengthVerification }
                 ],
               })(
                 <Input placeholder={'请输入授权公司ID'}/>,

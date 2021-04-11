@@ -135,6 +135,8 @@ class LogisticsConfiguration extends PureComponent {
       backUrl = "/order/afterSaleOrder?type=details"
     }else if(window.location.hash.indexOf("executive") != -1){
       backUrl = "/order/executive?type=details"
+    }else if(window.location.hash.indexOf("branchManage") != -1){
+      backUrl = "/branchManage/branchOrder"
     }
 
   }

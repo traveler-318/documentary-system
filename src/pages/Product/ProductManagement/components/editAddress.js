@@ -42,40 +42,53 @@ class EditAddress extends PureComponent {
     form.validateFieldsAndScroll((err, values) => {
       values.deptId = getCookie("dept_id");
       if (!err) {
-        const params = {
-          ...values,
-          deptId:getCookie("dept_id"),
-          id:details.id,
-        };
-        console.log(params)
-        getProductattributeUpdate(params).then(res=>{
-          if(res.code === 200){
-            message.success(res.msg);
-            router.push('/product/productManagement');
+
+        if(
+          (values.consignor && values.consignorPhone && values.deliveryAddress) || 
+          (!values.consignor && !values.consignorPhone && !values.deliveryAddress)
+          ){
+          const params = {
+            ...values,
+            deptId:getCookie("dept_id"),
+            id:details.id,
+          };
+          console.log(params)
+          getProductattributeUpdate(params).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              router.push('/product/productManagement');
+            }
+          })
+        }else{
+          if(!values.consignor){
+            form.setFields({
+              consignor: {
+                value: values.consignor,
+                errors: [new Error('请输入发货人')],
+              },
+            });
           }
-        })
+          if(!values.consignorPhone){
+            form.setFields({
+              consignorPhone: {
+                value: values.consignorPhone,
+                errors: [new Error('请输入发货人电话')],
+              },
+            });
+          }
+          if(!values.deliveryAddress){
+            form.setFields({
+              deliveryAddress: {
+                value: values.deliveryAddress,
+                errors: [new Error('请输入发货地址')],
+              },
+            });
+          }
+        }
       }
     });
   };
 
-  validator = (rule, value, callback) => {
-    const { form } = this.props;
-    const consignorPhone= form.getFieldValue('consignorPhone')
-    if(consignorPhone){
-      if (!value) {
-        callback('不能为空');
-      } else {
-        callback();
-      }
-    }else{
-      if (value) {
-        callback('发货人电话为空时不能输入');
-      } else {
-        callback();
-      }
-    }
-
-  };
   render() {
 
     const {
@@ -121,41 +134,22 @@ class EditAddress extends PureComponent {
               <FormItem {...formAllItemLayout} label="发货人">
                 {getFieldDecorator('consignor', {
                   initialValue: details.consignor,
-                  rules: [
-                    {
-                      validator:this.validator
-                    }
-                  ],
                 })(<Input placeholder="请输入发货人" />)}
               </FormItem>
               <FormItem {...formAllItemLayout} label="发货人电话">
                 {getFieldDecorator('consignorPhone', {
                   initialValue: details.consignorPhone,
                   rules: [
-                    // {
-                    //   required: true,
-                    //   message: '请输入发货人电话',
-                    // },
                     {
                       pattern: /^[\d+]{11,12}$/,
                       message: '请输入正确的电话'
-                    }
-                    // ,
-                    // {
-                    //   pattern: /^1(3[0-9]|4[01456879]|5[0-3,5-9]|6[2567]|7[0-8]|8[0-9]|9[0-3,5-9])\d{8}$/,
-                    //   message: '请输入正确的手机号'
-                    // }
+                    },
                   ],
                 })(<Input placeholder="请输入发货人电话" />)}
               </FormItem>
               <FormItem {...formAllItemLayout} label="发货地址">
                 {getFieldDecorator('deliveryAddress', {
                   initialValue: details.deliveryAddress,
-                  rules: [
-                    {
-                      validator:this.validator
-                    },
-                  ],
                 })(<Input placeholder="请输入发货地址" />)}
               </FormItem>
 
