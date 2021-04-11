@@ -58,6 +58,24 @@ class EditAddress extends PureComponent {
     });
   };
 
+  validator = (rule, value, callback) => {
+    const { form } = this.props;
+    const consignorPhone= form.getFieldValue('consignorPhone')
+    if(consignorPhone){
+      if (!value) {
+        callback('不能为空');
+      } else {
+        callback();
+      }
+    }else{
+      if (value) {
+        callback('发货人电话为空时不能输入');
+      } else {
+        callback();
+      }
+    }
+
+  };
   render() {
 
     const {
@@ -105,9 +123,8 @@ class EditAddress extends PureComponent {
                   initialValue: details.consignor,
                   rules: [
                     {
-                      required: true,
-                      message: '请输入发货人',
-                    },
+                      validator:this.validator
+                    }
                   ],
                 })(<Input placeholder="请输入发货人" />)}
               </FormItem>
@@ -136,8 +153,7 @@ class EditAddress extends PureComponent {
                   initialValue: details.deliveryAddress,
                   rules: [
                     {
-                      required: true,
-                      message: '请输入发货地址',
+                      validator:this.validator
                     },
                   ],
                 })(<Input placeholder="请输入发货地址" />)}

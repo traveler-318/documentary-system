@@ -33,13 +33,13 @@ class AuthorizedCompanyPage extends PureComponent {
           },
         },
         {
-          title: '授权租户ID',
+          title: '供应商ID',
           dataIndex: 'authorizationTenantId',
           key: 'authorizationTenantId',
           width: 160,
         },
         {
-          title: '授权租户名称',
+          title: '供应商名称',
           dataIndex: 'authorizationTenantName',
           key: 'authorizationTenantName',
         },
