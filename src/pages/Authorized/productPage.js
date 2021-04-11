@@ -190,22 +190,35 @@ class AuthorizedProductPage extends PureComponent {
 
   handleSubmit = () => {
     const { selectedRowKeys } = this.state;
-    const { handleOkProduct } = this.props;
-
+    console.log(selectedRowKeys,"selectedRowKeysselectedRowKeysselectedRowKeys")
     if (selectedRowKeys.length <= 0) {
-      return message.info('请至少选择一条数据');
+      Modal.confirm({
+        title: '提示',
+        content: '提示当前操作会关闭渠道商的所有产品代理,确认是否操作!',
+        okText: '确定',
+        okType: 'info',
+        cancelText: '取消',
+        onOk:() => {
+          this.saveData(selectedRowKeys);
+        },
+        onCancel() {},
+      });
+    }else{
+      this.saveData(selectedRowKeys);
     }
+  };
 
+  saveData = (selectedRowKeys) => {
+    const { handleOkProduct } = this.props;
     this.setState({
       submitLoading:true
     })
     handleOkProduct(selectedRowKeys,()=>{
-      console.log(this)
       this.setState({
         submitLoading:false
       })
     });
-  };
+  }
 
   render() {
     const {

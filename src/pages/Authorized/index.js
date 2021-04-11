@@ -109,7 +109,7 @@ class Authorized extends PureComponent {
     const { selectedRows } = this.state;
     superiorupdate({
       id: selectedRows[0].id,
-      authorizationProductidId: ids.join(','),
+      authorizationProductidId: ids.length <= 0 ? null : ids.join(','),
     }).then(res => {
       if (res && res.code == 200) {
         message.info(res.msg);

@@ -170,10 +170,11 @@ class SystemAuthorized extends PureComponent {
       okText: '确定',
       okType: 'danger',
       cancelText: '取消',
-      onOk() {
+      onOk:() => {
         subordinateRemove({ ids: id }).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
+            this.getDataList();
           } else {
             message.error(resp.msg || '删除失败');
           }
