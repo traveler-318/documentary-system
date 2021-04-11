@@ -24,6 +24,7 @@ import { tenantMode } from '../../../defaultSettings';
 
 const FormItem = Form.Item;
 
+
 @connect(({ user, loading }) => ({
   user,
   submitting: loading.effects['user/submit'],
