@@ -16,6 +16,7 @@ import { getCookie } from '../../../utils/support';
 import router from 'umi/router';
 import SystemAuthorizedVerification from './SystemAuthorizedVerification';
 import { remove } from '@/services/region';
+import styles from './index.less';
 
 let ViewData = {};
 @connect(({ globalParameters }) => ({
@@ -235,15 +236,13 @@ class SystemAuthorized extends PureComponent {
         title: '状态',
         dataIndex: 'authorizationStatus',
         key: 'authorizationStatus',
-        render: (key,row)=>{
-          return (
+        render: (key) => {
+          return(
             <div>
-              {
-                key === 1 ? "启用":"禁用"
-              }
+              <span className={styles.statue} style={key === 1 ? {background:"#67C23A"}:{background:"#dcdfe6"}}></span>{key === 1 ? "启用":"禁用"}
             </div>
           )
-        }
+        },
       },
       {
         title: '创建时间',
@@ -261,8 +260,14 @@ class SystemAuthorized extends PureComponent {
               <a onClick={()=>this.handleViewSecret(row)}>查看secret</a>
               <Divider type="vertical" />
               <a onClick={()=>this.handleChangeStatus(row)}>{row.authorizationStatus == '1' ? '禁用':'启用'}</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleDelete(row)}>删除</a>
+              
+              {row.authorizationStatus != 1 ? (
+                <>
+                  <Divider type="vertical" />
+                  <a onClick={()=>this.handleDelete(row)}>删除</a>
+                </>
+              ):""}
+              
               {/*<Divider type="vertical" />*/}
               {/*<a onClick={()=>this.handleSMS(row)}>短信</a>*/}
             </div>
