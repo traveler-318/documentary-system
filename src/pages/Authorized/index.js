@@ -177,11 +177,11 @@ class Authorized extends PureComponent {
       //   }
       // },
       {
-        title: '绑定状态',
-        dataIndex: 'bindingState',
-        key: 'bindingState',
+        title: '授权状态',
+        dataIndex: 'authorizationStatus',
+        key: 'authorizationStatus',
         render: (key, row) => {
-          return key === '0' ? (<Tag color="orange">已断开</Tag>) : <Tag color="green">已绑定</Tag>;
+          return key === 1 ? (<Tag color="green">已授权</Tag>) : <Tag color="orange">未授权</Tag>;
         },
       },
       {
@@ -194,23 +194,23 @@ class Authorized extends PureComponent {
         dataIndex: 'createTime',
         key: 'createTime',
       },
-      {
-        title: '操作',
-        key: 'operation',
-        fixed: 'right',
-        width: 250,
-        render: (text, row) => {
-          return (
-            <div>
-              <a onClick={() => this.handleDetails(row)}>查看</a>
-              {/*<Divider type="vertical" />*/}
-              {/*<a onClick={()=>this.handleJournal(row)}>日志</a>*/}
-              {/*<Divider type="vertical" />*/}
-              {/*<a onClick={()=>this.handleSMS(row)}>短信</a>*/}
-            </div>
-          );
-        },
-      },
+      // {
+      //   title: '操作',
+      //   key: 'operation',
+      //   fixed: 'right',
+      //   width: 250,
+      //   render: (text, row) => {
+      //     return (
+      //       <div>
+      //         <a onClick={() => this.handleDetails(row)}>查看</a>
+      //         {/*<Divider type="vertical" />*/}
+      //         {/*<a onClick={()=>this.handleJournal(row)}>日志</a>*/}
+      //         {/*<Divider type="vertical" />*/}
+      //         {/*<a onClick={()=>this.handleSMS(row)}>短信</a>*/}
+      //       </div>
+      //     );
+      //   },
+      // },
     ];
 
     return (

@@ -238,7 +238,7 @@ class SystemAuthorized extends PureComponent {
           return (
             <div>
               {
-                key === '1' ? "启用":"禁用"
+                key === 1 ? "启用":"禁用"
               }
             </div>
           )

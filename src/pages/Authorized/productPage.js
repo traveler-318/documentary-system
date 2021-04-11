@@ -160,7 +160,7 @@ class AuthorizedProductPage extends PureComponent {
   onSelectRow = (rows, key) => {
     this.setState({
       selectDataArr: rows,
-      selectedRowKeys: key,
+      selectedRowKeys: rows.map(item=>item.id),
     });
   };
 
