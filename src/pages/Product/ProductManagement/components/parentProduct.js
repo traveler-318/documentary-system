@@ -70,6 +70,10 @@ class ParentProduct extends PureComponent {
   }
 
   onOk = () => {
+    if(this.state.selectedRows.length <=0 ){
+      message.info("请至少选择一条数据");
+      return false;
+    }
     const json = this.state.selectedRows[0];
     getProductAgentsave(json).then(res=>{
       if(res.code  == 200){
