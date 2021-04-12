@@ -30,7 +30,7 @@ class UserView extends PureComponent {
         params: { id },
       },
     } = this.props;
-    router.push(`/system/user/edit/${id}`);
+    router.push(`/system/user/edit/${id}?_K=${Date.parse(new Date())}`);
   };
 
   render() {

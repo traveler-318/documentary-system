@@ -140,6 +140,7 @@ export default class Grid extends PureComponent {
       return;
     }
     if (alias === 'edit') {
+
       if (keys.length <= 0) {
         message.warn('请先选择一条数据!');
         return;
@@ -148,7 +149,7 @@ export default class Grid extends PureComponent {
         message.warn('只能选择一条数据!');
         return;
       }
-      router.push(`${path}/${keys[0]}`);
+      router.push(`${path}/${keys[0]}?_K=${Date.parse(new Date())}`);
       return;
     }
     if (alias === 'view') {
