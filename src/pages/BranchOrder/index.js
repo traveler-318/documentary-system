@@ -65,7 +65,7 @@ import styles from './index.less';
 import Export from './components/export'
 // import TransferCustomers from './components/TransferCustomers'
 // import LogisticsConfig from './components/LogisticsConfig'
-import PopupDetails from '../Order/components/popupDetails'
+import PopupDetails from './components/popupDetails'
 //
 // import ImportData from '../components/ImportData';
 // import Excel from '../components/excel';
@@ -522,7 +522,7 @@ class BranchOffice extends PureComponent {
       type: `globalParameters/setListId`,
       payload: data,
     });
-    router.push('/order/executive/logisticsConfiguration');
+    router.push('/branchManage/branchOrder/logisticsConfiguration');
 
   }
 

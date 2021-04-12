@@ -199,11 +199,14 @@ export default [
           { path: '/branchManage/branchOrder', component: './BranchOrder/index' },
           { path: '/branchManage/authorized', component: './Authorized/index' },
           { path: '/branchManage/authorized/add', component: './Authorized/add' },
+          { path: '/branchManage/branchOrder/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
         ],
       },
       {
         path: '/authority',
         routes: [
+          { path: '/authority/authorized', component: './System/Authorized/index' },
+          { path: '/authority/authorized/add', component: './System/Authorized/add' },
           {
             path: '/authority/role',
             routes: [
@@ -231,8 +234,6 @@ export default [
       {
         path: '/system',
         routes: [
-          { path: '/system/authorized', component: './System/Authorized/index' },
-          { path: '/system/authorized/add', component: './System/Authorized/add' },
           {
             path: '/system/user',
             routes: [

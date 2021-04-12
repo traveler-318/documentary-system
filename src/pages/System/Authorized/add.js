@@ -15,7 +15,7 @@ import func from '@/utils/Func';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
-let backUrl = '/system/authorized';
+let backUrl = '/authority/authorized';
 
 @connect(({ user, loading }) => ({
   user,
@@ -31,8 +31,9 @@ class SystemAuthorizedAdd extends PureComponent {
         authorizationModule: null,	//授权模块 订单 其它 等等
         authorizationOperationType: null,	//下级往上授权类型 增删改查
         authorizationTenantId: null,//	授权租户id
+        authorizationTenantName:null,
         remark: null,//	备注
-        timeoutTime: moment('2099-12-31 00:00:00', 'YYYY-MM-DD HH:mm:ss'),//授权到期时间
+        timeoutTime: moment().add(1, 'Y'),//授权到期时间
       },
       loading: false,
       isTipVisible: false,//密匙提示框显示、隐藏
@@ -85,6 +86,15 @@ class SystemAuthorizedAdd extends PureComponent {
     router.push(backUrl);
   }
 
+  lengthVerification = (rule, value, callback) => {
+    var reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    if(!reg.test(value) || value.length != 6){
+      callback('请输入6位授权公司ID');
+    }else{
+      return callback();
+    }
+  };
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -118,13 +128,23 @@ class SystemAuthorizedAdd extends PureComponent {
             <FormTitle
               title="基础信息"
             />
-            <FormItem {...formAllItemLayout} label="授权租户">
+            <FormItem {...formAllItemLayout} label="授权公司ID">
               {getFieldDecorator('authorizationTenantId', {
                 rules: [
-                  { required: true, message: '请输入授权租户ID' },
+                  // { required: true, max:6, min:6, message: '请输入授权公司ID' },
+                  { required: true, validator: this.lengthVerification }
                 ],
               })(
-                <Input placeholder={'请输入授权租户ID'}/>,
+                <Input placeholder={'请输入授权公司ID'}/>,
+              )}
+            </FormItem>
+            <FormItem {...formAllItemLayout} label="授权公司名称">
+              {getFieldDecorator('authorizationTenantName', {
+                rules: [
+                  { required: true, message: '请输入授权公司名称' },
+                ],
+              })(
+                <Input placeholder={'请输入授权公司名称'}/>,
               )}
             </FormItem>
             {/*<FormItem {...formAllItemLayout} label="授权类型">*/}

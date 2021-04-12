@@ -136,6 +136,15 @@ class BaseView extends Component {
     callback('请输入正整数!');
   }
 
+  reactNode = () => {
+    return(
+      <div>
+        <p>1、当开启供应商发货后，并且有配置发货地址后，供应商将会看到你所克隆供应商的产品所产生的订单用于集中发货（其他自行配置的产品或者非当前上级供应商的则无法看到您的订单）</p>
+        <p>2、当开启供应商发货后，并且未配置发货地址后，供应商将无法看到你所克隆供应商的产品所产生的订单</p>
+      </div>
+    )
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -154,6 +163,7 @@ class BaseView extends Component {
         md: { span: 12 },
       },
     };
+
 
     const uploadProp = {
       action: '/api/blade-resource/oss/endpoint/put-file',
@@ -245,6 +255,17 @@ class BaseView extends Component {
               {/* ------------------------------------------ */}
 
               <Col span={12}>
+                <FormItem {...formItemLayout} label={'供应商发货'}>
+                  {getFieldDecorator('agentDeliveryStatus')(
+                    <Radio.Group>
+                      <Radio key={1} value={1}>是</Radio>
+                      <Radio key={0} value={0}>否</Radio>
+                    </Radio.Group>
+                  )}
+                  <Tooltip
+                    title={this.reactNode}
+                  ><Icon type='question-circle-o' style={{position: 'absolute',right: '-23px',top: '3px'}} /></Tooltip>
+                </FormItem>
                 <FormItem {...formItemLayout} label={'系统告警'}>
                   {getFieldDecorator('alarmStatus')(
                     <Radio.Group>

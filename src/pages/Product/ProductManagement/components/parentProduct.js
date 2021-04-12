@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Modal, Form,  Button,message,Table } from 'antd';
 import { connect } from 'dva';
-import {getProductAgentlist,getProductAgentsave} from '../../../../services/newServices/product';
+import {getProductAgentlist,matchinglist,getProductAgentsave} from '../../../../services/newServices/product';
 import moment from 'moment';
 
 
@@ -21,6 +21,7 @@ class ParentProduct extends PureComponent {
         current:1
       },
       total:0,
+      chooseProducts:[],
       productList:[],
       selectedRowKeys: [],
       selectedRows:[],
@@ -33,9 +34,22 @@ class ParentProduct extends PureComponent {
     this.setState({
       model:visible
     })
+    this.getChooseDataList();
     this.getDataList();
   }
 
+  getChooseDataList =() =>{
+    const { handleProductParams } = this.props;
+    matchinglist({
+      authorizationTenantId:handleProductParams.authorizationTenantId
+    }).then(res=>{
+      if(res.code  == 200){
+        this.setState({
+          chooseProducts:res.data
+        })
+      }
+    })
+  }
   getDataList = () => {
     const {params} = this.state;
     const { handleProductParams } = this.props;
@@ -56,6 +70,10 @@ class ParentProduct extends PureComponent {
   }
 
   onOk = () => {
+    if(this.state.selectedRows.length <=0 ){
+      message.info("请至少选择一条数据");
+      return false;
+    }
     const json = this.state.selectedRows[0];
     getProductAgentsave(json).then(res=>{
       if(res.code  == 200){
@@ -179,19 +197,21 @@ class ParentProduct extends PureComponent {
     ];
 
     const {
-      model,productList,selectedRowKeys,params,total
+      model,productList,selectedRowKeys,params,total,chooseProducts
     } = this.state;
 
     const rowSelection = {
       type:'radio',
-      selectedRowKeys,
       onChange: this.onSelectChange,
+      getCheckboxProps: record => ({
+        disabled: chooseProducts.indexOf(record.id)>=0, // Column configuration not to be checked
+      }),
     };
 
 
     return (
         <Modal
-          title="代理产品"
+          title="供应商产品列表"
           visible={model}
           maskClosable={false}
           width='80%'

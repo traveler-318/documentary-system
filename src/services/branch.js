@@ -34,4 +34,12 @@ export async function branchSalesman(params) {
     body: params,
   });
 }
+//訂單詳情
+export async function orderdetail(params) {
+  return request('/api/branch/orderdetail', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 // /branch/branchSalesman

@@ -163,6 +163,7 @@ class LogisticsConfig extends PureComponent {
       message.success('当前选择的打印模板不在线!请检查机器网络或者联系管理员排查!');
       return false;
     }
+
     const params =
       {
         recMans: [],
@@ -191,10 +192,14 @@ class LogisticsConfig extends PureComponent {
           "printAddr": globalParameters.detailData[i].userAddress,
           "out_order_no": globalParameters.detailData[i].outOrderNo,
           "id":globalParameters.detailData[i].id,
+          'productCoding':globalParameters.detailData[i].productCoding,
+          'orderTenantId':globalParameters.detailData[i].tenantId,
+          'orderDeptId':globalParameters.detailData[i].deptId
           // 'salesman':globalParameters.detailData[i].salesman,
         }
       )
     }
+
     logisticsPrintRequest(params).then(res=>{
       message.success(res.msg);
       router.push('/order/executive');

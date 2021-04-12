@@ -165,8 +165,8 @@ class LogisticsConfig extends PureComponent {
         shipmentRemind:checked1,
         ...authorizationItem
       };
-
     for(let i=0; i<globalParameters.detailData.length; i++){
+
       params.recMans.push(
         {
           "mobile": globalParameters.detailData[i].userPhone,

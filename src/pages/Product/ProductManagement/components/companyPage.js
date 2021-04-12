@@ -33,18 +33,13 @@ class AuthorizedCompanyPage extends PureComponent {
           },
         },
         {
-          title: '公司ID',
-          dataIndex: 'tenantId',
-          key: 'tenantId',
+          title: '供应商ID',
+          dataIndex: 'authorizationTenantId',
+          key: 'authorizationTenantId',
           width: 160,
         },
         {
-          title: '机构名称',
-          dataIndex: 'tenantName',
-          key: 'tenantName',
-        },
-        {
-          title: '授权租户名称',
+          title: '供应商名称',
           dataIndex: 'authorizationTenantName',
           key: 'authorizationTenantName',
         },
@@ -133,23 +128,15 @@ class AuthorizedCompanyPage extends PureComponent {
     const {
       data,
       loading,
-      selectedRowKeys
+      selectedRowKeys,
+      columns
     } = this.state;
-
-
-    const columns = this.state.columns.map((col, index) => ({
-      ...col,
-      onHeaderCell: column => ({
-        width: column.width,
-        onResize: this.handleResize(index),
-      }),
-    }));
 
     return (
       <Modal
         className={'authorized-product-page'}
-        title="授权公司"
-        width={960}
+        title="供应商列表"
+        width={800}
         visible={isVisible}
         maskClosable={false}
         footer={[
@@ -168,7 +155,7 @@ class AuthorizedCompanyPage extends PureComponent {
           // onSelectRow={this.onSelectRow}
           loading={loading}
           columns={columns}
-          scroll={{ x: 900 }}
+          // scroll={{ x: 900 }}
         />
       </Modal>
     );

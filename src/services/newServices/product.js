@@ -101,6 +101,14 @@ export async function getProductAgentlist(params) {
   });
 }
 
+//获取已有的代理列表
+export async function matchinglist(params) {
+  return request(`/api/business/productattribute/matchinglist`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 /**
  * 保存代理数据
  * @param params [id,productTypeId]

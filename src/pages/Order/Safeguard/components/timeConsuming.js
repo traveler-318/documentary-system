@@ -114,7 +114,7 @@ class timeConsuming extends PureComponent {
       {
         title: '订单号',
         dataIndex: 'outOrderNo',
-        width: 260,
+        width: 240,
       },
       {
         title: '跟进耗时',
@@ -137,6 +137,7 @@ class timeConsuming extends PureComponent {
       {
         title: '操作',
         key: 'operation',
+        width: 100,
         fixed: 'right',
         render: (text,row) => {
           return(
@@ -151,7 +152,7 @@ class timeConsuming extends PureComponent {
         <Modal
           title="耗时检测"
           visible={timeConsumingVisible}
-          width={900}
+          width={960}
           onCancel={handleCancelTimeConsuming}
           maskClosable={false}
           footer={[

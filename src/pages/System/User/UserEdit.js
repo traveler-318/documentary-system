@@ -55,6 +55,7 @@ class UserEdit extends PureComponent {
       form,
     } = this.props;
     form.validateFieldsAndScroll((err, values) => {
+      console.log(values)
       if (!err) {
         Modal.confirm({
           title: '提醒',
@@ -69,7 +70,6 @@ class UserEdit extends PureComponent {
               ...values,
               organizationId: values.organizationId.toString(),
               deptId: func.join(values.deptId),
-              roleId: func.join(values.roleId),
               postId: func.join(values.postId),
               birthday: func.format(values.birthday),
             };
@@ -317,7 +317,7 @@ class UserEdit extends PureComponent {
                         message: '请选择所属角色',
                       },
                     ],
-                    initialValue: func.split(detail.roleId),
+                    initialValue: detail.roleId,
                   })(
                     <TreeSelect
                       dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
