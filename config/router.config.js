@@ -199,7 +199,7 @@ export default [
           { path: '/branchManage/branchOrder', component: './BranchOrder/index' },
           { path: '/branchManage/authorized', component: './Authorized/index' },
           { path: '/branchManage/authorized/add', component: './Authorized/add' },
-          { path: '/branchManage/branchOrder/logisticsConfiguration', component: './Order/components/logisticsConfiguration' },
+          { path: '/branchManage/BranchOrder/logisticsConfiguration', component: './BranchOrder/components/logisticsConfiguration' },
         ],
       },
       {
