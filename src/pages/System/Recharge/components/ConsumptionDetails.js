@@ -32,6 +32,7 @@ class ConsumptionDetails extends PureComponent {
     }
   }
 
+
   componentWillMount() {
     const {params}=this.state;
     this.getStatisticsformtaskList(params)
