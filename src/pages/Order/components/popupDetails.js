@@ -446,6 +446,7 @@ class OrdersEdit extends PureComponent {
     }
   };
 
+
   getText = (key, type) => {
     let text = ""
     type.map(item=>{

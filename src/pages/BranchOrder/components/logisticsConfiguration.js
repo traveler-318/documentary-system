@@ -21,7 +21,7 @@ import {
   updateData,
   getRegion,
   logisticsSubscription,
-  getDetails,
+  getOrderdetail,
   productTreelist,
   logisticsPrintRequest,
   localPrinting,
@@ -109,7 +109,7 @@ class LogisticsConfiguration extends PureComponent {
       listID:globalParameters.listParam
     })
     // 获取详情数据
-    this.getDetailsData(globalParameters.listParam[0].id);
+    this.getDetailsData(globalParameters.listParam[0].id,globalParameters.listParam[0].tenantId);
 
     this.getlogisticsTemplate();
     // 拼装对应产品
@@ -154,8 +154,11 @@ class LogisticsConfiguration extends PureComponent {
     })
   };
 
-  getDetailsData = (id,type) => {
-    getDetails({id}).then(res=>{
+  getDetailsData = (id,tenantId,type) => {
+    getOrderdetail({
+      id,
+      tenantId,
+    }).then(res=>{
       let _data = res.data
 
       if(sessionStorage.logisticsConfigurationValues){
@@ -202,9 +205,9 @@ class LogisticsConfiguration extends PureComponent {
       },()=>{
 
       })
-      this.getDetailsData(listID[currentIndex - 1].id,"switch");
+      this.getDetailsData(listID[currentIndex - 1].id,listID[currentIndex + 1].tenantId,"switch");
     }else{
-      this.getDetailsData(listID[currentIndex + 1].id,"switch");
+      this.getDetailsData(listID[currentIndex + 1].id,listID[currentIndex + 1].tenantId,"switch");
       this.setState({
         currentIndex:currentIndex + 1
       },()=>{
@@ -535,7 +538,7 @@ class LogisticsConfiguration extends PureComponent {
                      this.setState({
                        currentIndex:currentIndex+1
                      },()=>{
-                       this.getDetailsData(listID[currentIndex+1].id);
+                       this.getDetailsData(listID[currentIndex+1].id,listID[currentIndex+1].tenantId);
                      });
                    }
                  }else{

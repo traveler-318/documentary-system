@@ -38,12 +38,20 @@ export async function getDetails(params) {
   return request(`/api/order/order/detail?${stringify(params)}`);
 }
 
+export async function getOrderdetail(params) {
+  return request(`/api/branch/orderdetail`, {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function createData(params) {
   return request('/api/order/order/save', {
     method: 'POST',
     body: params,
   });
 }
+
 
 export async function updateData(params) {
   return request('/api/order/order/update', {

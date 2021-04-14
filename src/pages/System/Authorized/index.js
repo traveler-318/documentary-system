@@ -16,6 +16,7 @@ import { getCookie } from '../../../utils/support';
 import router from 'umi/router';
 import SystemAuthorizedVerification from './SystemAuthorizedVerification';
 import { remove } from '@/services/region';
+import styles from './index.less';
 
 let ViewData = {};
 @connect(({ globalParameters }) => ({
@@ -163,6 +164,10 @@ class SystemAuthorized extends PureComponent {
 
   //删除
   handleDelete = (row) => {
+    if(row.authorizationStatus === 1){
+      message.info("此数据未禁用，禁止删除")
+      return false;
+    }
     const id = row.id;
     Modal.confirm({
       title: '删除确认',
@@ -170,10 +175,11 @@ class SystemAuthorized extends PureComponent {
       okText: '确定',
       okType: 'danger',
       cancelText: '取消',
-      onOk() {
+      onOk:() => {
         subordinateRemove({ ids: id }).then(resp => {
           if (resp.success) {
             message.success(resp.msg);
+            this.getDataList();
           } else {
             message.error(resp.msg || '删除失败');
           }
@@ -234,15 +240,13 @@ class SystemAuthorized extends PureComponent {
         title: '状态',
         dataIndex: 'authorizationStatus',
         key: 'authorizationStatus',
-        render: (key,row)=>{
-          return (
+        render: (key) => {
+          return(
             <div>
-              {
-                key === '1' ? "启用":"禁用"
-              }
+              <span className={styles.statue} style={key === 1 ? {background:"#67C23A"}:{background:"#dcdfe6"}}></span>{key === 1 ? "启用":"禁用"}
             </div>
           )
-        }
+        },
       },
       {
         title: '创建时间',
@@ -259,9 +263,15 @@ class SystemAuthorized extends PureComponent {
             <div>
               <a onClick={()=>this.handleViewSecret(row)}>查看secret</a>
               <Divider type="vertical" />
-              <a onClick={()=>this.handleChangeStatus(row)}>{row.authorizationStatus == '1' ? '禁用':'启用'}</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleDelete(row)}>删除</a>
+              <a onClick={()=>this.handleChangeStatus(row)}>{row.authorizationStatus == 1 ? '禁用':'启用'}</a>
+{/*               
+              {row.authorizationStatus != 1 ? (
+                <> */}
+                  <Divider type="vertical" />
+                  <a onClick={()=>this.handleDelete(row)}>删除</a>
+                {/* </>
+              ):""} */}
+              
               {/*<Divider type="vertical" />*/}
               {/*<a onClick={()=>this.handleSMS(row)}>短信</a>*/}
             </div>
