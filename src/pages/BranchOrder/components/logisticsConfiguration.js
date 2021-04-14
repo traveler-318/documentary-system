@@ -28,6 +28,9 @@ import {
   logisticsRepeatPrint,
 } from '../../../services/newServices/order'
 import {
+  printRequest
+} from '../../../services/branch';
+import {
   LOGISTICSCOMPANY,
   paymentCompany,
   productType,
@@ -522,7 +525,7 @@ class LogisticsConfiguration extends PureComponent {
                param.localPrintStatus=1;
                const { dispatch } = this.props;
                console.log(param)
-               logisticsPrintRequest(param).then(response=>{
+               printRequest(param).then(response=>{
                  this.setState({
                    loading:false
                  })
@@ -551,7 +554,7 @@ class LogisticsConfiguration extends PureComponent {
              }else {
                param.localPrintStatus=0;
                console.log(param)
-               logisticsPrintRequest(param).then(response=>{
+               printRequest(param).then(response=>{
                  this.setState({
                    loading:false
                  })
