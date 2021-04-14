@@ -42,4 +42,12 @@ export async function orderdetail(params) {
   });
 }
 
+//首次打印
+export async function printRequest(params) {
+  return request('/api/branch/printRequest', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 // /branch/branchSalesman
