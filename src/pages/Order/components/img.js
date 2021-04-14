@@ -39,12 +39,13 @@ class Background extends PureComponent {
       console.log(value)
       // 当离线仓库中的值被载入时，此处代码运行
       let baseImg = "";
-      console.log(sessionStorage.getItem('printingType'),"printingType");
-      if(sessionStorage.getItem('printingType') === "Repeat"){
+
+      try {
         baseImg='data:image/png;base64,'+ JSON.parse(value)[0] +''
-      }else{
+      } catch (e) {
         baseImg='data:image/png;base64,'+ value.slice(2,value.length - 2) +''
       }
+
       sessionStorage.removeItem("printingType")
 
       this.setState({
