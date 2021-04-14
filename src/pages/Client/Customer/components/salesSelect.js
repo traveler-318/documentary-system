@@ -8,7 +8,8 @@ class SalesSelect extends PureComponent {
     super(props);
     this.state = {
       disabled:false,
-      salesmanList:[]
+      salesmanList:[],
+      value:''
     };
   }
 
@@ -19,7 +20,17 @@ class SalesSelect extends PureComponent {
     this.getSalesmanList()
   }
 
-  // 获取业务员数据
+  componentWillReceiveProps(nextProps) {
+    // Should be a controlled component.
+    if ('value' in nextProps) {
+      const value = nextProps.value;
+      this.setState({
+        value:value
+      })
+    }
+  }
+
+    // 获取业务员数据
   getSalesmanList = () => {
     getSalesmanLists({size:100,current:1}).then(res=>{
       this.setState({
@@ -31,16 +42,18 @@ class SalesSelect extends PureComponent {
   render() {
     const {
       disabled,
-      salesmanList
+      salesmanList,
+      value
     } = this.state;
+
     return (
-      <Select placeholder={"请选择销售"} disabled={disabled}>
+      <Select value={value} placeholder={"请选择销售"} disabled={disabled}>
         {salesmanList.map(item=>{
           return (<Select.Option value={item.userAccount}>{item.userName}</Select.Option>)
         })}
       </Select>
     );
   }
-}
 
+}
 export default SalesSelect;
