@@ -49,5 +49,13 @@ export async function printRequest(params) {
     body: params,
   });
 }
+//本地打印
+export async function getOriginalDataJson(params) {
+  return request('/api/branch/getOriginalDataJson', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 
 // /branch/branchSalesman

@@ -16,7 +16,9 @@ import {
   logisticsRepeatPrint,
 } from '../../../services/newServices/order';
 import {
-  orderdetail
+  orderdetail,
+  printRequest,
+  getOriginalDataJson
 } from '../../../services/branch';
 import {ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
@@ -346,6 +348,7 @@ class OrdersEdit extends PureComponent {
   // 复打
   repeat = () => {
     const {detail}=this.state;
+
     // 当前时间戳
     const timestamp = (new Date()).getTime();
     const timeInterval = 24 * 60 * 60 * 1000 * 2;
@@ -383,9 +386,10 @@ class OrdersEdit extends PureComponent {
 
     if(detail.logisticsPrintType === "1" || detail.logisticsPrintType === "2"){
       // 本地打印
-      localPrinting({
+      getOriginalDataJson({
         id:detail.id,
-        logisticsPrintType:detail.logisticsPrintType
+        logisticsPrintType:detail.logisticsPrintType,
+        orderTenantId:detail.tenantId
       }).then(res=>{
         this.setState({
           repeatLoading:false
@@ -403,7 +407,7 @@ class OrdersEdit extends PureComponent {
     }else{
       let param = [];
       param.push(detail.taskId)
-      logisticsRepeatPrint(param).then(res=>{
+      printRequest(param).then(res=>{
         this.setState({
           repeatLoading:false
         });

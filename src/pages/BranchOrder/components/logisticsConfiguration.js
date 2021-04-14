@@ -28,7 +28,8 @@ import {
   logisticsRepeatPrint,
 } from '../../../services/newServices/order'
 import {
-  printRequest
+  printRequest,
+  getOriginalDataJson
 } from '../../../services/branch';
 import {
   LOGISTICSCOMPANY,
@@ -601,9 +602,10 @@ class LogisticsConfiguration extends PureComponent {
 
       if(listID[currentIndex].logisticsPrintType === "1" || listID[currentIndex].logisticsPrintType === "2"){
           // 本地打印
-          localPrinting({
+        getOriginalDataJson({
             id:listID[currentIndex].id,
-            logisticsPrintType:listID[currentIndex].logisticsPrintType
+            logisticsPrintType:listID[currentIndex].logisticsPrintType,
+            orderTenantId:listID[currentIndex].tenantId
           }).then(res=>{
             this.setState({
               loading:false
@@ -622,7 +624,7 @@ class LogisticsConfiguration extends PureComponent {
             }
           })
       }else{
-        logisticsRepeatPrint([listID[currentIndex].taskId]).then(res=>{
+        printRequest([listID[currentIndex].taskId]).then(res=>{
           this.setState({
             loading:false
           })
