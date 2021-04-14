@@ -35,15 +35,18 @@ class Background extends PureComponent {
   componentWillMount() {
 
     localforage.getItem('imgBase64', (err, value)=>{
+
+      console.log(value)
       // 当离线仓库中的值被载入时，此处代码运行
       let baseImg = "";
       console.log(sessionStorage.getItem('printingType'),"printingType");
-      if(sessionStorage.getItem('printingType') === "Repeat"){
-        baseImg='data:image/png;base64,'+ value.slice(2,value.length - 2) +''
-      }else{
+      // if(sessionStorage.getItem('printingType') === "Repeat"){
+      //   baseImg='data:image/png;base64,'+ value.slice(2,value.length - 2) +''
+      // }else{
         baseImg='data:image/png;base64,'+ JSON.parse(value)[0] +''
-      }
+      // }
       sessionStorage.removeItem("printingType")
+
       this.setState({
         imgBase64:value,
         baseImg:baseImg
