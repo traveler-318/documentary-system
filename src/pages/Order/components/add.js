@@ -142,11 +142,11 @@ class OrdersAdd extends PureComponent {
         }
         values.userAddress = `${selectedOptions}${values.userAddress}`;
         createData(values).then(res=>{
+          this.setState({
+            loading:false
+          })
           if(res.code === 200){
             message.success(res.msg);
-            this.setState({
-              loading:false
-            })
             callback();
           }
         })
