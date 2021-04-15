@@ -127,6 +127,9 @@ class OrdersAdd extends PureComponent {
     const { cityparam, selectedOptions, payamount, payPanyId, productTypeId, productId, } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        this.setState({
+          loading:true
+        })
         values.deptId = getCookie("dept_id");
         values.tenantId = getCookie("tenantId");
         values = {...values,...cityparam};
@@ -141,6 +144,9 @@ class OrdersAdd extends PureComponent {
         createData(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
+            this.setState({
+              loading:false
+            })
             callback();
           }
         })
