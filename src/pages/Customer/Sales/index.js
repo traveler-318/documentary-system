@@ -442,7 +442,7 @@ class AuthorityList extends PureComponent {
           <span>
               {'销售催激活'}
                 <Tooltip
-                  title={<span>开：催激活提醒的短信号码是销售电话<br/>关：催激活提醒的短信号码是售后电话</span>}
+                  title={<span>开：催激活提醒短信号码是销售电话<br/>关：催激活提醒短信号码是售后电话</span>}
                 >
                 <Icon style={{ marginLeft: 8 }} type="question-circle" />
               </Tooltip>
