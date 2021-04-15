@@ -16,10 +16,10 @@ import {
   getDetails,
   orderDetail,
   updateReminds,
-  productTreelist, 
+  productTreelist,
   subscription,
-  deleteLogisticsSuber, 
-  localPrinting, 
+  deleteLogisticsSuber,
+  localPrinting,
   logisticsRepeatPrint,
 } from '../../../services/newServices/order';
 import {ORDERSTATUS,ORDERSOURCE} from './data.js';
@@ -95,8 +95,8 @@ class OrdersEdit extends PureComponent {
       this.getTreeList();
       this.getEditDetails();
     });
-    
-    
+
+
 
     if(window.location.hash.indexOf("allOrders") != -1){
       backUrl = "/order/allOrders?type=details"
@@ -110,7 +110,7 @@ class OrdersEdit extends PureComponent {
       backUrl = "/order/executive?type=details"
     }
 
-    
+
   }
 
   getTreeList = () => {
@@ -219,7 +219,7 @@ class OrdersEdit extends PureComponent {
         values.productName = values.productType[2];
         values.productType = `${values.productType[0]}/${values.productType[1]}`;
         values.payPanyId = payPanyId;
-        values.productTypeId = productTypeId; 
+        values.productTypeId = productTypeId;
         values.productId = productId;
       }
 
@@ -603,13 +603,13 @@ class OrdersEdit extends PureComponent {
                       })(<Input disabled placeholder="" />)}
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="订单归属">
-                      {getFieldDecorator('salesman', {
+                      {getFieldDecorator('salesmanName', {
                         rules: [
                           {
                             message: '',
                           },
                         ],
-                        initialValue: detail.salesman,
+                        initialValue: detail.salesmanName,
                       })(<Input disabled placeholder="" />)}
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="SN">
@@ -619,7 +619,7 @@ class OrdersEdit extends PureComponent {
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="产品类型">
                       {getFieldDecorator('productType', {
-                        initialValue: detail.productType?[...detail.productType.split("/"),detail.productName]:null, 
+                        initialValue: detail.productType?[...detail.productType.split("/"),detail.productName]:null,
                       })(
                         <Cascader
                           disabled={edit}
