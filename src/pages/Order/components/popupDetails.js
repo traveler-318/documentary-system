@@ -242,6 +242,9 @@ class OrdersEdit extends PureComponent {
           const params = {
             ...values
           };
+
+          delete params.salesman;
+
           // if(detail.logisticsStatus){
             Modal.confirm({
               title: '提示',
@@ -299,6 +302,7 @@ class OrdersEdit extends PureComponent {
           const params = {
             ...values
           };
+          delete params.salesman;
           updateData(params).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
