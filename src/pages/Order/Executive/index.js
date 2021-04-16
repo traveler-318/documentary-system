@@ -1990,12 +1990,13 @@ class AllOrdersList extends PureComponent {
 
   getOrderMenuTemplate = () => {
     orderMenuTemplate(0).then(res=>{
-      res.data.menuJson.map(item => {
+      let titles = res.data.menuJson.filter(item=>item.dataIndex !== 'oderCompanyName')
+      titles.map(item => {
         item.key=item.dataIndex
       })
       this.setState({
-        plainOptions:res.data.menuJson,
-        editPlainOptions:res.data.menuJson
+        plainOptions:titles,
+        editPlainOptions:titles
       })
     })
   }

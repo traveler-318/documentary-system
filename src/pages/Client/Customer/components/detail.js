@@ -187,8 +187,8 @@ class CustomerDetail extends PureComponent {
               })(<Input title={detail.clientAddress} disabled={edit} placeholder="请输入详细地址" />)}
             </FormItem>
             <FormItem {...formAllItemLayout} label="客户负责人" className={styles.salesman}>
-              {getFieldDecorator('salesman', {
-                initialValue: detail.salesman,
+              {getFieldDecorator('salesmanName', {
+                initialValue: detail.salesmanName,
               })(<SalesSelect disabled={true}/>)}
             </FormItem>
 

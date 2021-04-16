@@ -807,7 +807,7 @@ class BranchOffice extends PureComponent {
             item.ellipsis=true
           }
           // 收货地址
-          if(item.dataIndex === "userAddress"){
+          if(item.dataIndex === "userAddress" || item.dataIndex === "oderCompanyName"){
             item.ellipsis=true
           }
           // 销售

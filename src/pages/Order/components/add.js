@@ -104,38 +104,55 @@ class OrdersAdd extends PureComponent {
     })
   }
 
+  //保存并新增
+  handleSave = (e)=>{
+    e.preventDefault();
+    const { form } = this.props;
+    this.submit(()=>{
+      form.resetFields([ 'userName','userPhone','backPhone','wechatId','region','userAddress']);
+    })
+  }
+
+  //保存
   handleSubmit = e => {
     e.preventDefault();
+
+    this.submit(()=>{
+      router.push(backUrl);
+    })
+  };
+
+  submit = (callback)=>{
     const { form } = this.props;
     const { cityparam, selectedOptions, payamount, payPanyId, productTypeId, productId, } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values,"提交数据")
+        this.setState({
+          loading:true
+        })
         values.deptId = getCookie("dept_id");
         values.tenantId = getCookie("tenantId");
         values = {...values,...cityparam};
         if(values.productType && values.productType != ""){
-          console.log(values.productType[2])
-          console.log(values.productType[2].split("-"))
-          // values.payAmount = values.productType[2].split("-")[1];
-          // values.payAmount = payamount;
           values.productName = values.productType[2];
           values.productType = `${values.productType[0]}/${values.productType[1]}`;
           values.payPanyId = payPanyId;
-          values.productTypeId = productTypeId; 
+          values.productTypeId = productTypeId;
           values.productId = productId;
         }
         values.userAddress = `${selectedOptions}${values.userAddress}`;
         createData(values).then(res=>{
+          this.setState({
+            loading:false
+          })
           if(res.code === 200){
             message.success(res.msg);
-            router.push(backUrl);
+            callback();
           }
         })
       }
     });
-  };
-
+  }
   handleChange = value => {
   };
 
@@ -208,9 +225,14 @@ class OrdersAdd extends PureComponent {
     };
 
     const action = (
+      <>
+        <Button type="primary" onClick={this.handleSave} loading={loading}>
+          保存并新增
+        </Button>
       <Button type="primary" onClick={this.handleSubmit} loading={loading}>
-        提交
+        保存
       </Button>
+        </>
     );
 
     return (

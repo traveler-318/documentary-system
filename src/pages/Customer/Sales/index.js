@@ -15,6 +15,7 @@ import {
   Switch,
   Modal,
   message,
+  Tooltip
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
@@ -129,6 +130,11 @@ class AuthorityList extends PureComponent {
       params = {
         id:key.id,
         wechatBrowserStatus:data
+      };
+    }else if(keys === 3){
+      params = {
+        id:key.id,
+        afterSaleStatus:data
       };
     }else {
       params = {
@@ -342,6 +348,7 @@ class AuthorityList extends PureComponent {
     )
   };
 
+
   render() {
     const {
       form,
@@ -427,6 +434,25 @@ class AuthorityList extends PureComponent {
         render: (res,key) => {
           return(
             <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key,2)} />
+          )
+        },
+      },
+      {
+        title: () => (
+          <span>
+              {'销售催激活'}
+                <Tooltip
+                  title={<span>开：催激活提醒短信号码是销售电话<br/>关：催激活提醒短信号码是售后电话</span>}
+                >
+                <Icon style={{ marginLeft: 8 }} type="question-circle" />
+              </Tooltip>
+          </span>
+        ),
+        dataIndex: 'afterSaleStatus',
+        width: 110,
+        render: (res,key) => {
+          return(
+            <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key,3)} />
           )
         },
       },
