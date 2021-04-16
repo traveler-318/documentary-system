@@ -1842,7 +1842,8 @@ class AllOrdersList extends PureComponent {
     const {tabKey}=this.state;
     orderMenuHead(0).then(resp=>{
       if(resp.code === 200){
-        const list=resp.data.menuJson;
+
+        const list=resp.data.menuJson.filter(item=>item.dataIndex !== 'oderCompanyName');
         const checked=[];
 
         list.map(item => {
