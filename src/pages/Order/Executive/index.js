@@ -650,7 +650,8 @@ class AllOrdersList extends PureComponent {
       LogisticsConfigVisible:false
     })
   }
-  // 批量审核
+
+  // 批量初审
   batchAudit = () => {
     const {selectedRows,tabKey} = this.state;
 
@@ -678,21 +679,21 @@ class AllOrdersList extends PureComponent {
         title: '提醒',
         // content: "确定审核此订单吗？",
         okText: '初审',
-        cancelText: '终审',
+        cancelText: '拒绝',
         cancelButtonProps: {
-          type:"primary"
+          type:"danger"
         },
         keyboard:false,
         content:<div>
           确定审核此订单吗？
-          <Button key="submit" type="danger" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{toExamines('9');}} >拒绝</Button>
-          <Button key="submit" style={{ position: 'absolute',right: '250px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button>
+          {/*<Button key="submit" type="danger" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{toExamines('9');}} >拒绝</Button>*/}
+          <Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button>
           </div>,
         onOk() {
           toExamines('1');
         },
         onCancel() {
-          toExamines('2');
+          toExamines('9');
         },
       });
     }else if(tabKey === "1"){
@@ -721,6 +722,55 @@ class AllOrdersList extends PureComponent {
 
 
   }
+
+  // 批量终审
+  lastBatchAudit = () => {
+    const {selectedRows,tabKey} = this.state;
+
+    const toExamines = this.toExamines;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+
+    let type = false, _data = [];
+    selectedRows.map(item=>{
+      if(item.confirmTag === '0' || item.confirmTag === '1'){
+        _data.push(item.id)
+      }else{
+        type = true;
+      }
+    })
+    if(!_data || _data.length === 0){
+      // modal.destroy();
+      return message.error("您选择的数据中未包含未审核的数据");
+    }
+
+    modal = Modal.confirm({
+      title: '提醒',
+      // content: "确定审核此订单吗？",
+      okText: '终审',
+      cancelText: '拒绝',
+      cancelButtonProps: {
+        type:"danger"
+      },
+      keyboard:false,
+      content:<div>
+        确定审核此订单吗？
+        {/*<Button key="submit" type="danger" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{toExamines('9');}} >拒绝</Button>*/}
+        <Button key="submit" style={{ position: 'absolute',right: '177px',bottom: '24px'}} onClick={()=>{modal.destroy()}} >取消</Button>
+      </div>,
+      onOk() {
+        toExamines('2');
+      },
+      onCancel() {
+        toExamines('9');
+      },
+    });
+  }
+
+
+
+
   toExamines = (confirmTag) => {
     const {selectedRows} = this.state;
     let type = false, _data = [];
@@ -1074,9 +1124,12 @@ class AllOrdersList extends PureComponent {
       this.handleOrderImport()
     }else if(code === "add"){
       router.push(`/order/executive/add`);
-    }else if(code === "examine"){
-      // 审核
+    }else if(code === "first-trial"){
+      // 初审
       this.batchAudit()
+    }else if(code === "last-trial"){
+      // 终审
+      this.lastBatchAudit()
     }else if(code === "synchronization"){
       // 免押同步
       this.importData()
