@@ -57,5 +57,18 @@ export async function getOriginalDataJson(params) {
   });
 }
 
+export async function updateData(params) {
+  return request('/api/branch/update', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+export async function returngoods(params) {
+  return request('/api/branch/returngoods', {
+    method: 'POST',
+    body: params,
+  });
+}
 
 // /branch/branchSalesman

@@ -66,6 +66,7 @@ import Export from './components/export'
 // import TransferCustomers from './components/TransferCustomers'
 // import LogisticsConfig from './components/LogisticsConfig'
 import PopupDetails from './components/popupDetails'
+import ReturnGoods from './components/returnGoods'
 //
 // import ImportData from '../components/ImportData';
 // import Excel from '../components/excel';
@@ -141,7 +142,8 @@ class BranchOffice extends PureComponent {
       voiceStatusVisible:false,
       confirmTagList:[],
       _listArr:[],
-      organizationTree:[]
+      organizationTree:[],
+      isViewReturnGoods:false,//退货弹窗
     };
   }
 
@@ -285,6 +287,19 @@ class BranchOffice extends PureComponent {
     this.handleShowLogistics(selectedRows)
   }
 
+  //打开退货
+  openReturnGoods =() =>{
+    this.setState({
+      isViewReturnGoods:true
+    })
+  }
+  //关闭退货
+  cancelReturnGoods =() =>{
+    this.setState({
+      isViewReturnGoods:false
+    })
+  }
+
   btnButtonBack = (code) => {
     if(code === "deliver-goods"){
       // 发货
@@ -292,6 +307,9 @@ class BranchOffice extends PureComponent {
     }else if(code === "export"){
       // 导出
       this.exportFile()
+    }else if(code ==='return'){
+      //退货
+      this.openReturnGoods();
     }
   }
   // 左侧操作按钮
@@ -857,7 +875,8 @@ class BranchOffice extends PureComponent {
       plainOptions,
       checkedOptions,
       columns,
-      params
+      params,
+      isViewReturnGoods
     } = this.state;
 
     const loop = data =>
@@ -950,8 +969,6 @@ class BranchOffice extends PureComponent {
       }),
     }));
 
-
-
     return (
       <Panel>
         <div className={styles.ordersTabs}>
@@ -1024,6 +1041,12 @@ class BranchOffice extends PureComponent {
           />
         ):""}
 
+        {isViewReturnGoods?(
+          <ReturnGoods
+            isViewReturnGoods ={isViewReturnGoods}
+            cancelReturnGoods={this.cancelReturnGoods}
+          />
+        ):''}
       </Panel>
     );
   }

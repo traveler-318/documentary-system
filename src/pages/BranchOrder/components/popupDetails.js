@@ -7,7 +7,6 @@ import localforage from 'localforage';
 import styles from './edit.less';
 import { CITY } from '../../../utils/city';
 import {
-  updateData,
   orderDetail,
   updateReminds,
   productTreelist,
@@ -18,7 +17,8 @@ import {
 import {
   orderdetail,
   printRequest,
-  getOriginalDataJson
+  getOriginalDataJson,
+  updateData
 } from '../../../services/branch';
 import {ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
@@ -171,18 +171,14 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail,selectedOptions, payPanyId, productTypeId, productId, } = this.state;
+    const { detail,selectedOptions, payPanyId, productTypeId, productId } = this.state;
     form.validateFieldsAndScroll((err, values) => {
-      //ORDERSTATUS.map(item => {
-      //  if(item.name === values.confirmTag){
-      //    values.confirmTag = item.key
-      //  }
-      //})
-      ORDERSOURCE.map(item => {
-        if(item.name === values.orderSource){
-          values.orderSource = item.key
-        }
-      })
+
+      // ORDERSOURCE.map(item => {
+      //   if(item.name === values.orderSource){
+      //     values.orderSource = item.key
+      //   }
+      // })
       values.id = detail.id;
       values.userAddress=`${selectedOptions}${values.userAddress}`;
       if(values.productType && values.productType != ""){
@@ -193,25 +189,16 @@ class OrdersEdit extends PureComponent {
         values.productId = productId;
       }
 
-      if (values.orderNote === ''){
-        values.orderNote=null
+      for(var i in values){
+        if(values[i] === ''){
+          values[i] = null
+        }
       }
-      if (values.productCoding === ''){
-        values.productCoding=null
-      }
-
+      const params = values;
       if (!err) {
         const _this=this;
         if(values.logisticsCompany != detail.logisticsCompany || values.logisticsNumber != detail.logisticsNumber){
-          if (values.logisticsCompany === ''){
-            values.logisticsCompany=null
-          }
-          if (values.logisticsNumber === ''){
-            values.logisticsNumber=null
-          }
-          const params = {
-            ...values
-          };
+
           // if(detail.logisticsStatus){
             Modal.confirm({
               title: '提示',
@@ -226,7 +213,6 @@ class OrdersEdit extends PureComponent {
                   outOrderNo:detail.outOrderNo
                 }
                 deleteLogisticsSuber(_data).then(resp=>{
-                  console.log(resp)
                   updateData(params).then(res=>{
                     if(res.code === 200){
                       message.success(res.msg);
@@ -260,15 +246,6 @@ class OrdersEdit extends PureComponent {
           //   })
           // }
         }else {
-          if (values.logisticsCompany === ''){
-            values.logisticsCompany=null
-          }
-          if (values.logisticsNumber === ''){
-            values.logisticsNumber=null
-          }
-          const params = {
-            ...values
-          };
           updateData(params).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
@@ -462,6 +439,8 @@ class OrdersEdit extends PureComponent {
       },
     };
 
+    //是否有修改权限
+    const isUpdate = detail.confirmTag === '1' || detail.confirmTag === '2' || detail.confirmTag === '3' ? true : false;
     return (
         <Modal
         title="详情"
@@ -480,44 +459,35 @@ class OrdersEdit extends PureComponent {
             <Row gutter={24} style={{ margin: 0 }}>
               <Col span={8} style={{ padding: 0 }} className={styles.leftContent}>
                 <div className={styles.titleBtn}>
-                  {/*<Button type={primary} disabled onClick={this.handleSubmit}>保存</Button>*/}
-                  {/*<Button type={primary1} icon="edit" disabled onClick={this.clickEdit}>编辑</Button>*/}
+                  {/*状态为  初审 终审 已发货时可修改*/}
+                  {isUpdate ? (
+                    <>
+                      <Button type={primary} onClick={this.handleSubmit}>保存</Button>
+                      <Button type={primary1} icon="edit" onClick={this.clickEdit}>编辑</Button>
+                    </>
+                  ):''}
                   {/*/!* <Button  icon="delete">删除</Button> *!/*/}
                   {/*<Button*/}
                     {/*icon="bell"*/}
                     {/*onClick={this.handleReminds}*/}
                     {/*disabled*/}
                   {/*>提醒</Button>*/}
-                  <Button icon="copy" type={primary} onClick={this.repeat}>复打</Button>
+
+                  <Button icon="copy" type={isUpdate?'':'primary'} onClick={this.repeat}>复打</Button>
                   {/* <Button  icon="folder">归档</Button> */}
                 </div>
                 <div className={styles.editList} style={{ padding: '20px' }}>
                   <FormDetailsTitle title="订单信息" style={{ margin:'0'}} />
                   <Form span={24}>
                     <FormItem {...formAllItemLayout} label="客户姓名">
-                      {getFieldDecorator('userName', {
-                        rules: [
-                          {
-                            message: '请输入客户姓名',
-                          },
-                        ],
-                        initialValue: detail.userName,
-                      })(<Input disabled={detail.confirmTag === '0' || detail.confirmTag === '1' || detail.confirmTag === '2' ? edit : true} placeholder="请输入客户姓名" />)}
+                      <Input disabled={true} value={detail.userName}/>
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="手机号">
-                      {getFieldDecorator('userPhone', {
-                        rules: [
-                          { required: true, validator: this.validatePhone },
-                        ],
-                        initialValue: detail.userPhone,
-                      })(<Input disabled={detail.confirmTag === '0' || detail.confirmTag === '1' || detail.confirmTag === '2' ? edit : true} placeholder="" />)}
+                      <Input disabled={true} value={detail.userPhone} />
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="备用手机号">
-                      {getFieldDecorator('backPhone', {
-                        initialValue: detail.backPhone,
-                      })(<Input disabled={detail.backPhone ? true : edit} placeholder="" />)}
+                      <Input disabled={true} value={detail.backPhone}/>
                     </FormItem>
-
                     <FormItem {...formAllItemLayout} label="所在地区">
                       {getFieldDecorator('region', {
                         initialValue: [detail.province, detail.city, detail.area],
@@ -525,7 +495,7 @@ class OrdersEdit extends PureComponent {
                         <Cascader
                           // defaultValue={[detail.province, detail.city, detail.area]}
                           options={CITY}
-                          disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2') ? edit : true}
+                          disabled={isUpdate ? edit : true}
                           onChange={this.onChange}
                         />
                       )}
@@ -538,59 +508,28 @@ class OrdersEdit extends PureComponent {
                           },
                         ],
                         initialValue: detail.userAddress,
-                      })(<Input title={detail.userAddress} disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2') ? edit : true} placeholder="请输入收货地址" />)}
+                      })(<Input title={detail.userAddress} disabled={isUpdate ? edit : true} placeholder="请输入收货地址" />)}
                     </FormItem>
-                    {/*                  <FormItem {...formAllItemLayout} label="客戶状态">
-                    {getFieldDecorator('userAddress', {
-                      rules: [
-                        {
-                          message: '',
-                        },
-                      ],
-                      initialValue: detail.userAddress,
-                    })(<Input disabled={edit} placeholder="" />)}
-                  </FormItem>*/}
-                    {/*                  <FormItem {...formAllItemLayout} label="订单状态">
-                    {getFieldDecorator('confirmTag', {
-                      rules: [
-                        {
-                          message: '',
-                        },
-                      ],
-                      initialValue: this.getText(detail.confirmTag,ORDERSTATUS),
-                    })(<Input disabled={edit} placeholder="" />)}
-                  </FormItem>*/}
                     <FormItem {...formAllItemLayout} label="订单金额">
-                      {getFieldDecorator('payAmount', {
-                        initialValue: detail.payAmount,
-                      })(<Input disabled placeholder="" />)}
+                      <Input disabled={true} value={detail.payAmount} />
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="订单来源">
-                      {getFieldDecorator('orderSource', {
-                        initialValue: this.getText(parseInt(detail.orderSource),ORDERSOURCE),
-                      })(<Input disabled placeholder="" />)}
+                      <Input disabled={true} value={this.getText(parseInt(detail.orderSource),ORDERSOURCE)} />
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="订单归属">
-                      {getFieldDecorator('salesman', {
-                        rules: [
-                          {
-                            message: '',
-                          },
-                        ],
-                        initialValue: detail.salesman,
-                      })(<Input disabled placeholder="" />)}
+                      <Input disabled={true} value={detail.salesman} />
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="SN">
                       {getFieldDecorator('productCoding', {
                         initialValue: detail.productCoding,
-                      })(<Input disabled={edit} placeholder="" />)}
+                      })(<Input disabled={isUpdate ? edit : true} placeholder="" />)}
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="产品类型">
                       {getFieldDecorator('productType', {
                         initialValue: detail.productType?[...detail.productType.split("/"),detail.productName]:null,
                       })(
                         <Cascader
-                          disabled={edit}
+                          disabled={isUpdate ? edit : true}
                           options={productList}
                           fieldNames={{ label: 'value'}}
                           onChange={(value, selectedOptions)=>{
@@ -617,7 +556,7 @@ class OrdersEdit extends PureComponent {
                       })(
                         <Select
                           style={{height:45,float:"right"}}
-                          disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
+                          disabled={isUpdate ? edit : true}
                           placeholder={"请选择物流公司"}>
                           {Object.keys(LOGISTICSCOMPANY).map(key=>{
                             return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
@@ -629,28 +568,16 @@ class OrdersEdit extends PureComponent {
                       {getFieldDecorator('logisticsNumber', {
                         initialValue: detail.logisticsNumber,
                       })(<Input
-                        disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
+                        disabled={isUpdate ? edit : true}
                         placeholder="请输入物流单号" />)}
                     </FormItem>
-                    {/*<FormItem {...formAllItemLayout} label="开启提醒"  className={styles.salesman}>*/}
-                      {/*{getFieldDecorator('voiceStatus', {*/}
-                        {/*initialValue: parseInt(detail.voiceStatus),*/}
-                      {/*})(<Radio.Group  onChange={this.RadioChange} value={this.state.value}>*/}
-                        {/*<Radio disabled={edit} value={1}>是</Radio>*/}
-                        {/*<Radio disabled={edit} value={0}>否</Radio>*/}
-                      {/*</Radio.Group>)}*/}
-                    {/*</FormItem>*/}
 
                     <FormDetailsTitle title="其他信息" />
                     <FormItem {...formAllItemLayout} label="微信号">
-                      {getFieldDecorator('wechatId', {
-                        initialValue: detail.wechatId,
-                      })(<Input disabled={detail.wechatId ? true : edit} placeholder="" />)}
+                      <Input disabled={true} value={detail.wechatId} />
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="备注">
-                      {getFieldDecorator('orderNote', {
-                        initialValue: detail.orderNote,
-                      })(<TextArea rows={4} disabled={edit} placeholder="请输入备注信息" />)}
+                      <TextArea rows={4} disabled={true} value={detail.orderNote} />
                     </FormItem>
                   </Form>
                 </div>
