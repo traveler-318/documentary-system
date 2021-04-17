@@ -18,7 +18,7 @@ import {
   CLIENTTYPE,
 } from './data.js';
 import func from '@/utils/Func';
-import { getList as getSalesmanLists } from '../../../services/newServices/sales';
+import { getList as getSalesmanLists, salesmanList } from '../../../services/newServices/sales';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -95,11 +95,18 @@ class CustomerAdd extends PureComponent {
 
   // 获取业务员数据
   getSalesmanList = () => {
-    getSalesmanLists({size:100,current:1}).then(res=>{
+    // getSalesmanLists({size:100,current:1}).then(res=>{
+    //   this.setState({
+    //     salesmanList:res.data.records
+    //   })
+    // })
+
+    salesmanList({size:100,current:1}).then(res=>{
       this.setState({
-        salesmanList:res.data.records
+        salesmanList:res.data
       })
     })
+
   }
 
   handleSubmit = e => {

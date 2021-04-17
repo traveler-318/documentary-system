@@ -14,7 +14,7 @@ import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
 import { createData, getRegion, productTreelist } from '../../../services/newServices/order'
-import { getList as getSalesmanLists } from '../../../services/newServices/sales';
+import { getList as getSalesmanLists,salesmanList } from '../../../services/newServices/sales';
 import {
   LOGISTICSCOMPANY,
   paymentCompany,
@@ -97,11 +97,19 @@ class OrdersAdd extends PureComponent {
 
   // 获取业务员数据
   getSalesmanList = () => {
-    getSalesmanLists({size:100,current:1}).then(res=>{
+    // getSalesmanLists({size:100,current:1}).then(res=>{
+    //   this.setState({
+    //     salesmanList:res.data.records
+    //   })
+    // })
+    //
+    salesmanList({size:100,current:1}).then(res=>{
       this.setState({
-        salesmanList:res.data.records
+        salesmanList:res.data
       })
     })
+
+
   }
 
   //保存并新增
@@ -346,6 +354,12 @@ class OrdersAdd extends PureComponent {
                 <FormItem {...formAllItemLayout} label="产品分类">
                   {getFieldDecorator('productType', {
                       initialValue: null,
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择产品分类',
+                        },
+                      ],
                     })(
                       <Cascader
                         options={productList}
