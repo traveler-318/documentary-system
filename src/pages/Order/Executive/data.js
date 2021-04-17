@@ -83,7 +83,6 @@ export const LOGISTICSSTATUS = [
 ]
 
 // 物流 LogisticsCompany
-
 export const LOGISTICSCOMPANY = {
     "SF": "顺丰速运",
     "HTKY": "百世快递",
@@ -101,7 +100,8 @@ export const LOGISTICSCOMPANY = {
     "ZJS": "宅急送",
     "AXD": "安信达快递",
     "BTWL": "百世快运",
-    "SUNING": "苏宁"
+    "SUNING": "苏宁",
+    "ZYKD": "众邮快递",
 }
 
 

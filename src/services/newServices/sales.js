@@ -14,6 +14,13 @@ export async function getList(params) {
   });
 }
 
+export async function salesmanList(params) {
+  return request("/api/agent/salesman/salesmanList",{
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function updateStatus(params) {
   return request("/api/agent/salesman/updateStatus",{
     method: 'POST',
