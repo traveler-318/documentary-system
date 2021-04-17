@@ -25,7 +25,6 @@ const { TextArea } = Input;
 
 let backUrl = "/client/customer";
 
-
 @connect(({ user, loading }) => ({
   user,
   submitting: loading.effects['user/submit'],
