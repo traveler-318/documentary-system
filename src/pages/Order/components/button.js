@@ -160,7 +160,7 @@ class SearchButton extends PureComponent {
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
-                }else if(tabKey === '1' && (item.code === "last-trial" ||item.code === "first-trial" )){
+                }else if(tabKey === '1' && (item.code === "last-trial")){
                   i++;
                     // 已初审
                     return (

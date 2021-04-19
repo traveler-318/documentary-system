@@ -229,6 +229,9 @@ export function exportData() {
     {value:"快递公司",code:"logistics_company"},
     {value:"快递单号",code:"logistics_number"},
     {value:"下单时间",code:"create_time"},
+    {value:"物流状态",code:"logistics_status"},
+    {value:"签收时间",code:"logistics_signtime"},
+    {value:"订单金额",code:"pay_amount"},
   ]
 }
 
