@@ -26,15 +26,17 @@ export default {
   },
   effects: {
     *fetchList({ payload }, { call, put }) {
-      const response = yield call(list, payload);
-      if (response.success) {
-        yield put({
-          type: 'saveList',
-          payload: {
-            list: response.data,
-            pagination: false,
-          },
-        });
+      if(payload.roleAlias || payload.roleName || payload.tenantId){
+        const response = yield call(list, payload);
+        if (response.success) {
+          yield put({
+            type: 'saveList',
+            payload: {
+              list: response.data,
+              pagination: false,
+            },
+          });
+        }
       }
     },
     *fetchInit({ payload }, { call, put }) {
