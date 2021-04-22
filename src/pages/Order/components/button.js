@@ -63,7 +63,7 @@ class SearchButton extends PureComponent {
       </Menu.Item>
       <Menu.Item key="order-import">
         <Icon type="upload" />
-        订单导入
+        表格导入
       </Menu.Item>
     </Menu>
   );
@@ -73,25 +73,33 @@ class SearchButton extends PureComponent {
       <Menu onClick={this.handleMenuClick}>
           {
               moreList.map(item=>{
-                  if(item.code === "place-an-order"){
-                    return (
-                        <SubMenu key="sub1" title="批量物流下单">
-                            <Menu.Item key="6" onClick={()=>this.handleClick('repeat-printing')}>
-                                重复打印
-                            </Menu.Item>
-                            <Menu.Item key="7" onClick={()=>this.handleClick('first-printing')}>
-                                首次打印
-                            </Menu.Item>
-                        </SubMenu>
-                    )
-                  }else if(item.code === "transfer"){
-                    return (
-                        <Menu.Item key="4"  onClick={()=>this.handleClick('transfer')}>
-                            <Icon type="loading-3-quarters" />
-                            转移客户
-                        </Menu.Item>
-                    )
-                  }
+                  // if(item.code === "place-an-order"){
+                  //   return (
+                  //       <SubMenu key="sub1" title="批量物流下单">
+                  //           <Menu.Item key="6" onClick={()=>this.handleClick('repeat-printing')}>
+                  //               重复打印
+                  //           </Menu.Item>
+                  //           <Menu.Item key="7" onClick={()=>this.handleClick('first-printing')}>
+                  //               首次打印
+                  //           </Menu.Item>
+                  //       </SubMenu>
+                  //   )
+                  // }else if(item.code === "transfer"){
+                  //   return (
+                  //       <Menu.Item key="4"  onClick={()=>this.handleClick('transfer')}>
+                  //           <Icon type="loading-3-quarters" />
+                  //           转移客户
+                  //       </Menu.Item>
+                  //   )
+                  // }
+                if(item.code === "transfer"){
+                  return (
+                    <Menu.Item key="4"  onClick={()=>this.handleClick('transfer')}>
+                      <Icon type="loading-3-quarters" />
+                      转移客户
+                    </Menu.Item>
+                  )
+                }
               })
           }
 

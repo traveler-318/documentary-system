@@ -432,7 +432,6 @@ class OrdersAdd extends PureComponent {
             </Row>
 
           </Card>
-
         </Form>
       </Panel>
     );
