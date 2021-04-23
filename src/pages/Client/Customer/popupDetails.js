@@ -285,8 +285,9 @@ class OrdersEdit extends PureComponent {
         }
         values.userAddress = `${selectedOptions}${values.userAddress}`;
 
+        values.region = values.regions;
+
         delete values.regions
-        delete values.region
 
         console.log(values)
 
