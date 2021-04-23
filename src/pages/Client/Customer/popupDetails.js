@@ -229,7 +229,7 @@ class OrdersEdit extends PureComponent {
     })
   };
 
-  addOrder = () =>{
+  orderVisible = () =>{
     const { detail } = this.state;
     console.log(detail)
     const _this=this;
@@ -252,16 +252,42 @@ class OrdersEdit extends PureComponent {
         //     message.error(res.msg);
         //   }
         // })
-
         _this.setState({
           orderVisible:true
         })
-
-
       },
       onCancel() {},
     });
   };
+
+  addOrder = ()=>{
+
+    const { form } = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log(values)
+
+        if(values.backPhone === undefined){
+          values.backPhone = null
+        }
+        if(values.orderNote === undefined){
+          values.orderNote = null
+        }
+        createOrder(values).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+            this.setState({
+              orderVisible:false
+            })
+          }else {
+            message.error(res.msg);
+          }
+        })
+
+      }
+    })
+
+  }
 
   handleCancelOrder = () => {
     this.setState({
@@ -323,6 +349,15 @@ class OrdersEdit extends PureComponent {
       callback();
     }
   }
+
+  valinsPayChange = (rule, value, callback) => {
+    var reg=/((^[1-9]\d*)|^0)(\.\d{0,2}){0,1}$/;
+    if(!reg.test(value)){
+      callback('请输入正确的金额格式');
+    }else{
+      return callback();
+    }
+  };
 
   render() {
 
@@ -389,7 +424,7 @@ class OrdersEdit extends PureComponent {
                   <Row className={styles.titleBtn}>
                     <Col span={16}>
                       <Button icon="plus" onClick={()=>{
-                        this.addOrder()
+                        this.orderVisible()
                       }}>订单</Button>
                       <Button icon="plus" onClick={()=>{message.info('开发中')}}>产品</Button>
                       <Button icon="plus" onClick={()=>{message.info('开发中')}}>联系人</Button>
@@ -479,7 +514,7 @@ class OrdersEdit extends PureComponent {
             <Button key="back">
               取消
             </Button>,
-            <Button key="submit" type="primary">
+            <Button key="submit" type="primary" onClick={()=>{this.addOrder()}}>
               确定
             </Button>,
           ]}
