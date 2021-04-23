@@ -43,7 +43,6 @@ class OrdersEdit extends PureComponent {
         ownership:"3"
       },
       ids:'',
-      selectedOptions:"",
       primary:'primary',
       primary1:'',
       repeatLoading:false,
@@ -55,6 +54,8 @@ class OrdersEdit extends PureComponent {
       orderVisible:false,
       productList:[],
       salesmanList:[],
+      cityparam:[],
+      selectedOptions:[],
     };
   }
 
@@ -230,49 +231,65 @@ class OrdersEdit extends PureComponent {
   };
 
   orderVisible = () =>{
-    const { detail } = this.state;
-    console.log(detail)
-    const _this=this;
-    Modal.confirm({
-      title: '提醒',
-      content: "确定将要创建此客户的订单？",
-      okText: '确定',
-      okType: 'primary',
-      cancelText: '取消',
-      onOk() {
-        // const params={
-        //   clientPhone: detail.clientPhone,
-        //   clientName: detail.clientName,
-        //   clientAddress: detail.clientAddress,
-        // }
-        // createOrder(params).then(res=>{
-        //   if(res.code === 200){
-        //     message.success(res.msg);
-        //   }else {
-        //     message.error(res.msg);
-        //   }
-        // })
-        _this.setState({
-          orderVisible:true
-        })
-      },
-      onCancel() {},
-    });
+    this.setState({
+      orderVisible:true
+    })
+    // Modal.confirm({
+    //   title: '提醒',
+    //   content: "确定将要创建此客户的订单？",
+    //   okText: '确定',
+    //   okType: 'primary',
+    //   cancelText: '取消',
+    //   onOk() {
+    //     // const params={
+    //     //   clientPhone: detail.clientPhone,
+    //     //   clientName: detail.clientName,
+    //     //   clientAddress: detail.clientAddress,
+    //     // }
+    //     // createOrder(params).then(res=>{
+    //     //   if(res.code === 200){
+    //     //     message.success(res.msg);
+    //     //   }else {
+    //     //     message.error(res.msg);
+    //     //   }
+    //     // })
+    //
+    //   },
+    //   onCancel() {},
+    // });
   };
 
   addOrder = ()=>{
 
     const { form } = this.props;
+    const {  cityparam,selectedOptions,payPanyId, productTypeId, productId, } = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values)
 
+        values = {...values,...cityparam};
         if(values.backPhone === undefined){
           values.backPhone = null
         }
         if(values.orderNote === undefined){
           values.orderNote = null
         }
+        if(values.productCoding === undefined){
+          values.productCoding = null
+        }
+        if(values.productType && values.productType != ""){
+          values.productName = values.productType[2];
+          values.productType = `${values.productType[0]}/${values.productType[1]}`;
+          values.payPanyId = payPanyId;
+          values.productTypeId = productTypeId;
+          values.productId = productId;
+        }
+        values.userAddress = `${selectedOptions}${values.userAddress}`;
+
+        delete values.regions
+        delete values.region
+
+        console.log(values)
+
         createOrder(values).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
@@ -308,6 +325,9 @@ class OrdersEdit extends PureComponent {
     for(let i=0; i<selectedOptions.length; i++){
       text += selectedOptions[i].label
     }
+    console.log(value)
+
+
     this.setState({
       cityparam:{
         province:value[0],
@@ -563,7 +583,7 @@ class OrdersEdit extends PureComponent {
                     {getFieldDecorator('wechatId')(<Input placeholder="请输入微信号" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="所在地区">
-                    {getFieldDecorator('region', {
+                    {getFieldDecorator('regions', {
                       // initialValue: {['zhejiang', 'hangzhou', 'xihu']},
                       initialValue: [detail.province, detail.city, detail.area],
                       rules: [
