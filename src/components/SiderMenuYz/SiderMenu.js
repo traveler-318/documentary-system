@@ -102,7 +102,7 @@ export default class SiderMenu extends PureComponent {
               handleOpenChange={this.handleOpenChange}
               onOpenChange={this.handleOpenChange}
               hover = {this.handleHover}
-              style={{ padding: '16px 0', width: '100%' }}
+              style={{ padding: '6px 0', width: '100%' }}
               {...defaultProps}
             />
             {/*<BaseMenu*/}
