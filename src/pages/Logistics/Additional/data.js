@@ -39,6 +39,10 @@ export const EXPRESSTYPE = [
     value:"特惠专配"
   },
   {
+    key:"陆运包裹",
+    value:"陆运包裹"
+  },
+  {
     key:"电商标快",
     value:"电商标快"
   }
