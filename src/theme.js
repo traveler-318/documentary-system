@@ -1,5 +1,5 @@
 module.exports = {
-  'primary-color': '#10e99b',
+  'primary-color': '#155bd4 ',
   'btn-primary-color':'#FFF',
   'btn-primary-bg':'#155bd4',
 
