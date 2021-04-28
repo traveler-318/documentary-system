@@ -1,0 +1,239 @@
+@import '~antd/lib/style/themes/default.less';
+
+@nav-header-height: @layout-header-height;
+:global {
+  //.ant-drawer-content-wrapper{
+  //  width: 180px !important;
+  //}
+}
+
+.firstSidebar{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 92px;
+  background-color: #273543;
+}
+
+.li{
+  width: 92px;
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+
+  a{
+    color: #c8c9cc;
+  }
+
+  &:hover{
+    background: #434e6c;
+    a{
+      color: #fff;
+    }
+  }
+
+  &:hover .secondSidebar,.secondSidebar:hover{ display: block; }
+}
+.li.active{
+  background: #38f;
+
+  a{
+    color: #fff;
+  }
+}
+
+
+.secondSidebar{
+  width: 132px;
+  position:absolute;
+  top:0;
+  margin-left: 92px;
+  display: none;
+  bottom: 0;
+  background-color: #FFF;
+  text-align: left;
+  z-index: 2;
+
+  ul{
+    padding: 0;
+    text-align: left;
+
+    .item a{
+      color: #323233;
+      padding-left: 16px;
+      display: block;
+    }
+
+    .item{
+      position: relative;
+      width: 108px;
+      min-height: 30px;
+      line-height: 30px;
+      padding: 5px 0;
+      color: #323233;
+      cursor: pointer;
+      font-size: 14px;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      background: #fff;
+
+      &:hover a{color: #155bd4;}
+    }
+    .item.active{
+      a{
+        background-color: #ebedf0;
+      }
+    }
+  }
+
+  .groupNav{
+    i{
+      transform: scale(0.8);
+    }
+
+    .item a{
+      padding-left: 24px;
+    }
+  }
+  .groupNav.collapsed{
+    max-height: 40px;
+    overflow: hidden;
+
+    i{
+      transform: scale(0.8) rotate(-90deg);
+    }
+  }
+  .secondGroupTitle{
+    color: #323233;
+  }
+}
+.secondSidebar.view{
+  display: block;
+  z-index: 1;
+}
+
+.sideerTitle{
+  padding-left: 28px;
+  width: 100%;
+  height: 56px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ebedf0;
+  font-size: 14px;
+  color: #323233;
+  line-height: 56px;
+  font-weight: 500;
+}
+
+.logo {
+  position: relative;
+  height: 50px;
+  padding-left: 20px;
+  overflow: hidden;
+  line-height: 50px;
+  background: #273543;
+  transition: all 0.3s;
+  img {
+    display: inline-block;
+    height: 32px;
+    vertical-align: middle;
+  }
+  h1 {
+    display: inline-block;
+    margin: 0 0 0 12px;
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+    font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    vertical-align: middle;
+  }
+}
+.sider {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
+  &.fixSiderBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+    :global {
+      .ant-menu-root {
+        height: ~'calc(100vh - 50px)';
+        overflow-y: auto;
+      }
+
+      .ant-menu-root::-webkit-scrollbar {
+  display: none;
+}
+      .ant-menu-inline {
+        border-right: 0;
+        .ant-menu-item,
+        .ant-menu-submenu-title {
+          width: 100%;
+        }
+      }
+    }
+  }
+  &.light {
+    background-color: white;
+    box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+    .logo {
+      background: white;
+      box-shadow: 1px 1px 0 0 @border-color-split;
+      h1 {
+        color: @primary-color;
+      }
+    }
+    :global(.ant-menu-light) {
+      border-right-color: transparent;
+    }
+  }
+}
+
+.icon {
+  width: 14px;
+  vertical-align: baseline;
+}
+
+
+:global {
+  .top-nav-menu li.ant-menu-item {
+    height: @nav-header-height;
+    line-height: @nav-header-height;
+  }
+  .drawer .drawer-content {
+    background: #001529;
+  }
+  .ant-menu-inline-collapsed {
+    & > .ant-menu-item .sider-menu-item-img + span,
+    &
+      > .ant-menu-item-group
+      > .ant-menu-item-group-list
+      > .ant-menu-item
+      .sider-menu-item-img
+      + span,
+    & > .ant-menu-submenu > .ant-menu-submenu-title .sider-menu-item-img + span {
+      display: inline-block;
+      max-width: 0;
+      opacity: 0;
+    }
+  }
+  .ant-menu-item .sider-menu-item-img + span,
+  .ant-menu-submenu-title .sider-menu-item-img + span {
+    opacity: 1;
+    transition: opacity 0.3s @ease-in-out, width 0.3s @ease-in-out;
+  }
+  .ant-drawer-left {
+    .ant-drawer-body {
+      padding: 0;
+    }
+  }
+}

@@ -40,7 +40,8 @@ class HeaderView extends React.Component {
     if (isMobile || !fixedHeader || layout === 'topmenu') {
       return '100%';
     }
-    return collapsed ? 'calc(100% - 80px)' : 'calc(100% - 180px)';
+    // return collapsed ? 'calc(100% - 80px)' : 'calc(100% - 180px)';
+    return collapsed ? 'calc(100% - 92px)' : 'calc(100% - 224px)';
   };
 
   handleNoticeClear = type => {
@@ -142,7 +143,7 @@ class HeaderView extends React.Component {
     const { visible } = this.state;
     const isTop = layout === 'topmenu';
     const width = this.getHeadWidth();
-    
+
     const HeaderDom = visible ? (
       <Header style={{ padding: 0, width }} className={fixedHeader ? styles.fixedHeader : ''}>
         {/* <RealTimeInformation/> */}
