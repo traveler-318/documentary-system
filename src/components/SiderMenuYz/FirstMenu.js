@@ -31,7 +31,12 @@ const getIcon = icon => {
 };
 
 export default class BaseMenu extends PureComponent {
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      chooseMenuName:null
+    };
+  }
   /**
    * 获得菜单子节点
    * @memberof SiderMenu
@@ -56,7 +61,11 @@ export default class BaseMenu extends PureComponent {
    * get SubMenu or Item
    */
   getSubMenuOrItem = (item,selectedKeys) => {
-    let current = selectedKeys ? selectedKeys.indexOf(item.path)>-1 ?true:false : false
+    let {chooseMenuName} = this.state
+
+    let current = chooseMenuName ? chooseMenuName == item.path ? true : false:false;
+    if(!chooseMenuName) current = selectedKeys.indexOf(item.path)>-1 ?true:false;
+
     return <li key={item.path} className={ `${styles.li} ${current?styles.active:''} `}>{this.getMenuItemPath(item,current)}</li>;
   };
 
@@ -75,19 +84,17 @@ export default class BaseMenu extends PureComponent {
     const { location, isMobile, onCollapse } = this.props;
 
     let isView = !collapsed && current
-
-    console.log(isView)
-    console.log(isView)
     return (
       <>
       <Link
         replace={itemPath === location.pathname}
         onClick={
-          isMobile
-            ? () => {
-              onCollapse(true);
+          () => {
+              this.setState({
+                chooseMenuName:item.path
+              })
+              onCollapse(false);
             }
-            : undefined
         }
       >
         {icon}
