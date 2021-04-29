@@ -4,6 +4,8 @@ module.exports = {
   // Buttons
   'btn-primary-color':'#FFF',
   'btn-primary-bg':'#52b7b4',
+  'btn-primary-hover-bg': '#ccc',
+  'btn-primary-shadow':'initial',
 
   'btn-default-color':'#323233',
 
