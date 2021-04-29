@@ -25,7 +25,7 @@ const getIcon = icon => {
     if (icon.startsWith('icon-')) {
       return <IconFont type={icon} />;
     }
-    return <Icon type={icon} style={{marginRight:'4px'}}/>;
+    return <Icon type={icon} style={{fontSize: '16px',marginRight:'4px'}}/>;
   }
   return icon;
 };

@@ -1,7 +1,11 @@
 module.exports = {
-  'primary-color': '#155bd4 ',
-  'btn-primary-color':'#FFF',
-  'btn-primary-bg':'#155bd4',
+  'primary-color': '#52b7b4',
 
-  'btn-default-color':'#323233'
+  // Buttons
+  'btn-primary-color':'#FFF',
+  'btn-primary-bg':'#52b7b4',
+
+  'btn-default-color':'#323233',
+
+  'btn-danger-bg': '#ff7875'
 };
