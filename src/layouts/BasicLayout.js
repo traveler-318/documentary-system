@@ -66,6 +66,7 @@ class BasicLayout extends React.Component {
   // 组件即将销毁
   componentWillUnmount() {
     this.handleMenuCollapse(true);
+    sessionStorage.removeItem('MENUCHANGE')
   }
 
   getContext() {
@@ -81,7 +82,7 @@ class BasicLayout extends React.Component {
     if (fixSiderbar && layout !== 'topmenu' && !isMobile) {
       return {
         // paddingLeft: collapsed ? '80px' : '180px',
-        paddingLeft: collapsed ? '92px' : '224px',
+        paddingLeft: collapsed ? '92px' : '223px',
       };
     }
     return null;
@@ -119,6 +120,7 @@ class BasicLayout extends React.Component {
     const isTop = PropsLayout === 'topmenu';
     const istab = localStorage.getItem('isAntTap')
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
+
     const layout = (
       <Layout>
         {isTop && !isMobile ? null : (

@@ -11,6 +11,7 @@ const SiderMenuWrapper = React.memo(props => {
       visible={!collapsed}
       placement="left"
       onClose={() => onCollapse(true)}
+      width={collapsed && sessionStorage.getItem('MENUCHANGE') == 'true' ? 223 : 92}
       style={{
         padding: 0,
         height: '100vh',

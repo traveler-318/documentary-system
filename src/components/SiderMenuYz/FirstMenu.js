@@ -67,6 +67,9 @@ export default class BaseMenu extends PureComponent {
     let current = chooseMenuName ? chooseMenuName == item.path ? true : false:false;
     if(!chooseMenuName) current = selectedKeys.indexOf(item.path)>-1 ?true:false;
 
+    if(sessionStorage.getItem('MENUCHANGE') == undefined && current){
+      sessionStorage.setItem('MENUCHANGE',current);
+    }
     return <li key={item.path} className={ `${styles.li} ${current?styles.active:''} `}
                onClick={
                  () => {
