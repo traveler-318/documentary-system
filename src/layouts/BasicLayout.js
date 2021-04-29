@@ -63,6 +63,11 @@ class BasicLayout extends React.Component {
     });
   }
 
+  // 组件即将销毁
+  componentWillUnmount() {
+    this.handleMenuCollapse(true);
+  }
+
   getContext() {
     const { location, breadcrumbNameMap } = this.props;
     return {
