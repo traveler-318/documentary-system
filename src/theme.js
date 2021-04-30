@@ -10,5 +10,8 @@ module.exports = {
 
   'btn-default-color':'#323233',
 
-  'btn-danger-bg': '#ff7875'
+  'btn-danger-bg': '#ff7875',
+
+
+  'text-selection-bg':'#1890FF',
 };
