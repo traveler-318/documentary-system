@@ -17,6 +17,7 @@ import {
 import {
   orderdetail,
   printRequest,
+  repeatPrint,
   getOriginalDataJson,
   updateData
 } from '../../../services/branch';
@@ -384,7 +385,7 @@ class OrdersEdit extends PureComponent {
     }else{
       let param = [];
       param.push(detail.taskId)
-      printRequest(param).then(res=>{
+      repeatPrint(param).then(res=>{
         this.setState({
           repeatLoading:false
         });

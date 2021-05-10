@@ -29,6 +29,7 @@ import {
 } from '../../../services/newServices/order'
 import {
   printRequest,
+  repeatPrint,
   getOriginalDataJson
 } from '../../../services/branch';
 import {
@@ -624,7 +625,7 @@ class LogisticsConfiguration extends PureComponent {
             }
           })
       }else{
-        printRequest([listID[currentIndex].taskId]).then(res=>{
+        repeatPrint([listID[currentIndex].taskId]).then(res=>{
           this.setState({
             loading:false
           })
