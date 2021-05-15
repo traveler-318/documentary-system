@@ -50,6 +50,12 @@ class Tenant extends PureComponent {
       },{
         id:'2',
         version:'企业'
+      },{
+        id:'3',
+        version:'机构'
+      },{
+        id:'4',
+        version:'补偿'
       }
     ]
   };
