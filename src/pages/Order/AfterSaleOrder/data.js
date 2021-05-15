@@ -100,7 +100,8 @@ export const LOGISTICSCOMPANY = {
     "ZJS": "宅急送",
     "AXD": "安信达快递",
     "BTWL": "百世快运",
-    "SUNING": "苏宁"
+    "SUNING": "苏宁",
+    "ZYKD": "众邮快递",
 }
 
 
@@ -208,7 +209,8 @@ export function getLogisticsQuery() {
       "ANXINDA": "安信达快递",
       "BSKY": "百世快运",
       "SUNING": "苏宁",
-      "NSF": "新顺丰(NSF)"
+      "NSF": "新顺丰(NSF)",
+      "ZYKD": "众邮快递",
     }
   }
 }

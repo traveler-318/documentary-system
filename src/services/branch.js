@@ -49,6 +49,14 @@ export async function printRequest(params) {
     body: params,
   });
 }
+export async function repeatPrint(params) {
+  return request('/api/order/order/repeatPrint', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+
 //本地打印
 export async function getOriginalDataJson(params) {
   return request('/api/branch/getOriginalDataJson', {
