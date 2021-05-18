@@ -61,6 +61,8 @@ class BasicLayout extends React.Component {
       type: 'menu/fetchMenuData',
       payload: { routes, path, authority },
     });
+
+    sessionStorage.removeItem('MENUCHANGE')
   }
 
   // 组件即将销毁

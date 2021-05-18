@@ -103,7 +103,7 @@ export default class BaseMenu extends PureComponent {
         replace={itemPath === location.pathname}
       >
         {icon}
-        <span>{name.substring(0,2)}</span>
+        <span>{name.substring(0,4)}</span>
       </Link>
         <div className={`${styles.secondSidebar} ${isView?styles.view : ''}`}>
           {item.children?(
