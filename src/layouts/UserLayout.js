@@ -148,6 +148,11 @@ class UserLayout extends Component {
                 <div className={styles.lang}>
                   <SelectLang />
                 </div>
+                <div className={styles.reminder}>
+                  <h3 className={styles.text}>近期有用户举报，部分公司有冒充跟单宝进行私自招收代理等严重违规行为！
+                    跟单宝系统归厦门软猫科技有限公司版权所有；跟单宝从未开放任何分公司、OEM、系统代理！(主账号非admin帐号均属于挂载他人名下，将会造成数据泄露风险)。
+                    唯一销售渠道电话/微信：15160078582（备注来源：跟单宝）</h3>
+                </div>
                 <div className={styles.content}>
                   <div className={styles.top} style={{width:"440px",margin:"0 auto",textAlign:"left"}}>
                     <div className={classnames(styles.header,styles.headerPC)} style={{fontSize:"28px",fontWeight:"bold",color:"#000"}}>

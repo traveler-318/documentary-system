@@ -3,11 +3,13 @@ import { FormattedMessage, formatMessage } from 'umi/locale';
 import { Spin, Tag, Menu, Icon, Avatar, Tooltip, message } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
+import $ from "jquery";
 import NoticeIcon from '../NoticeIcon';
 import HeaderSearch from '../HeaderSearch';
 import HeaderDropdown from '../HeaderDropdown';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
+
 
 import { getSMSBalance } from '../../services/user';
 import { getSalesmanInfo } from '../../services/user';
@@ -19,6 +21,8 @@ export default class GlobalHeaderRight extends PureComponent {
     this.state = {
       remainingMoney:'',
       currentQuota:'',
+      Notice:'近期有用户举报，部分公司有冒充跟单宝进行私自招收代理等严重违规行为！跟单宝系统归厦门软猫科技有限公司版权所有；跟单宝从未开放任何分公司、OEM、系统代理！(主账号非admin帐号均属于挂载他人名下，将会造成数据泄露风险)。' +
+        '唯一销售渠道电话/微信：15160078582（备注来源：跟单宝）'
     };
   }
 
@@ -40,6 +44,7 @@ export default class GlobalHeaderRight extends PureComponent {
       }
     });
   }
+
 
   getNoticeData() {
     const { notices = [] } = this.props;
@@ -151,90 +156,97 @@ export default class GlobalHeaderRight extends PureComponent {
       className = `${styles.right}  ${styles.dark}`;
     }
     return (
-      <div className={className}>
-        <Tooltip
-          title={this.salesmanAmount}
-        >
-          <span style={{padding:"0 12px"}}><Icon type="user"  style={{marginRight:5}} />{currentQuota}个</span>
-        </Tooltip>
-        <Tooltip
-          title={this.payAmount}
-        >
-          <span style={{padding:"0 12px"}}><Icon type="mail"  style={{marginRight:5}} />{remainingMoney}元</span>
-        </Tooltip>
-        <HeaderSearch
-          className={`${styles.action} ${styles.search}`}
-          placeholder={formatMessage({ id: 'component.globalHeader.search' })}
-          dataSource={[
-            formatMessage({ id: 'component.globalHeader.search.example1' }),
-            formatMessage({ id: 'component.globalHeader.search.example2' }),
-            formatMessage({ id: 'component.globalHeader.search.example3' }),
-          ]}
-          onSearch={value => {
-            console.log('input', value); // eslint-disable-line
-          }}
-          onPressEnter={value => {
-            console.log('enter', value); // eslint-disable-line
-          }}
-        />
-        <Tooltip title={"使用文档"}>
-          <a
-            target="_blank"
-            href="https://www.yuque.com/gdb"
-            rel="noopener noreferrer"
-            className={styles.action}
+      <>
+        <div className={styles.reminder}>
+          <h3 className={styles.text}>近期有用户举报，部分公司有冒充跟单宝进行私自招收代理等严重违规行为！
+            跟单宝系统归厦门软猫科技有限公司版权所有；跟单宝从未开放任何分公司、OEM、系统代理！(主账号非admin帐号均属于挂载他人名下，将会造成数据泄露风险)。
+            唯一销售渠道电话/微信：15160078582（备注来源：跟单宝）</h3>
+        </div>
+
+        <div className={className}>
+          <Tooltip
+            title={this.salesmanAmount}
           >
-            <Icon type="question-circle-o" />
-          </a>
-        </Tooltip>
-        <NoticeIcon
-          className={styles.action}
-          count={currentUser.unreadCount}
-          onItemClick={(item, tabProps) => {
-            console.log(item, tabProps); // eslint-disable-line
-            this.changeReadState(item, tabProps);
-          }}
-          loading={fetchingNotices}
-          locale={{
-            emptyText: formatMessage({ id: 'component.noticeIcon.empty' }),
-            clear: formatMessage({ id: 'component.noticeIcon.clear' }),
-            viewMore: formatMessage({ id: 'component.noticeIcon.view-more' }),
-            notification: formatMessage({ id: 'component.globalHeader.notification' }),
-            message: formatMessage({ id: 'component.globalHeader.message' }),
-            event: formatMessage({ id: 'component.globalHeader.event' }),
-          }}
-          onClear={onNoticeClear}
-          onPopupVisibleChange={onNoticeVisibleChange}
-          onViewMore={() => message.info('Click on view more')}
-          clearClose
-        >
-          <NoticeIcon.Tab
-            count={unreadMsg.notification}
-            list={noticeData.notification}
-            title="notification"
-            emptyText={formatMessage({ id: 'component.globalHeader.notification.empty' })}
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
-            showViewMore
+            <span style={{padding:"0 12px"}}><Icon type="user"  style={{marginRight:5}} />{currentQuota}个</span>
+          </Tooltip>
+          <Tooltip
+            title={this.payAmount}
+          >
+            <span style={{padding:"0 12px"}}><Icon type="mail"  style={{marginRight:5}} />{remainingMoney}元</span>
+          </Tooltip>
+          <HeaderSearch
+            className={`${styles.action} ${styles.search}`}
+            placeholder={formatMessage({ id: 'component.globalHeader.search' })}
+            dataSource={[
+              formatMessage({ id: 'component.globalHeader.search.example1' }),
+              formatMessage({ id: 'component.globalHeader.search.example2' }),
+              formatMessage({ id: 'component.globalHeader.search.example3' }),
+            ]}
+            onSearch={value => {
+              console.log('input', value); // eslint-disable-line
+            }}
+            onPressEnter={value => {
+              console.log('enter', value); // eslint-disable-line
+            }}
           />
-          <NoticeIcon.Tab
-            count={unreadMsg.message}
-            list={noticeData.message}
-            title="message"
-            emptyText={formatMessage({ id: 'component.globalHeader.message.empty' })}
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
-            showViewMore
-          />
-          <NoticeIcon.Tab
-            count={unreadMsg.event}
-            list={noticeData.event}
-            title="event"
-            emptyText={formatMessage({ id: 'component.globalHeader.event.empty' })}
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
-            showViewMore
-          />
-        </NoticeIcon>
-        {currentUser.name ? (
-          <HeaderDropdown overlay={menu}>
+          <Tooltip title={"使用文档"}>
+            <a
+              target="_blank"
+              href="https://www.yuque.com/gdb"
+              rel="noopener noreferrer"
+              className={styles.action}
+            >
+              <Icon type="question-circle-o" />
+            </a>
+          </Tooltip>
+          <NoticeIcon
+            className={styles.action}
+            count={currentUser.unreadCount}
+            onItemClick={(item, tabProps) => {
+              console.log(item, tabProps); // eslint-disable-line
+              this.changeReadState(item, tabProps);
+            }}
+            loading={fetchingNotices}
+            locale={{
+              emptyText: formatMessage({ id: 'component.noticeIcon.empty' }),
+              clear: formatMessage({ id: 'component.noticeIcon.clear' }),
+              viewMore: formatMessage({ id: 'component.noticeIcon.view-more' }),
+              notification: formatMessage({ id: 'component.globalHeader.notification' }),
+              message: formatMessage({ id: 'component.globalHeader.message' }),
+              event: formatMessage({ id: 'component.globalHeader.event' }),
+            }}
+            onClear={onNoticeClear}
+            onPopupVisibleChange={onNoticeVisibleChange}
+            onViewMore={() => message.info('Click on view more')}
+            clearClose
+          >
+            <NoticeIcon.Tab
+              count={unreadMsg.notification}
+              list={noticeData.notification}
+              title="notification"
+              emptyText={formatMessage({ id: 'component.globalHeader.notification.empty' })}
+              emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
+              showViewMore
+            />
+            <NoticeIcon.Tab
+              count={unreadMsg.message}
+              list={noticeData.message}
+              title="message"
+              emptyText={formatMessage({ id: 'component.globalHeader.message.empty' })}
+              emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
+              showViewMore
+            />
+            <NoticeIcon.Tab
+              count={unreadMsg.event}
+              list={noticeData.event}
+              title="event"
+              emptyText={formatMessage({ id: 'component.globalHeader.event.empty' })}
+              emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
+              showViewMore
+            />
+          </NoticeIcon>
+          {currentUser.name ? (
+            <HeaderDropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>
               <Avatar
                 size="small"
@@ -244,12 +256,14 @@ export default class GlobalHeaderRight extends PureComponent {
               />
               <span className={styles.name}>{currentUser.name}</span>
             </span>
-          </HeaderDropdown>
-        ) : (
-          <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
-        )}
-        {/* <SelectLang className={styles.action} /> */}
-      </div>
+            </HeaderDropdown>
+          ) : (
+            <Spin size="small" style={{ marginLeft: 8, marginRight: 8 }} />
+          )}
+          {/* <SelectLang className={styles.action} /> */}
+        </div>
+      </>
+
     );
   }
 }
