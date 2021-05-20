@@ -20,9 +20,7 @@ export default class GlobalHeaderRight extends PureComponent {
     super(props);
     this.state = {
       remainingMoney:'',
-      currentQuota:'',
-      Notice:'近期有用户举报，部分公司有冒充跟单宝进行私自招收代理等严重违规行为！跟单宝系统归厦门软猫科技有限公司版权所有；跟单宝从未开放任何分公司、OEM、系统代理！(主账号非admin帐号均属于挂载他人名下，将会造成数据泄露风险)。' +
-        '唯一销售渠道电话/微信：15160078582（备注来源：跟单宝）'
+      currentQuota:''
     };
   }
 
@@ -114,7 +112,6 @@ export default class GlobalHeaderRight extends PureComponent {
       <span>业务员余额：{currentQuota}个</span>
     )
   }
-
   render() {
     const {
       currentUser,
@@ -158,11 +155,11 @@ export default class GlobalHeaderRight extends PureComponent {
     return (
       <>
         <div className={styles.reminder}>
-          <h3 className={styles.text}>近期有用户举报，部分公司有冒充跟单宝进行私自招收代理等严重违规行为！
+          <marquee scrollamount='10'>近期有用户举报，部分公司有冒充跟单宝进行私自招收代理等严重违规行为！
             跟单宝系统归厦门软猫科技有限公司版权所有；跟单宝从未开放任何分公司、OEM、系统代理！(主账号非admin帐号均属于挂载他人名下，将会造成数据泄露风险)。
-            唯一销售渠道电话/微信：15160078582（备注来源：跟单宝）</h3>
+            唯一销售渠道电话/微信：15160078582（备注来源：跟单宝）</marquee>
+          {/*<h3 className={styles.text}></h3>*/}
         </div>
-
         <div className={className}>
           <Tooltip
             title={this.salesmanAmount}
