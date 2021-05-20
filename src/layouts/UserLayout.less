@@ -10,36 +10,18 @@
 
 .reminder{
   overflow: hidden;
-  width: 700px;
+  position: relative;
+  width: 600px;
   height: 50px;
   color:red;
   display: inline-block;
   overflow: hidden;
   float: left;
   white-space: nowrap;
-  margin: 0;
   padding: 0;
-  position: absolute;
-  left: 50%;
-  margin-left: -450px;
-  .text {
-    animation: rotaryBlockFirst 20s linear infinite;
-    white-space: nowrap;
-    position: absolute;
-    font-size: 14px;
-    color:red;
-    width: 100%;
-  }
-}
-@keyframes rotaryBlockFirst {
-  0% { left: 0; }
-  100% { left: -180%;}
-}
-@media screen and (max-width: 1250px) {
-  @keyframes rotaryBlockFirst {
-    0% { left: 0; }
-    100% { left: -1300px;} /*1200px为文本的长度，利用多媒体查询，当屏幕宽度太小时，就设置滚动距离为文本的长度*/
-  }
+  margin-left: 70px;
+  margin-bottom: 70px;
+  font-size: 14px;
 }
 
 .lang {
