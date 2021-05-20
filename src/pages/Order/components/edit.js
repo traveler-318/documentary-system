@@ -572,7 +572,7 @@ class OrdersEdit extends PureComponent {
                             })
                             // }
                           }}
-                        />
+                        ></Cascader>
                       )}
                     </FormItem>
 
