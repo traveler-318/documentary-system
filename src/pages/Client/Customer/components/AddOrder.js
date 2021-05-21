@@ -455,7 +455,7 @@ class AddOrders extends PureComponent {
                     })(
                       <Cascader
                         options={productList}
-                        fieldNames={{ label: 'value'}}
+                        fieldNames={{ label: 'value',value: "id"}}
                         onChange={(value, selectedOptions)=>{
                           console.log(value, selectedOptions,"产品分类改变")
                           this.setState({
