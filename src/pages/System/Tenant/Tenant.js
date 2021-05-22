@@ -288,6 +288,15 @@ class Tenant extends PureComponent {
             version = "企业"
             color="green"
           }
+          if(res === '3'){
+            version = "机构"
+            color='geekblue'
+          }
+          if(res === '4'){
+            version = "补偿"
+            color='yellow'
+          }
+
           return(
             <Tag color={color}>
               {version}
