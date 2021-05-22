@@ -47,6 +47,7 @@ class OrdersAdd extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productType:'',
+      productName:'',
       productId:null,
     };
   }
@@ -133,7 +134,7 @@ class OrdersAdd extends PureComponent {
 
   submit = (callback)=>{
     const { form } = this.props;
-    const { cityparam, selectedOptions, payamount, payPanyId, productTypeId, productId, productType} = this.state;
+    const { cityparam, selectedOptions, payamount, payPanyId, productTypeId, productId, productType,productName} = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         this.setState({
@@ -143,7 +144,7 @@ class OrdersAdd extends PureComponent {
         values.tenantId = getCookie("tenantId");
         values = {...values,...cityparam};
         if(values.productType && values.productType != ""){
-          values.productName = values.productType[2];
+          values.productName = productName;
           values.productType =productType;
           values.payPanyId = payPanyId;
           values.productTypeId = productTypeId;
@@ -371,6 +372,7 @@ class OrdersAdd extends PureComponent {
                             payPanyId:selectedOptions[0].id,
                             productTypeId:selectedOptions[1].id,
                             productId :selectedOptions[2].id,
+                            productName:selectedOptions[2].value,
                             productType:selectedOptions[0].value +"/" +selectedOptions[1].value
                           })
                           const { form } = this.props;

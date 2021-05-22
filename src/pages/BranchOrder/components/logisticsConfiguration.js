@@ -98,6 +98,7 @@ class LogisticsConfiguration extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productType:'',
+      productName:'',
       productId :null,
       disabledType:false,
       loading:false,
@@ -785,7 +786,7 @@ class LogisticsConfiguration extends PureComponent {
                 />
                 <FormItem {...formAllItemLayout} label="对应产品">
                   {getFieldDecorator('productType', {
-                    initialValue: detail.productType ? [detail.payPanyId,detail.productTypeId,detail.productName] : "",
+                    initialValue: detail.productType ? [detail.payPanyId,detail.productTypeId,detail.productId] : "",
                     rules: [
                       {
                         required: true,
@@ -804,6 +805,7 @@ class LogisticsConfiguration extends PureComponent {
                           payPanyId:selectedOptions[0].id,
                           productTypeId:selectedOptions[1].id,
                           productId :selectedOptions[2].id,
+                          productName:selectedOptions[2].value,
                           productType:selectedOptions[0].value +"/" +selectedOptions[1].value
                         })
                       }}

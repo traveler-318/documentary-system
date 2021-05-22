@@ -62,6 +62,7 @@ class OrdersEdit extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productType:'',
+      productName:'',
       productId:null,
       detailsId:null,
       tenantId:null,
@@ -184,7 +185,7 @@ class OrdersEdit extends PureComponent {
       values.id = detail.id;
       values.userAddress=productType;
       if(values.productType && values.productType != ""){
-        values.productName = values.productType[2];
+        values.productName = !productName ? detail.productName : productName;
         values.productType = productType;
         values.payPanyId = payPanyId;
         values.productTypeId = productTypeId;
@@ -528,12 +529,12 @@ class OrdersEdit extends PureComponent {
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="产品类型">
                       {getFieldDecorator('productType', {
-                        initialValue: detail.productType?[...detail.productType.split("/"),detail.productName]:null,
+                        initialValue: detail.productType?[detail.payPanyId,detail.productTypeId,detail.productId]:null,
                       })(
                         <Cascader
                           disabled={isUpdate ? edit : true}
                           options={productList}
-                          fieldNames={{ label: 'value'}}
+                          fieldNames={{ label: 'value',value:'id'}}
                           onChange={(value, selectedOptions)=>{
                             const { form } = this.props;
 
@@ -541,6 +542,7 @@ class OrdersEdit extends PureComponent {
                               payPanyId:selectedOptions[0].id,
                               productTypeId:selectedOptions[1].id,
                               productId :selectedOptions[2].id,
+                              productName:selectedOptions[2].value,
                               productType:selectedOptions[0].value +"/" +selectedOptions[1].value
                             })
 
