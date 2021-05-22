@@ -61,6 +61,7 @@ class OrdersEdit extends PureComponent {
       repeatLoading:false,
       payPanyId:null,
       productTypeId:null,
+      productType:'',
       productId:null,
       detailsId:null,
       tenantId:null,
@@ -172,7 +173,7 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail,selectedOptions, payPanyId, productTypeId, productId } = this.state;
+    const { detail,selectedOptions, payPanyId, productTypeId, productId,productType } = this.state;
     form.validateFieldsAndScroll((err, values) => {
 
       // ORDERSOURCE.map(item => {
@@ -181,10 +182,10 @@ class OrdersEdit extends PureComponent {
       //   }
       // })
       values.id = detail.id;
-      values.userAddress=`${selectedOptions}${values.userAddress}`;
+      values.userAddress=productType;
       if(values.productType && values.productType != ""){
         values.productName = values.productType[2];
-        values.productType = `${values.productType[0]}/${values.productType[1]}`;
+        values.productType = productType;
         values.payPanyId = payPanyId;
         values.productTypeId = productTypeId;
         values.productId = productId;
@@ -540,6 +541,7 @@ class OrdersEdit extends PureComponent {
                               payPanyId:selectedOptions[0].id,
                               productTypeId:selectedOptions[1].id,
                               productId :selectedOptions[2].id,
+                              productType:selectedOptions[0].value +"/" +selectedOptions[1].value
                             })
 
                             form.setFieldsValue({

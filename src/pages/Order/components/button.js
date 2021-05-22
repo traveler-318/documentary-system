@@ -219,7 +219,7 @@ class SearchButton extends PureComponent {
                 //         }}>{item.name}</Button>
                 //     )
                 // }
-                else if(tabKey === 'null' && (item.code === "add" || item.code === "deliver-goods" || item.code === "bell" || item.code === 'Import' || item.code === 'overdue' || item.code === 'timeConsuming')){
+                else if(tabKey === 'null' && (item.code === "add" || item.code === "bell" || item.code === 'Import' || item.code === 'overdue' || item.code === 'timeConsuming')){
                   i++;
                     // 全部
                     if(item.code === 'Import'){
