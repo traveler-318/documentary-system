@@ -93,6 +93,7 @@ class LogisticsConfiguration extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productType:'',
+      productName:'',
       productId :null,
       disabledType:false,
       loading:false,
@@ -373,7 +374,7 @@ class LogisticsConfiguration extends PureComponent {
   }
 
   saveData = (values,callBack) => {
-    const { detail, payamount,productType } = this.state;
+    const { detail, payamount,productType,productName } = this.state;
     console.log(detail,"detail")
     sessionStorage.logisticsConfigurationValues = JSON.stringify(values);
     values.id = detail.id;
@@ -384,7 +385,7 @@ class LogisticsConfiguration extends PureComponent {
     values.userPhone = detail.userPhone;
     values.payAmount = payamount;
     // values.payAmount = values.productType[2].split("-")[1];
-    values.productName = values.productType[2];
+    values.productName = !productName ? detail.productName : productName;
     values.productType = productType;
     // values.productName = values.productName.join("/");
     logisticsSubscription(values).then(res=>{
@@ -775,7 +776,7 @@ class LogisticsConfiguration extends PureComponent {
                 />
                 <FormItem {...formAllItemLayout} label="对应产品">
                   {getFieldDecorator('productType', {
-                    initialValue: detail.productType ? [detail.payPanyId,detail.productTypeId,detail.productName] : "",
+                    initialValue: detail.productType ? [detail.payPanyId,detail.productTypeId,detail.productId] : "",
                     rules: [
                       {
                         required: true,
@@ -794,6 +795,7 @@ class LogisticsConfiguration extends PureComponent {
                           payPanyId:selectedOptions[0].id,
                           productTypeId:selectedOptions[1].id,
                           productId :selectedOptions[2].id,
+                          productName:selectedOptions[2].value,
                           productType:selectedOptions[0].value +"/" +selectedOptions[1].value
                         })
                       }}
