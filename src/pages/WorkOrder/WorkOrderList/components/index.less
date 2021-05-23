@@ -1,0 +1,157 @@
+
+.default_table_serch_box{
+    background: #ffffff;
+    margin-bottom: 10px;
+    padding: 10px;
+    :global{
+        .ant-form-item-control-wrapper{
+            flex: 1 1;
+            display: inline-block;
+            vertical-align: top;
+        }
+    }
+}
+// 可伸缩列表样式
+:global{
+      .react-resizable {
+        position: relative;
+        background-clip: padding-box;
+      }
+
+    .react-resizable-handle {
+        position: absolute;
+        width: 10px;
+        height: 100%;
+        bottom: 0;
+        right: -5px;
+        cursor: col-resize;
+        z-index: 1;
+      }
+}
+
+
+
+.default_operation_box{
+    background: #ffffff;
+    padding: 10px 0;
+}
+.default_table_box{
+    background: #ffffff;
+}
+
+
+.form_title{
+    border-left: 3px solid #52b7b4;
+}
+
+.tabs{
+    vertical-align: top;
+    height: 40px;
+    background: #fff;
+    padding-top: 10px;
+    padding-left: 20px;
+    .status_item_select{
+        color:#52b7b4;
+        background: #409eff26;
+        float: left;
+        // margin-right: 15px;
+        line-height: 28px;
+        text-align: center;
+        padding: 0 30px;
+        border: 1px solid #fff;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    .status_item{
+        float: left;
+        // margin-right: 15px;
+        line-height: 28px;
+        text-align: center;
+        padding: 0 30px;
+        border: 1px solid #fff;
+        color: #606266;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+}
+.logisticsButton{
+  background-color:#52b7b4;
+  color:#fff !important;
+  margin-left: 10px;
+  border-color: #52b7b4;
+  padding:0 10px;
+}
+.logisticsButton:hover{
+  color:#52b7b4 !important;
+}
+.checkbox{
+  margin-top: 20px;
+}
+.ordersTabs{
+  :global{
+    .ant-tabs-bar{
+      border: 0px !important;
+    }
+    .ant-card{
+      margin-top: -1px;
+    }
+    .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab{
+      height: 48px !important;
+      line-height: 46px !important;
+      margin-top: 10px;
+    }
+    .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-nav-container{
+      height: 58px !important;
+    }
+    .ant-badge{
+      position: absolute !important;
+      right: 0 !important;
+    }
+    .ant-badge-count{
+      background: #52b7b4 !important;
+    }
+  }
+}
+
+
+.range_item{
+  width: 54px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  display: inline-block;
+  border-top: 1px solid #dcdfe6;
+  border-bottom: 1px solid #dcdfe6;
+  border-right: 1px solid #dcdfe6;
+  border-left: 1px solid #fff;
+  cursor: pointer;
+}
+.range_left_btn{
+  border-left: 1px solid #dcdfe6;
+  border-radius: 4px 0 0 4px;
+}
+.range_right_btn{
+  border-left: 1px solid #fff;
+  border-radius: 0 4px 4px 0;
+}
+.range_selete{
+  color: #52b7b4 !important;
+  border-color: #52b7b4 !important;
+}
+.export_fields_item{
+  width: 32%;
+  float: left;
+}
+.text{
+  :global{
+    .ant-form-item-control{
+      position: relative;
+      padding: 0 10px;
+      .anticon-question-circle-o{
+        position: absolute;
+        top:-138px;
+        right: -20px;
+      }
+    }
+  }
+}
