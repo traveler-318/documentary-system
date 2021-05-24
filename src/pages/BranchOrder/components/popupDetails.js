@@ -529,7 +529,7 @@ class OrdersEdit extends PureComponent {
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="产品类型">
                       {getFieldDecorator('productType', {
-                        initialValue: detail.productType?[detail.payPanyId,detail.productTypeId,detail.productId]:null,
+                        initialValue: detail.productType?[detail.payPanyId,detail.productTypeId,Number(detail.productId)]:null,
                       })(
                         <Cascader
                           disabled={isUpdate ? edit : true}
