@@ -776,7 +776,7 @@ class LogisticsConfiguration extends PureComponent {
                 />
                 <FormItem {...formAllItemLayout} label="对应产品">
                   {getFieldDecorator('productType', {
-                    initialValue: detail.productType ? [detail.payPanyId,detail.productTypeId,detail.productId] : "",
+                    initialValue: detail.productType ? [detail.payPanyId,detail.productTypeId,Number(detail.productId)] : "",
                     rules: [
                       {
                         required: true,
