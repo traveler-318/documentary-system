@@ -19,3 +19,10 @@ export async function updateChatRecords(params) {
     body: params,
   });
 }
+//删除
+export async function remove(params) {
+  return request("/api/tracking_order_after_record/afterrecord/remove",{
+    method: 'POST',
+    body: params,
+  });
+}

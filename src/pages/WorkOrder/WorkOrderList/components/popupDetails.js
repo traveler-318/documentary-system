@@ -62,26 +62,9 @@ class OrdersEdit extends PureComponent {
       this.getEditDetails();
     });
 
-  }
-
-  UNSAFE_componentWillReceiveProps(nex){
-    console.log(nex)
-    console.log(ORDERSTATUS)
-    const { detail } = this.props;
-    let list = [];
-
-    if(nex.detail.followRecords && JSON.parse(nex.detail.followRecords).list){
-      list = JSON.parse(nex.detail.followRecords).list
-    }
-
-    this.setState({
-      detail:nex.detail,
-      followRecords:list
-    })
-
     let _type = ORDERSTATUS.map(item=>{
       let _item = {...item}
-      if(Number(item.key) <= Number(nex.detail.confirmTag)){
+      if(Number(item.key) <= Number(globalParameters.detailData.workOrderStatus)){
         _item.className = "clolor"
       }else{
         _item.className = ""
@@ -93,6 +76,8 @@ class OrdersEdit extends PureComponent {
     this.setState({
       orderType:_type
     })
+
+
 
   }
 
@@ -146,12 +131,13 @@ class OrdersEdit extends PureComponent {
   };
 
   handleSubmit =()=>{
-    const { detail , describe } = this.state;
+    const { detail , describe,chatRecords } = this.state;
     const { globalParameters } = this.props;
     const params={
-      "id": detail.id,
+      "id": chatRecords[0].id,
       "chatRecords":JSON.stringify({
-        "id":detail.id,
+        "id":chatRecords[0].id,
+        "creatime": moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
         "context": describe,
         "pic_zoom_url": "",
         "pic_url": "",
@@ -170,6 +156,12 @@ class OrdersEdit extends PureComponent {
     })
 
 
+  }
+
+  handleEmpty =()=>{
+    this.setState({
+      describe:''
+    })
   }
 
 
@@ -203,8 +195,11 @@ class OrdersEdit extends PureComponent {
       describe,
       logisticsDetailsVisible,
       productList,
+      orderType,
       chatRecords
     } = this.state;
+
+    console.log(orderType )
 
     const formAllItemLayout = {
       labelCol: {
@@ -327,9 +322,15 @@ class OrdersEdit extends PureComponent {
                 <Col span={16} style={{ padding: 0 }} className={styles.rightContent}>
                   <div className={styles.main}>
                     <ul>
-                      <li className={styles.color}>待回复</li>
-                      <li>已回复</li>
-                      <li>已完成</li>
+                      {orderType.map(item=>{
+                        return (
+                          <>
+                            {
+                              item.key === null ? "":(<li className={item.className ? styles.color : styles.defaultColor}>{item.name}</li>)
+                            }
+                          </>
+                        )
+                      })}
                     </ul>
                     <p><label>快递：</label>{detail.logisticsCompany}<span style={{float:'right'}}>类型：售后类型</span></p>
                     <p><label>单号：</label>{detail.logisticsNumber}
@@ -390,7 +391,7 @@ class OrdersEdit extends PureComponent {
                       value={describe}
                       onChange={this.TextAreaChange}
                       style={{height: '90px'}}
-                      placeholder='请输入内容（Alt+Enter快速提交）'
+                      placeholder='请输入内容'
                     />
                       <div>
                         <div style={{float:"left",cursor:"pointer",paddingTop:7}}>

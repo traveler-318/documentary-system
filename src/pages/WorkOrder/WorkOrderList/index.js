@@ -18,12 +18,12 @@ import { Resizable } from 'react-resizable';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { getButton } from '../../../utils/authority';
-import { ORDERSTATUS } from './data.js';
+import { ORDERSTATUS,TYPESTATUS } from './data.js';
 import {
   deleteData,
   updateOrderHead
 } from '../../../services/newServices/order';
-import {getList } from '../../../services/newServices/workOrder';
+import {getList,remove } from '../../../services/newServices/workOrder';
 import PopupDetails from './components/popupDetails'
 import { getCookie } from '../../../utils/support';
 import { getLabelList } from '@/services/user';
@@ -76,19 +76,6 @@ class WorkOrderList extends PureComponent {
       // 详情弹窗
       detailsVisible:false,
       countSice:0,
-
-
-      workOrderStatus:[
-        {
-          id:1,
-          name:'未开始'
-        },
-        {
-          id:1,
-          name:'开始'
-        },
-      ]
-
     };
   }
 
@@ -122,8 +109,6 @@ class WorkOrderList extends PureComponent {
   // ============ 查询 ===============
   handleSearch = (params) => {
     console.log(params,"查询参数")
-    const {tabKey}=this.state;
-    params.confirmTag=tabKey
     this.setState({
       params:params
     },()=>{
@@ -138,26 +123,26 @@ class WorkOrderList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { workOrderStatus, params,organizationTree } = this.state;
+    const { workOrderStatus } = this.state;
 
     return (
       <div className={"default_search_form"}>
         <Form.Item label="工单状态">
-          {getFieldDecorator('status', {
+          {getFieldDecorator('workOrderStatus', {
           })(
             <Select placeholder={"请选择工单状态"} style={{ width: 200 }}>
-              {workOrderStatus.map((item,index)=>{
-                return (<Option key={index} value={item.id}>{item.name}</Option>)
+              {ORDERSTATUS.map((item,index)=>{
+                return (<Option key={index} value={item.key}>{item.name}</Option>)
               })}
             </Select>
           )}
         </Form.Item>
         <Form.Item label="工单类型">
-          {getFieldDecorator('status', {
+          {getFieldDecorator('complaintsType', {
           })(
             <Select placeholder={"请选择工单类型"} style={{ width: 200 }}>
-              {workOrderStatus.map((item,index)=>{
-                return (<Option key={index} value={item.id}>{item.name}</Option>)
+              {TYPESTATUS.map((item,index)=>{
+                return (<Option key={index} value={item.key}>{item.name}</Option>)
               })}
             </Select>
           )}
@@ -216,7 +201,7 @@ class WorkOrderList extends PureComponent {
       cancelText: '取消',
       keyboard:false,
       async onOk() {
-        deleteData({
+        remove({
           ids:row.id
         }).then(res=>{
           message.success(res.msg);
@@ -281,16 +266,26 @@ class WorkOrderList extends PureComponent {
     if(key === 2 || key === '2'){ text = "已完成" }
     return text;
   }
+
   statusChange = (key) => {
     sessionStorage.executiveOrderTabKey = key;
     let _params = {...this.state.params}
+    const {params} = this.state;
     _params.current = 1
-    _params.orderBy = false;
     this.setState({
       tabKey:key,
       params:_params
     },()=>{
-      this.handleSearch(this.state.params)
+      if(key === "null"){
+        params.workOrderStatus=null
+      }else {
+        params.workOrderStatus=Number(key)
+      }
+      this.setState({
+        params:params
+      },()=>{
+        this.getDataList();
+      })
     })
   }
 
@@ -311,44 +306,6 @@ class WorkOrderList extends PureComponent {
       detailsVisible:false
     })
   }
-
-  handleSubmit = confirm => {
-    // 确定 保存用户设置的字段排序和需要显示的字段key
-    const { plainOptions, checkedOptions } = this.state;
-    const arr=[];
-
-    plainOptions.map(item=>{
-      if(checkedOptions.indexOf(item.key) != -1){
-        arr.push(item)
-      }
-    })
-
-    const params={
-      menuJson:arr,
-      menuType:1,
-      deptId:getCookie("dept_id")
-    }
-    updateOrderHead(params).then(res=>{
-      if(res.code === 200){
-        message.success(res.msg)
-        this.setState({
-            isClickHandleSearch: true,
-          },() => {
-            confirm();
-          }
-        )
-      }
-    })
-  };
-
-  handleCancel = clearFilters => {
-    // 用户点击取消按钮，重置字段
-    clearFilters();
-    this.setState({
-      plainOptions: this.state.editPlainOptions,
-      checkedOptions: this.state.editCheckedOptions
-    });
-  };
 
   components = {
     header: {
@@ -380,9 +337,6 @@ class WorkOrderList extends PureComponent {
       params,
       detailsVisible
     } = this.state;
-
-    console.log(data)
-    console.log(countSice)
 
     const columns = [
       {
@@ -444,7 +398,7 @@ class WorkOrderList extends PureComponent {
       },
       {
         title: '工单状态',
-        dataIndex: 'userReplyStatus',
+        dataIndex: 'workOrderStatus',
         width: 200,
         render:(key)=>{
           return (
@@ -473,12 +427,14 @@ class WorkOrderList extends PureComponent {
               <Divider type="vertical" />
               <a onClick={()=>this.handleDetails(row)}>详情</a>
               <Divider type="vertical" />
-              <a onClick={() => this.handleClick(res)}>删除</a>
+              {/*<a onClick={() => this.handleDelect(res)}>删除</a>*/}
             </div>
           )
         },
       },
     ];
+
+    console.log(countSice)
 
     return (
       <Panel>
@@ -489,8 +445,8 @@ class WorkOrderList extends PureComponent {
                 <TabPane tab={
                   <span>
                     {(
-                      item.key === params.confirmTag ||
-                      JSON.stringify(item.key) === params.confirmTag
+                      item.key === tabKey ||
+                      JSON.stringify(item.key) === tabKey
                     ) ? (
                       <Badge count={countSice} overflowCount={999}>
                         <a href="#" className="head-example" />
