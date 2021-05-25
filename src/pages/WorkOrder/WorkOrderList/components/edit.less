@@ -91,7 +91,6 @@
     .ant-btn{
       margin-right: 10px;
       box-shadow:none;
-      border:none;
       outline: 0;
     }
 
@@ -128,6 +127,13 @@
       border: none;
       box-shadow: none;
     }
+    .ant-upload.ant-upload-drag{
+      background:none;
+      border:0
+    }
+    .ant-upload.ant-upload-drag .ant-upload{
+      padding: 0;
+    }
   }
 }
 .main{
@@ -140,7 +146,7 @@
     // border: 1px solid #fefefe;
     margin: 0 15px;
     li{
-      width: 18%;
+      width: 30%;
       color: #ccc;
       background: #fff;
       text-align: center;
@@ -174,6 +180,44 @@
   margin-bottom: 10px;
   p{
     margin-bottom: 5px;
+  }
+  .detailItem{
+    margin: 10px 15px;
+  }
+  .creatime{
+    color: #B5B5B5;
+    font-size: 12px;
+    text-align: center;
+    margin: 10px;
+  }
+  .detailMesage{
+    display: flex;
+  }
+  .detailMessage1{
+    flex-direction: row-reverse;
+  }
+  .userPhoto{
+    background: #1890FF;
+    color: #fff;
+    font-size: 14px;
+    width: 39px;
+    height: 39px;
+    line-height: 39px;
+    text-align: center;
+    border-radius: 50%;
+  }
+  .message{
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+    padding: 9px;
+    margin-left: 15px;
+    max-width: 200px;
+    font-size: 12px;
+  }
+  .message1{
+    background: #BAE7FF;
+    color: #656667;
   }
 }
 .timelineContent::-webkit-scrollbar{
