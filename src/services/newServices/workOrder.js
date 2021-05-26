@@ -26,3 +26,10 @@ export async function remove(params) {
     body: params,
   });
 }
+//删除
+export async function updateReaded(params) {
+  return request("/api/tracking_order_after_record/afterrecord/updateReaded",{
+    method: 'POST',
+    body: params,
+  });
+}

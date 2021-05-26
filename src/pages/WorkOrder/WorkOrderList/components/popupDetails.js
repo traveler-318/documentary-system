@@ -21,7 +21,7 @@ import { connect } from 'dva';
 import moment from 'moment';
 import styles from './edit.less';
 import { getDetails, productTreelist } from '../../../../services/newServices/order';
-import { getList, updateChatRecords } from '../../../../services/newServices/workOrder';
+import { getList, updateChatRecords,updateReaded } from '../../../../services/newServices/workOrder';
 import {ORDERSTATUS} from './data';
 import FormDetailsTitle from '../../../../components/FormDetailsTitle';
 import { getToken } from '@/utils/authority';
@@ -76,9 +76,6 @@ class OrdersEdit extends PureComponent {
     this.setState({
       orderType:_type
     })
-
-
-
   }
 
   getTreeList = () => {
@@ -89,6 +86,15 @@ class OrdersEdit extends PureComponent {
 
 
   changeDetails = (id) => {
+    // 获取详情数据
+    this.setState({
+      detailsId:id,
+    },()=>{
+      this.getEditDetails();
+    });
+  }
+
+  updateReaded = (id) => {
     // 获取详情数据
     this.setState({
       detailsId:id,
