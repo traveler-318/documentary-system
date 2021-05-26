@@ -21,15 +21,26 @@ import { connect } from 'dva';
 import moment from 'moment';
 import styles from './edit.less';
 import { getDetails, productTreelist } from '../../../../services/newServices/order';
-import { getList, updateChatRecords,updateReaded } from '../../../../services/newServices/workOrder';
+import { getList, updateChatRecords,updateReaded,getUpToken } from '../../../../services/newServices/workOrder';
 import {ORDERSTATUS} from './data';
 import FormDetailsTitle from '../../../../components/FormDetailsTitle';
 import { getToken } from '@/utils/authority';
 import LogisticsDetails from './LogisticsDetails';
+import * as qiniu from 'qiniu-js'
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const { Dragger } = Upload;
 const { TabPane } = Tabs;
+
+let config = {
+  useCdnDomain: true,         // 表示是否使用 cdn 加速域名，为布尔值，true 表示使用，默认为 false。
+  region: qiniu.region.z2     // 上传域名区域（z1为华北）,当为 null 或 undefined 时，自动分析上传域名区域
+};
+let putExtra = {
+  fname: "",          // 文件原文件名
+  params: {},         // 放置自定义变量： 'x:name': 'sex'
+  mimeType: null      // 限制上传文件类型，为 null 时表示不对文件类型限制；限制类型放到数组里： ["image/png", "image/jpeg", "image/gif"]
+};
 
 
 @connect(({ globalParameters}) => ({
@@ -46,6 +57,8 @@ class OrdersEdit extends PureComponent {
       logisticsDetailsVisible:false,
       chatRecords:[],
       describe:"",
+      tokenJson:{},
+      url:''
     };
   }
 
@@ -60,6 +73,7 @@ class OrdersEdit extends PureComponent {
     },()=>{
       this.getTreeList();
       this.getEditDetails();
+      this.updateReaded();
     });
 
     let _type = ORDERSTATUS.map(item=>{
@@ -94,13 +108,18 @@ class OrdersEdit extends PureComponent {
     });
   }
 
-  updateReaded = (id) => {
-    // 获取详情数据
-    this.setState({
-      detailsId:id,
-    },()=>{
-      this.getEditDetails();
-    });
+  updateReaded = () => {
+    const { globalParameters } = this.props;
+    const { detail} = this.state;
+    const params={
+      id:String(globalParameters.detailData.id),
+      chatRecords:globalParameters.detailData.chatRecords
+    }
+    console.log(params)
+    updateReaded(params).then(res=>{
+      console.log(res.data)
+      this.getDataList(detail.id)
+    })
   }
 
   getEditDetails = () => {
@@ -136,8 +155,8 @@ class OrdersEdit extends PureComponent {
     })
   };
 
-  handleSubmit =()=>{
-    const { detail , describe,chatRecords } = this.state;
+  handleSubmit =(url)=>{
+    const { detail , describe,chatRecords} = this.state;
     const { globalParameters } = this.props;
     const params={
       "id": chatRecords[0].id,
@@ -146,7 +165,7 @@ class OrdersEdit extends PureComponent {
         "creatime": moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
         "context": describe,
         "pic_zoom_url": "",
-        "pic_url": "",
+        "pic_url": url,
         "read_status": 0,
         "identity": 1,
         "complaints_type":globalParameters.detailData.complaintsType
@@ -191,6 +210,61 @@ class OrdersEdit extends PureComponent {
     })
   };
 
+  UpToken=(name)=>{
+    getUpToken(name).then(res=>{
+      console.log(res)
+      if(res.code === 200){
+        this.setState({
+          tokenJson:res.data
+        })
+      }else{
+        message.error(res.message)
+      }
+    })
+  }
+
+  onUpload = info => {
+    console.log(info)
+    console.log(info.file, info.fileList);
+    const _this=this;
+    getUpToken(info.file.name).then(res=>{
+      console.log(res)
+      if(res.code === 200){
+        const observable = qiniu.upload(info, res.data.imgUrl, res.data.token, putExtra, config)
+        const subscription = observable.subscribe({
+          next: (result) => {
+            // 接收上传进度信息，result是带有total字段的 Object
+            // loaded: 已上传大小; size: 上传总信息; percent: 当前上传进度
+            console.log(result);    // 形如：{total: {loaded: 1671168, size: 2249260, percent: 74.29856930723882}}
+            // this.percent = result.total.percent.toFixed(0);
+          },
+          error: (errResult) => {
+            // 上传错误后失败报错
+            console.log(errResult)
+            message.error('上传失败');
+          },
+          complete: (result) => {
+            // 接收成功后返回的信息
+            console.log(result);   // 形如：{hash: "Fp5_DtYW4gHiPEBiXIjVsZ1TtmPc", key: "%TStC006TEyVY5lLIBt7Eg.jpg"}
+            if (result.key) {
+              message.success('上传成功');
+              _this.handleSubmit(result.key)
+            }
+          }
+        }) // 上传开始
+      }else{
+        message.error(res.message)
+      }
+    })
+    /*
+            file: File 对象，上传的文件
+            key: 文件资源名
+            token: 上传验证信息，前端通过接口请求后端获得
+            config: object，其中的每一项都为可选
+        */
+
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -205,7 +279,7 @@ class OrdersEdit extends PureComponent {
       chatRecords
     } = this.state;
 
-    console.log(orderType )
+    console.log(chatRecords )
 
     const formAllItemLayout = {
       labelCol: {
@@ -222,6 +296,7 @@ class OrdersEdit extends PureComponent {
       },
       action: '/api/blade-resource/oss/endpoint/put-file-attach',
     };
+    const imgHttp = 'https://oss.gendanbao.com.cn/';
 
     return (
       <>
@@ -348,7 +423,7 @@ class OrdersEdit extends PureComponent {
                   <div className={styles.tabContent}>
                     <div className={styles.timelineContent}>
                       <div className={styles.detailItem}>
-                        <div className={styles.creatime}>{chatRecords[0].creatime}</div>
+                        <div className={styles.creatime}>{chatRecords[0].create_time}</div>
                         <div className={`${styles.detailMesage}`}>
                           <div className={styles.userPhoto}>客户</div>
                           <div className={`${styles.message}`} style={{marginRight:'8px'}}>
@@ -358,6 +433,7 @@ class OrdersEdit extends PureComponent {
                             <div>联系方式</div>
                             <div>姓名：{detail.userName}</div>
                             <div>手机号：{detail.userPhone}</div>
+                            <div className={styles.state}>{chatRecords[0].read_status === 0 ? '未读':'已读'}</div>
                           </div>
                         </div>
                       </div>
@@ -371,6 +447,10 @@ class OrdersEdit extends PureComponent {
                                   <div className={styles.userPhoto}>客户</div>
                                   <div className={`${styles.message}`} style={{marginRight:'8px'}}>
                                     {item.context}
+                                    {item.pic_url && (
+                                      <img style={{width:'100%'}} src={imgHttp+item.pic_url} />
+                                    )}
+                                    <div className={styles.state}>{item.read_status === 0 ? '未读':'已读'}</div>
                                   </div>
                                 </div>
                               </div>
@@ -381,6 +461,10 @@ class OrdersEdit extends PureComponent {
                                   <div className={styles.userPhoto}>我</div>
                                   <div className={`${styles.message} ${styles.message1}`} style={{marginRight:'8px'}}>
                                     {item.context}
+                                    {item.pic_url && (
+                                      <img style={{width:'100%'}} src={imgHttp+item.pic_url} />
+                                    )}
+                                    <div className={styles.state}>{item.read_status === 0 ? '未读':'已读'}</div>
                                   </div>
                                 </div>
                               </div>
@@ -400,7 +484,7 @@ class OrdersEdit extends PureComponent {
                       <div>
                         <div style={{float:"left",cursor:"pointer",paddingTop:7}}>
 
-                          <Dragger {...uploadProps} onChange={this.onUpload}>
+                          <Dragger {...uploadProps} onChange={(e)=>this.onUpload(e)}>
                             <Icon
                               type="picture"
                               style={{margin:"0 10px 0 15px"}}
@@ -417,7 +501,7 @@ class OrdersEdit extends PureComponent {
                           >清空</Button>
                           <Button
                             type="primary"
-                            onClick={this.handleSubmit}
+                            onClick={()=>this.handleSubmit('')}
                           >发送</Button>
                         </div>
                       </div>
