@@ -222,8 +222,6 @@ class OrdersEdit extends PureComponent {
       action: '/api/blade-resource/oss/endpoint/put-file-attach',
     };
 
-    console.log(chatRecords)
-
     return (
       <>
         <Modal
@@ -343,7 +341,7 @@ class OrdersEdit extends PureComponent {
                   <div className={styles.tabContent}>
                     <div className={styles.timelineContent}>
                       <div className={styles.detailItem}>
-                        <div className={styles.creatime}>2021-05-22 </div>
+                        <div className={styles.creatime}>{chatRecords[0].creatime}</div>
                         <div className={`${styles.detailMesage}`}>
                           <div className={styles.userPhoto}>客户</div>
                           <div className={`${styles.message}`} style={{marginRight:'8px'}}>
