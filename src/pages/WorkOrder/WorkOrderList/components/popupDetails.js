@@ -81,7 +81,7 @@ class OrdersEdit extends PureComponent {
 
     let _type = ORDERSTATUS.map(item=>{
       let _item = {...item}
-      if(Number(item.key) <= Number(globalParameters.detailData.workOrderStatus)){
+      if(Number(item.key) <= Number(globalParameters.detailData.platformReplyStatus)){
         _item.className = "clolor"
       }else{
         _item.className = ""
@@ -505,7 +505,7 @@ class OrdersEdit extends PureComponent {
                           <Dragger onChange={(e)=>this.onUpload(e)}>
                             <Icon
                               type="picture"
-                              style={{margin:"0 10px 0 15px"}}
+                              style={{margin:"0 10px 0 15px",color:'#666'}}
                             />
                           </Dragger>
                         </div>
