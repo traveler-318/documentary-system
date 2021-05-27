@@ -61,6 +61,8 @@ class OrdersEdit extends PureComponent {
       repeatLoading:false,
       payPanyId:null,
       productTypeId:null,
+      productType:'',
+      productName:'',
       productId:null,
       detailsId:null,
       tenantId:null,
@@ -172,8 +174,10 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail,selectedOptions, payPanyId, productTypeId, productId } = this.state;
+    const { detail,selectedOptions, payPanyId, productTypeId, productName, productId,productType } = this.state;
     form.validateFieldsAndScroll((err, values) => {
+
+      console.log(productId)
 
       // ORDERSOURCE.map(item => {
       //   if(item.name === values.orderSource){
@@ -181,10 +185,10 @@ class OrdersEdit extends PureComponent {
       //   }
       // })
       values.id = detail.id;
-      values.userAddress=`${selectedOptions}${values.userAddress}`;
+      values.userAddress=productType;
       if(values.productType && values.productType != ""){
-        values.productName = values.productType[2];
-        values.productType = `${values.productType[0]}/${values.productType[1]}`;
+        values.productName = !productName ? detail.productName : productName;
+        values.productType = productType;
         values.payPanyId = payPanyId;
         values.productTypeId = productTypeId;
         values.productId = productId;
@@ -527,19 +531,23 @@ class OrdersEdit extends PureComponent {
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="产品类型">
                       {getFieldDecorator('productType', {
-                        initialValue: detail.productType?[...detail.productType.split("/"),detail.productName]:null,
+                        initialValue: detail.productType?[detail.payPanyId,detail.productTypeId,Number(detail.productId)]:null,
                       })(
                         <Cascader
                           disabled={isUpdate ? edit : true}
                           options={productList}
-                          fieldNames={{ label: 'value'}}
+                          fieldNames={{ label: 'value',value:'id'}}
                           onChange={(value, selectedOptions)=>{
                             const { form } = this.props;
+
+                            console.log(selectedOptions[2].id)
 
                             this.setState({
                               payPanyId:selectedOptions[0].id,
                               productTypeId:selectedOptions[1].id,
                               productId :selectedOptions[2].id,
+                              productName:selectedOptions[2].value,
+                              productType:selectedOptions[0].value +"/" +selectedOptions[1].value
                             })
 
                             form.setFieldsValue({

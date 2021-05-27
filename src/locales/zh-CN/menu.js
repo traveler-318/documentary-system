@@ -29,6 +29,11 @@ export default {
   'menu.orders.afterSaleOrder': '售后订单',
   // 'menu.order.orderList': '全部订单',
 
+  'menu.workOrder':'工单管理',
+  'menu.workOrder.workOrderList':'工单',
+
+
+
   'menu.branchManage':'渠道商管理',
   'menu.branchManage.branchOffice':'渠道商管理',
   'menu.branchManage.branchOrder':'渠道商订单',

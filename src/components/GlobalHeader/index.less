@@ -34,10 +34,11 @@
 
 .trigger {
   height: 50px;
-  padding: ~'calc((50px - 20px) / 2)' 24px;
+  padding: 0 24px;
   font-size: 20px;
   cursor: pointer;
   transition: all 0.3s, padding 0s;
+  float: left;
   &:hover {
     background: @pro-header-hover-bg;
   }
@@ -52,6 +53,21 @@
   &:hover {
     background: @pro-header-hover-bg;
   }
+}
+
+
+.reminder{
+  overflow: hidden;
+  position: relative;
+  width: 600px;
+  height: 50px;
+  color:red;
+  display: inline-block;
+  overflow: hidden;
+  float: left;
+  white-space: nowrap;
+  padding: 0;
+  font-size: 14px;
 }
 
 .right {

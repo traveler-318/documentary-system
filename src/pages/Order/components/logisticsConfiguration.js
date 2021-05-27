@@ -92,6 +92,8 @@ class LogisticsConfiguration extends PureComponent {
       payamount:0,
       payPanyId:null,
       productTypeId:null,
+      productType:'',
+      productName:'',
       productId :null,
       disabledType:false,
       loading:false,
@@ -372,7 +374,7 @@ class LogisticsConfiguration extends PureComponent {
   }
 
   saveData = (values,callBack) => {
-    const { detail, payamount } = this.state;
+    const { detail, payamount,productType,productName } = this.state;
     console.log(detail,"detail")
     sessionStorage.logisticsConfigurationValues = JSON.stringify(values);
     values.id = detail.id;
@@ -383,8 +385,8 @@ class LogisticsConfiguration extends PureComponent {
     values.userPhone = detail.userPhone;
     values.payAmount = payamount;
     // values.payAmount = values.productType[2].split("-")[1];
-    values.productName = values.productType[2];
-    values.productType = `${values.productType[0]}/${values.productType[1]}`;
+    values.productName = !productName ? detail.productName : productName;
+    values.productType = productType;
     // values.productName = values.productName.join("/");
     logisticsSubscription(values).then(res=>{
       if(res.code === 200){
@@ -774,7 +776,7 @@ class LogisticsConfiguration extends PureComponent {
                 />
                 <FormItem {...formAllItemLayout} label="对应产品">
                   {getFieldDecorator('productType', {
-                    initialValue: detail.productType ? [...detail.productType.split("/"),detail.productName] : "",
+                    initialValue: detail.productType ? [detail.payPanyId,detail.productTypeId,Number(detail.productId)] : "",
                     rules: [
                       {
                         required: true,
@@ -785,7 +787,7 @@ class LogisticsConfiguration extends PureComponent {
                     <Cascader
                       disabled={disabledType}
                       options={productList}
-                      fieldNames={{ label: 'value'}}
+                      fieldNames={{ label: 'value',value: "id"}}
                       onChange={(value, selectedOptions)=>{
                         console.log(value, selectedOptions,"产品分类改变")
                         this.setState({
@@ -793,6 +795,8 @@ class LogisticsConfiguration extends PureComponent {
                           payPanyId:selectedOptions[0].id,
                           productTypeId:selectedOptions[1].id,
                           productId :selectedOptions[2].id,
+                          productName:selectedOptions[2].value,
+                          productType:selectedOptions[0].value +"/" +selectedOptions[1].value
                         })
                       }}
                     ></Cascader>

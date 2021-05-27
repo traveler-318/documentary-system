@@ -46,6 +46,8 @@ class OrdersAdd extends PureComponent {
       payamount:null,
       payPanyId:null,
       productTypeId:null,
+      productType:'',
+      productName:'',
       productId:null,
     };
   }
@@ -132,7 +134,7 @@ class OrdersAdd extends PureComponent {
 
   submit = (callback)=>{
     const { form } = this.props;
-    const { cityparam, selectedOptions, payamount, payPanyId, productTypeId, productId, } = this.state;
+    const { cityparam, selectedOptions, payamount, payPanyId, productTypeId, productId, productType,productName} = this.state;
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         this.setState({
@@ -142,8 +144,8 @@ class OrdersAdd extends PureComponent {
         values.tenantId = getCookie("tenantId");
         values = {...values,...cityparam};
         if(values.productType && values.productType != ""){
-          values.productName = values.productType[2];
-          values.productType = `${values.productType[0]}/${values.productType[1]}`;
+          values.productName = productName;
+          values.productType =productType;
           values.payPanyId = payPanyId;
           values.productTypeId = productTypeId;
           values.productId = productId;
@@ -363,13 +365,15 @@ class OrdersAdd extends PureComponent {
                     })(
                       <Cascader
                         options={productList}
-                        fieldNames={{ label: 'value'}}
+                        fieldNames={{ label: 'value',value: "id"}}
                         onChange={(value, selectedOptions)=>{
                           console.log(value, selectedOptions,"产品分类改变")
                           this.setState({
                             payPanyId:selectedOptions[0].id,
                             productTypeId:selectedOptions[1].id,
                             productId :selectedOptions[2].id,
+                            productName:selectedOptions[2].value,
+                            productType:selectedOptions[0].value +"/" +selectedOptions[1].value
                           })
                           const { form } = this.props;
                           console.log(form,"1")

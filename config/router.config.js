@@ -658,8 +658,18 @@ export default [
               { path: '/logistics/additional/edit', component: './Logistics/Additional/edit' },
             ],
           },
-
         ],
+      },
+      {
+        path: '/workOrder',
+        routes:[
+          {
+            path: '/workOrder/workOrderList',
+            routes:[
+              { path: '/workOrder/workOrderList', component: './WorkOrder/WorkOrderList/index' },
+            ]
+          },
+        ]
       },
       {
         path: '/numberDetection',

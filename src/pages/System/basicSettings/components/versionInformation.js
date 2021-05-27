@@ -53,6 +53,14 @@ class BaseView extends Component {
           resp.data.versionColor = 'green';
           resp.data.version = '企业';
         }
+        if(resp.data.version === '3'){
+          resp.data.versionColor = 'geekblue';
+          resp.data.version = '机构';
+        }
+        if(resp.data.version === '4'){
+          resp.data.versionColor = 'yellow';
+          resp.data.version = '补偿';
+        }
         this.setState({
           data:resp.data
         });

@@ -557,7 +557,7 @@ class OrdersEdit extends PureComponent {
                         <Cascader
                           disabled={edit}
                           options={productList}
-                          fieldNames={{ label: 'value'}}
+                          fieldNames={{ label: 'value',value: "id"}}
                           onChange={(value, selectedOptions)=>{
                             const { form } = this.props;
 
@@ -572,7 +572,7 @@ class OrdersEdit extends PureComponent {
                             })
                             // }
                           }}
-                        />
+                        ></Cascader>
                       )}
                     </FormItem>
 
