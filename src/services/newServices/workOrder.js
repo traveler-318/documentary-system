@@ -26,10 +26,16 @@ export async function remove(params) {
     body: params,
   });
 }
-//删除
+//已读未读状态修改
 export async function updateReaded(params) {
   return request("/api/tracking_order_after_record/afterrecord/updateReaded",{
     method: 'POST',
     body: params,
+  });
+}
+
+export async function getUpToken(fileName) {
+  return request("http://push.gendanbao.com.cn/qiniu/UpToken?suffix="+fileName,{
+    method:'get',
   });
 }
