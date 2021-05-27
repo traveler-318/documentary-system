@@ -455,7 +455,6 @@ class OrdersEdit extends PureComponent {
                             <div>联系方式</div>
                             <div>姓名：{detail.userName}</div>
                             <div>手机号：{detail.userPhone}</div>
-                            <div className={styles.state}>{chatRecords[0].read_status === 0 ? '未读':'已读'}</div>
                           </div>
                         </div>
                       </div>
@@ -472,7 +471,6 @@ class OrdersEdit extends PureComponent {
                                     {item.pic_url && (
                                       <img style={{width:'100%'}} src={imgHttp+item.pic_url} onClick={()=>this.viewImgBig(item.pic_url)} />
                                     )}
-                                    <div className={styles.state}>{item.read_status === 0 ? '未读':'已读'}</div>
                                   </div>
                                 </div>
                               </div>
