@@ -258,13 +258,13 @@ class OrdersEdit extends PureComponent {
             error: (errResult) => {
               // 上传错误后失败报错
               console.log(errResult)
-              message.error('上传失败');
+              // message.error('上传失败');
             },
             complete: (result) => {
               // 接收成功后返回的信息
               console.log(result);   // 形如：{hash: "Fp5_DtYW4gHiPEBiXIjVsZ1TtmPc", key: "%TStC006TEyVY5lLIBt7Eg.jpg"}
               if (result.key) {
-                message.success('上传成功');
+                // message.success('上传成功');
                 _this.handleSubmit(result.key)
                 // return false;
               }
@@ -485,7 +485,7 @@ class OrdersEdit extends PureComponent {
                                     {item.pic_url && (
                                       <img style={{width:'100%'}} src={imgHttp+item.pic_url} onClick={()=>this.viewImgBig(item.pic_url)} />
                                     )}
-                                    <div className={styles.state}>{item.read_status === 0 ? '未读':'已读'}</div>
+                                    <div className={styles.state1}>{item.read_status === 0 ? '未读':'已读'}</div>
                                   </div>
                                 </div>
                               </div>
