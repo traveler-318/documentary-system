@@ -162,17 +162,14 @@ class OrdersEdit extends PureComponent {
     const { detail , describe,chatRecords} = this.state;
     const { globalParameters } = this.props;
     const params={
-      "id": chatRecords[0].id,
-      "chatRecords":JSON.stringify({
-        "id":chatRecords[0].id,
-        "creatime": moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-        "context": describe,
-        "pic_zoom_url": "",
-        "pic_url": url,
-        "read_status": 0,
-        "identity": '1',
-        "complaints_type":globalParameters.detailData.complaintsType
-      })
+      "id":chatRecords[0].id,
+      "create_time": moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+      "context": describe,
+      "pic_zoom_url": "",
+      "pic_url": url,
+      "read_status": 0,
+      "identity": 1,
+      "complaints_type":globalParameters.detailData.complaintsType
     }
     console.log(params)
     updateChatRecords(params).then(res=>{
@@ -463,7 +460,7 @@ class OrdersEdit extends PureComponent {
                           return i==0 ? '': item.identity == 0 ?
                             (
                               <div className={styles.detailItem}>
-                                <div className={styles.creatime}>{item.creatime}</div>
+                                <div className={styles.creatime}>{item.create_time}</div>
                                 <div className={`${styles.detailMesage}`}>
                                   <div className={styles.userPhoto}>客户</div>
                                   <div className={`${styles.message}`} style={{marginRight:'8px'}}>
