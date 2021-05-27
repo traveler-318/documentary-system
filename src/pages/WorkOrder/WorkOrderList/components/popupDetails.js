@@ -162,17 +162,14 @@ class OrdersEdit extends PureComponent {
     const { detail , describe,chatRecords} = this.state;
     const { globalParameters } = this.props;
     const params={
-      "id": chatRecords[0].id,
-      "chatRecords":{
-        "id":chatRecords[0].id,
-        "create_time": moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-        "context": describe,
-        "pic_zoom_url": "",
-        "pic_url": url,
-        "read_status": 0,
-        "identity": 1,
-        "complaints_type":globalParameters.detailData.complaintsType
-      }
+      "id":chatRecords[0].id,
+      "create_time": moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+      "context": describe,
+      "pic_zoom_url": "",
+      "pic_url": url,
+      "read_status": 0,
+      "identity": 1,
+      "complaints_type":globalParameters.detailData.complaintsType
     }
     console.log(params)
     updateChatRecords(params).then(res=>{
