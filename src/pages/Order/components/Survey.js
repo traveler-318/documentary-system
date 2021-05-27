@@ -10,7 +10,13 @@ import styles from './edit.less';
 import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
-import { updateData, getRegion, getDetails,orderFollowing } from '../../../services/newServices/order';
+import {
+  updateData,
+  getRegion,
+  getDetails,
+  orderFollowing,
+  deleteLogisticsSuber,
+} from '../../../services/newServices/order';
 import {ORDERSTATUS} from './data'
 import LogisticsDetails from './LogisticsDetails'
 import ReminderTimes from './time'
@@ -158,7 +164,6 @@ class Survey extends PureComponent {
   };
 
   // 物流详情窗口
-
   handleDetails = () => {
     const { dispatch } = this.props;
     const {detail} = this.state;
@@ -190,46 +195,96 @@ class Survey extends PureComponent {
     if(describe === ""){
       return message.error("请输入跟进内容");
     }
-    let param = {
-      userName:detail.userName,
-      describe,
-      createTime:moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
-      type:reminderTime === "" ? "1" : "2",// 1是跟进-2提醒时间，
-      reminderTime
-    }
 
-    followRecords.unshift(param);
+    console.log(detail)
+    const _this=this;
+    if(detail.confirmTag === '7'){
+      Modal.confirm({
+        title: '提示',
+        content: '订单已激活。如果需要记录请到备注填写，如填写跟进记录，订单将变为未激活状态',
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        keyboard:false,
+        async onOk() {
+          let param = {
+            userName:detail.userName,
+            describe,
+            createTime:moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
+            type:reminderTime === "" ? "1" : "2",// 1是跟进-2提醒时间，
+            reminderTime
+          }
 
-    let _param = {
-      id:detail.id,
-      deptId:detail.deptId,
-      tenantId:detail.tenantId,
-      confirmTag:detail.confirmTag,
-      outOrderNo:detail.outOrderNo,
-      salesman:detail.salesman,
-      userName:detail.userName,
-      userPhone:detail.userPhone,
-      reminderTime:reminderTime === ""? null:moment(reminderTime,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
-    }
-    _param.followRecords = JSON.stringify({
-      list:followRecords
-    })
-    console.log(_param)
+          followRecords.unshift(param);
 
-    // if(detail.confirmTag === '4'){
-    orderFollowing(_param).then(res=>{
-      if(res.code === 200){
-        message.success(res.msg);
-        this.props.getEditDetails();
-        this.handleEmpty();
-      }else{
-        message.error(res.msg);
+          let _param = {
+            id:detail.id,
+            deptId:detail.deptId,
+            tenantId:detail.tenantId,
+            confirmTag:detail.confirmTag,
+            outOrderNo:detail.outOrderNo,
+            salesman:detail.salesman,
+            userName:detail.userName,
+            userPhone:detail.userPhone,
+            reminderTime:reminderTime === ""? null:moment(reminderTime,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
+          }
+          _param.followRecords = JSON.stringify({
+            list:followRecords
+          })
+
+          // if(detail.confirmTag === '4'){
+          orderFollowing(_param).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              _this.props.getEditDetails();
+              _this.handleEmpty();
+            }else{
+              message.error(res.msg);
+            }
+          })
+        },
+        onCancel() {
+
+        },
+      });
+    }else {
+      let param = {
+        userName:detail.userName,
+        describe,
+        createTime:moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
+        type:reminderTime === "" ? "1" : "2",// 1是跟进-2提醒时间，
+        reminderTime
       }
-    })
-    // }else {
-    //   message.warning("当物流签收后才能进入跟进状态");
-    // }
 
+      followRecords.unshift(param);
+
+      let _param = {
+        id:detail.id,
+        deptId:detail.deptId,
+        tenantId:detail.tenantId,
+        confirmTag:detail.confirmTag,
+        outOrderNo:detail.outOrderNo,
+        salesman:detail.salesman,
+        userName:detail.userName,
+        userPhone:detail.userPhone,
+        reminderTime:reminderTime === ""? null:moment(reminderTime,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
+      }
+      _param.followRecords = JSON.stringify({
+        list:followRecords
+      })
+      console.log(_param)
+
+      // if(detail.confirmTag === '4'){
+      orderFollowing(_param).then(res=>{
+        if(res.code === 200){
+          message.success(res.msg);
+          this.props.getEditDetails();
+          this.handleEmpty();
+        }else{
+          message.error(res.msg);
+        }
+      })
+    }
   }
 
 

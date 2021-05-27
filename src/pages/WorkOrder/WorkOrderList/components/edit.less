@@ -1,0 +1,262 @@
+.editContent{
+  :global{
+    .ant-card-body{
+      padding: 0;
+    }
+    .ant-tabs-nav .ant-tabs-tab{
+      //padding: 12px 5px;
+      //margin:0;
+    }
+    .ant-timeline{
+      margin: 0 20px;
+    }
+  }
+}
+.editList{
+    :global{
+      .ant-form-item{
+        margin-bottom: 0;
+        .ant-form-item-label{
+          text-align: center;
+          background: #f5f5f5;
+          border: 1px solid #ccc;
+          border-right: none;
+          height: 45px;
+          line-height: 45px;
+          border-bottom: none;
+        }
+      }
+      .ant-select-selection--single{
+        height: 45px;
+        border-bottom: 0px;
+      }
+
+      .ant-form-item-control{
+        line-height: 39px;
+      }
+      .ant-form-item-control-wrapper{
+        input{
+          height: 45px;
+          border-radius:0;
+          border-bottom: none;
+        }
+        .ant-input[disabled]{
+          background: #fbfbfb;
+          color:#8c8c8c;
+        }
+        .ant-cascader-picker-disabled{
+          background: #fbfbfb;
+          color:#8c8c8c;
+        }
+      }
+        .ant-form-item label{
+
+            display: inline-block;
+        }
+    }
+
+}
+.titleBtn{
+  height: 63px;
+  border-bottom: 1px solid #ccc;
+  padding: 15px 20px;
+
+}
+.content{
+  border: 1px solid #ccc;
+  padding: 15px;
+  img{
+    width: 40px;
+    border-radius: 50%;
+  }
+  .name{
+    padding-left: 10px;
+  }
+  .time{
+    float: right
+  }
+}
+.leftContent{
+  :global{
+    .ant-btn{
+      box-shadow:none;
+      border:none;
+      outline: 0;
+    }
+
+  }
+}
+.rightContent{
+  :global{
+    .ant-btn{
+      margin-right: 10px;
+      box-shadow:none;
+      outline: 0;
+    }
+
+  }
+}
+.tabContent{
+  position: relative;
+  .tabText{
+    height: 136px;
+    // margin-left: 20px;
+    max-width: 100%;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    // position: absolute;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
+  }
+
+  :global{
+    .ant-tabs-nav {
+      .ant-tabs-tab{
+        margin: 0 10px 0 0;
+      }
+    }
+    .ant-timeline-item-content{
+      top:0;
+    }
+    .ant-input{
+      border: 0;
+      resize:none
+    }
+    .ant-input:focus {
+      border: none;
+      box-shadow: none;
+    }
+    .ant-upload.ant-upload-drag{
+      background:none;
+      border:0
+    }
+    .ant-upload.ant-upload-drag .ant-upload{
+      padding: 0;
+    }
+    .ant-upload-list-item-info{
+      display: none;
+    }
+  }
+}
+.main{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: #eef8f9;
+  ul{
+    height: 31px;
+    padding: 0;
+    // border: 1px solid #fefefe;
+    margin: 0 15px;
+    li{
+      width: 30%;
+      color: #ccc;
+      background: #fff;
+      text-align: center;
+      float: left;
+      line-height: 30px;
+      margin-right: 2px;
+    }
+    li.color{
+      color:#fff;
+      background: #52b7b4;
+    }
+    .defaultColor{
+
+    }
+  }
+  p{
+    margin:10px 15px;
+    label{
+      color:#222a2c;
+    }
+    span{
+      width: 50%;
+      display: inline-block;
+    }
+  }
+
+}
+.timelineContent{
+  height: 407px;
+  overflow: auto;
+  margin-bottom: 10px;
+  p{
+    margin-bottom: 5px;
+  }
+  .detailItem{
+    margin: 10px 15px;
+  }
+  .creatime{
+    color: #B5B5B5;
+    font-size: 12px;
+    text-align: center;
+    margin: 10px;
+  }
+  .detailMesage{
+    display: flex;
+  }
+  .detailMessage1{
+    flex-direction: row-reverse;
+  }
+  .userPhoto{
+    background: #1890FF;
+    color: #fff;
+    font-size: 14px;
+    width: 39px;
+    height: 39px;
+    line-height: 39px;
+    text-align: center;
+    border-radius: 50%;
+  }
+  .message{
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+    padding: 9px;
+    margin-left: 15px;
+    max-width: 200px;
+    font-size: 12px;
+    position: relative;
+  }
+  .message1{
+    background: #BAE7FF;
+    color: #656667;
+  }
+  .state{
+    position: absolute;
+    bottom: -22px;
+    right: 2px;
+    font-size: 12px;
+  }
+  .state1{
+    position: absolute;
+    bottom: -22px;
+    left: 2px;
+    font-size: 12px;
+  }
+}
+.timelineContent::-webkit-scrollbar{
+  width: 4px;
+  height: 4px;
+}
+.timelineContent::-webkit-scrollbar-thumb{
+  background:rgba(0,0,0,0.2);
+  border-radius:5px;
+  -webkit-box-shadow:inset005pxrgba(0,0,0,0.2);
+}
+.timelineContent::-webkit-scrollbar-track{
+  background:rgba(0,0,0,0.1);
+  border-radius:0;
+  -webkit-box-shadow:inset005pxrgba(0,0,0,0.2);
+}
+
+.logisticsTime{
+  :global{
+    .ant-timeline-item{
+      padding: 0 0 1px;
+    }
+  }
+}
+
