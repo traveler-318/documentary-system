@@ -54,6 +54,7 @@ class LogisticsDetails extends PureComponent {
           visible={visible}
           maskClosable={false}
           onCancel={handleImgModal}
+          width={700}
           footer={null}
         >
           <div>
