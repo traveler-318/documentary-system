@@ -174,7 +174,7 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail,selectedOptions, payPanyId, productTypeId, productId,productType } = this.state;
+    const { detail,selectedOptions, payPanyId,productName, productTypeId, productId,productType } = this.state;
     form.validateFieldsAndScroll((err, values) => {
 
       // ORDERSOURCE.map(item => {
