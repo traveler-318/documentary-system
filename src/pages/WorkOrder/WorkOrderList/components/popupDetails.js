@@ -136,6 +136,8 @@ class OrdersEdit extends PureComponent {
         productTypeId:res.data.productTypeId || '0',
         productId:res.data.productId || '0',
       })
+      let Content = document.getElementById('Content');
+      Content.scrollTop = Content.scrollHeight;
     })
   }
 
@@ -201,6 +203,8 @@ class OrdersEdit extends PureComponent {
       this.setState({
         chatRecords:eval('(' + res.data.records[0].chatRecords + ')')
       })
+      let Content = document.getElementById('Content');
+      Content.scrollTop = Content.scrollHeight;
     })
   }
 
@@ -439,7 +443,7 @@ class OrdersEdit extends PureComponent {
                     </p>
                   </div>
                   <div className={styles.tabContent}>
-                    <div className={styles.timelineContent}>
+                    <div className={styles.timelineContent} id='Content'>
                       <div className={styles.detailItem}>
                         <div className={styles.creatime}>{chatRecords[0].create_time}</div>
                         <div className={`${styles.detailMesage}`}>

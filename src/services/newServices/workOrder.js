@@ -35,7 +35,7 @@ export async function updateReaded(params) {
 }
 
 export async function getUpToken(fileName) {
-  return request("http://push.gendanbao.com.cn/qiniu/UpToken?suffix="+fileName,{
+  return request("/api/qiniu/UpToken?suffix="+fileName,{
     method:'get',
   });
 }
