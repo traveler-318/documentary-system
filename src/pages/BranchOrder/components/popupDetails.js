@@ -174,10 +174,8 @@ class OrdersEdit extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { form } = this.props;
-    const { detail,selectedOptions, payPanyId, productTypeId, productName, productId,productType } = this.state;
+    const { detail,selectedOptions, payPanyId,productName, productTypeId, productId,productType } = this.state;
     form.validateFieldsAndScroll((err, values) => {
-
-      console.log(productId)
 
       // ORDERSOURCE.map(item => {
       //   if(item.name === values.orderSource){
@@ -539,8 +537,6 @@ class OrdersEdit extends PureComponent {
                           fieldNames={{ label: 'value',value:'id'}}
                           onChange={(value, selectedOptions)=>{
                             const { form } = this.props;
-
-                            console.log(selectedOptions[2].id)
 
                             this.setState({
                               payPanyId:selectedOptions[0].id,

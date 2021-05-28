@@ -123,12 +123,12 @@ class WorkOrderList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { workOrderStatus } = this.state;
+    const { platformReplyStatus } = this.state;
 
     return (
       <div className={"default_search_form"}>
         <Form.Item label="工单状态">
-          {getFieldDecorator('workOrderStatus', {
+          {getFieldDecorator('platformReplyStatus', {
           })(
             <Select placeholder={"请选择工单状态"} style={{ width: 200 }}>
               {ORDERSTATUS.map((item,index)=>{
@@ -277,9 +277,9 @@ class WorkOrderList extends PureComponent {
       params:_params
     },()=>{
       if(key === "null"){
-        params.workOrderStatus=null
+        params.platformReplyStatus=null
       }else {
-        params.workOrderStatus=Number(key)
+        params.platformReplyStatus=Number(key)
       }
       this.setState({
         params:params
@@ -398,7 +398,7 @@ class WorkOrderList extends PureComponent {
       },
       {
         title: '工单状态',
-        dataIndex: 'workOrderStatus',
+        dataIndex: 'platformReplyStatus',
         width: 200,
         render:(key)=>{
           return (

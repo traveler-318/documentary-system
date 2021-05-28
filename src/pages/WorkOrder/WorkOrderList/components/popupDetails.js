@@ -26,6 +26,7 @@ import {ORDERSTATUS} from './data';
 import FormDetailsTitle from '../../../../components/FormDetailsTitle';
 import { getToken } from '@/utils/authority';
 import LogisticsDetails from './LogisticsDetails';
+import BigImg from './ImgBig';
 import * as qiniu from 'qiniu-js'
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -58,7 +59,9 @@ class OrdersEdit extends PureComponent {
       chatRecords:[],
       describe:"",
       tokenJson:{},
-      url:''
+      url:'',
+      visible:false,
+      ImgBig:''
     };
   }
 
@@ -78,7 +81,7 @@ class OrdersEdit extends PureComponent {
 
     let _type = ORDERSTATUS.map(item=>{
       let _item = {...item}
-      if(Number(item.key) <= Number(globalParameters.detailData.workOrderStatus)){
+      if(Number(item.key) <= Number(globalParameters.detailData.platformReplyStatus)){
         _item.className = "clolor"
       }else{
         _item.className = ""
@@ -133,6 +136,8 @@ class OrdersEdit extends PureComponent {
         productTypeId:res.data.productTypeId || '0',
         productId:res.data.productId || '0',
       })
+      let Content = document.getElementById('Content');
+      Content.scrollTop = Content.scrollHeight;
     })
   }
 
@@ -159,17 +164,14 @@ class OrdersEdit extends PureComponent {
     const { detail , describe,chatRecords} = this.state;
     const { globalParameters } = this.props;
     const params={
-      "id": chatRecords[0].id,
-      "chatRecords":JSON.stringify({
-        "id":chatRecords[0].id,
-        "creatime": moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
-        "context": describe,
-        "pic_zoom_url": "",
-        "pic_url": url,
-        "read_status": 0,
-        "identity": 1,
-        "complaints_type":globalParameters.detailData.complaintsType
-      })
+      "id":chatRecords[0].id,
+      "create_time": moment(new Date()).format("YYYY-MM-DD HH:mm:ss"),
+      "context": describe,
+      "pic_zoom_url": "",
+      "pic_url": url,
+      "read_status": 0,
+      "identity": 1,
+      "complaints_type":globalParameters.detailData.complaintsType
     }
     console.log(params)
     updateChatRecords(params).then(res=>{
@@ -201,6 +203,8 @@ class OrdersEdit extends PureComponent {
       this.setState({
         chatRecords:eval('(' + res.data.records[0].chatRecords + ')')
       })
+      let Content = document.getElementById('Content');
+      Content.scrollTop = Content.scrollHeight;
     })
   }
 
@@ -225,44 +229,67 @@ class OrdersEdit extends PureComponent {
 
   onUpload = info => {
     console.log(info)
-    console.log(info.file, info.fileList);
-    const _this=this;
-    getUpToken(info.file.name).then(res=>{
-      console.log(res)
-      if(res.code === 200){
-        const observable = qiniu.upload(info, res.data.imgUrl, res.data.token, putExtra, config)
-        const subscription = observable.subscribe({
-          next: (result) => {
-            // 接收上传进度信息，result是带有total字段的 Object
-            // loaded: 已上传大小; size: 上传总信息; percent: 当前上传进度
-            console.log(result);    // 形如：{total: {loaded: 1671168, size: 2249260, percent: 74.29856930723882}}
-            // this.percent = result.total.percent.toFixed(0);
-          },
-          error: (errResult) => {
-            // 上传错误后失败报错
-            console.log(errResult)
-            message.error('上传失败');
-          },
-          complete: (result) => {
-            // 接收成功后返回的信息
-            console.log(result);   // 形如：{hash: "Fp5_DtYW4gHiPEBiXIjVsZ1TtmPc", key: "%TStC006TEyVY5lLIBt7Eg.jpg"}
-            if (result.key) {
-              message.success('上传成功');
-              _this.handleSubmit(result.key)
-            }
-          }
-        }) // 上传开始
-      }else{
-        message.error(res.message)
-      }
-    })
-    /*
-            file: File 对象，上传的文件
-            key: 文件资源名
-            token: 上传验证信息，前端通过接口请求后端获得
-            config: object，其中的每一项都为可选
-        */
+    console.log(info.file);
 
+    if (info.file.status === 'uploading') {
+      console.log("1111")
+      return;
+    }
+    if (info.file.status === 'done') {
+      console.log(info.file)
+
+      const _this=this;
+      getUpToken(info.file.name).then(res=>{
+        console.log(res)
+        if(res.code === 200){
+          /*
+              file: File 对象，上传的文件
+              key: 文件资源名
+              token: 上传验证信息，前端通过接口请求后端获得
+              config: object，其中的每一项都为可选
+          */
+          const observable = qiniu.upload(info.file.originFileObj, res.data.imgUrl, res.data.token, putExtra, config)
+          const subscription = observable.subscribe({
+            next: (result) => {
+              // 接收上传进度信息，result是带有total字段的 Object
+              // loaded: 已上传大小; size: 上传总信息; percent: 当前上传进度
+              console.log(result);    // 形如：{total: {loaded: 1671168, size: 2249260, percent: 74.29856930723882}}
+              // this.percent = result.total.percent.toFixed(0);
+            },
+            error: (errResult) => {
+              // 上传错误后失败报错
+              console.log(errResult)
+              // message.error('上传失败');
+            },
+            complete: (result) => {
+              // 接收成功后返回的信息
+              console.log(result);   // 形如：{hash: "Fp5_DtYW4gHiPEBiXIjVsZ1TtmPc", key: "%TStC006TEyVY5lLIBt7Eg.jpg"}
+              if (result.key) {
+                // message.success('上传成功');
+                _this.handleSubmit(result.key)
+                // return false;
+              }
+            }
+          }) // 上传开始
+        }else{
+          message.error(res.message)
+        }
+      })
+    }
+  }
+
+  viewImgBig =(img)=>{
+    this.setState({
+      ImgBig:img,
+      visible:true
+    })
+
+  }
+
+  handleImgModal =()=>{
+    this.setState({
+      visible:false
+    })
   }
 
   render() {
@@ -276,7 +303,9 @@ class OrdersEdit extends PureComponent {
       logisticsDetailsVisible,
       productList,
       orderType,
-      chatRecords
+      chatRecords,
+      visible,
+      ImgBig
     } = this.state;
 
     console.log(chatRecords )
@@ -288,13 +317,6 @@ class OrdersEdit extends PureComponent {
       wrapperCol: {
         span: 16,
       },
-    };
-    const uploadProps = {
-      name: 'file',
-      headers: {
-        'Blade-Auth': getToken(),
-      },
-      action: '/api/blade-resource/oss/endpoint/put-file-attach',
     };
     const imgHttp = 'https://oss.gendanbao.com.cn/';
 
@@ -421,7 +443,7 @@ class OrdersEdit extends PureComponent {
                     </p>
                   </div>
                   <div className={styles.tabContent}>
-                    <div className={styles.timelineContent}>
+                    <div className={styles.timelineContent} id='Content'>
                       <div className={styles.detailItem}>
                         <div className={styles.creatime}>{chatRecords[0].create_time}</div>
                         <div className={`${styles.detailMesage}`}>
@@ -433,7 +455,6 @@ class OrdersEdit extends PureComponent {
                             <div>联系方式</div>
                             <div>姓名：{detail.userName}</div>
                             <div>手机号：{detail.userPhone}</div>
-                            <div className={styles.state}>{chatRecords[0].read_status === 0 ? '未读':'已读'}</div>
                           </div>
                         </div>
                       </div>
@@ -442,15 +463,14 @@ class OrdersEdit extends PureComponent {
                           return i==0 ? '': item.identity == 0 ?
                             (
                               <div className={styles.detailItem}>
-                                <div className={styles.creatime}>{item.creatime}</div>
+                                <div className={styles.creatime}>{item.create_time}</div>
                                 <div className={`${styles.detailMesage}`}>
                                   <div className={styles.userPhoto}>客户</div>
                                   <div className={`${styles.message}`} style={{marginRight:'8px'}}>
                                     {item.context}
                                     {item.pic_url && (
-                                      <img style={{width:'100%'}} src={imgHttp+item.pic_url} />
+                                      <img style={{width:'100%'}} src={imgHttp+item.pic_url} onClick={()=>this.viewImgBig(item.pic_url)} />
                                     )}
-                                    <div className={styles.state}>{item.read_status === 0 ? '未读':'已读'}</div>
                                   </div>
                                 </div>
                               </div>
@@ -462,9 +482,9 @@ class OrdersEdit extends PureComponent {
                                   <div className={`${styles.message} ${styles.message1}`} style={{marginRight:'8px'}}>
                                     {item.context}
                                     {item.pic_url && (
-                                      <img style={{width:'100%'}} src={imgHttp+item.pic_url} />
+                                      <img style={{width:'100%'}} src={imgHttp+item.pic_url} onClick={()=>this.viewImgBig(item.pic_url)} />
                                     )}
-                                    <div className={styles.state}>{item.read_status === 0 ? '未读':'已读'}</div>
+                                    <div className={styles.state1}>{item.read_status === 0 ? '未读':'已读'}</div>
                                   </div>
                                 </div>
                               </div>
@@ -482,12 +502,12 @@ class OrdersEdit extends PureComponent {
                       placeholder='请输入内容'
                     />
                       <div>
-                        <div style={{float:"left",cursor:"pointer",paddingTop:7}}>
+                        <div className={styles.img} style={{float:"left",cursor:"pointer",paddingTop:7}}>
 
-                          <Dragger {...uploadProps} onChange={(e)=>this.onUpload(e)}>
+                          <Dragger onChange={(e)=>this.onUpload(e)}>
                             <Icon
                               type="picture"
-                              style={{margin:"0 10px 0 15px"}}
+                              style={{margin:"0 10px 0 15px",color:'#666'}}
                             />
                           </Dragger>
                         </div>
@@ -520,6 +540,17 @@ class OrdersEdit extends PureComponent {
             handleLogisticsDetails={this.handleLogisticsDetails}
           />
         ):""}
+
+        {/* 查看图片 */}
+        {visible?(
+          <BigImg
+            visible={visible}
+            ImgBig={imgHttp+ImgBig}
+            handleImgModal={this.handleImgModal}
+          />
+        ):""}
+
+
       </>
 
     );
