@@ -669,6 +669,12 @@ export default [
               { path: '/workOrder/workOrderList', component: './WorkOrder/WorkOrderList/index' },
             ]
           },
+          {
+            path: '/workOrder/smsWorkOrder',
+            routes:[
+              { path: '/workOrder/smsWorkOrder', component: './WorkOrder/SmsWorkOrder/index' },
+            ]
+          },
         ]
       },
       {

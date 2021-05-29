@@ -31,6 +31,7 @@ export default {
 
   'menu.workOrder':'工单管理',
   'menu.workOrder.workOrderList':'工单',
+  'menu.workOrder.smsWorkOrder':'短信工单',
 
 
 
