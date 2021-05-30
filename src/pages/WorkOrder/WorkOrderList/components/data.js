@@ -41,6 +41,7 @@ export function getLogisticsQuery() {
       "SUNING": "苏宁",
       "NSF": "新顺丰(NSF)",
       "ZYKD": "众邮快递",
+      "JITU": "极兔速递",
     }
   }
 }
