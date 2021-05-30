@@ -87,6 +87,11 @@ export const EXPRESS100DATA =[
     "num": "zhongyouex",
     "cnt": 22859246,
     "type": "国内运输商"
+  },{
+    "name": "极兔速递",
+    "num": "jtexpress",
+    "cnt": 22859246,
+    "type": "国内运输商"
   },
 ]
 
