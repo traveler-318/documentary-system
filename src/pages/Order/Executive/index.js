@@ -621,7 +621,8 @@ class AllOrdersList extends PureComponent {
           updateConfirmTag({
             id:confirmTagList[0].id,
             confirmTag:radioChecked,
-            outOrderNo:confirmTagList[0].outOrderNo
+            outOrderNo:confirmTagList[0].outOrderNo,
+            productCoding:confirmTagList[0].productCoding
           }).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
@@ -889,7 +890,7 @@ class AllOrdersList extends PureComponent {
       keyboard:false,
       onOk:() => {
         return new Promise((resolve, reject) => {
-          updateConfirmTag({id:row.id,confirmTag:6}).then(res=>{
+          updateConfirmTag({id:row.id,confirmTag:6,productCoding:resolve.productCoding}).then(res=>{
             if(res.code === 200){
               message.success(res.msg);
               this.setState({
