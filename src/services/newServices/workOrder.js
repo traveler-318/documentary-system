@@ -39,3 +39,18 @@ export async function getUpToken(fileName) {
     method:'get',
   });
 }
+
+//短信工单列表
+export async function repairorderList(current,size) {
+  return request("/api/repairorder/list?current="+current+"&size="+size,{
+    method: 'get',
+  });
+}
+//短信工单处理
+export async function repairorderUpdate(params) {
+  return request("/api/repairorder/update",{
+    method: 'POST',
+    body: params,
+  });
+}
+

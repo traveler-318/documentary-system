@@ -243,12 +243,12 @@ class SMSrecord extends PureComponent {
     } = this.state;
 
     const columns = [
-      {
-        title: '任务编号',
-        dataIndex: 'taskId',
-        width: 150,
-        ellipsis: true,
-      },
+      // {
+      //   title: '任务编号',
+      //   dataIndex: 'taskId',
+      //   width: 150,
+      //   ellipsis: true,
+      // },
       {
         title: '通知类型',
         dataIndex: 'notificationTypes',

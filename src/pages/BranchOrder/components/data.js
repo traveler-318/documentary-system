@@ -103,6 +103,7 @@ export const LOGISTICSCOMPANY = {
     "BTWL": "百世快运",
     "SUNING": "苏宁",
     "ZYKD": "众邮快递",
+  "JITU": "极兔速递",
 }
 
 

@@ -19,8 +19,7 @@ import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { getButton } from '../../../utils/authority';
 import { ORDERSTATUS,TYPESTATUS } from './data.js';
-import {getList,remove } from '../../../services/newServices/workOrder';
-import PopupDetails from './components/popupDetails'
+import {repairorderList,remove,repairorderUpdate } from '../../../services/newServices/workOrder';
 import styles from './index.less';
 import moment from 'moment';
 
@@ -75,15 +74,15 @@ class WorkOrderList extends PureComponent {
 
   // ============ 初始化数据 ===============
   componentWillMount() {
-    this.getDataList()
+    this.getList()
   }
 
-  getDataList = () => {
+  getList = () => {
     const {params} = this.state;
     this.setState({
       loading:true,
     })
-    getList(params).then(res=>{
+    repairorderList(params.current,params.size).then(res=>{
       console.log(res.data)
       this.setState({
         countSice:res.data.total,
@@ -103,57 +102,57 @@ class WorkOrderList extends PureComponent {
   // ============ 查询 ===============
   handleSearch = (params) => {
     console.log(params,"查询参数")
-    this.setState({
-      params:params
-    },()=>{
-      this.getDataList();
-    })
+    // this.setState({
+    //   params:params
+    // },()=>{
+    //   this.getList();
+    // })
   };
 
   // ============ 查询表单 ===============
   renderSearchForm = onReset => {
-    const {
-      form,
-    } = this.props;
-    const { getFieldDecorator } = form;
-
-    const { platformReplyStatus } = this.state;
-
-    return (
-      <div className={"default_search_form"}>
-        <Form.Item label="工单状态">
-          {getFieldDecorator('platformReplyStatus', {
-          })(
-            <Select placeholder={"请选择工单状态"} style={{ width: 200 }}>
-              {ORDERSTATUS.map((item,index)=>{
-                return (<Option key={index} value={item.key}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
-        <Form.Item label="工单类型">
-          {getFieldDecorator('complaintsType', {
-          })(
-            <Select placeholder={"请选择工单类型"} style={{ width: 200 }}>
-              {TYPESTATUS.map((item,index)=>{
-                return (<Option key={index} value={item.key}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
-        <div style={{ float: 'right',height:'32px' }}>
-          <Button type="primary" htmlType="submit">
-            <FormattedMessage id="button.search.name" />
-          </Button>
-          <Button style={{ marginLeft: 8 }} onClick={()=>{
-            // this.getSalesman();
-            onReset()
-          }}>
-            <FormattedMessage id="button.reset.name" />
-          </Button>
-        </div>
-      </div>
-    );
+    // const {
+    //   form,
+    // } = this.props;
+    // const { getFieldDecorator } = form;
+    //
+    // const { platformReplyStatus } = this.state;
+    //
+    // return (
+    //   <div className={"default_search_form"}>
+    //     <Form.Item label="工单状态">
+    //       {getFieldDecorator('platformReplyStatus', {
+    //       })(
+    //         <Select placeholder={"请选择工单状态"} style={{ width: 200 }}>
+    //           {ORDERSTATUS.map((item,index)=>{
+    //             return (<Option key={index} value={item.key}>{item.name}</Option>)
+    //           })}
+    //         </Select>
+    //       )}
+    //     </Form.Item>
+    //     <Form.Item label="工单类型">
+    //       {getFieldDecorator('complaintsType', {
+    //       })(
+    //         <Select placeholder={"请选择工单类型"} style={{ width: 200 }}>
+    //           {TYPESTATUS.map((item,index)=>{
+    //             return (<Option key={index} value={item.key}>{item.name}</Option>)
+    //           })}
+    //         </Select>
+    //       )}
+    //     </Form.Item>
+    //     <div style={{ float: 'right',height:'32px' }}>
+    //       <Button type="primary" htmlType="submit">
+    //         <FormattedMessage id="button.search.name" />
+    //       </Button>
+    //       <Button style={{ marginLeft: 8 }} onClick={()=>{
+    //         // this.getSalesman();
+    //         onReset()
+    //       }}>
+    //         <FormattedMessage id="button.reset.name" />
+    //       </Button>
+    //     </div>
+    //   </div>
+    // );
   };
 
 
@@ -208,7 +207,7 @@ class WorkOrderList extends PureComponent {
   }
 
   refreshTable = () => {
-    this.getDataList();
+    this.getList();
   }
 
   handleCancelNoDeposit = () => {
@@ -278,21 +277,42 @@ class WorkOrderList extends PureComponent {
       this.setState({
         params:params
       },()=>{
-        this.getDataList();
+        this.getList();
       })
     })
   }
 
-  // 打开详情弹窗
+  // 工单是否已处理
   handleDetails = (row) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: `globalParameters/setDetailData`,
-      payload: row,
+    console.log(row)
+    let params={
+      id:row.id,
+      processingStatus:1
+    }
+    console.log(params)
+    Modal.confirm({
+      title: '提示',
+      content: `确认当前工单是否已经处理！`,
+      okText: '确定',
+      okType: 'primary',
+      cancelText: '取消',
+      onOk: () => {
+        console.log("123")
+
+        repairorderUpdate(params).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg)
+          }else {
+            message.error(res.msg)
+          }
+        })
+      },
+      onCancel() {
+
+      },
     });
-    this.setState({
-      detailsVisible:true
-    })
+
+
   }
   // 关闭详情弹窗
   handleCancelDetails = () => {
@@ -334,33 +354,23 @@ class WorkOrderList extends PureComponent {
 
     const columns = [
       {
-        title: '工单类型',
-        dataIndex: 'complaintsDescribe',
-        width: 150,
-      },
-      // {
-      //   title: '工单内容',
-      //   dataIndex: 'chatRecords',
-      //   width: 200,
-      // },
-      {
-        title: '姓名',
-        dataIndex: 'userName',
+        title: '业务员账号',
+        dataIndex: 'salesman',
         width: 100,
       },
       {
-        title: '手机号',
-        dataIndex: 'userPhone',
+        title: '发送手机号',
+        dataIndex: 'mobilePhone',
         width: 150,
       },
       {
-        title: '所属销售',
-        dataIndex: 'remark',
-        width: 200,
+        title: '回复内容',
+        dataIndex: 'content',
+        width: 500,
       },
       {
-        title: '反馈时间',
-        dataIndex: 'createTime',
+        title: '回复时间',
+        dataIndex: 'receiveTime',
         width: 200,
         render: (res) => {
           return(
@@ -373,42 +383,6 @@ class WorkOrderList extends PureComponent {
             </div>
           )
         },
-      },
-      {
-        title: '最新时间',
-        dataIndex: 'latestFeedbackTime',
-        width: 200,
-        render: (res) => {
-          return(
-            <div>
-              {
-                res === '' ?
-                  (res)
-                  :(moment(res).format('YYYY-MM-DD HH:mm:ss'))
-              }
-            </div>
-          )
-        },
-      },
-      {
-        title: '工单状态',
-        dataIndex: 'platformReplyStatus',
-        width: 200,
-        render:(key)=>{
-          return (
-            <div>
-                <span style={{
-                  display:'inline-block',
-                  width:"10px",
-                  height:'10px',
-                  marginRight: 5,
-                  background:this.getORDERSCOLOR(key),
-                  borderRadius: '50%'
-                }}> </span>
-              {this.getORDERSTATUS(key)}
-            </div>
-          )
-        }
       },
       {
         title: '操作',
@@ -419,7 +393,7 @@ class WorkOrderList extends PureComponent {
           return(
             <div>
               <Divider type="vertical" />
-              <a onClick={()=>this.handleDetails(row)}>详情</a>
+              <a onClick={()=>this.handleDetails(row)}>处理</a>
               <Divider type="vertical" />
               {/*<a onClick={() => this.handleDelect(res)}>删除</a>*/}
             </div>
@@ -428,31 +402,29 @@ class WorkOrderList extends PureComponent {
       },
     ];
 
-    console.log(countSice)
-
     return (
       <Panel>
         <div className={styles.ordersTabs}>
-          <Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange} style={{height:59}}>
-            {ORDERSTATUS.map((item,i)=>{
-              return (
-                <TabPane tab={
-                  <span>
-                    {(
-                      item.key === tabKey ||
-                      JSON.stringify(item.key) === tabKey
-                    ) ? (
-                      <Badge count={countSice} overflowCount={999}>
-                        <a href="#" className="head-example" />
-                      </Badge>) : ""
-                    }
-                    {item.name}
-                  </span>
-                } key={item.key}>
-                </TabPane>
-              )
-            })}
-          </Tabs>
+          {/*<Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange} style={{height:59}}>*/}
+            {/*{ORDERSTATUS.map((item,i)=>{*/}
+              {/*return (*/}
+                {/*<TabPane tab={*/}
+                  {/*<span>*/}
+                    {/*{(*/}
+                      {/*item.key === tabKey ||*/}
+                      {/*JSON.stringify(item.key) === tabKey*/}
+                    {/*) ? (*/}
+                      {/*<Badge count={countSice} overflowCount={999}>*/}
+                        {/*<a href="#" className="head-example" />*/}
+                      {/*</Badge>) : ""*/}
+                    {/*}*/}
+                    {/*{item.name}*/}
+                  {/*</span>*/}
+                {/*} key={item.key}>*/}
+                {/*</TabPane>*/}
+              {/*)*/}
+            {/*})}*/}
+          {/*</Tabs>*/}
 
           <Grid
             form={form}
@@ -465,14 +437,6 @@ class WorkOrderList extends PureComponent {
             renderLeftButton={()=>this.renderLeftButton(tabKey)}
           />
 
-          {/* 详情*/}
-          {detailsVisible?(
-            <PopupDetails
-              detailsVisible={detailsVisible}
-              handleCancelDetails={this.handleCancelDetails}
-            >
-            </PopupDetails>
-          ):""}
         </div>
 
       </Panel>
