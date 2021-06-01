@@ -102,11 +102,11 @@ class WorkOrderList extends PureComponent {
   // ============ 查询 ===============
   handleSearch = (params) => {
     console.log(params,"查询参数")
-    // this.setState({
-    //   params:params
-    // },()=>{
-    //   this.getList();
-    // })
+    this.setState({
+      params:params
+    },()=>{
+      this.getList();
+    })
   };
 
   // ============ 查询表单 ===============
