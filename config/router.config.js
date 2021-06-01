@@ -616,6 +616,17 @@ export default [
         ],
       },
       {
+        path: '/inventory',
+        routes:[
+          {
+            path: '/inventory/warehouse',
+            routes: [
+              { path: '/inventory/warehouse', component: './Inventory/Warehouse/index' },
+            ]
+          }
+        ]
+      },
+      {
         path: '/logistics',
         routes: [
           {
