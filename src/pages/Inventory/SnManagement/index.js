@@ -35,7 +35,7 @@ const { TextArea } = Input;
   globalParameters,
 }))
 @Form.create()
-class WarehouseList extends PureComponent {
+class SnManagementList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -54,7 +54,6 @@ class WarehouseList extends PureComponent {
           name:'不在线'
         }
       ],
-      warehouseVisible:false
     };
   }
   // ============ 初始化数据 ===============
@@ -106,16 +105,46 @@ class WarehouseList extends PureComponent {
     const {warehouseStatus}=this.state
     return (
       <div className={"default_search_form"}>
-        <Form.Item label="仓库名称">
+        <Form.Item label="SN">
           {getFieldDecorator('platformReplyStatus', {
           })(
-            <Input placeholder="请输入仓库名称" />
+            <Input placeholder="请输入SN" />
           )}
         </Form.Item>
-        <Form.Item label="仓库状态">
+        <Form.Item label="所属仓库">
           {getFieldDecorator('complaintsType', {
           })(
-            <Select placeholder={"请选择仓库状态"} style={{ width: 200 }}>
+            <Select placeholder={"请选择所属仓库"} style={{ width: 200 }}>
+              {warehouseStatus.map((item,index)=>{
+                return (<Option key={index} value={item.id}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="SN状态">
+          {getFieldDecorator('complaintsType', {
+          })(
+            <Select placeholder={"请选择SN状态"} style={{ width: 200 }}>
+              {warehouseStatus.map((item,index)=>{
+                return (<Option key={index} value={item.id}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="数据来源">
+          {getFieldDecorator('complaintsType', {
+          })(
+            <Select placeholder={"请选择数据来源"} style={{ width: 200 }}>
+              {warehouseStatus.map((item,index)=>{
+                return (<Option key={index} value={item.id}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="制单人">
+          {getFieldDecorator('dateRange', {
+          })(
+            <Select placeholder={"请选择数据来源"} style={{ width: 200 }}>
               {warehouseStatus.map((item,index)=>{
                 return (<Option key={index} value={item.id}>{item.name}</Option>)
               })}
@@ -137,48 +166,6 @@ class WarehouseList extends PureComponent {
     );
   };
 
-  // ============ 新增弹框 ===============
-  handleClick = () => {
-    this.setState({
-      warehouseVisible:true
-    })
-  };
-
-  handleCancelWarehouse = () => {
-    this.setState({
-      warehouseVisible:false
-    })
-  };
-
-
-  // ============ 修改默认开关 =========
-  onStatus = (value,key) => {
-    const refresh = this.getDataList;
-    const data= value === 0 ? 1 : 0;
-    const params = {
-      id:key.id,
-      status:data
-    };
-    Modal.confirm({
-      title: '修改确认',
-      content: '是否要修改该状态??',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      async onOk() {
-        getDeliveryStatus(params).then(resp=>{
-          if (resp.success) {
-            message.success(resp.msg);
-            refresh()
-          } else {
-            message.error(resp.msg || '修改失败');
-          }
-        })
-      },
-      onCancel() {},
-    });
-  };
-
   // 修改数据
   handleEdit = (row) => {
 
@@ -186,7 +173,7 @@ class WarehouseList extends PureComponent {
 
   renderLeftButton = () => (
     <>
-      <Button type="primary" icon='plus' onClick={()=>{this.handleClick()}}>添加</Button>
+
     </>
   );
 
@@ -200,31 +187,45 @@ class WarehouseList extends PureComponent {
     const {
       form,
     } = this.props;
-
-    const { getFieldDecorator } = form;
-
-    const formAllItemLayout = {
-      labelCol: {
-        span: 4,
-      },
-      wrapperCol: {
-        span: 20,
-      },
-    };
-    const {data,loading,warehouseVisible} = this.state;
+    const {data,loading} = this.state;
     const columns = [
       {
-        title: '仓库名称',
+        title: 'SN',
         dataIndex: 'name',
-        width: 250,
+        width: 150,
       },
       {
-        title: '仓库位置',
+        title: '批次单据号',
         dataIndex: 'mobile',
         width: 200,
       },
       {
-        title: '创建人',
+        title: '所属仓库',
+        dataIndex: 'mobile',
+        width: 100,
+      },
+      {
+        title: '产品名称',
+        dataIndex: 'mobile',
+        width: 100,
+      },
+      {
+        title: '库存年龄',
+        dataIndex: 'mobile',
+        width: 100,
+      },
+      {
+        title: 'SN状态',
+        dataIndex: 'mobile',
+        width: 100,
+      },
+      {
+        title: '是否代理',
+        dataIndex: 'mobile',
+        width: 100,
+      },
+      {
+        title: '数据来源',
         dataIndex: 'administrativeAreas',
         width: 150,
         render: (res,key) => {
@@ -236,7 +237,25 @@ class WarehouseList extends PureComponent {
         ellipsis: true,
       },
       {
-        title: '状态',
+        title: '冻结状态',
+        dataIndex: 'company',
+        width: 200,
+        ellipsis: true,
+      },
+      {
+        title: '制单人',
+        dataIndex: 'company',
+        width: 200,
+        ellipsis: true,
+      },
+      {
+        title: '创建时间 ',
+        dataIndex: 'company',
+        width: 200,
+        ellipsis: true,
+      },
+      {
+        title: '更新时间 ',
         dataIndex: 'company',
         width: 200,
         ellipsis: true,
@@ -250,11 +269,9 @@ class WarehouseList extends PureComponent {
           return(
             <div>
               <Divider type="vertical" />
-              <a onClick={()=>this.handleEdit(row)}>编辑</a>
+              <a>日志</a>
               <Divider type="vertical" />
-              <a>停用</a>
-              <Divider type="vertical" />
-              <a>删除</a>
+              <a>详情</a>
             </div>
           )
         },
@@ -273,69 +290,8 @@ class WarehouseList extends PureComponent {
           renderLeftButton={this.renderLeftButton}
           renderRightButton={this.renderRightButton}
         />
-
-        <Modal
-          title="新建仓库"
-          visible={warehouseVisible}
-          maskClosable={false}
-          destroyOnClose
-          width={600}
-          onCancel={this.handleCancelWarehouse}
-          footer={[
-            <Button key="back" onClick={this.handleCancelWarehouse}>
-              取消
-            </Button>,
-            <Button key="submit" type="primary" onClick={()=>this.addDeliveryTime()}>
-              确定
-            </Button>,
-          ]}
-        >
-          <Form>
-            <FormItem {...formAllItemLayout} label="仓库名称">
-              {getFieldDecorator('deliveryTime', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入仓库名称',
-                  },
-                ],
-              })(
-                <Input placeholder="请输入仓库名称" />
-              )}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="仓库位置">
-              {getFieldDecorator('deliveryTime', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入仓库位置',
-                  },
-                ],
-              })(
-                <Input placeholder="请输入仓库位置" />
-              )}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="状态">
-              {getFieldDecorator('deliveryTime')(
-                <Radio.Group onChange={this.onChangeRadio}>
-                  <Radio value={1}>启用</Radio>
-                  <Radio value={2}> 禁用</Radio>
-                </Radio.Group>
-              )}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="备注">
-              {getFieldDecorator('deliveryTime')(
-                <TextArea
-                  rows={3}
-                  onChange={this.TextAreaChange}
-                  placeholder='请输入描述信息'
-                />
-              )}
-            </FormItem>
-          </Form>
-        </Modal>
       </Panel>
     );
   }
 }
-export default WarehouseList;
+export default SnManagementList;

@@ -35,7 +35,7 @@ const { TextArea } = Input;
   globalParameters,
 }))
 @Form.create()
-class WarehouseList extends PureComponent {
+class StockList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -106,16 +106,46 @@ class WarehouseList extends PureComponent {
     const {warehouseStatus}=this.state
     return (
       <div className={"default_search_form"}>
-        <Form.Item label="仓库名称">
+        <Form.Item label="单据号">
           {getFieldDecorator('platformReplyStatus', {
           })(
-            <Input placeholder="请输入仓库名称" />
+            <Input placeholder="请输入单据号" />
           )}
         </Form.Item>
-        <Form.Item label="仓库状态">
+        <Form.Item label="所属仓库">
           {getFieldDecorator('complaintsType', {
           })(
-            <Select placeholder={"请选择仓库状态"} style={{ width: 200 }}>
+            <Select placeholder={"请选择所属仓库"} style={{ width: 200 }}>
+              {warehouseStatus.map((item,index)=>{
+                return (<Option key={index} value={item.id}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="制单人">
+          {getFieldDecorator('complaintsType', {
+          })(
+            <Select placeholder={"请选择制单人"} style={{ width: 200 }}>
+              {warehouseStatus.map((item,index)=>{
+                return (<Option key={index} value={item.id}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="产品">
+          {getFieldDecorator('complaintsType', {
+          })(
+            <Select placeholder={"请选择产品"} style={{ width: 200 }}>
+              {warehouseStatus.map((item,index)=>{
+                return (<Option key={index} value={item.id}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="单据来源">
+          {getFieldDecorator('complaintsType', {
+          })(
+            <Select placeholder={"请选择单据来源"} style={{ width: 200 }}>
               {warehouseStatus.map((item,index)=>{
                 return (<Option key={index} value={item.id}>{item.name}</Option>)
               })}
@@ -150,35 +180,6 @@ class WarehouseList extends PureComponent {
     })
   };
 
-
-  // ============ 修改默认开关 =========
-  onStatus = (value,key) => {
-    const refresh = this.getDataList;
-    const data= value === 0 ? 1 : 0;
-    const params = {
-      id:key.id,
-      status:data
-    };
-    Modal.confirm({
-      title: '修改确认',
-      content: '是否要修改该状态??',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      async onOk() {
-        getDeliveryStatus(params).then(resp=>{
-          if (resp.success) {
-            message.success(resp.msg);
-            refresh()
-          } else {
-            message.error(resp.msg || '修改失败');
-          }
-        })
-      },
-      onCancel() {},
-    });
-  };
-
   // 修改数据
   handleEdit = (row) => {
 
@@ -186,7 +187,7 @@ class WarehouseList extends PureComponent {
 
   renderLeftButton = () => (
     <>
-      <Button type="primary" icon='plus' onClick={()=>{this.handleClick()}}>添加</Button>
+      <Button type="primary" icon='plus' onClick={()=>{this.handleClick()}}>设置库存初始化</Button>
     </>
   );
 
@@ -214,17 +215,17 @@ class WarehouseList extends PureComponent {
     const {data,loading,warehouseVisible} = this.state;
     const columns = [
       {
-        title: '仓库名称',
+        title: '单据号',
         dataIndex: 'name',
         width: 250,
       },
       {
-        title: '仓库位置',
+        title: '单据来源',
         dataIndex: 'mobile',
         width: 200,
       },
       {
-        title: '创建人',
+        title: '所属仓库',
         dataIndex: 'administrativeAreas',
         width: 150,
         render: (res,key) => {
@@ -236,7 +237,25 @@ class WarehouseList extends PureComponent {
         ellipsis: true,
       },
       {
-        title: '状态',
+        title: '产品名称',
+        dataIndex: 'company',
+        width: 200,
+        ellipsis: true,
+      },
+      {
+        title: '数量',
+        dataIndex: 'company',
+        width: 200,
+        ellipsis: true,
+      },
+      {
+        title: '制单人',
+        dataIndex: 'company',
+        width: 200,
+        ellipsis: true,
+      },
+      {
+        title: '制单时间 ',
         dataIndex: 'company',
         width: 200,
         ellipsis: true,
@@ -250,11 +269,9 @@ class WarehouseList extends PureComponent {
           return(
             <div>
               <Divider type="vertical" />
-              <a onClick={()=>this.handleEdit(row)}>编辑</a>
+              <a>日志</a>
               <Divider type="vertical" />
-              <a>停用</a>
-              <Divider type="vertical" />
-              <a>删除</a>
+              <a>详情</a>
             </div>
           )
         },
@@ -338,4 +355,4 @@ class WarehouseList extends PureComponent {
     );
   }
 }
-export default WarehouseList;
+export default StockList;

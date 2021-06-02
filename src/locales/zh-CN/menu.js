@@ -35,6 +35,8 @@ export default {
 
   'menu.inventory':'进销存',
   'menu.inventory.warehouse':'仓库',
+  'menu.inventory.snManagement':'SN管理',
+  'menu.inventory.stock':'库存',
 
 
   'menu.branchManage':'渠道商管理',

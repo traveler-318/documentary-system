@@ -623,6 +623,18 @@ export default [
             routes: [
               { path: '/inventory/warehouse', component: './Inventory/Warehouse/index' },
             ]
+          },
+          {
+            path: '/inventory/snManagement',
+            routes: [
+              { path: '/inventory/snManagement', component: './Inventory/SnManagement/index' },
+            ]
+          },
+          {
+            path: '/inventory/stock',
+            routes: [
+              { path: '/inventory/stock', component: './Inventory/Stock/index' },
+            ]
           }
         ]
       },
