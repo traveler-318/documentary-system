@@ -40,8 +40,8 @@ class HeaderView extends React.Component {
     if (isMobile || !fixedHeader || layout === 'topmenu') {
       return '100%';
     }
-    // return collapsed ? 'calc(100% - 80px)' : 'calc(100% - 180px)';
-    return collapsed ? 'calc(100% - 92px)' : 'calc(100% - 224px)';
+    return collapsed ? 'calc(100% - 80px)' : 'calc(100% - 180px)';
+    // return collapsed ? 'calc(100% - 92px)' : 'calc(100% - 224px)';
   };
 
   handleNoticeClear = type => {
