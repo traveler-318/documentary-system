@@ -247,7 +247,7 @@ class Survey extends PureComponent {
 
         },
       });
-    }else if(detail.confirmTag === '5'){
+    }else if(Number(detail.confirmTag) < 5){
       Modal.confirm({
         title: '提示',
         content: '当前订单流程处于非签收状态，如果跟进将导致订单的物流停止更新，是否确认操作',
