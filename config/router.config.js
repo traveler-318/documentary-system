@@ -357,6 +357,12 @@ export default [
             ],
           },
           {
+            path: '/system/charging',
+            routes: [
+              { path: '/system/charging', component: './System/Recharge/Charging' },
+            ],
+          },
+          {
             path: '/system/registrationList',
             routes: [
               { path: '/system/registrationList', component: './System/registrationList/index' },

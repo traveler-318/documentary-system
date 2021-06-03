@@ -59,7 +59,7 @@ class UserAdd extends PureComponent {
                 ...values,
                 deptId: values.deptId,
                 // roleId: func.join(values.roleId),
-                postId: func.join(values.postId),
+                // postId: func.join(values.postId),
                 birthday: func.format(values.birthday),
               };
               dispatch(USER_SUBMIT(params));
@@ -74,7 +74,7 @@ class UserAdd extends PureComponent {
 
   handleChange = value => {
     const { dispatch, form } = this.props;
-    form.resetFields([ 'deptId', 'postId']);
+    form.resetFields([ 'deptId'/*, 'postId'*/]);
     dispatch(USER_CHANGE_INIT({ tenantId: value }));
   };
 
@@ -318,7 +318,7 @@ class UserAdd extends PureComponent {
           <Card title="职责信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="用户编号">
+                <FormItem {...formItemLayout} label="职员工号">
                   {getFieldDecorator('code', {})(<Input placeholder="请输入用户编号" />)}
                 </FormItem>
               </Col>
@@ -391,6 +391,7 @@ class UserAdd extends PureComponent {
             </Row>
             <Row gutter={24}>
               <Col span={10}>
+{/*
                 <FormItem {...formItemLayout} label="所属岗位">
                   {getFieldDecorator('postId', {
                     rules: [
@@ -417,6 +418,7 @@ class UserAdd extends PureComponent {
                     </Select>
                   )}
                 </FormItem>
+*/}
               </Col>
             </Row>
           </Card>

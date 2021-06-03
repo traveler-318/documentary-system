@@ -129,21 +129,21 @@ class ProductManagement extends PureComponent {
         //   dataIndex: 'settlePrice',
         //   width: 150,
         // },
-        {
-          title: '自定义1',
-          dataIndex: 'customOne',
-          width: 150,
-        },
-        {
-          title: '自定义2',
-          dataIndex: 'customTwo',
-          width: 150,
-        },
-        {
-          title: '自定义3',
-          dataIndex: 'customThree',
-          width: 150,
-        },
+        // {
+        //   title: '自定义1',
+        //   dataIndex: 'customOne',
+        //   width: 150,
+        // },
+        // {
+        //   title: '自定义2',
+        //   dataIndex: 'customTwo',
+        //   width: 150,
+        // },
+        // {
+        //   title: '自定义3',
+        //   dataIndex: 'customThree',
+        //   width: 150,
+        // },
         // {
         //   title: '允许代理',
         //   dataIndex: 'openAuthorization',

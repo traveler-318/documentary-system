@@ -138,11 +138,6 @@ class CustomerDetail extends PureComponent {
         <div className={styles.editList} style={{ padding: '20px' }}>
           <FormDetailsTitle title="客户信息" style={{ margin:'0'}} />
           <Form span={24}>
-            <FormItem {...formAllItemLayout} label="客户编号">
-              {getFieldDecorator('id', {
-                initialValue: detail.id,
-              })(<Input disabled={true} />)}
-            </FormItem>
             <FormItem {...formAllItemLayout} label="联系人">
               {getFieldDecorator('clientName', {
                 rules: [
