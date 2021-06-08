@@ -26,25 +26,25 @@ class Organization extends PureComponent {
 
   };
 
-  handleClick = parentId => {
-    router.push(`/system/organization/add/${parentId}`);
+  handleClick = row => {
+    router.push(`/system/organization/add/${row.id}`);
   };
 
   renderActionButton = (keys, rows) => {
-    console.log(rows[0].parentId === "0",rows,"row");
-    return (
-      <Fragment>
-        <Divider type="vertical" />
-        <a
-          title="新增下级"
-          onClick={() => {
-            this.handleClick(rows[0].id);
-          }}
-        >
-          新增下级
-        </a>
-      </Fragment>
-    )
+    let row = rows[0];
+    return row.deptCategory == 3 ? '':(
+            <Fragment>
+              <Divider type="vertical" />
+              <a
+                title="新增下级"
+                onClick={() => {
+                  this.handleClick(row);
+                }}
+              >
+                新增下级
+              </a>
+            </Fragment>
+      )
   };
 
   render() {
@@ -97,6 +97,7 @@ class Organization extends PureComponent {
           actionColumnWidth={250}
           loading={loading}
           data={data}
+          multipleChoice={true}
           columns={columns}
         />
       </Panel>

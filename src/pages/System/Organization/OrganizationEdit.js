@@ -155,7 +155,7 @@ class OrganizationEdit extends PureComponent {
                     ],
                     initialValue: String(detail.deptCategory),
                   })(
-                    <Select placeholder="请选择组织类型">
+                    <Select placeholder="请选择组织类型" disabled={true}>
                       {category.map(d => (
                         <Select.Option key={d.dictKey} value={d.dictKey}>
                           {d.dictValue}

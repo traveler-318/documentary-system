@@ -50,7 +50,7 @@ class OrganizationAdd extends PureComponent {
       submitting,
     } = this.props;
 
-    console.log(category)
+    const deptCategory = detail.deptCategory+1;
 
     const formItemLayout = {
       labelCol: {
@@ -119,7 +119,8 @@ class OrganizationAdd extends PureComponent {
             <Row gutter={24}>
               <Col span={10}>
                 <FormItem {...formItemLayout} className={styles.inputItem} label="组织类型">
-                  {getFieldDecorator('deptCategory', {
+                  {getFieldDecorator('deptCategory',{
+                    initialValue: deptCategory ? deptCategory+'' :'',
                     rules: [
                       {
                         required: true,
@@ -127,7 +128,7 @@ class OrganizationAdd extends PureComponent {
                       },
                     ],
                   })(
-                    <Select placeholder="请选择组织类型">
+                    <Select placeholder="请选择组织类型" disabled={func.notEmpty(detail.id)}>
                       {category.map(d => (
                         <Select.Option key={d.dictKey} value={d.dictKey}>
                           {d.dictValue}
