@@ -409,9 +409,14 @@ class User extends PureComponent {
         width:120,
       },
       {
-        title: '所属机构',
-        dataIndex: 'deptName',
+        title: '所属组织',
+        dataIndex: 'organizationId',
         width:180,
+      },
+      {
+        title: '职员工号',
+        dataIndex: 'code',
+        width:120,
       },
       {
         title: '手机号码',

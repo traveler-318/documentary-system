@@ -247,6 +247,55 @@ class Survey extends PureComponent {
 
         },
       });
+    }else if(Number(detail.confirmTag) < 5){
+      Modal.confirm({
+        title: '提示',
+        content: '当前订单流程处于非签收状态，如果跟进将导致订单的物流停止更新，是否确认操作',
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        keyboard:false,
+        async onOk() {
+          let param = {
+            userName:detail.userName,
+            describe,
+            createTime:moment(new Date(),'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
+            type:reminderTime === "" ? "1" : "2",// 1是跟进-2提醒时间，
+            reminderTime
+          }
+
+          followRecords.unshift(param);
+
+          let _param = {
+            id:detail.id,
+            deptId:detail.deptId,
+            tenantId:detail.tenantId,
+            confirmTag:detail.confirmTag,
+            outOrderNo:detail.outOrderNo,
+            salesman:detail.salesman,
+            userName:detail.userName,
+            userPhone:detail.userPhone,
+            reminderTime:reminderTime === ""? null:moment(reminderTime,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss')
+          }
+          _param.followRecords = JSON.stringify({
+            list:followRecords
+          })
+
+          // if(detail.confirmTag === '4'){
+          orderFollowing(_param).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              _this.props.getEditDetails();
+              _this.handleEmpty();
+            }else{
+              message.error(res.msg);
+            }
+          })
+        },
+        onCancel() {
+
+        },
+      });
     }else {
       let param = {
         userName:detail.userName,

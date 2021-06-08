@@ -71,7 +71,7 @@ class UserEdit extends PureComponent {
               ...values,
               organizationId: values.organizationId.toString(),
               deptId: func.join(values.deptId),
-              postId: func.join(values.postId),
+              // postId: func.join(values.postId),
               birthday: func.format(values.birthday),
             };
             dispatch(USER_UPDATE(params));
@@ -84,7 +84,7 @@ class UserEdit extends PureComponent {
 
   handleChange = value => {
     const { dispatch, form } = this.props;
-    form.resetFields([ 'deptId', 'postId']);
+    form.resetFields([ 'deptId'/*, 'postId'*/]);
     dispatch(USER_CHANGE_INIT({ tenantId: value }));
   };
 
@@ -303,10 +303,10 @@ class UserEdit extends PureComponent {
           <Card title="职责信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="用户编号">
+                <FormItem {...formItemLayout} label="职员工号">
                   {getFieldDecorator('code', {
                     initialValue: detail.code,
-                  })(<Input placeholder="请输入用户编号" />)}
+                  })(<Input placeholder="请输入职员工号" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
@@ -383,33 +383,33 @@ class UserEdit extends PureComponent {
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="所属岗位">
-                  {getFieldDecorator('postId', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择所属岗位',
-                      },
-                    ],
-                    initialValue: func.split(detail.postId),
-                  })(
-                    <Select
-                      mode="multiple"
-                      showSearch
-                      filterOption={(input, option) =>
-                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                      }
-                      allowClear
-                      placeholder="请选择所属岗位"
-                    >
-                      {postList.map(d => (
-                        <Select.Option key={d.id} value={d.id}>
-                          {d.postName}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  )}
-                </FormItem>
+                {/*<FormItem {...formItemLayout} label="所属岗位">*/}
+                  {/*{getFieldDecorator('postId', {*/}
+                    {/*rules: [*/}
+                      {/*{*/}
+                        {/*required: true,*/}
+                        {/*message: '请选择所属岗位',*/}
+                      {/*},*/}
+                    {/*],*/}
+                    {/*initialValue: func.split(detail.postId),*/}
+                  {/*})(*/}
+                    {/*<Select*/}
+                      {/*mode="multiple"*/}
+                      {/*showSearch*/}
+                      {/*filterOption={(input, option) =>*/}
+                        {/*option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0*/}
+                      {/*}*/}
+                      {/*allowClear*/}
+                      {/*placeholder="请选择所属岗位"*/}
+                    {/*>*/}
+                      {/*{postList.map(d => (*/}
+                        {/*<Select.Option key={d.id} value={d.id}>*/}
+                          {/*{d.postName}*/}
+                        {/*</Select.Option>*/}
+                      {/*))}*/}
+                    {/*</Select>*/}
+                  {/*)}*/}
+                {/*</FormItem>*/}
               </Col>
             </Row>
           </Card>

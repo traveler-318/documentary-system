@@ -13,6 +13,7 @@ import styles from './index.less';
 
 import { getSMSBalance } from '../../services/user';
 import { getSalesmanInfo } from '../../services/user';
+import router from 'umi/router';
 
 export default class GlobalHeaderRight extends PureComponent {
 
@@ -99,10 +100,19 @@ export default class GlobalHeaderRight extends PureComponent {
     });
   };
 
+  recharge =()=>{
+    console.log("1111")
+    router.push(`/system/charging`);
+  }
+
   payAmount = () => {
     const {remainingMoney}=this.state;
     return(
-      <span>短信余额：{remainingMoney}元</span>
+      <>
+        <span onClick={()=>this.recharge()} style={{cursor: "pointer"}}>充值</span><br/>
+        <span>短信余额：{remainingMoney}元</span>
+      </>
+
     )
   }
 
