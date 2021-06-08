@@ -79,7 +79,7 @@ export default {
   },
   proxy: {
     '/api': {
-      target: 'http://47.102.204.79:9010',
+      target: 'http://47.119.116.197:9010',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
