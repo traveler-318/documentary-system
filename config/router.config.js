@@ -640,6 +640,7 @@ export default [
             path: '/inventory/stock',
             routes: [
               { path: '/inventory/stock', component: './Inventory/Stock/index' },
+              { path: '/inventory/stock/add', component: './Inventory/Stock/add' },
             ]
           }
         ]

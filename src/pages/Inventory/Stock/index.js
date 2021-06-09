@@ -53,8 +53,7 @@ class StockList extends PureComponent {
           id:2,
           name:'不在线'
         }
-      ],
-      warehouseVisible:false
+      ]
     };
   }
   // ============ 初始化数据 ===============
@@ -167,19 +166,6 @@ class StockList extends PureComponent {
     );
   };
 
-  // ============ 新增弹框 ===============
-  handleClick = () => {
-    this.setState({
-      warehouseVisible:true
-    })
-  };
-
-  handleCancelWarehouse = () => {
-    this.setState({
-      warehouseVisible:false
-    })
-  };
-
   // 修改数据
   handleEdit = (row) => {
 
@@ -187,7 +173,7 @@ class StockList extends PureComponent {
 
   renderLeftButton = () => (
     <>
-      <Button type="primary" icon='plus' onClick={()=>{this.handleClick()}}>设置库存初始化</Button>
+      <Button type="primary" icon='plus' onClick={()=>{router.push(`/inventory/stock/add`);}}>设置库存初始化</Button>
     </>
   );
 
@@ -212,7 +198,7 @@ class StockList extends PureComponent {
         span: 20,
       },
     };
-    const {data,loading,warehouseVisible} = this.state;
+    const {data,loading} = this.state;
     const columns = [
       {
         title: '单据号',
@@ -290,67 +276,6 @@ class StockList extends PureComponent {
           renderLeftButton={this.renderLeftButton}
           renderRightButton={this.renderRightButton}
         />
-
-        <Modal
-          title="新建仓库"
-          visible={warehouseVisible}
-          maskClosable={false}
-          destroyOnClose
-          width={600}
-          onCancel={this.handleCancelWarehouse}
-          footer={[
-            <Button key="back" onClick={this.handleCancelWarehouse}>
-              取消
-            </Button>,
-            <Button key="submit" type="primary" onClick={()=>this.addDeliveryTime()}>
-              确定
-            </Button>,
-          ]}
-        >
-          <Form>
-            <FormItem {...formAllItemLayout} label="仓库名称">
-              {getFieldDecorator('deliveryTime', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入仓库名称',
-                  },
-                ],
-              })(
-                <Input placeholder="请输入仓库名称" />
-              )}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="仓库位置">
-              {getFieldDecorator('deliveryTime', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入仓库位置',
-                  },
-                ],
-              })(
-                <Input placeholder="请输入仓库位置" />
-              )}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="状态">
-              {getFieldDecorator('deliveryTime')(
-                <Radio.Group onChange={this.onChangeRadio}>
-                  <Radio value={1}>启用</Radio>
-                  <Radio value={2}> 禁用</Radio>
-                </Radio.Group>
-              )}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="备注">
-              {getFieldDecorator('deliveryTime')(
-                <TextArea
-                  rows={3}
-                  onChange={this.TextAreaChange}
-                  placeholder='请输入描述信息'
-                />
-              )}
-            </FormItem>
-          </Form>
-        </Modal>
       </Panel>
     );
   }

@@ -410,7 +410,7 @@ class User extends PureComponent {
       },
       {
         title: '所属组织',
-        dataIndex: 'organizationId',
+        dataIndex: 'organizationName',
         width:180,
       },
       {
