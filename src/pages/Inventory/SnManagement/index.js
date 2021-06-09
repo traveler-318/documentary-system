@@ -131,26 +131,26 @@ class SnManagementList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="数据来源">
-          {getFieldDecorator('complaintsType', {
-          })(
-            <Select placeholder={"请选择数据来源"} style={{ width: 200 }}>
-              {warehouseStatus.map((item,index)=>{
-                return (<Option key={index} value={item.id}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
-        <Form.Item label="制单人">
-          {getFieldDecorator('dateRange', {
-          })(
-            <Select placeholder={"请选择数据来源"} style={{ width: 200 }}>
-              {warehouseStatus.map((item,index)=>{
-                return (<Option key={index} value={item.id}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
+        {/*<Form.Item label="数据来源">*/}
+          {/*{getFieldDecorator('complaintsType', {*/}
+          {/*})(*/}
+            {/*<Select placeholder={"请选择数据来源"} style={{ width: 200 }}>*/}
+              {/*{warehouseStatus.map((item,index)=>{*/}
+                {/*return (<Option key={index} value={item.id}>{item.name}</Option>)*/}
+              {/*})}*/}
+            {/*</Select>*/}
+          {/*)}*/}
+        {/*</Form.Item>*/}
+        {/*<Form.Item label="制单人">*/}
+          {/*{getFieldDecorator('dateRange', {*/}
+          {/*})(*/}
+            {/*<Select placeholder={"请选择数据来源"} style={{ width: 200 }}>*/}
+              {/*{warehouseStatus.map((item,index)=>{*/}
+                {/*return (<Option key={index} value={item.id}>{item.name}</Option>)*/}
+              {/*})}*/}
+            {/*</Select>*/}
+          {/*)}*/}
+        {/*</Form.Item>*/}
         <div style={{ float: 'right',height:'32px' }}>
           <Button type="primary" htmlType="submit">
             <FormattedMessage id="button.search.name" />
