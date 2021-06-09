@@ -140,7 +140,7 @@ class ReturnOfGoodsForm extends PureComponent {
                     })(
                       <Select placeholder={"请选择快递公司"}>
                         {capacitys.map(item=>{
-                          return (<Select.Option value={item.id}>{item.value}</Select.Option>)
+                          return (<Select.Option value={item.com}>{item.value}</Select.Option>)
                         })}
                       </Select>
                     )}
