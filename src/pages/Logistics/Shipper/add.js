@@ -7,7 +7,7 @@ import { CITY } from '../../../utils/city';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
 
-import { getDeliverySave } from '../../../services/newServices/logistics';
+import { shipperSave } from '../../../services/newServices/logistics';
 import router from 'umi/router';
 
 const FormItem = Form.Item;
@@ -44,7 +44,7 @@ class SenderAdd extends PureComponent {
           ...values,
           administrativeAreas:cityparam.name
         };
-        getDeliverySave(params).then(res=>{
+        shipperSave(params).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
             router.push('/logistics/shipper');
@@ -96,7 +96,7 @@ class SenderAdd extends PureComponent {
     );
 
     return (
-      <Panel title="新增" back="/logistics/sender" action={action}>
+      <Panel title="新增" back="/logistics/shipper" action={action}>
         <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>

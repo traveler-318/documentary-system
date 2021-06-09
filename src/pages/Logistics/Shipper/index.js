@@ -21,9 +21,9 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import {
-  getDeliveryList,
-  getDeliveryRemove,
-  getDeliveryStatus,
+  shipperList,
+  shipperRemove,
+  shipperUpdate,
 } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
@@ -56,7 +56,7 @@ class SenderList extends PureComponent {
     this.setState({
       loading:true
     })
-    getDeliveryList(params).then(res=>{
+    shipperList(params).then(res=>{
       this.setState({
         loading:false
       })
@@ -106,7 +106,7 @@ class SenderList extends PureComponent {
         okType: 'danger',
         cancelText: '取消',
         onOk() {
-          getDeliveryRemove(params).then(resp => {
+          shipperRemove(params).then(resp => {
             if (resp.success) {
               message.success(resp.msg);
               refresh()
@@ -136,7 +136,7 @@ class SenderList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        getDeliveryStatus(params).then(resp=>{
+        shipperUpdate(params).then(resp=>{
           if (resp.success) {
             message.success(resp.msg);
             refresh()
@@ -189,7 +189,7 @@ class SenderList extends PureComponent {
       },
       {
         title: '寄件人地址',
-        dataIndex: 'administrativeAreas',
+        dataIndex: 'printAddr',
         width: 350,
         render: (res,key) => {
           let Areas =res + key.printAddr;

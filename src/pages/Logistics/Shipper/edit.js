@@ -5,7 +5,7 @@ import moment from 'moment'
 import Panel from '../../../components/Panel';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
-import { getDeliverySubmit } from '../../../services/newServices/logistics';
+import { shipperUpdate } from '../../../services/newServices/logistics';
 import router from 'umi/router';
 import styles from '../../../layouts/Sword.less';
 import { CITY } from '../../../utils/city';
@@ -54,7 +54,7 @@ class SenderEdit extends PureComponent {
         params.administrativeAreas=cityparam.name
       }
       if (!err) {
-        getDeliverySubmit(params).then(res=>{
+        shipperUpdate(params).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
             router.push('/logistics/shipper');
@@ -107,7 +107,7 @@ class SenderEdit extends PureComponent {
     );
 
     return (
-      <Panel title="修改" back="/logistics/sender" action={action}>
+      <Panel title="修改" back="/logistics/shipper" action={action}>
         <Form style={{ marginTop: 8 }}>
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>

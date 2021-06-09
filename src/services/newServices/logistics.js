@@ -194,3 +194,30 @@ export async function getAdditionalinformationStatus(params) {
 
 
 
+//退货配置
+export async function shipperList(params) {
+  return request(`/api/logistics_recipient_config/recipientconfig/list?size=`+params.size+`&current=`+params.current, {
+    method: 'GET'
+  });
+}
+
+export async function shipperSave(params) {
+  return request('/api/logistics_recipient_config/recipientconfig/save', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+export async function shipperUpdate(params) {
+  return request('/api/logistics_recipient_config/recipientconfig/update', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+export async function shipperRemove(params) {
+  return request('/api/logistics_recipient_config/recipientconfig/remove', {
+    method: 'POST',
+    body: func.toFormData(params),
+  });
+}
