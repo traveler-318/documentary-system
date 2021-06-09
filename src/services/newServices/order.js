@@ -370,3 +370,26 @@ export async function importOrder(params) {
 }
 
 
+//退货列表
+export async function returnOfGoodsList(params){
+  return request('/api/logistics/placeorder/list', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+//查询快递下拉树接口
+export async function returnOfGoodsCapacity(params){
+  return request('/api/logistics/placeorder/capacity', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+//下单退货接口
+export async function returnOfGoodsSave(params){
+  return request('/api/logistics/placeorder/save', {
+    method: 'POST',
+    body: params,
+  });
+}

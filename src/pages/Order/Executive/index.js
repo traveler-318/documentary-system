@@ -73,6 +73,7 @@ import TimeConsuming from '../components/timeConsuming';
 import SMS from '../components/smsList';
 import VoiceList from '../components/voiceList';
 import OrderImport from '../components/orderImport';
+import returnOfGoodsList from './components/returnOfGoodsList';
 import SearchButton from '../components/button';
 import { getCookie } from '../../../utils/support';
 const FormItem = Form.Item;
@@ -148,6 +149,10 @@ class AllOrdersList extends PureComponent {
       //发货时间弹窗
       deliverGoodsTimeVisible:false,
       deliverGoodsTimeList:{},
+
+      //退货弹窗
+      returnOfGoodsVisible:false,
+      returnOfGoodsList:{},
       // 语音弹窗
       VoiceVisible:false,
       voice:{},
@@ -1174,6 +1179,9 @@ class AllOrdersList extends PureComponent {
     }else if(code === "deliverGoodsTime"){
       // 发货时间
       this.handleDeliverGoodsTime()
+    }else if(code === 'returnOfGoods'){
+      //退货
+      this.returnOfGoods();
     }
 
   }
@@ -1587,6 +1595,24 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  // 打开退货弹窗
+  returnOfGoods = () => {
+    const { selectedRows } = this.state;
+    if(selectedRows.length === 0){
+      return message.info('请选择一条数据');
+    }
+    this.setState({
+      returnOfGoodsVisible:true,
+      returnOfGoodsList:selectedRows
+    })
+  }
+
+  handleOrderReturnOfGoodsCancel = () =>{
+    this.setState({
+      returnOfGoodsVisible: false,
+    });
+  }
+
   addDeliveryTime = () => {
     const { deliverGoodsTimeList } = this.state;
     const { form } = this.props;
@@ -1769,7 +1795,6 @@ class AllOrdersList extends PureComponent {
       OrderImportVisible: false,
     });
   }
-
   onCheck = (checkedKeys) => {
     this.setState({
       checkedOptions: checkedKeys
@@ -2114,7 +2139,9 @@ class AllOrdersList extends PureComponent {
       plainOptions,
       checkedOptions,
       columns,
-      params
+      params,
+      returnOfGoodsVisible,
+      returnOfGoodsList,
     } = this.state;
 
     const loop = data =>
@@ -2646,6 +2673,14 @@ class AllOrdersList extends PureComponent {
           />
         ):""}
 
+        {/*退货*/}
+        {returnOfGoodsVisible?(
+          <returnOfGoodsList
+            visible={returnOfGoodsVisible}
+            returnOfGoodsList={returnOfGoodsList}
+            handleCancel={this.handleOrderReturnOfGoodsCancel}
+          ></returnOfGoodsList>
+        ):''}
         <Modal
           title="提示"
           visible={LogisticsAlertVisible}
