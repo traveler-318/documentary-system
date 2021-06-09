@@ -192,8 +192,15 @@ class SearchButton extends PureComponent {
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
-                    // {/* 在途中什么都没有 */}
-                }else if(tabKey === '5' && item.code === "bell"){
+                }else if(tabKey === '4' && item.code === 'returnOfGoods'){
+                  i++;
+                  // 在途中
+                  return (
+                    <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
+                      this.handleClick(item.code)
+                    }}>{item.name}</Button>
+                  )
+                }else if(tabKey === '5' && (item.code === "bell" || item.code === 'returnOfGoods')){
                   i++;
                     // 已签收
                     return (
@@ -201,7 +208,7 @@ class SearchButton extends PureComponent {
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
-                }else if(tabKey === '6' && item.code === "bell"){
+                }else if(tabKey === '6' && (item.code === "bell" || item.code === 'returnOfGoods')){
                   i++;
                     // 跟进中
                     return (
@@ -209,6 +216,14 @@ class SearchButton extends PureComponent {
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
+                }else if(tabKey === '7' && item.code === 'returnOfGoods'){
+                  i++;
+                  // 已激活
+                  return (
+                    <Button type={i===0?'primary':''} icon={item.source} onClick={()=>{
+                      this.handleClick(item.code)
+                    }}>{item.name}</Button>
+                  )
                 }
                 // else if(tabKey === '10' && item.code === 'Claim'){
                 //   i++;

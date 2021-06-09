@@ -48,6 +48,7 @@ export default {
   'menu.logistics': '物流配置',
   'menu.logistics.authority': '授权配置',
   'menu.logistics.faceSheet': '打印模板',
+  'menu.logistics.shipper': '退货配置',
   'menu.logistics.sender': '寄件配置',
   'menu.logistics.goods': '物品信息',
   'menu.logistics.additional': '附加信息',

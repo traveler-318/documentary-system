@@ -76,6 +76,7 @@ class BasicLayout extends React.Component {
     if (fixSiderbar && layout !== 'topmenu' && !isMobile) {
       return {
         paddingLeft: collapsed ? '80px' : '180px',
+        // paddingLeft: collapsed ? '92px' : '224px',
       };
     }
     return null;

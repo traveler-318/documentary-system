@@ -673,6 +673,14 @@ export default [
             ],
           },
           {
+            path: '/logistics/shipper',
+            routes: [
+              { path: '/logistics/shipper', component: './Logistics/Shipper/index' },
+              { path: '/logistics/shipper/add', component: './Logistics/Shipper/add' },
+              { path: '/logistics/shipper/edit', component: './Logistics/Shipper/edit' },
+            ],
+          },
+          {
             path: '/logistics/goods',
             routes: [
               { path: '/logistics/goods', component: './Logistics/Goods/index' },
