@@ -112,48 +112,48 @@ class SenderEdit extends PureComponent {
           <Card title="基本信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="寄件人姓名：">
+                <FormItem {...formItemLayout} label="退货人姓名：">
                   {getFieldDecorator('name', {
                     rules: [
                       {
                         required: true,
-                        message: '寄件人姓名',
+                        message: '退货人姓名',
                       },
                     ],
                     initialValue: data.name,
-                  })(<Input placeholder="寄件人姓名" />)}
+                  })(<Input placeholder="退货人姓名" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="寄件人手机号：">
+                <FormItem {...formItemLayout} label="退货人手机号：">
                   {getFieldDecorator('mobile', {
                     rules: [
                       { required: true, validator: this.validatePhone },
                     ],
                     initialValue: data.mobile,
-                  })(<Input placeholder="寄件人手机号" />)}
+                  })(<Input placeholder="退货人手机号" />)}
                 </FormItem>
               </Col>
             </Row>
             <Row gutter={24}>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="寄件人详细地址：">
+                <FormItem {...formItemLayout} label="退货人详细地址：">
                   {getFieldDecorator('printAddr', {
                     rules: [
                       {
                         required: true,
-                        message: '寄件人详细地址',
+                        message: '退货人详细地址',
                       },
                     ],
                     initialValue: data.printAddr,
-                  })(<Input placeholder="寄件人详细地址" />)}
+                  })(<Input placeholder="退货人详细地址" />)}
                 </FormItem>
               </Col>
               <Col span={10}>
-                <FormItem {...formItemLayout} label="寄件人公司名称:">
+                <FormItem {...formItemLayout} label="退货人公司名称:">
                   {getFieldDecorator('company',{
                     initialValue: data.company,
-                  })(<Input placeholder="寄件人公司名称" />)}
+                  })(<Input placeholder="退货人公司名称" />)}
                 </FormItem>
               </Col>
             </Row>
