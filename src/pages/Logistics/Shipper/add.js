@@ -1,10 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Form, Input, Card, Row, Col, Button, Radio, Cascader, Select, DatePicker, message } from 'antd';
-import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
-import { CITY } from '../../../utils/city';
-import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
 
 import { shipperSave } from '../../../services/newServices/logistics';
@@ -23,6 +20,7 @@ class SenderAdd extends PureComponent {
       data:{
 
       },
+      productId:null,
       productList:[],
       cityparam:{}
     };
@@ -42,13 +40,12 @@ class SenderAdd extends PureComponent {
     e.preventDefault();
     const {  form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
-      values.addrCoding=JSON.stringify(values.addrCoding);
       values.deptId = getCookie("dept_id");
-      const { cityparam } = this.state;
+      values.productId = this.state.productId;
+      delete values.productType;
       if (!err) {
         const params = {
-          ...values,
-          administrativeAreas:cityparam.name
+          ...values
         };
         shipperSave(params).then(res=>{
           if(res.code === 200){
@@ -58,17 +55,6 @@ class SenderAdd extends PureComponent {
         })
       }
     });
-  };
-
-  onChange = (value, selectedOptions) => {
-    this.setState({
-      cityparam:{
-        province:value[0],
-        city:value[1],
-        area:value[2],
-        name:`${selectedOptions[0].label}${selectedOptions[1].label}${selectedOptions[2].label}`
-      }
-    })
   };
 
   validatePhone = (rule, value, callback) => {
@@ -164,11 +150,7 @@ class SenderAdd extends PureComponent {
                       fieldNames={{ label: 'value',value: "id"}}
                       onChange={(value, selectedOptions)=>{
                         this.setState({
-                          payPanyId:selectedOptions[0].id,
-                          productTypeId:selectedOptions[1].id,
-                          productId :selectedOptions[2].id,
-                          productName:selectedOptions[2].value,
-                          productType:selectedOptions[0].value +"/" +selectedOptions[1].value
+                          productId :selectedOptions[2].id
                         })
                       }}
                     ></Cascader>
