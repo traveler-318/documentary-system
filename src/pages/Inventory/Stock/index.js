@@ -1,32 +1,16 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Row,
-  Select,
-  DatePicker,
-  Divider,
-  Dropdown,
-  Menu,
-  Icon,
-  Radio,
-  Switch,
-  Modal,
-  message,
-} from 'antd';
+import {Button,Form,Input,Select,DatePicker,Divider,Modal,message, } from 'antd';
+// import { WaterMark } from '@ant-design/pro-layout';
+// import ProLayout, { PageContainer } from '@ant-design/pro-layout';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import {
   getDeliveryList,
-  getDeliveryRemove,
-  getDeliveryStatus,
 } from '../../../services/newServices/logistics';
-import { ORDERSTATUS, TYPESTATUS } from '../../WorkOrder/WorkOrderList/data';
+
 import Add from './add';
 
 const FormItem = Form.Item;
@@ -278,27 +262,26 @@ class StockList extends PureComponent {
       },
     ];
     return (
-      <Panel>
-        <Grid
-          form={form}
-          onSearch={this.handleSearch}
-          renderSearchForm={this.renderSearchForm}
-          data={data}
-          loading={loading}
-          columns={columns}
-          scroll={{ x: 1000 }}
-          renderLeftButton={this.renderLeftButton}
-          renderRightButton={this.renderRightButton}
-        />
-        {/* 耗时检测弹框 */}
-        {stockVisible?(
-          <Add
-            stockVisible={stockVisible}
-            handleStockVisibleCancel={this.handleStockVisibleCancel}
-          />
-        ):""}
-      </Panel>
-
+        <Panel>
+            <Grid
+              form={form}
+              onSearch={this.handleSearch}
+              renderSearchForm={this.renderSearchForm}
+              data={data}
+              loading={loading}
+              columns={columns}
+              scroll={{ x: 1000 }}
+              renderLeftButton={this.renderLeftButton}
+              renderRightButton={this.renderRightButton}
+            />
+            {/* 耗时检测弹框 */}
+            {stockVisible?(
+              <Add
+                stockVisible={stockVisible}
+                handleStockVisibleCancel={this.handleStockVisibleCancel}
+              />
+            ):""}
+        </Panel>
     );
   }
 }

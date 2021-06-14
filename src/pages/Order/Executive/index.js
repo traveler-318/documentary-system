@@ -20,7 +20,7 @@ import {
   Radio,
   Tag,
   Cascader,
-  TreeSelect,
+  TreeSelect, Table,
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
@@ -84,8 +84,6 @@ const { TextArea } = Input;
 const { TreeNode } = Tree;
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-
-
 let modal;
 
 const ResizeableTitle = props => {
@@ -109,6 +107,7 @@ const ResizeableTitle = props => {
 @connect(({ globalParameters }) => ({
   globalParameters,
 }))
+
 @Form.create()
 class AllOrdersList extends PureComponent {
 
@@ -181,7 +180,8 @@ class AllOrdersList extends PureComponent {
       confirmTagList:[],
       _listArr:[],
       organizationTree:[],
-      beginTime:''
+      beginTime:'',
+      display:false
     };
   }
 
@@ -1915,6 +1915,46 @@ class AllOrdersList extends PureComponent {
     }
   };
 
+  Update =(e,row)=>{
+    let  type = false
+    for(let key in LOGISTICSCOMPANY){
+      if(LOGISTICSCOMPANY[key] === e.target.value){
+        type = true
+      }
+    }
+    if(type){
+      const params={
+        id:row.id,
+        logisticsCompany : e.target.value !=="" ? e.target.value : null,
+      }
+      console.log(params)
+      updateData(params).then(res=>{
+        if(res.code === 200){
+          message.success(res.msg);
+        }else {
+          message.error(res.msg);
+        }
+      })
+    }else {
+      message.error("此快递名称在系统中不存在,请核实后录入!");
+    }
+
+  }
+
+  Update1 =(e,row)=>{
+    const params={
+      id:row.id,
+      logisticsNumber : e.target.value !=="" ? e.target.value : null,
+    }
+    console.log(params)
+    updateData(params).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg);
+      }else {
+        message.error(res.msg);
+      }
+    })
+  }
 
   // 菜单列表头获取
   getOrderMenuHead = () => {
@@ -2055,6 +2095,24 @@ class AllOrdersList extends PureComponent {
           if(item.dataIndex === "salesman"){
             item.ellipsis=true
           }
+          // 快递公司
+          if(item.dataIndex === "logisticsCompany"){
+            item.ellipsis=true;
+            item.render=(key,row)=>{
+              return (
+                row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? key:(<input style={{width:"90%"}} defaultValue={key} onBlur={(e)=>this.Update(e,row)} />)
+              )
+            }
+          }
+          // 快递单号
+          if(item.dataIndex === "logisticsNumber"){
+            item.ellipsis=true;
+            item.render=(key,row)=>{
+              return (
+                row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? key:(<input style={{width:"90%"}} defaultValue={key} onBlur={(e)=>this.Update1(e,row)} />)
+              )
+            }
+          }
           checked.push(item.dataIndex)
         })
         this.setState({
@@ -2095,7 +2153,7 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
-    const { getFieldDecorator } = form;
+    const {getFieldDecorator}=form
 
     const formAllItemLayout = {
       labelCol: {

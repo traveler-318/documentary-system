@@ -393,3 +393,13 @@ export async function returnOfGoodsSave(params){
     body: params,
   });
 }
+
+//地址解析
+export async function addressParsing(params){
+  return request('/api/order/order/addressParsing', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+

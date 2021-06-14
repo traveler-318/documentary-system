@@ -64,8 +64,8 @@ class Export extends PureComponent {
       this.setState({
         seleteTimeRange:5,
         downloadExcelParam:{
-          startTime:moment(globalParameters.detailData.startTime).format('YYYY-MM-DD')+" 00:00:00",
-          endTime:moment(globalParameters.detailData.endTime).format('YYYY-MM-DD')+" 23:59:59"
+          startTime:moment(globalParameters.detailData.startTime).format('YYYY-MM-DD HH:mm:ss'),
+          endTime:moment(globalParameters.detailData.endTime).format('YYYY-MM-DD HH:mm:ss')
         }
       })
     }
@@ -214,18 +214,18 @@ class Export extends PureComponent {
   exportFilePopup =(cellBack) =>{
     // 验证是否获取短信验证码
     const {smsType,downloadExcelParam,params,verificationCode}=this.state;
-    if(smsType){
-      message.error('导出数据需要短信验证，请先获取短信验证码！');
-      return false;
-    }
-    if(verificationCode.length < 6){
-      message.error('验证码不能小于6位数');
-      return false;
-    }
-    if(verificationCode.length > 6){
-      message.error('验证码不能大于6位数');
-      return false;
-    }
+    // if(smsType){
+    //   message.error('导出数据需要短信验证，请先获取短信验证码！');
+    //   return false;
+    // }
+    // if(verificationCode.length < 6){
+    //   message.error('验证码不能小于6位数');
+    //   return false;
+    // }
+    // if(verificationCode.length > 6){
+    //   message.error('验证码不能大于6位数');
+    //   return false;
+    // }
 
 
     let param={
@@ -346,29 +346,29 @@ class Export extends PureComponent {
     const downloadExcelParam={};
     // 本日
     if(item.code === 1){
-      downloadExcelParam.startTime = moment().format('YYYY-MM-DD')+" 00:00:00";
-      downloadExcelParam.endTime = moment().format('YYYY-MM-DD')+" 23:59:59";
+      downloadExcelParam.startTime = moment().format('YYYY-MM-DD HH:mm:ss');
+      downloadExcelParam.endTime = moment().format('YYYY-MM-DD HH:mm:ss');
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 2){
       // 昨日
-      downloadExcelParam.startTime = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 00:00:00";
-      downloadExcelParam.endTime = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD')+" 23:59:59";
+      downloadExcelParam.startTime = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD HH:mm:ss');
+      downloadExcelParam.endTime = moment(new Date()-24*60*60*1000).format('YYYY-MM-DD HH:mm:ss');
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 3){
       // 本周
-      downloadExcelParam.startTime = moment().startOf('week').format('YYYY-MM-DD') +" 00:00:00";
-      downloadExcelParam.endTime = moment().endOf('week').format('YYYY-MM-DD')+" 23:59:59";
+      downloadExcelParam.startTime = moment().startOf('week').format('YYYY-MM-DD HH:mm:ss');
+      downloadExcelParam.endTime = moment().endOf('week').format('YYYY-MM-DD HH:mm:ss');
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
     }else if(item.code === 4){
       // 本月
-      downloadExcelParam.startTime = moment().startOf('month').format('YYYY-MM-DD') +" 00:00:00";
-      downloadExcelParam.endTime = moment().endOf('month').format('YYYY-MM-DD') +" 00:00:00";
+      downloadExcelParam.startTime = moment().startOf('month').format('YYYY-MM-DD HH:mm:ss');
+      downloadExcelParam.endTime = moment().endOf('month').format('YYYY-MM-DD HH:mm:ss');
       this.setState({
         downloadExcelParam:downloadExcelParam
       })
@@ -390,8 +390,8 @@ class Export extends PureComponent {
 
   onOk = (value) => {
     const downloadExcelParam={};
-    downloadExcelParam.startTime = moment(value[0]).format('YYYY-MM-DD HH:mm');
-    downloadExcelParam.endTime = moment(value[1]).format('YYYY-MM-DD HH:mm');
+    downloadExcelParam.startTime = moment(value[0]).format('YYYY-MM-DD HH:mm:ss');
+    downloadExcelParam.endTime = moment(value[1]).format('YYYY-MM-DD HH:mm:ss');
     this.setState({
       downloadExcelParam:downloadExcelParam
     })

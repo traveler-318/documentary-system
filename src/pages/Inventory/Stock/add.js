@@ -15,9 +15,6 @@ import {
   Table, Divider,
 } from 'antd';
 import { connect } from 'dva';
-import Panel from '../../../components/Panel';
-import styles from '../../../layouts/Sword.less';
-import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
 import { getSurfacesingleSave } from '../../../services/newServices/logistics';
 import router from 'umi/router';
