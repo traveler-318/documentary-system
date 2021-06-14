@@ -371,10 +371,9 @@ export async function importOrder(params) {
 
 
 //退货列表
-export async function returnOfGoodsList(params){
-  return request('/api/logistics/placeorder/list', {
-    method: 'POST',
-    body: params,
+export async function returnGoodsList(params){
+  return request('/api/logistics/placeorder/list?orderId='+params.orderId, {
+    method: 'get'
   });
 }
 

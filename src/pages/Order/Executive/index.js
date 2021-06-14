@@ -73,7 +73,7 @@ import TimeConsuming from '../components/timeConsuming';
 import SMS from '../components/smsList';
 import VoiceList from '../components/voiceList';
 import OrderImport from '../components/orderImport';
-import returnOfGoodsList from './components/returnOfGoodsList';
+import ReturnOfGoodsList from './components/returnOfGoodsList';
 import SearchButton from '../components/button';
 import { getCookie } from '../../../utils/support';
 const FormItem = Form.Item;
@@ -151,7 +151,7 @@ class AllOrdersList extends PureComponent {
 
       //退货弹窗
       returnOfGoodsVisible:false,
-      returnOfGoodsList:{},
+      returnOfGoodsDataList:{},
       // 语音弹窗
       VoiceVisible:false,
       voice:{},
@@ -1603,7 +1603,7 @@ class AllOrdersList extends PureComponent {
     }
     this.setState({
       returnOfGoodsVisible:true,
-      returnOfGoodsList:selectedRows
+      returnOfGoodsDataList:selectedRows
     })
   }
 
@@ -2199,7 +2199,7 @@ class AllOrdersList extends PureComponent {
       columns,
       params,
       returnOfGoodsVisible,
-      returnOfGoodsList,
+      returnOfGoodsDataList,
     } = this.state;
 
     const loop = data =>
@@ -2733,11 +2733,11 @@ class AllOrdersList extends PureComponent {
 
         {/*退货*/}
         {returnOfGoodsVisible?(
-          <returnOfGoodsList
+          <ReturnOfGoodsList
             visible={returnOfGoodsVisible}
-            returnOfGoodsList={returnOfGoodsList}
+            returnOfGoodsDataList={returnOfGoodsDataList}
             handleCancel={this.handleOrderReturnOfGoodsCancel}
-          ></returnOfGoodsList>
+          ></ReturnOfGoodsList>
         ):''}
         <Modal
           title="提示"
