@@ -9,6 +9,7 @@ import { getCookie } from '../../../utils/support';
 
 import { shipperSave } from '../../../services/newServices/logistics';
 import router from 'umi/router';
+import { productTreelist } from '../../../services/newServices/order';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -22,14 +23,19 @@ class SenderAdd extends PureComponent {
       data:{
 
       },
+      productList:[],
       cityparam:{}
     };
   }
 
   componentWillMount() {
-
+    this.getTreeList();
   }
-
+  getTreeList = () => {
+    productTreelist().then(res=>{
+      this.setState({productList:res.data})
+    })
+  }
   // ============ 提交 ===============
 
   handleSubmit = e => {
@@ -87,7 +93,7 @@ class SenderAdd extends PureComponent {
       },
     };
 
-    const {data}=this.state
+    const {data,productList}=this.state
 
     const action = (
       <Button type="primary" onClick={this.handleSubmit}>
@@ -141,7 +147,35 @@ class SenderAdd extends PureComponent {
                 </FormItem>
               </Col>
             </Row>
-
+            <Row gutter={24}>
+              <Col span={10}>
+                <FormItem {...formItemLayout} label="产品分类">
+                  {getFieldDecorator('productType', {
+                    initialValue: null,
+                    rules: [
+                      {
+                        required: true,
+                        message: '请选择产品分类',
+                      },
+                    ],
+                  })(
+                    <Cascader
+                      options={productList}
+                      fieldNames={{ label: 'value',value: "id"}}
+                      onChange={(value, selectedOptions)=>{
+                        this.setState({
+                          payPanyId:selectedOptions[0].id,
+                          productTypeId:selectedOptions[1].id,
+                          productId :selectedOptions[2].id,
+                          productName:selectedOptions[2].value,
+                          productType:selectedOptions[0].value +"/" +selectedOptions[1].value
+                        })
+                      }}
+                    ></Cascader>
+                  )}
+                </FormItem>
+              </Col>
+            </Row>
           </Card>
         </Form>
       </Panel>
