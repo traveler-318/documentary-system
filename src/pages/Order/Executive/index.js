@@ -83,6 +83,58 @@ const { SubMenu } = Menu;
 const { TextArea } = Input;
 const { TreeNode } = Tree;
 
+let timeout;
+let currentValue;
+
+function fetch(value, callback) {
+  if (timeout) {
+    clearTimeout(timeout);
+    timeout = null;
+  }
+  currentValue = value;
+
+  function fake() {
+    const logisticsCompanyList = [];
+    console.log(value)
+    if (currentValue === value) {
+      // LOGISTICSCOMPANY.map((value,index) => {  //使用filter函数过滤新闻列表数据
+      //   console.log(value,"1111")
+      //   // var re =new RegExp(keyword,"g"); //定义正则
+      //   // value.title=value.title.replace(re, `<span class="keyword">${keyword}</span>`); //进行替换，并定义高亮的样式
+      // })
+      for(let key in LOGISTICSCOMPANY){
+        const index = LOGISTICSCOMPANY[key].indexOf(value)
+        console.log(index)
+        if (index !== -1) {
+          logisticsCompanyList.push({
+            value: LOGISTICSCOMPANY[key],
+          });
+        }
+      }
+      callback(logisticsCompanyList);
+    }
+
+
+    // jsonp(`https://suggest.taobao.com/sug?${str}`)
+    //   .then(response => response.json())
+    //   .then(d => {
+    //     if (currentValue === value) {
+    //       const { result } = d;
+    //       const data = [];
+    //       result.forEach(r => {
+    //         data.push({
+    //           value: r[0],
+    //           text: r[0],
+    //         });
+    //       });
+    //       callback(data);
+    //     }
+    //   });
+  }
+
+  timeout = setTimeout(fake, 300);
+}
+
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 let modal;
 
@@ -181,7 +233,8 @@ class AllOrdersList extends PureComponent {
       _listArr:[],
       organizationTree:[],
       beginTime:'',
-      display:false
+      display:false,
+      logisticsCompanyList:[]
     };
   }
 
@@ -193,6 +246,16 @@ class AllOrdersList extends PureComponent {
     this.getOrderMenuHead();
     this.getOrderMenuTemplate();
 
+    let logisticsCompanyList=[]
+    for(let key in LOGISTICSCOMPANY){
+      logisticsCompanyList.push({
+        value: LOGISTICSCOMPANY[key],
+      });
+    }
+    this.setState({
+      logisticsCompanyList:logisticsCompanyList
+    })
+    this.forceUpdate();//页面重新渲染数据
   }
 
   getTreeList = () => {
@@ -1915,31 +1978,33 @@ class AllOrdersList extends PureComponent {
     }
   };
 
-  Update =(e,row)=>{
-    if(e.target.value){
-      let  type = false
-      for(let key in LOGISTICSCOMPANY){
-        if(LOGISTICSCOMPANY[key] === e.target.value){
-          type = true
-        }
-      }
-      if(type){
-        const params={
-          id:row.id,
-          logisticsCompany : e.target.value !=="" ? e.target.value : null,
-        }
-        console.log(params)
-        updateData(params).then(res=>{
-          if(res.code === 200){
-            message.success(res.msg);
-          }else {
-            message.error(res.msg);
-          }
-        })
-      }else {
-        message.error("此快递名称在系统中不存在,请核实后录入!");
-      }
-    }
+  Update =(value,row)=>{
+    console.log(value)
+    console.log(row)
+    // if(e.target.value){
+    //   let  type = false
+    //   for(let key in LOGISTICSCOMPANY){
+    //     if(LOGISTICSCOMPANY[key] === e.target.value){
+    //       type = true
+    //     }
+    //   }
+    //   if(type){
+    //     const params={
+    //       id:row.id,
+    //       logisticsCompany : e.target.value !=="" ? e.target.value : null,
+    //     }
+    //     console.log(params)
+    //     updateData(params).then(res=>{
+    //       if(res.code === 200){
+    //         message.success(res.msg);
+    //       }else {
+    //         message.error(res.msg);
+    //       }
+    //     })
+    //   }else {
+    //     message.error("此快递名称在系统中不存在,请核实后录入!");
+    //   }
+    // }
   }
 
   Update1 =(e,row)=>{
@@ -1959,15 +2024,33 @@ class AllOrdersList extends PureComponent {
     }
   }
 
+  handleLogisticsCompanySearch =(value)=>{
+    console.log(value)
+    if (value) {
+      fetch(value, data => {
+        console.log(value)
+        console.log(data)
+        this.setState({ logisticsCompanyList:data })
+      });
+    } else {
+      let logisticsCompanyList=[]
+      for(let key in LOGISTICSCOMPANY){
+        logisticsCompanyList.push({
+          value: LOGISTICSCOMPANY[key],
+        });
+      }
+      this.setState({ logisticsCompanyList: logisticsCompanyList });
+    }
+    this.forceUpdate();//页面重新渲染数据
+  }
+
   // 菜单列表头获取
   getOrderMenuHead = () => {
-    const {tabKey}=this.state;
+    const {tabKey,logisticsCompanyList}=this.state;
     orderMenuHead(0).then(resp=>{
       if(resp.code === 200){
-
         const list=resp.data.menuJson.filter(item=>item.dataIndex !== 'oderCompanyName');
         const checked=[];
-
         list.map(item => {
           // 姓名
           if(item.dataIndex === "userName"){
@@ -2102,8 +2185,30 @@ class AllOrdersList extends PureComponent {
           if(item.dataIndex === "logisticsCompany"){
             item.ellipsis=true;
             item.render=(key,row)=>{
+              const options = this.state.logisticsCompanyList.map(i => <Option value={i.value}>{i.value}</Option>);
               return (
-                row.confirmTag === 0 || row.confirmTag === "0" || row.confirmTag === 1 || row.confirmTag === '1'|| row.confirmTag === 2 || row.confirmTag === '2'|| row.confirmTag === 3 || row.confirmTag === '3' ? (<input style={{width:"91%"}} defaultValue={key} onBlur={(e)=>this.Update(e,row)}/>) :key
+                <div className={styles.logisticsCompany}>
+                  {row.logisticsStatus === "" ? (
+                    <>
+                      <span>{key}</span>
+                      <Select
+                        showSearch
+                        style={{width:"91%"}}
+                        className={styles.select}
+                        defaultValue={key}
+                        defaultActiveFirstOption={false}
+                        showArrow={false}
+                        filterOption={false}
+                        onChange={(e)=>this.Update(e,row)}
+                        onSearch={this.handleLogisticsCompanySearch}
+                        notFoundContent={null}
+                      >
+                        {options}
+                      </Select>
+                    </>
+                  ):key}
+
+                </div>
               )
             }
           }
@@ -2112,7 +2217,16 @@ class AllOrdersList extends PureComponent {
             item.ellipsis=true;
             item.render=(key,row)=>{
               return (
-              row.confirmTag === 0 || row.confirmTag === "0" || row.confirmTag === 1 || row.confirmTag === '1'|| row.confirmTag === 2 || row.confirmTag === '2'|| row.confirmTag === 3 || row.confirmTag === '3' ? (<input style={{width:"91%"}} defaultValue={key} onBlur={(e)=>this.Update1(e,row)}/>) :key
+                <>
+                  <div className={styles.logisticsNumber}>
+                    {row.logisticsStatus === "" ? (
+                      <>
+                        <span>{key}</span>
+                        <Input style={{width:"91%"}} className={styles.input} defaultValue={key} onBlur={(e)=>this.Update1(e,row)}/>
+                      </>
+                    ) :key}
+                    </div>
+                </>
             )
             }
           }
