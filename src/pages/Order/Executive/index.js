@@ -1916,16 +1916,37 @@ class AllOrdersList extends PureComponent {
   };
 
   Update =(e,row)=>{
-    let  type = false
-    for(let key in LOGISTICSCOMPANY){
-      if(LOGISTICSCOMPANY[key] === e.target.value){
-        type = true
+    if(e.target.value){
+      let  type = false
+      for(let key in LOGISTICSCOMPANY){
+        if(LOGISTICSCOMPANY[key] === e.target.value){
+          type = true
+        }
+      }
+      if(type){
+        const params={
+          id:row.id,
+          logisticsCompany : e.target.value !=="" ? e.target.value : null,
+        }
+        console.log(params)
+        updateData(params).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+          }else {
+            message.error(res.msg);
+          }
+        })
+      }else {
+        message.error("此快递名称在系统中不存在,请核实后录入!");
       }
     }
-    if(type){
+  }
+
+  Update1 =(e,row)=>{
+    if(e.target.value){
       const params={
         id:row.id,
-        logisticsCompany : e.target.value !=="" ? e.target.value : null,
+        logisticsNumber : e.target.value !=="" ? e.target.value : null,
       }
       console.log(params)
       updateData(params).then(res=>{
@@ -1935,25 +1956,7 @@ class AllOrdersList extends PureComponent {
           message.error(res.msg);
         }
       })
-    }else {
-      message.error("此快递名称在系统中不存在,请核实后录入!");
     }
-
-  }
-
-  Update1 =(e,row)=>{
-    const params={
-      id:row.id,
-      logisticsNumber : e.target.value !=="" ? e.target.value : null,
-    }
-    console.log(params)
-    updateData(params).then(res=>{
-      if(res.code === 200){
-        message.success(res.msg);
-      }else {
-        message.error(res.msg);
-      }
-    })
   }
 
   // 菜单列表头获取
@@ -2100,7 +2103,7 @@ class AllOrdersList extends PureComponent {
             item.ellipsis=true;
             item.render=(key,row)=>{
               return (
-                row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? key:(<input style={{width:"90%"}} defaultValue={key} onBlur={(e)=>this.Update(e,row)} />)
+                row.logisticsStatus !== "" ? key:(<input style={{width:"91%"}} defaultValue={key} onBlur={(e)=>this.Update(e,row)} />)
               )
             }
           }
@@ -2109,7 +2112,7 @@ class AllOrdersList extends PureComponent {
             item.ellipsis=true;
             item.render=(key,row)=>{
               return (
-                row.logisticsCompany && row.logisticsNumber && !row.logisticsStatus ? key:(<input style={{width:"90%"}} defaultValue={key} onBlur={(e)=>this.Update1(e,row)} />)
+                row.logisticsStatus !== "" ? key:(<input style={{width:"91%"}} defaultValue={key} onBlur={(e)=>this.Update1(e,row)} />)
               )
             }
           }
