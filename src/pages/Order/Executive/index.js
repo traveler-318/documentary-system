@@ -2103,7 +2103,7 @@ class AllOrdersList extends PureComponent {
             item.ellipsis=true;
             item.render=(key,row)=>{
               return (
-                row.logisticsStatus !== "" ? key:(<input style={{width:"91%"}} defaultValue={key} onBlur={(e)=>this.Update(e,row)} />)
+                row.confirmTag === 0 || row.confirmTag === "0" || row.confirmTag === 1 || row.confirmTag === '1'|| row.confirmTag === 2 || row.confirmTag === '2'|| row.confirmTag === 3 || row.confirmTag === '3' ? (<input style={{width:"91%"}} defaultValue={key} onBlur={(e)=>this.Update(e,row)}/>) :key
               )
             }
           }
@@ -2112,8 +2112,8 @@ class AllOrdersList extends PureComponent {
             item.ellipsis=true;
             item.render=(key,row)=>{
               return (
-                row.logisticsStatus !== "" ? key:(<input style={{width:"91%"}} defaultValue={key} onBlur={(e)=>this.Update1(e,row)} />)
-              )
+              row.confirmTag === 0 || row.confirmTag === "0" || row.confirmTag === 1 || row.confirmTag === '1'|| row.confirmTag === 2 || row.confirmTag === '2'|| row.confirmTag === 3 || row.confirmTag === '3' ? (<input style={{width:"91%"}} defaultValue={key} onBlur={(e)=>this.Update1(e,row)}/>) :key
+            )
             }
           }
           checked.push(item.dataIndex)
