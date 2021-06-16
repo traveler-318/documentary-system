@@ -65,7 +65,7 @@ class BasicLayout extends React.Component {
         watermark_font:'微软雅黑',           //水印字体
         watermark_color:'black',            //水印字体颜色
         watermark_fontsize:'14px',          //水印字体大小
-        watermark_alpha:0.08,               //水印透明度，要求设置在大于等于0.005
+        watermark_alpha:0.06,               //水印透明度，要求设置在大于等于0.005
         watermark_width:140,                //水印宽度
         watermark_height:30,               //水印长度
         watermark_angle:15,                 //水印倾斜度数
@@ -86,7 +86,7 @@ class BasicLayout extends React.Component {
         watermark_font:'微软雅黑',           //水印字体
         watermark_color:'black',            //水印字体颜色
         watermark_fontsize:'14px',          //水印字体大小
-        watermark_alpha:0.08,               //水印透明度，要求设置在大于等于0.005
+        watermark_alpha:0.06,               //水印透明度，要求设置在大于等于0.005
         watermark_width:140,                //水印宽度
         watermark_height:30,               //水印长度
         watermark_angle:15,                 //水印倾斜度数
