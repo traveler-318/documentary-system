@@ -14,6 +14,8 @@ import SiderMenu from '@/components/SiderMenu';
 import getPageTitle from '@/utils/getPageTitle';
 import styles from './BasicLayout.less';
 import RealTimeInformation from '@/components/RealTimeInformation/index';
+import watermark from 'watermark-dom';
+import { getCookie } from '@/utils/support';
 
 // lazy load SettingDrawer
 const SettingDrawer = React.lazy(() => import('@/components/SettingDrawer'));
@@ -46,6 +48,55 @@ const query = {
 };
 
 class BasicLayout extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      defaultSettings:{
+        watermark_id: 'wm_div_id',          //水印总体的id
+        watermark_prefix: 'mask_div_id',    //小水印的id前缀
+        watermark_txt:getCookie("userName")+" 8582 06/16",             //水印的内容
+        watermark_x:0,                     //水印起始位置x轴坐标
+        watermark_y:20,                     //水印起始位置Y轴坐标
+        watermark_rows:0,                   //水印行数
+        watermark_cols:0,                   //水印列数
+        watermark_x_space:80,              //水印x轴间隔
+        watermark_y_space:150,               //水印y轴间隔
+        watermark_font:'微软雅黑',           //水印字体
+        watermark_color:'black',            //水印字体颜色
+        watermark_fontsize:'14px',          //水印字体大小
+        watermark_alpha:0.08,               //水印透明度，要求设置在大于等于0.005
+        watermark_width:140,                //水印宽度
+        watermark_height:30,               //水印长度
+        watermark_angle:15,                 //水印倾斜度数
+        watermark_parent_width:0,      //水印的总体宽度（默认值：body的scrollWidth和clientWidth的较大值）
+        watermark_parent_height:0,     //水印的总体高度（默认值：body的scrollHeight和clientHeight的较大值）
+        watermark_parent_node:null
+      },
+      defaultSettings1:{
+        watermark_id: 'wm1_div_id',          //水印总体的id
+        watermark_prefix: 'mask1_div_id',    //小水印的id前缀
+        watermark_txt:getCookie("userName")+" 8582 06/16",             //水印的内容
+        watermark_x:80,                     //水印起始位置x轴坐标
+        watermark_y:180,                     //水印起始位置Y轴坐标
+        watermark_rows:0,                   //水印行数
+        watermark_cols:0,                   //水印列数
+        watermark_x_space:80,              //水印x轴间隔
+        watermark_y_space:150,               //水印y轴间隔
+        watermark_font:'微软雅黑',           //水印字体
+        watermark_color:'black',            //水印字体颜色
+        watermark_fontsize:'14px',          //水印字体大小
+        watermark_alpha:0.08,               //水印透明度，要求设置在大于等于0.005
+        watermark_width:140,                //水印宽度
+        watermark_height:30,               //水印长度
+        watermark_angle:15,                 //水印倾斜度数
+        watermark_parent_width:0,      //水印的总体宽度（默认值：body的scrollWidth和clientWidth的较大值）
+        watermark_parent_height:0,     //水印的总体高度（默认值：body的scrollHeight和clientHeight的较大值）
+        watermark_parent_node:null
+      }
+    };
+  }
+
   componentDidMount() {
     const {
       dispatch,
@@ -61,6 +112,12 @@ class BasicLayout extends React.Component {
       type: 'menu/fetchMenuData',
       payload: { routes, path, authority },
     });
+
+    let {defaultSettings,defaultSettings1} = this.state;
+    // defaultSettings.watermark_parent_node = "executive_box"
+    watermark.load(defaultSettings)
+    watermark.load(defaultSettings1)
+
   }
 
   getContext() {
