@@ -20,7 +20,7 @@ import {
   Radio,
   Tag,
   Cascader,
-  TreeSelect,
+  TreeSelect, Table,
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
@@ -73,7 +73,7 @@ import TimeConsuming from '../components/timeConsuming';
 import SMS from '../components/smsList';
 import VoiceList from '../components/voiceList';
 import OrderImport from '../components/orderImport';
-import returnOfGoodsList from './components/returnOfGoodsList';
+import ReturnOfGoodsList from './components/returnOfGoodsList';
 import SearchButton from '../components/button';
 import { getCookie } from '../../../utils/support';
 const FormItem = Form.Item;
@@ -83,9 +83,59 @@ const { SubMenu } = Menu;
 const { TextArea } = Input;
 const { TreeNode } = Tree;
 
+let timeout;
+let currentValue;
+
+function fetch(value, callback) {
+  if (timeout) {
+    clearTimeout(timeout);
+    timeout = null;
+  }
+  currentValue = value;
+
+  function fake() {
+    const logisticsCompanyList = [];
+    console.log(value)
+    if (currentValue === value) {
+      // LOGISTICSCOMPANY.map((value,index) => {  //使用filter函数过滤新闻列表数据
+      //   console.log(value,"1111")
+      //   // var re =new RegExp(keyword,"g"); //定义正则
+      //   // value.title=value.title.replace(re, `<span class="keyword">${keyword}</span>`); //进行替换，并定义高亮的样式
+      // })
+      for(let key in LOGISTICSCOMPANY){
+        const index = LOGISTICSCOMPANY[key].indexOf(value)
+        console.log(index)
+        if (index !== -1) {
+          logisticsCompanyList.push({
+            value: LOGISTICSCOMPANY[key],
+          });
+        }
+      }
+      callback(logisticsCompanyList);
+    }
+
+
+    // jsonp(`https://suggest.taobao.com/sug?${str}`)
+    //   .then(response => response.json())
+    //   .then(d => {
+    //     if (currentValue === value) {
+    //       const { result } = d;
+    //       const data = [];
+    //       result.forEach(r => {
+    //         data.push({
+    //           value: r[0],
+    //           text: r[0],
+    //         });
+    //       });
+    //       callback(data);
+    //     }
+    //   });
+  }
+
+  timeout = setTimeout(fake, 300);
+}
+
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-
-
 let modal;
 
 const ResizeableTitle = props => {
@@ -109,6 +159,7 @@ const ResizeableTitle = props => {
 @connect(({ globalParameters }) => ({
   globalParameters,
 }))
+
 @Form.create()
 class AllOrdersList extends PureComponent {
 
@@ -152,7 +203,7 @@ class AllOrdersList extends PureComponent {
 
       //退货弹窗
       returnOfGoodsVisible:false,
-      returnOfGoodsList:{},
+      returnOfGoodsDataList:{},
       // 语音弹窗
       VoiceVisible:false,
       voice:{},
@@ -181,7 +232,9 @@ class AllOrdersList extends PureComponent {
       confirmTagList:[],
       _listArr:[],
       organizationTree:[],
-      beginTime:''
+      beginTime:'',
+      display:false,
+      logisticsCompanyList:[]
     };
   }
 
@@ -193,6 +246,16 @@ class AllOrdersList extends PureComponent {
     this.getOrderMenuHead();
     this.getOrderMenuTemplate();
 
+    let logisticsCompanyList=[]
+    for(let key in LOGISTICSCOMPANY){
+      logisticsCompanyList.push({
+        value: LOGISTICSCOMPANY[key],
+      });
+    }
+    this.setState({
+      logisticsCompanyList:logisticsCompanyList
+    })
+    this.forceUpdate();//页面重新渲染数据
   }
 
   getTreeList = () => {
@@ -1603,7 +1666,7 @@ class AllOrdersList extends PureComponent {
     }
     this.setState({
       returnOfGoodsVisible:true,
-      returnOfGoodsList:selectedRows
+      returnOfGoodsDataList:selectedRows
     })
   }
 
@@ -1915,16 +1978,80 @@ class AllOrdersList extends PureComponent {
     }
   };
 
+  Update =(value,row)=>{
+    if(value){
+      let  type = false
+      for(let key in LOGISTICSCOMPANY){
+        if(LOGISTICSCOMPANY[key] === value){
+          type = true
+        }
+      }
+      if(type){
+        const params={
+          id:row.id,
+          logisticsCompany : value !=="" ? value : null,
+        }
+        const _this=this;
+        updateData(params).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+            _this.getDataList();
+          }else {
+            message.error(res.msg);
+          }
+        })
+      }else {
+        message.error("此快递名称在系统中不存在,请核实后录入!");
+      }
+    }
+  }
+
+  Update1 =(e,row)=>{
+    if(e.target.value){
+      const params={
+        id:row.id,
+        logisticsNumber : e.target.value !=="" ? e.target.value : null,
+      }
+      console.log(params)
+      const _this=this;
+      updateData(params).then(res=>{
+        if(res.code === 200){
+          message.success(res.msg);
+          _this.getDataList();
+        }else {
+          message.error(res.msg);
+        }
+      })
+    }
+  }
+
+  handleLogisticsCompanySearch =(value)=>{
+    console.log(value)
+    if (value) {
+      fetch(value, data => {
+        console.log(value)
+        console.log(data)
+        this.setState({ logisticsCompanyList:data })
+      });
+    } else {
+      let logisticsCompanyList=[]
+      for(let key in LOGISTICSCOMPANY){
+        logisticsCompanyList.push({
+          value: LOGISTICSCOMPANY[key],
+        });
+      }
+      this.setState({ logisticsCompanyList: logisticsCompanyList });
+    }
+    this.forceUpdate();//页面重新渲染数据
+  }
 
   // 菜单列表头获取
   getOrderMenuHead = () => {
-    const {tabKey}=this.state;
+    const {tabKey,logisticsCompanyList}=this.state;
     orderMenuHead(0).then(resp=>{
       if(resp.code === 200){
-
         const list=resp.data.menuJson.filter(item=>item.dataIndex !== 'oderCompanyName');
         const checked=[];
-
         list.map(item => {
           // 姓名
           if(item.dataIndex === "userName"){
@@ -2055,6 +2182,55 @@ class AllOrdersList extends PureComponent {
           if(item.dataIndex === "salesman"){
             item.ellipsis=true
           }
+          // 快递公司
+          if(item.dataIndex === "logisticsCompany"){
+            item.ellipsis=true;
+            item.render=(key,row)=>{
+              const options = this.state.logisticsCompanyList.map(i => <Option value={i.value}>{i.value}</Option>);
+              return (
+                <div className={styles.logisticsCompany}>
+                  {row.logisticsStatus === "" ? (
+                    <>
+                      <span>{key}</span>
+                      <Select
+                        showSearch
+                        style={{width:"91%"}}
+                        className={styles.select}
+                        defaultValue={key}
+                        defaultActiveFirstOption={false}
+                        showArrow={false}
+                        filterOption={false}
+                        onChange={(e)=>this.Update(e,row)}
+                        onSearch={this.handleLogisticsCompanySearch}
+                        notFoundContent={null}
+                      >
+                        {options}
+                      </Select>
+                    </>
+                  ):key}
+
+                </div>
+              )
+            }
+          }
+          // 快递单号
+          if(item.dataIndex === "logisticsNumber"){
+            item.ellipsis=true;
+            item.render=(key,row)=>{
+              return (
+                <>
+                  <div className={styles.logisticsNumber}>
+                    {row.logisticsStatus === "" ? (
+                      <>
+                        <span>{key}</span>
+                        <Input style={{width:"91%"}} className={styles.input} defaultValue={key} onBlur={(e)=>this.Update1(e,row)}/>
+                      </>
+                    ) :key}
+                    </div>
+                </>
+            )
+            }
+          }
           checked.push(item.dataIndex)
         })
         this.setState({
@@ -2095,7 +2271,7 @@ class AllOrdersList extends PureComponent {
       form,
     } = this.props;
 
-    const { getFieldDecorator } = form;
+    const {getFieldDecorator}=form
 
     const formAllItemLayout = {
       labelCol: {
@@ -2141,7 +2317,7 @@ class AllOrdersList extends PureComponent {
       columns,
       params,
       returnOfGoodsVisible,
-      returnOfGoodsList,
+      returnOfGoodsDataList,
     } = this.state;
 
     const loop = data =>
@@ -2675,11 +2851,11 @@ class AllOrdersList extends PureComponent {
 
         {/*退货*/}
         {returnOfGoodsVisible?(
-          <returnOfGoodsList
+          <ReturnOfGoodsList
             visible={returnOfGoodsVisible}
-            returnOfGoodsList={returnOfGoodsList}
+            returnOfGoodsDataList={returnOfGoodsDataList}
             handleCancel={this.handleOrderReturnOfGoodsCancel}
-          ></returnOfGoodsList>
+          ></ReturnOfGoodsList>
         ):''}
         <Modal
           title="提示"

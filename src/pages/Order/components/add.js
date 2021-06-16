@@ -13,7 +13,7 @@ import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
 import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
-import { createData, getRegion, productTreelist } from '../../../services/newServices/order'
+import { createData, getRegion, productTreelist,addressParsing } from '../../../services/newServices/order'
 import { getList as getSalesmanLists,salesmanList } from '../../../services/newServices/sales';
 import {
   LOGISTICSCOMPANY,
@@ -205,6 +205,21 @@ class OrdersAdd extends PureComponent {
     }
   };
 
+  textAArea = ({ target: { value } }) => {
+    console.log(value)
+  //addressParsing
+    addressParsing(value).then(res=>{
+      this.setState({
+        loading:false
+      })
+      if(res.code === 200){
+        message.success(res.msg);
+        callback();
+      }
+    })
+
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -312,6 +327,9 @@ class OrdersAdd extends PureComponent {
                     ],
                   })(<Input placeholder="请输入收货地址" />)}
                 </FormItem>
+                {/*<FormItem {...formAllItemLayout} label="地址解析">*/}
+                  {/*<TextArea rows={4} onChange={this.textAArea} />*/}
+                {/*</FormItem>*/}
               </Col>
               <Col span={12}>
                 <FormTitle
@@ -351,8 +369,6 @@ class OrdersAdd extends PureComponent {
                     </Select>
                   )}
                 </FormItem>
-
-
                 <FormItem {...formAllItemLayout} label="产品分类">
                   {getFieldDecorator('productType', {
                       initialValue: null,
@@ -389,7 +405,6 @@ class OrdersAdd extends PureComponent {
                       ></Cascader>
                   )}
                 </FormItem>
-
                 <FormItem {...formAllItemLayout} label="产品金额">
                   {getFieldDecorator('payAmount',{
                     rules: [

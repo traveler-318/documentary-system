@@ -178,17 +178,17 @@ class SenderList extends PureComponent {
     const {data,loading} = this.state;
     const columns = [
       {
-        title: '寄件人姓名',
+        title: '退货人姓名',
         dataIndex: 'name',
         width: 150,
       },
       {
-        title: '寄件人手机号',
+        title: '退货人手机号',
         dataIndex: 'mobile',
         width: 150,
       },
       {
-        title: '寄件人地址',
+        title: '退货人地址',
         dataIndex: 'printAddr',
         width: 350,
         render: (res,key) => {
@@ -200,7 +200,7 @@ class SenderList extends PureComponent {
         ellipsis: true,
       },
       {
-        title: '寄件人公司名称',
+        title: '退货人公司名称',
         dataIndex: 'company',
         width: 200,
         ellipsis: true,

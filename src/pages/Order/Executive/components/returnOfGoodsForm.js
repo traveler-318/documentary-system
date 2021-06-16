@@ -9,7 +9,7 @@ import styles from '@/layouts/Sword.less';
 import { ORDERSOURCE, ORDERTYPE } from '@/pages/Order/OrderList/data';
 import moment from 'moment';
 import {
-  returnOfGoodsCapacity, returnOfGoodsList,
+  returnOfGoodsCapacity,
   returnOfGoodsSave,
 } from '../../../../services/newServices/order';
 
@@ -34,9 +34,10 @@ class ReturnOfGoodsForm extends PureComponent {
   }
 
   getCapacityDataInfo =() =>{
-    let {returnOfGoodsList} = this.props;
+    let {returnOfGoodsDataList} = this.props;
     returnOfGoodsCapacity({
-      id:returnOfGoodsList[0].id
+      id:returnOfGoodsDataList[0].id,
+      product_id:returnOfGoodsDataList[0].productId,
     }).then(res=>{
       this.setState({capacitys:res.data})
     })
@@ -46,6 +47,9 @@ class ReturnOfGoodsForm extends PureComponent {
   }
 
   handleSubmit = e => {
+    const {
+      handleCancel
+    } = this.props;
     e.preventDefault();
     const { form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
@@ -57,6 +61,7 @@ class ReturnOfGoodsForm extends PureComponent {
         if (resp.success) {
           message.success(resp.msg);
           form.resetFields();
+          handleCancel();
         } else {
           message.error(resp.msg || '提交失败');
         }
@@ -95,18 +100,27 @@ class ReturnOfGoodsForm extends PureComponent {
     return (
       <>
         <Modal
-          title="退货管理"
+          title="退货"
           width={550}
           visible={visible}
           confirmLoading={confirmLoading}
           onCancel={handleCancel}
           maskClosable={false}
           loading={loading}
+          footer={[
+            <Button onClick={handleCancel}>
+              取消
+            </Button>,
+            <Button type="primary" onClick={this.handleSubmit}>
+              保存
+            </Button>,
+            <Button type="primary" onClick={handleCancel}>
+              取消下单
+            </Button>
+          ]}
         >
           <Form style={{ marginTop: 8 }} onSubmit={this.handleSubmit}>
-            <Card title="创建客户" className={styles.card} bordered={false}>
-              <Row gutter={24}>
-                <Col span={12}>
+
                   <FormItem {...formAllItemLayout} label="姓名">
                     {getFieldDecorator('recManName', {
                       rules: [
@@ -154,8 +168,6 @@ class ReturnOfGoodsForm extends PureComponent {
                   {/*    />*/}
                   {/*  )}*/}
                   {/*</FormItem>*/}
-                </Col>
-                <Col span={12}>
                   <FormItem {...formAllItemLayout} label="付款方式">
                     {getFieldDecorator('payment', {
                       initialValue: 'SHIPPER',
@@ -186,22 +198,6 @@ class ReturnOfGoodsForm extends PureComponent {
                       <TextArea rows={4} />
                     )}
                   </FormItem>
-                  <FormItem >
-                    <Button onClick={handleCancel}>
-                      取消
-                    </Button>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
-                      保存
-                    </Button>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
-                      取消下单
-                    </Button>
-                  </FormItem>
-                </Col>
-              </Row>
-
-            </Card>
-
           </Form>
         </Modal>
 

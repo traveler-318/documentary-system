@@ -6,10 +6,10 @@ import {
 } from 'antd';
 import { connect } from 'dva';
 import {
-  returnOfGoodsList
+  returnGoodsList
 } from '../../../../services/newServices/order';
 
-import returnOfGoodsForm from './returnOfGoodsForm';
+import ReturnOfGoodsForm from './returnOfGoodsForm';
 
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -31,11 +31,11 @@ class ReturnOfGoodsList extends PureComponent {
   }
 
   getDataInfo =() =>{
-    let {returnOfGoodsList} = this.props;
-    returnOfGoodsList({
-      orderId:returnOfGoodsList[0].id
+    let {returnOfGoodsDataList} = this.props;
+    returnGoodsList({
+      orderId:returnOfGoodsDataList[0].id
     }).then(res=>{
-      this.setState({dataSource:res.data})
+      this.setState({dataSource:res.data.records})
     })
   }
 
@@ -52,8 +52,8 @@ class ReturnOfGoodsList extends PureComponent {
       form: { getFieldDecorator },
       visible,
       confirmLoading,
-      handleOrderImportCancel,
-      returnOfGoodsList
+      handleCancel,
+      returnOfGoodsDataList
     } = this.props;
 
     const {loading,dataSource,fromVisible} = this.state;
@@ -62,7 +62,6 @@ class ReturnOfGoodsList extends PureComponent {
       {
         title: '物流名称',
         dataIndex: 'kuaidicom',
-        width:180
       },
       {
         title: '物流单号',
@@ -72,6 +71,7 @@ class ReturnOfGoodsList extends PureComponent {
       {
         title: '下单状态',
         dataIndex: 'status',
+        width:100
         // render: (text,row) => {
         //   return(<>
         //     <a onClick={()=>this.handleSubmit(row)}>二维码</a>
@@ -85,12 +85,12 @@ class ReturnOfGoodsList extends PureComponent {
       {
         title: '快递员名字',
         dataIndex: 'courier_name',
-        width:100
+        width:130
       },
       {
         title: '快递员电话',
         dataIndex: 'courier_mobile',
-        width:100
+        width:150
       },
       {
         title: '订单金额',
@@ -108,12 +108,13 @@ class ReturnOfGoodsList extends PureComponent {
       <>
         <Modal
           title="退货"
-          width={550}
+          width={950}
           visible={visible}
           confirmLoading={confirmLoading}
-          onCancel={handleOrderImportCancel}
+          onCancel={handleCancel}
           maskClosable={false}
           loading={loading}
+          footer={null}
         >
           <Table
             columns={columns}
@@ -121,19 +122,23 @@ class ReturnOfGoodsList extends PureComponent {
             bordered
             pagination={false}
           />
-          <Button type='primary' onClick={()=>{
-            this.handleClick()
-          }}>退货</Button>
+          <div style={{textAlign:'right',marginTop:'10px'}}>
+            <Button type='primary' onClick={()=>{
+              this.handleClick()
+            }}>退货</Button>
+          </div>
+
         </Modal>
 
         {/*退货*/}
         {fromVisible?(
-          <returnOfGoodsForm
+          <ReturnOfGoodsForm
             visible={fromVisible}
-            returnOfGoodsList={returnOfGoodsList}
+            returnOfGoodsDataList={returnOfGoodsDataList}
             handleCancel={this.handleFormCancel}
-          ></returnOfGoodsForm>
+          ></ReturnOfGoodsForm>
         ):''}
+
       </>
     );
   }

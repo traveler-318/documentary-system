@@ -1,32 +1,17 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  Row,
-  Select,
-  DatePicker,
-  Divider,
-  Dropdown,
-  Menu,
-  Icon,
-  Radio,
-  Switch,
-  Modal,
-  message,
-} from 'antd';
+import {Button,Form,Input,Select,DatePicker,Divider,Modal,message, } from 'antd';
+// import { WaterMark } from '@ant-design/pro-layout';
+// import ProLayout, { PageContainer } from '@ant-design/pro-layout';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import {
   getDeliveryList,
-  getDeliveryRemove,
-  getDeliveryStatus,
 } from '../../../services/newServices/logistics';
-import { ORDERSTATUS, TYPESTATUS } from '../../WorkOrder/WorkOrderList/data';
+
+import Add from './add';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -41,6 +26,7 @@ class StockList extends PureComponent {
     this.state = {
       data:[],
       loading:false,
+      stockVisible:false,
       params:{
         size:10,
         current:1
@@ -121,16 +107,16 @@ class StockList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="制单人">
-          {getFieldDecorator('complaintsType', {
-          })(
-            <Select placeholder={"请选择制单人"} style={{ width: 200 }}>
-              {warehouseStatus.map((item,index)=>{
-                return (<Option key={index} value={item.id}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
+        {/*<Form.Item label="制单人">*/}
+          {/*{getFieldDecorator('complaintsType', {*/}
+          {/*})(*/}
+            {/*<Select placeholder={"请选择制单人"} style={{ width: 200 }}>*/}
+              {/*{warehouseStatus.map((item,index)=>{*/}
+                {/*return (<Option key={index} value={item.id}>{item.name}</Option>)*/}
+              {/*})}*/}
+            {/*</Select>*/}
+          {/*)}*/}
+        {/*</Form.Item>*/}
         <Form.Item label="产品">
           {getFieldDecorator('complaintsType', {
           })(
@@ -141,16 +127,16 @@ class StockList extends PureComponent {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="单据来源">
-          {getFieldDecorator('complaintsType', {
-          })(
-            <Select placeholder={"请选择单据来源"} style={{ width: 200 }}>
-              {warehouseStatus.map((item,index)=>{
-                return (<Option key={index} value={item.id}>{item.name}</Option>)
-              })}
-            </Select>
-          )}
-        </Form.Item>
+        {/*<Form.Item label="单据来源">*/}
+          {/*{getFieldDecorator('complaintsType', {*/}
+          {/*})(*/}
+            {/*<Select placeholder={"请选择单据来源"} style={{ width: 200 }}>*/}
+              {/*{warehouseStatus.map((item,index)=>{*/}
+                {/*return (<Option key={index} value={item.id}>{item.name}</Option>)*/}
+              {/*})}*/}
+            {/*</Select>*/}
+          {/*)}*/}
+        {/*</Form.Item>*/}
         <div style={{ float: 'right',height:'32px' }}>
           <Button type="primary" htmlType="submit">
             <FormattedMessage id="button.search.name" />
@@ -171,9 +157,21 @@ class StockList extends PureComponent {
 
   };
 
+  handleStockVisible = () => {
+    this.setState({
+      stockVisible:true
+    })
+  };
+
+  handleStockVisibleCancel = () => {
+    this.setState({
+      stockVisible:false
+    })
+  };
+
   renderLeftButton = () => (
     <>
-      <Button type="primary" icon='plus' onClick={()=>{router.push(`/inventory/stock/add`);}}>设置库存初始化</Button>
+      <Button type="primary" icon='plus' onClick={this.handleStockVisible}>设置库存初始化</Button>
     </>
   );
 
@@ -198,7 +196,7 @@ class StockList extends PureComponent {
         span: 20,
       },
     };
-    const {data,loading} = this.state;
+    const {data,loading,stockVisible} = this.state;
     const columns = [
       {
         title: '单据号',
@@ -224,25 +222,25 @@ class StockList extends PureComponent {
       },
       {
         title: '产品名称',
-        dataIndex: 'company',
+        dataIndex: 'name',
         width: 200,
         ellipsis: true,
       },
       {
         title: '数量',
-        dataIndex: 'company',
+        dataIndex: 'nul',
         width: 200,
         ellipsis: true,
       },
       {
         title: '制单人',
-        dataIndex: 'company',
+        dataIndex: '123',
         width: 200,
         ellipsis: true,
       },
       {
         title: '制单时间 ',
-        dataIndex: 'company',
+        dataIndex: 'time',
         width: 200,
         ellipsis: true,
       },
@@ -264,19 +262,26 @@ class StockList extends PureComponent {
       },
     ];
     return (
-      <Panel>
-        <Grid
-          form={form}
-          onSearch={this.handleSearch}
-          renderSearchForm={this.renderSearchForm}
-          data={data}
-          loading={loading}
-          columns={columns}
-          scroll={{ x: 1000 }}
-          renderLeftButton={this.renderLeftButton}
-          renderRightButton={this.renderRightButton}
-        />
-      </Panel>
+        <Panel>
+            <Grid
+              form={form}
+              onSearch={this.handleSearch}
+              renderSearchForm={this.renderSearchForm}
+              data={data}
+              loading={loading}
+              columns={columns}
+              scroll={{ x: 1000 }}
+              renderLeftButton={this.renderLeftButton}
+              renderRightButton={this.renderRightButton}
+            />
+            {/* 耗时检测弹框 */}
+            {stockVisible?(
+              <Add
+                stockVisible={stockVisible}
+                handleStockVisibleCancel={this.handleStockVisibleCancel}
+              />
+            ):""}
+        </Panel>
     );
   }
 }
