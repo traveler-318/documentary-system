@@ -1979,32 +1979,31 @@ class AllOrdersList extends PureComponent {
   };
 
   Update =(value,row)=>{
-    console.log(value)
-    console.log(row)
-    // if(e.target.value){
-    //   let  type = false
-    //   for(let key in LOGISTICSCOMPANY){
-    //     if(LOGISTICSCOMPANY[key] === e.target.value){
-    //       type = true
-    //     }
-    //   }
-    //   if(type){
-    //     const params={
-    //       id:row.id,
-    //       logisticsCompany : e.target.value !=="" ? e.target.value : null,
-    //     }
-    //     console.log(params)
-    //     updateData(params).then(res=>{
-    //       if(res.code === 200){
-    //         message.success(res.msg);
-    //       }else {
-    //         message.error(res.msg);
-    //       }
-    //     })
-    //   }else {
-    //     message.error("此快递名称在系统中不存在,请核实后录入!");
-    //   }
-    // }
+    if(value){
+      let  type = false
+      for(let key in LOGISTICSCOMPANY){
+        if(LOGISTICSCOMPANY[key] === value){
+          type = true
+        }
+      }
+      if(type){
+        const params={
+          id:row.id,
+          logisticsCompany : value !=="" ? value : null,
+        }
+        const _this=this;
+        updateData(params).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+            _this.getDataList();
+          }else {
+            message.error(res.msg);
+          }
+        })
+      }else {
+        message.error("此快递名称在系统中不存在,请核实后录入!");
+      }
+    }
   }
 
   Update1 =(e,row)=>{
