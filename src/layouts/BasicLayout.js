@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Layout, Spin } from 'antd';
+import { Layout, message, Spin } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { ContainerQuery } from 'react-container-query';
@@ -16,6 +16,7 @@ import styles from './BasicLayout.less';
 import RealTimeInformation from '@/components/RealTimeInformation/index';
 import watermark from 'watermark-dom';
 import { getCookie } from '@/utils/support';
+import { getUserInfo } from '../services/user';
 
 // lazy load SettingDrawer
 const SettingDrawer = React.lazy(() => import('@/components/SettingDrawer'));
@@ -52,13 +53,13 @@ class BasicLayout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isShowWaterMark:false,
+      isShowWaterMark:true,
       defaultSettings:{
         watermark_id: 'wm_div_id',          //水印总体的id
         watermark_prefix: 'mask_div_id',    //小水印的id前缀
-        watermark_txt:getCookie("userName")+" 8582 06/16",             //水印的内容
+        watermark_txt:"",             //水印的内容
         watermark_x:0,                     //水印起始位置x轴坐标
-        watermark_y:20,                     //水印起始位置Y轴坐标
+        watermark_y:0,                     //水印起始位置Y轴坐标
         watermark_rows:0,                   //水印行数
         watermark_cols:0,                   //水印列数
         watermark_x_space:80,              //水印x轴间隔
@@ -72,14 +73,14 @@ class BasicLayout extends React.Component {
         watermark_angle:15,                 //水印倾斜度数
         watermark_parent_width:0,      //水印的总体宽度（默认值：body的scrollWidth和clientWidth的较大值）
         watermark_parent_height:0,     //水印的总体高度（默认值：body的scrollHeight和clientHeight的较大值）
-        watermark_parent_node:null
+        watermark_parent_node:'root'
       },
       defaultSettings1:{
         watermark_id: 'wm1_div_id',          //水印总体的id
         watermark_prefix: 'mask1_div_id',    //小水印的id前缀
-        watermark_txt:getCookie("userName")+" 8582 06/16",             //水印的内容
-        watermark_x:80,                     //水印起始位置x轴坐标
-        watermark_y:180,                     //水印起始位置Y轴坐标
+        watermark_txt:"",             //水印的内容
+        watermark_x:0,                     //水印起始位置x轴坐标
+        watermark_y:0,                     //水印起始位置Y轴坐标
         watermark_rows:0,                   //水印行数
         watermark_cols:0,                   //水印列数
         watermark_x_space:80,              //水印x轴间隔
@@ -93,7 +94,7 @@ class BasicLayout extends React.Component {
         watermark_angle:15,                 //水印倾斜度数
         watermark_parent_width:0,      //水印的总体宽度（默认值：body的scrollWidth和clientWidth的较大值）
         watermark_parent_height:0,     //水印的总体高度（默认值：body的scrollHeight和clientHeight的较大值）
-        watermark_parent_node:null
+        watermark_parent_node:'root'
       }
     };
   }
@@ -116,9 +117,26 @@ class BasicLayout extends React.Component {
 
     let {defaultSettings,defaultSettings1,isShowWaterMark} = this.state;
     if(isShowWaterMark){
+      let date = new Date();
+      let m = date.getMonth()+1; //获取当前月份(0-11,0代表1月)
+      m = m > 10 ? m : "0" + m;
+      let d = date.getDate(); //获取当前日(1-31)
+      getUserInfo().then(resp => {
+        if (resp.success) {
+          const userInfo = resp.data;
+          let watermark_txt = userInfo.account+' '+userInfo.aftersalesPhone.substring(7)+' '+m+'/'+d;
+
+          defaultSettings.watermark_txt = watermark_txt;
+          defaultSettings1.watermark_txt = watermark_txt;
+          watermark.load(defaultSettings)
+          watermark.load(defaultSettings1)
+        } else {
+          message.error(resp.msg || '获取数据失败');
+        }
+      });
+
+      // watermark_txt = getCookie("userName")+" 8582 "+m+'/'+d;
       // defaultSettings.watermark_parent_node = "executive_box"
-      watermark.load(defaultSettings)
-      watermark.load(defaultSettings1)
     }
 
   }
