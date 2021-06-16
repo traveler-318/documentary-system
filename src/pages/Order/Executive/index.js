@@ -1979,7 +1979,7 @@ class AllOrdersList extends PureComponent {
   };
 
   Update =(value,row)=>{
-    if(value){
+    if(value && value !== row.logisticsCompany){
       let  type = false
       for(let key in LOGISTICSCOMPANY){
         if(LOGISTICSCOMPANY[key] === value){
@@ -2007,7 +2007,7 @@ class AllOrdersList extends PureComponent {
   }
 
   Update1 =(e,row)=>{
-    if(e.target.value){
+    if(e.target.value && e.target.value !== row.logisticsNumber){
       const params={
         id:row.id,
         logisticsNumber : e.target.value !=="" ? e.target.value : null,
@@ -2026,7 +2026,7 @@ class AllOrdersList extends PureComponent {
   }
 
   Update2 =(e,row)=>{
-    if(e.target.value){
+    if(e.target.value && e.target.value !== row.productCoding){
       const params={
         id:row.id,
         productCoding : e.target.value !=="" ? e.target.value : null,
