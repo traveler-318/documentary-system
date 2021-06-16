@@ -52,6 +52,7 @@ class BasicLayout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isShowWaterMark:false,
       defaultSettings:{
         watermark_id: 'wm_div_id',          //水印总体的id
         watermark_prefix: 'mask_div_id',    //小水印的id前缀
@@ -113,10 +114,12 @@ class BasicLayout extends React.Component {
       payload: { routes, path, authority },
     });
 
-    let {defaultSettings,defaultSettings1} = this.state;
-    // defaultSettings.watermark_parent_node = "executive_box"
-    watermark.load(defaultSettings)
-    watermark.load(defaultSettings1)
+    let {defaultSettings,defaultSettings1,isShowWaterMark} = this.state;
+    if(isShowWaterMark){
+      // defaultSettings.watermark_parent_node = "executive_box"
+      watermark.load(defaultSettings)
+      watermark.load(defaultSettings1)
+    }
 
   }
 
