@@ -2013,9 +2013,11 @@ class AllOrdersList extends PureComponent {
         logisticsNumber : e.target.value !=="" ? e.target.value : null,
       }
       console.log(params)
+      const _this=this;
       updateData(params).then(res=>{
         if(res.code === 200){
           message.success(res.msg);
+          _this.getDataList();
         }else {
           message.error(res.msg);
         }
