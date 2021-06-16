@@ -2025,6 +2025,25 @@ class AllOrdersList extends PureComponent {
     }
   }
 
+  Update2 =(e,row)=>{
+    if(e.target.value){
+      const params={
+        id:row.id,
+        productCoding : e.target.value !=="" ? e.target.value : null,
+      }
+      console.log(params)
+      const _this=this;
+      updateData(params).then(res=>{
+        if(res.code === 200){
+          message.success(res.msg);
+          _this.getDataList();
+        }else {
+          message.error(res.msg);
+        }
+      })
+    }
+  }
+
   handleLogisticsCompanySearch =(value)=>{
     console.log(value)
     if (value) {
@@ -2047,7 +2066,7 @@ class AllOrdersList extends PureComponent {
 
   // 菜单列表头获取
   getOrderMenuHead = () => {
-    const {tabKey,logisticsCompanyList}=this.state;
+    const {tabKey}=this.state;
     orderMenuHead(0).then(resp=>{
       if(resp.code === 200){
         const list=resp.data.menuJson.filter(item=>item.dataIndex !== 'oderCompanyName');
@@ -2172,7 +2191,21 @@ class AllOrdersList extends PureComponent {
           }
           // SN
           if(item.dataIndex === "productCoding"){
-            item.ellipsis=true
+            item.ellipsis=true;
+            item.render=(key,row)=>{
+              return (
+                <>
+                  <div className={styles.productCoding}>
+                    {row.confirmTag === "2" || row.confirmTag === "3" ? (
+                      <>
+                        <span>{key}</span>
+                        <Input style={{width:"91%"}} className={styles.input} defaultValue={key} onBlur={(e)=>this.Update2(e,row)}/>
+                      </>
+                    ) :key}
+                  </div>
+                </>
+              )
+            }
           }
           // 收货地址
           if(item.dataIndex === "userAddress"){
@@ -2228,7 +2261,7 @@ class AllOrdersList extends PureComponent {
                     ) :key}
                     </div>
                 </>
-            )
+              )
             }
           }
           checked.push(item.dataIndex)

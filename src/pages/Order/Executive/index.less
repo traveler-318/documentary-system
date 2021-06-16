@@ -203,8 +203,9 @@
     }
   }
 }
-.logisticsNumber{
+.logisticsNumber,.productCoding{
   height: 32px;
+  line-height: 32px;
   .input{
     display: none;
     //float: right;
@@ -213,11 +214,15 @@
 .logisticsNumber:hover .input{
   display: block;
 }
-.logisticsNumber:hover span{
+.productCoding:hover .input{
+  display: block;
+}
+.logisticsNumber:hover span,.productCoding:hover span{
   display: none;
 }
 .logisticsCompany{
   height: 32px;
+  line-height: 32px;
   position: relative;
   .select{
     //display: none;
