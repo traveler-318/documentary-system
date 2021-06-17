@@ -215,6 +215,13 @@ export async function shipperUpdate(params) {
   });
 }
 
+export async function shipperUpdateDefaultStatus(params) {
+  return request('/api/logistics/recipient/updateDefaultStatus', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function shipperRemove(params) {
   return request('/api/logistics/recipient/remove', {
     method: 'POST',

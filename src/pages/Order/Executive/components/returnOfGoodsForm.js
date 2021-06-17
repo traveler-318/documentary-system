@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import {
   Modal,
   Form,
-  Button, Card, Row, Col, Input, Cascader, Select, DatePicker, message,Radio
+  Button, Card, Row, Col, Input, Cascader, Select, DatePicker, message,Radio,TimePicker
 } from 'antd';
 import { connect } from 'dva';
 import styles from '@/layouts/Sword.less';
@@ -26,7 +26,8 @@ class ReturnOfGoodsForm extends PureComponent {
     this.state = {
       loading: false,
       capacitys:[],
-      payment:null
+      payment:null,
+      startTime:new Date(+new Date() +8*3600*1000).toISOString().split("T")[1].split(".")[0]//获取当前时间
     };
   }
 
@@ -45,6 +46,10 @@ class ReturnOfGoodsForm extends PureComponent {
     }
     returnOfGoodsCapacity(json).then(res=>{
       if(res.code==200){
+        const { form } = this.props;
+        form.setFieldsValue({
+          com: ''
+        });
         this.setState({capacitys:res.data})
       }else{
         message.error(res.msg);
@@ -90,6 +95,36 @@ class ReturnOfGoodsForm extends PureComponent {
     this.setState({
       payment: e.target.value,
     });
+  };
+
+  disabledHours = ()=>{
+    const { form } = this.props;
+    let dayType = form.getFieldValue('dayType');
+    let hours=[];
+    if(dayType == '今天'){
+      let time = this.state.startTime;
+      let timeArr = time.split(":");
+      for(var i=0;i<parseInt(timeArr[0]);i++){
+        hours.push(i)
+      }
+    }
+    return hours;
+  };
+  //限制分钟
+  disabledMinutes = (selectedHour)=>{
+      const { form } = this.props;
+      let dayType = form.getFieldValue('dayType');
+      let minutes =[];
+      if(dayType == '今天'){
+        let {startTime} = this.state;
+        let timeArr  =startTime.split(":");
+        if(selectedHour == parseInt(timeArr[0])){
+          for(let i=0;i<parseInt(timeArr[1]);i++){
+            minutes.push(i);
+          }
+        }
+      }
+      return minutes;
   };
 
   render() {
@@ -161,6 +196,7 @@ class ReturnOfGoodsForm extends PureComponent {
                       ],
                     })(
                       <Select placeholder={"请选择快递公司"}>
+                        <Select.Option value=''>请选择</Select.Option>
                         {capacitys.map(item=>{
                           if(payment == 'CONSIGNEE' && item.type == 2){
                           }else{
@@ -169,6 +205,38 @@ class ReturnOfGoodsForm extends PureComponent {
                         })}
                       </Select>
                     )}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="预约日期">
+                    {getFieldDecorator('dayType', {
+                    })(
+                      <Select placeholder={"请选择预约日期"}>
+                        <Select.Option value='今天'>今天</Select.Option>
+                        <Select.Option value='明天'>明天</Select.Option>
+                        <Select.Option value='后天'>后天</Select.Option>
+                      </Select>
+                    )}
+                  </FormItem>
+                  <FormItem {...formAllItemLayout} label="预约时间">
+                    <FormItem
+                      style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}>
+                      {getFieldDecorator('pickupStartTime', {
+                      })(
+                        <TimePicker  format='HH:mm'
+                                     disabledHours = {this.disabledHours}
+                                     disabledMinutes = {this.disabledMinutes}/>
+                      )}
+                    </FormItem>
+                    <span style={{ display: 'inline-block', width: '24px', textAlign: 'center' }}>-</span>
+
+                    <FormItem
+                      style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}>
+                      {getFieldDecorator('pickupEndTime', {
+                      })(
+                        <TimePicker  format='HH:mm'
+                                     disabledHours = {this.disabledHours}
+                                     disabledMinutes = {this.disabledMinutes}/>
+                      )}
+                    </FormItem>
                   </FormItem>
                   {/*<FormItem {...formAllItemLayout} label="所在地区">*/}
                   {/*  {getFieldDecorator('region', {*/}
@@ -180,7 +248,7 @@ class ReturnOfGoodsForm extends PureComponent {
                   {/*  )}*/}
                   {/*</FormItem>*/}
                   <FormItem {...formAllItemLayout} label="付款方式">
-                    {getFieldDecorator('payment', {
+                    {getFieldDecorator('paymentMode', {
                       initialValue: 'SHIPPER',
                       rules: [
                         {
