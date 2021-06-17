@@ -65,11 +65,14 @@ class ReturnOfGoodsForm extends PureComponent {
       handleCancel
     } = this.props;
     e.preventDefault();
-    const { form } = this.props;
+    const { form,returnOfGoodsDataList } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (err) return;
+      values.pickupStartTime = moment(values.pickupStartTime).format('HH:mm')
+      values.pickupEndTime = moment(values.pickupEndTime).format('HH:mm')
       const params = {
         ...values,
+        orderId:returnOfGoodsDataList[0].id
       };
       returnOfGoodsSave(params).then(resp => {
         if (resp.success) {
