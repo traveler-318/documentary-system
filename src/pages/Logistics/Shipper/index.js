@@ -23,7 +23,7 @@ import Grid from '../../../components/Sword/Grid';
 import {
   shipperList,
   shipperRemove,
-  shipperUpdate,
+  shipperUpdateDefaultStatus,
 } from '../../../services/newServices/logistics';
 
 const FormItem = Form.Item;
@@ -136,7 +136,7 @@ class SenderList extends PureComponent {
       okType: 'danger',
       cancelText: '取消',
       async onOk() {
-        shipperUpdate(params).then(resp=>{
+        shipperUpdateDefaultStatus(params).then(resp=>{
           if (resp.success) {
             message.success(resp.msg);
             refresh()
