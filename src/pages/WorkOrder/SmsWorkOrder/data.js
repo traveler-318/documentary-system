@@ -2,9 +2,9 @@
 
 // 状态
 export const ORDERSTATUS = [
-    {"name":"全部",key:null},
   {"name":"未处理",key:0},
   {"name":"已处理",key:1},
+  {"name":"全部",key:null},
 ]
 // 类型
 export const TYPESTATUS = [

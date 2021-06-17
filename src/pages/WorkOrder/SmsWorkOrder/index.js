@@ -63,7 +63,8 @@ class WorkOrderList extends PureComponent {
       loading:false,
       params:{
         size:10,
-        current:1
+        current:1,
+        processingStatus:sessionStorage.executiveOrderTabKey ? sessionStorage.executiveOrderTabKey : null,
       },
       tabKey:sessionStorage.executiveOrderTabKey ? sessionStorage.executiveOrderTabKey : null,
       // 详情弹窗
@@ -102,8 +103,12 @@ class WorkOrderList extends PureComponent {
   // ============ 查询 ===============
   handleSearch = (params) => {
     console.log(params,"查询参数")
+    const param={
+      ...params,
+      processingStatus:sessionStorage.executiveOrderTabKey
+    }
     this.setState({
-      params:params
+      params:param
     },()=>{
       this.getList();
     })
@@ -366,12 +371,11 @@ class WorkOrderList extends PureComponent {
       {
         title: '回复内容',
         dataIndex: 'content',
-        width: 500,
+        width: 550,
       },
       {
         title: '回复时间',
         dataIndex: 'receiveTime',
-        width: 200,
         render: (res) => {
           return(
             <div>
@@ -388,7 +392,7 @@ class WorkOrderList extends PureComponent {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 200,
+        width: 120,
         render: (res,row) => {
           return(
             <div>
