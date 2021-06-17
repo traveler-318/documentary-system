@@ -41,9 +41,10 @@ export async function getUpToken(fileName) {
 }
 
 //短信工单列表
-export async function repairorderList(current,size) {
-  return request("/api/repairorder/list?current="+current+"&size="+size,{
-    method: 'get',
+export async function repairorderList(params) {
+  return request("/api/repairorder/list",{
+    method: 'POST',
+    body: params,
   });
 }
 //短信工单处理

@@ -82,7 +82,7 @@ class WorkOrderList extends PureComponent {
     this.setState({
       loading:true,
     })
-    repairorderList(params.current,params.size).then(res=>{
+    repairorderList(params).then(res=>{
       console.log(res.data)
       this.setState({
         countSice:res.data.total,
@@ -270,9 +270,9 @@ class WorkOrderList extends PureComponent {
       params:_params
     },()=>{
       if(key === "null"){
-        params.platformReplyStatus=null
+        params.processingStatus=null
       }else {
-        params.platformReplyStatus=Number(key)
+        params.processingStatus=Number(key)
       }
       this.setState({
         params:params
@@ -393,7 +393,7 @@ class WorkOrderList extends PureComponent {
           return(
             <div>
               <Divider type="vertical" />
-              {res.processingStatus === 0 ? (<a onClick={()=>this.handleDetails(row)}>待处理</a>) : (<a>已处理</a>)}
+              {res.processingStatus === 0 ? (<a onClick={()=>this.handleDetails(row)}>待处理</a>) : (<a style={{color:"#67C23A"}}>已处理</a>)}
               <Divider type="vertical" />
               {/*<a onClick={() => this.handleDelect(res)}>删除</a>*/}
             </div>
@@ -405,26 +405,26 @@ class WorkOrderList extends PureComponent {
     return (
       <Panel>
         <div className={styles.ordersTabs}>
-          {/*<Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange} style={{height:59}}>*/}
-            {/*{ORDERSTATUS.map((item,i)=>{*/}
-              {/*return (*/}
-                {/*<TabPane tab={*/}
-                  {/*<span>*/}
-                    {/*{(*/}
-                      {/*item.key === tabKey ||*/}
-                      {/*JSON.stringify(item.key) === tabKey*/}
-                    {/*) ? (*/}
-                      {/*<Badge count={countSice} overflowCount={999}>*/}
-                        {/*<a href="#" className="head-example" />*/}
-                      {/*</Badge>) : ""*/}
-                    {/*}*/}
-                    {/*{item.name}*/}
-                  {/*</span>*/}
-                {/*} key={item.key}>*/}
-                {/*</TabPane>*/}
-              {/*)*/}
-            {/*})}*/}
-          {/*</Tabs>*/}
+          <Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange} style={{height:59}}>
+            {ORDERSTATUS.map((item,i)=>{
+              return (
+                <TabPane tab={
+                  <span>
+                    {(
+                      item.key === tabKey ||
+                      JSON.stringify(item.key) === tabKey
+                    ) ? (
+                      <Badge count={countSice} overflowCount={999}>
+                        <a href="#" className="head-example" />
+                      </Badge>) : ""
+                    }
+                    {item.name}
+                  </span>
+                } key={item.key}>
+                </TabPane>
+              )
+            })}
+          </Tabs>
 
           <Grid
             form={form}
