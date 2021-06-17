@@ -59,7 +59,7 @@ class BasicLayout extends React.Component {
         watermark_prefix: 'mask_div_id',    //小水印的id前缀
         watermark_txt:"",             //水印的内容
         watermark_x:0,                     //水印起始位置x轴坐标
-        watermark_y:-10,                     //水印起始位置Y轴坐标
+        watermark_y:0,                     //水印起始位置Y轴坐标
         watermark_rows:0,                   //水印行数
         watermark_cols:0,                   //水印列数
         watermark_x_space:80,              //水印x轴间隔
@@ -79,8 +79,8 @@ class BasicLayout extends React.Component {
         watermark_id: 'wm1_div_id',          //水印总体的id
         watermark_prefix: 'mask1_div_id',    //小水印的id前缀
         watermark_txt:"",             //水印的内容
-        watermark_x:110,                     //水印起始位置x轴坐标
-        watermark_y:130,                     //水印起始位置Y轴坐标
+        watermark_x:0,                     //水印起始位置x轴坐标
+        watermark_y:0,                     //水印起始位置Y轴坐标
         watermark_rows:0,                   //水印行数
         watermark_cols:0,                   //水印列数
         watermark_x_space:80,              //水印x轴间隔
@@ -92,8 +92,8 @@ class BasicLayout extends React.Component {
         watermark_width:140,                //水印宽度
         watermark_height:30,               //水印长度
         watermark_angle:15,                 //水印倾斜度数
-        watermark_parent_width:document.body.clientWidth-80,      //水印的总体宽度（默认值：body的scrollWidth和clientWidth的较大值）
-        watermark_parent_height:document.body.clientHeight-80,     //水印的总体高度（默认值：body的scrollHeight和clientHeight的较大值）
+        watermark_parent_width:document.body.clientWidth-180,      //水印的总体宽度（默认值：body的scrollWidth和clientWidth的较大值）
+        watermark_parent_height:document.body.clientHeight-180,     //水印的总体高度（默认值：body的scrollHeight和clientHeight的较大值）
         watermark_parent_node:null
       }
     };
