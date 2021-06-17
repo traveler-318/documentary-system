@@ -30,7 +30,7 @@ export default {
   // 'menu.order.orderList': '全部订单',
 
   'menu.workOrder':'工单管理',
-  'menu.workOrder.workOrderList':'工单',
+  'menu.workOrder.workOrderList':'售后工单',
   'menu.workOrder.smsWorkOrder':'短信工单',
 
   'menu.inventory':'进销存',
