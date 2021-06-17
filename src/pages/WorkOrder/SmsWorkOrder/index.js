@@ -393,7 +393,7 @@ class WorkOrderList extends PureComponent {
           return(
             <div>
               <Divider type="vertical" />
-              <a onClick={()=>this.handleDetails(row)}>处理</a>
+              {res.processingStatus === 0 ? (<a onClick={()=>this.handleDetails(row)}>待处理</a>) : (<a>已处理</a>)}
               <Divider type="vertical" />
               {/*<a onClick={() => this.handleDelect(res)}>删除</a>*/}
             </div>
