@@ -202,7 +202,7 @@ class ReturnOfGoodsForm extends PureComponent {
                       <Select placeholder={"请选择快递公司"}>
                         <Select.Option value=''>请选择</Select.Option>
                         {capacitys.map(item=>{
-                          if(payment == 'CONSIGNEE' && item.type == 2){
+                          if(payment == '2' && item.type == 2){
                           }else{
                             return (<Select.Option value={item.com}>{item.value}</Select.Option>)
                           }
@@ -212,6 +212,12 @@ class ReturnOfGoodsForm extends PureComponent {
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="预约日期">
                     {getFieldDecorator('dayType', {
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择预约日期',
+                        },
+                      ],
                     })(
 
                       <Select placeholder={"请选择预约日期"}
@@ -232,6 +238,12 @@ class ReturnOfGoodsForm extends PureComponent {
                     <FormItem
                       style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}>
                       {getFieldDecorator('pickupStartTime', {
+                        rules: [
+                          {
+                            required: true,
+                            message: '请选择预约时间',
+                          },
+                        ],
                       })(
                         <TimePicker  format='HH:mm'
                                      disabledHours = {this.disabledHours}
@@ -243,6 +255,12 @@ class ReturnOfGoodsForm extends PureComponent {
                     <FormItem
                       style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}>
                       {getFieldDecorator('pickupEndTime', {
+                        rules: [
+                          {
+                            required: true,
+                            message: '请选择预约时间',
+                          },
+                        ],
                       })(
                         <TimePicker  format='HH:mm'
                                      disabledHours = {this.disabledHours}
@@ -261,7 +279,7 @@ class ReturnOfGoodsForm extends PureComponent {
                   {/*</FormItem>*/}
                   <FormItem {...formAllItemLayout} label="付款方式">
                     {getFieldDecorator('paymentMode', {
-                      initialValue: 'SHIPPER',
+                      initialValue: '1',
                       rules: [
                         {
                           required: true,
@@ -270,8 +288,8 @@ class ReturnOfGoodsForm extends PureComponent {
                       ],
                     })(
                       <Radio.Group onChange={this.onChange}>
-                        <Radio value='SHIPPER'>寄付</Radio>
-                        <Radio value='CONSIGNEE'>到付</Radio>
+                        <Radio value='1'>寄付</Radio>
+                        <Radio value='2'>到付</Radio>
                       </Radio.Group>
                     )}
                   </FormItem>
