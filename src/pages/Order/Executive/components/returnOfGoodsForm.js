@@ -153,6 +153,12 @@ class ReturnOfGoodsForm extends PureComponent {
                   <div style={{color:'#ccc',padding:'0px 0px 10px 60px'}}>用户退货地址不是收货地址,以上可以更改</div>
                   <FormItem {...formAllItemLayout} label="快递公司">
                     {getFieldDecorator('com', {
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择快递公司',
+                        },
+                      ],
                     })(
                       <Select placeholder={"请选择快递公司"}>
                         {capacitys.map(item=>{
@@ -179,7 +185,7 @@ class ReturnOfGoodsForm extends PureComponent {
                       rules: [
                         {
                           required: true,
-                          message: '请选择订单来源',
+                          message: '请选择付款方式',
                         },
                       ],
                     })(
