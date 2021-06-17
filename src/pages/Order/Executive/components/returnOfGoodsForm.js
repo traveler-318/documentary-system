@@ -25,7 +25,8 @@ class ReturnOfGoodsForm extends PureComponent {
     super(props);
     this.state = {
       loading: false,
-      capacitys:[]
+      capacitys:[],
+      payment:null
     };
   }
 
@@ -33,12 +34,16 @@ class ReturnOfGoodsForm extends PureComponent {
     this.getCapacityDataInfo();
   }
 
-  getCapacityDataInfo =() =>{
+  getCapacityDataInfo =(v) =>{
     let {returnOfGoodsDataList} = this.props;
-    returnOfGoodsCapacity({
+    let json = {
       id:returnOfGoodsDataList[0].id,
-      product_id:returnOfGoodsDataList[0].productId,
-    }).then(res=>{
+      productId:returnOfGoodsDataList[0].productId
+    };
+    if(v){
+      json.sendManPrintAddr = v;
+    }
+    returnOfGoodsCapacity(json).then(res=>{
       this.setState({capacitys:res.data})
     })
   }
@@ -77,6 +82,11 @@ class ReturnOfGoodsForm extends PureComponent {
     }
   }
 
+  onChange = e => {
+    this.setState({
+      payment: e.target.value,
+    });
+  };
 
   render() {
     const {
@@ -86,7 +96,7 @@ class ReturnOfGoodsForm extends PureComponent {
       handleCancel
     } = this.props;
 
-    const {loading,capacitys} = this.state;
+    const {loading,capacitys,payment} = this.state;
 
     const formAllItemLayout = {
       labelCol: {
@@ -123,38 +133,29 @@ class ReturnOfGoodsForm extends PureComponent {
 
                   <FormItem {...formAllItemLayout} label="姓名">
                     {getFieldDecorator('recManName', {
-                      rules: [
-                        {
-                          required: true,
-                          message: '请输入姓名',
-                        },
-                      ],
                     })(<Input placeholder="请输入姓名" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="手机号">
                     {getFieldDecorator('recManMobile', {
                       rules: [
-                        { required: true, validator: this.validatePhone },
+                        { validator: this.validatePhone },
                       ],
                     })(<Input placeholder="请输入手机号" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="寄件地址">
                     {getFieldDecorator('sendManPrintAddr', {
-                      rules: [
-                        {
-                          required: true,
-                          message: '请输入寄件地址',
-                        },
-                      ],
-                    })(<Input placeholder="请输入寄件地址" />)}
+                    })(<Input placeholder="请输入寄件地址" onBlur={(e)=>this.getCapacityDataInfo(e.target.value)}/>)}
                   </FormItem>
-
+                  <div style={{color:'#ccc',padding:'0px 0px 10px 60px'}}>用户退货地址不是收货地址,以上可以更改</div>
                   <FormItem {...formAllItemLayout} label="快递公司">
                     {getFieldDecorator('com', {
                     })(
                       <Select placeholder={"请选择快递公司"}>
                         {capacitys.map(item=>{
-                          return (<Select.Option value={item.com}>{item.value}</Select.Option>)
+                          if(payment == 'CONSIGNEE' && item.type == 2){
+                          }else{
+                            return (<Select.Option value={item.com}>{item.value}</Select.Option>)
+                          }
                         })}
                       </Select>
                     )}
@@ -178,7 +179,7 @@ class ReturnOfGoodsForm extends PureComponent {
                         },
                       ],
                     })(
-                      <Radio.Group >
+                      <Radio.Group onChange={this.onChange}>
                         <Radio value='SHIPPER'>寄付</Radio>
                         <Radio value='CONSIGNEE'>到付</Radio>
                       </Radio.Group>
