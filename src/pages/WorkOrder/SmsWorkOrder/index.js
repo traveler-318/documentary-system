@@ -289,7 +289,7 @@ class WorkOrderList extends PureComponent {
       id:row.id,
       processingStatus:1
     }
-    console.log(params)
+    const _this=this;
     Modal.confirm({
       title: '提示',
       content: `确认当前工单是否已经处理！`,
@@ -298,10 +298,10 @@ class WorkOrderList extends PureComponent {
       cancelText: '取消',
       onOk: () => {
         console.log("123")
-
         repairorderUpdate(params).then(res=>{
           if(res.code === 200){
             message.success(res.msg)
+            _this.getList();
           }else {
             message.error(res.msg)
           }
@@ -392,9 +392,7 @@ class WorkOrderList extends PureComponent {
         render: (res,row) => {
           return(
             <div>
-              <Divider type="vertical" />
               {res.processingStatus === 0 ? (<a onClick={()=>this.handleDetails(row)}>待处理</a>) : (<a style={{color:"#67C23A"}}>已处理</a>)}
-              <Divider type="vertical" />
               {/*<a onClick={() => this.handleDelect(res)}>删除</a>*/}
             </div>
           )
