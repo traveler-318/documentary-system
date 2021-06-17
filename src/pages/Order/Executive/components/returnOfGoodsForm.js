@@ -92,6 +92,10 @@ class ReturnOfGoodsForm extends PureComponent {
   }
 
   onChange = e => {
+    const { form } = this.props;
+    form.setFieldsValue({
+      com: ''
+    });
     this.setState({
       payment: e.target.value,
     });
@@ -209,7 +213,15 @@ class ReturnOfGoodsForm extends PureComponent {
                   <FormItem {...formAllItemLayout} label="预约日期">
                     {getFieldDecorator('dayType', {
                     })(
-                      <Select placeholder={"请选择预约日期"}>
+
+                      <Select placeholder={"请选择预约日期"}
+                              onChange={() => {
+                                  const { form } = this.props;
+                                  form.setFieldsValue({
+                                    pickupStartTime: '',
+                                    pickupEndTime:''
+                                  });
+                              }}>
                         <Select.Option value='今天'>今天</Select.Option>
                         <Select.Option value='明天'>明天</Select.Option>
                         <Select.Option value='后天'>后天</Select.Option>
