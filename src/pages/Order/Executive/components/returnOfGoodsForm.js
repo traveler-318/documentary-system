@@ -37,14 +37,18 @@ class ReturnOfGoodsForm extends PureComponent {
   getCapacityDataInfo =(v) =>{
     let {returnOfGoodsDataList} = this.props;
     let json = {
-      id:returnOfGoodsDataList[0].id,
+      orderId:returnOfGoodsDataList[0].id,
       productId:returnOfGoodsDataList[0].productId
     };
     if(v){
       json.sendManPrintAddr = v;
     }
     returnOfGoodsCapacity(json).then(res=>{
-      this.setState({capacitys:res.data})
+      if(res.code==200){
+        this.setState({capacitys:res.data})
+      }else{
+        message.error(res.msg);
+      }
     })
   }
   handleClick = ()=>{

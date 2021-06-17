@@ -35,7 +35,9 @@ class ReturnOfGoodsList extends PureComponent {
     returnGoodsList({
       orderId:returnOfGoodsDataList[0].id
     }).then(res=>{
-      this.setState({dataSource:res.data.records})
+      if(res.code==200) {
+        this.setState({ dataSource: res.data.records })
+      }
     })
   }
 
