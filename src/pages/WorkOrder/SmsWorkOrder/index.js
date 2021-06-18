@@ -371,11 +371,12 @@ class WorkOrderList extends PureComponent {
       {
         title: '回复内容',
         dataIndex: 'content',
-        width: 550,
+        width: 500,
       },
       {
         title: '回复时间',
         dataIndex: 'receiveTime',
+        width: 200,
         render: (res) => {
           return(
             <div>
@@ -387,6 +388,10 @@ class WorkOrderList extends PureComponent {
             </div>
           )
         },
+      },
+      {
+        title: '处理时间',
+        dataIndex: 'updateTime',
       },
       {
         title: '操作',

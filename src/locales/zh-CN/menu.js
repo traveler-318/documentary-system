@@ -39,10 +39,10 @@ export default {
   'menu.inventory.stock':'库存',
 
 
-  'menu.branchManage':'渠道商管理',
-  'menu.branchManage.branchOffice':'渠道商管理',
-  'menu.branchManage.branchOrder':'渠道商订单',
-  'menu.branchManage.authorized':'渠道商授权',
+  'menu.branchManage':'渠道管理',
+  'menu.branchManage.branchOffice':'渠道管理',
+  'menu.branchManage.branchOrder':'渠道订单',
+  'menu.branchManage.authorized':'渠道授权',
 
 
   'menu.logistics': '物流配置',
