@@ -63,7 +63,8 @@ class WorkOrderList extends PureComponent {
       loading:false,
       params:{
         size:10,
-        current:1
+        current:1,
+        processingStatus:sessionStorage.executiveOrderTabKey ? sessionStorage.executiveOrderTabKey : null,
       },
       tabKey:sessionStorage.executiveOrderTabKey ? sessionStorage.executiveOrderTabKey : null,
       // 详情弹窗
@@ -82,7 +83,7 @@ class WorkOrderList extends PureComponent {
     this.setState({
       loading:true,
     })
-    repairorderList(params.current,params.size).then(res=>{
+    repairorderList(params).then(res=>{
       console.log(res.data)
       this.setState({
         countSice:res.data.total,
@@ -102,8 +103,12 @@ class WorkOrderList extends PureComponent {
   // ============ 查询 ===============
   handleSearch = (params) => {
     console.log(params,"查询参数")
+    const param={
+      ...params,
+      processingStatus:sessionStorage.executiveOrderTabKey
+    }
     this.setState({
-      params:params
+      params:param
     },()=>{
       this.getList();
     })
@@ -270,9 +275,9 @@ class WorkOrderList extends PureComponent {
       params:_params
     },()=>{
       if(key === "null"){
-        params.platformReplyStatus=null
+        params.processingStatus=null
       }else {
-        params.platformReplyStatus=Number(key)
+        params.processingStatus=Number(key)
       }
       this.setState({
         params:params
@@ -289,7 +294,7 @@ class WorkOrderList extends PureComponent {
       id:row.id,
       processingStatus:1
     }
-    console.log(params)
+    const _this=this;
     Modal.confirm({
       title: '提示',
       content: `确认当前工单是否已经处理！`,
@@ -298,10 +303,10 @@ class WorkOrderList extends PureComponent {
       cancelText: '取消',
       onOk: () => {
         console.log("123")
-
         repairorderUpdate(params).then(res=>{
           if(res.code === 200){
             message.success(res.msg)
+            _this.getList();
           }else {
             message.error(res.msg)
           }
@@ -385,16 +390,18 @@ class WorkOrderList extends PureComponent {
         },
       },
       {
+        title: '处理时间',
+        dataIndex: 'updateTime',
+      },
+      {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 200,
+        width: 120,
         render: (res,row) => {
           return(
             <div>
-              <Divider type="vertical" />
-              {res.processingStatus === 0 ? (<a onClick={()=>this.handleDetails(row)}>待处理</a>) : (<a>已处理</a>)}
-              <Divider type="vertical" />
+              {res.processingStatus === 0 ? (<a onClick={()=>this.handleDetails(row)}>待处理</a>) : (<a style={{color:"#67C23A"}}>已处理</a>)}
               {/*<a onClick={() => this.handleDelect(res)}>删除</a>*/}
             </div>
           )
@@ -405,26 +412,26 @@ class WorkOrderList extends PureComponent {
     return (
       <Panel>
         <div className={styles.ordersTabs}>
-          {/*<Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange} style={{height:59}}>*/}
-            {/*{ORDERSTATUS.map((item,i)=>{*/}
-              {/*return (*/}
-                {/*<TabPane tab={*/}
-                  {/*<span>*/}
-                    {/*{(*/}
-                      {/*item.key === tabKey ||*/}
-                      {/*JSON.stringify(item.key) === tabKey*/}
-                    {/*) ? (*/}
-                      {/*<Badge count={countSice} overflowCount={999}>*/}
-                        {/*<a href="#" className="head-example" />*/}
-                      {/*</Badge>) : ""*/}
-                    {/*}*/}
-                    {/*{item.name}*/}
-                  {/*</span>*/}
-                {/*} key={item.key}>*/}
-                {/*</TabPane>*/}
-              {/*)*/}
-            {/*})}*/}
-          {/*</Tabs>*/}
+          <Tabs type="card" defaultActiveKey={tabKey} onChange={this.statusChange} style={{height:59}}>
+            {ORDERSTATUS.map((item,i)=>{
+              return (
+                <TabPane tab={
+                  <span>
+                    {(
+                      item.key === tabKey ||
+                      JSON.stringify(item.key) === tabKey
+                    ) ? (
+                      <Badge count={countSice} overflowCount={999}>
+                        <a href="#" className="head-example" />
+                      </Badge>) : ""
+                    }
+                    {item.name}
+                  </span>
+                } key={item.key}>
+                </TabPane>
+              )
+            })}
+          </Tabs>
 
           <Grid
             form={form}
