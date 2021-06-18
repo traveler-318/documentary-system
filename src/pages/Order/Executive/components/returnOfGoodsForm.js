@@ -27,7 +27,8 @@ class ReturnOfGoodsForm extends PureComponent {
       loading: false,
       capacitys:[],
       payment:null,
-      startTime:new Date(+new Date() +8*3600*1000).toISOString().split("T")[1].split(".")[0]//获取当前时间
+      dayTime:new Date(+new Date() +8*3600*1000).toISOString().split("T")[1].split(".")[0],//获取当前时间
+      startTime:null
     };
   }
 
@@ -109,7 +110,7 @@ class ReturnOfGoodsForm extends PureComponent {
     let dayType = form.getFieldValue('dayType');
     let hours=[];
     if(dayType == '今天'){
-      let time = this.state.startTime;
+      let time = this.state.dayTime;
       let timeArr = time.split(":");
       for(var i=0;i<parseInt(timeArr[0]);i++){
         hours.push(i)
@@ -123,8 +124,8 @@ class ReturnOfGoodsForm extends PureComponent {
       let dayType = form.getFieldValue('dayType');
       let minutes =[];
       if(dayType == '今天'){
-        let {startTime} = this.state;
-        let timeArr  =startTime.split(":");
+        let time = this.state.dayTime;
+        let timeArr  =time.split(":");
         if(selectedHour == parseInt(timeArr[0])){
           for(let i=0;i<parseInt(timeArr[1]);i++){
             minutes.push(i);
@@ -133,6 +134,46 @@ class ReturnOfGoodsForm extends PureComponent {
       }
       return minutes;
   };
+
+  changeTime =(time, timeString) => {
+    this.setState({
+      startTime: timeString,
+    });
+  };
+  getDisabledHours =()=> {
+    const { form } = this.props;
+    let dayType = form.getFieldValue('dayType');
+    let hours = []
+    let time = this.state.startTime
+    if(dayType == '今天' && !time) {
+      time = this.state.dayTime;
+    }
+    if(time){
+      let timeArr = time.split(':')
+      for (var i = 0; i < parseInt(timeArr[0]); i++) {
+        hours.push(i)
+      }
+    }
+    return hours
+  };
+  getDisabledMinutes =(selectedHour)=> {
+    const { form } = this.props;
+    let dayType = form.getFieldValue('dayType');
+    let time = this.state.startTime
+    if(dayType == '今天' && !time) {
+      time = this.state.dayTime;
+    }
+    let minutes = []
+    if(time) {
+      let timeArr = time.split(':')
+      if (selectedHour == parseInt(timeArr[0])) {
+        for (var i = 0; i < parseInt(timeArr[1]); i++) {
+          minutes.push(i)
+        }
+      }
+    }
+    return minutes
+  }
 
   render() {
     const {
@@ -230,6 +271,9 @@ class ReturnOfGoodsForm extends PureComponent {
                                     pickupStartTime: '',
                                     pickupEndTime:''
                                   });
+                                  this.setState({
+                                    startTime: null,
+                                  });
                               }}>
                         <Select.Option value='今天'>今天</Select.Option>
                         <Select.Option value='明天'>明天</Select.Option>
@@ -250,7 +294,8 @@ class ReturnOfGoodsForm extends PureComponent {
                       })(
                         <TimePicker  format='HH:mm'
                                      disabledHours = {this.disabledHours}
-                                     disabledMinutes = {this.disabledMinutes}/>
+                                     disabledMinutes = {this.disabledMinutes}
+                                     onChange={this.changeTime} />
                       )}
                     </FormItem>
                     <span style={{ display: 'inline-block', width: '24px', textAlign: 'center' }}>-</span>
@@ -266,8 +311,8 @@ class ReturnOfGoodsForm extends PureComponent {
                         ],
                       })(
                         <TimePicker  format='HH:mm'
-                                     disabledHours = {this.disabledHours}
-                                     disabledMinutes = {this.disabledMinutes}/>
+                                     disabledHours = {this.getDisabledHours}
+                                     disabledMinutes = {this.getDisabledMinutes}/>
                       )}
                     </FormItem>
                   </FormItem>
