@@ -36,6 +36,7 @@ class GlobalHeader extends PureComponent {
 
   render() {
     const { collapsed, isMobile, logo, topMenuData } = this.props;
+    const isMenuChange = sessionStorage.getItem('MENUCHANGE');
     return (
       <div className={styles.header}>
         {isMobile && (
@@ -43,9 +44,11 @@ class GlobalHeader extends PureComponent {
             <img src={logo} alt="logo" width="32" />
           </Link>
         )}
-        <span className={styles.trigger} onClick={this.toggle}>
+        {(isMenuChange == 'true' || isMobile) && (
+          <span className={styles.trigger} onClick={this.toggle}>
           <Icon type={collapsed ? 'menu-unfold' : 'menu-fold'} />
         </span>
+        )}
 
         {/* <span
           className={styles.triggerSmall}

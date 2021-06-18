@@ -74,9 +74,7 @@ export default {
   routes: pageRoutes,
   // Theme for antd
   // https://ant.design/docs/react/customize-theme-cn
-  theme: {
-    'primary-color': primaryColor,
-  },
+  theme: './src/theme.js',
   proxy: {
     '/api': {
       target: 'http://47.119.116.197:9010',

@@ -10,7 +10,7 @@ import Footer from './Footer';
 import Header from './Header';
 import Context from './MenuContext';
 import PageTab from './PageTab'
-import SiderMenu from '@/components/SiderMenu';
+import SiderMenu from '@/components/SiderMenuYz';
 import getPageTitle from '@/utils/getPageTitle';
 import styles from './BasicLayout.less';
 import RealTimeInformation from '@/components/RealTimeInformation/index';
@@ -139,6 +139,14 @@ class BasicLayout extends React.Component {
       // defaultSettings.watermark_parent_node = "executive_box"
     }
 
+
+    sessionStorage.removeItem('MENUCHANGE')
+  }
+
+  // 组件即将销毁
+  componentWillUnmount() {
+    this.handleMenuCollapse(true);
+    sessionStorage.removeItem('MENUCHANGE')
   }
 
   getContext() {
@@ -153,8 +161,8 @@ class BasicLayout extends React.Component {
     const { fixSiderbar, isMobile, collapsed, layout } = this.props;
     if (fixSiderbar && layout !== 'topmenu' && !isMobile) {
       return {
-        paddingLeft: collapsed ? '80px' : '180px',
-        // paddingLeft: collapsed ? '92px' : '224px',
+        // paddingLeft: collapsed ? '80px' : '180px',
+        paddingLeft: collapsed ? '92px' : '223px',
       };
     }
     return null;
@@ -192,6 +200,7 @@ class BasicLayout extends React.Component {
     const isTop = PropsLayout === 'topmenu';
     const istab = localStorage.getItem('isAntTap')
     const contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
+
     const layout = (
       <Layout>
         {isTop && !isMobile ? null : (

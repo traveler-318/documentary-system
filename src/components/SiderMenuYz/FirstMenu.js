@@ -25,7 +25,7 @@ const getIcon = icon => {
     if (icon.startsWith('icon-')) {
       return <IconFont type={icon} />;
     }
-    return <Icon type={icon} style={{marginRight:'4px'}}/>;
+    return <Icon type={icon} style={{fontSize: '16px',marginRight:'4px'}}/>;
   }
   return icon;
 };
@@ -62,11 +62,24 @@ export default class BaseMenu extends PureComponent {
    */
   getSubMenuOrItem = (item,selectedKeys) => {
     let {chooseMenuName} = this.state
+    const { onCollapse } = this.props;
 
     let current = chooseMenuName ? chooseMenuName == item.path ? true : false:false;
     if(!chooseMenuName) current = selectedKeys.indexOf(item.path)>-1 ?true:false;
 
-    return <li key={item.path} className={ `${styles.li} ${current?styles.active:''} `}>{this.getMenuItemPath(item,current)}</li>;
+    if(sessionStorage.getItem('MENUCHANGE') == undefined && current){
+      sessionStorage.setItem('MENUCHANGE',current);
+    }
+    return <li key={item.path} className={ `${styles.li} ${current?styles.active:''} `}
+               onClick={
+                 () => {
+                   this.setState({
+                     chooseMenuName:item.path
+                   })
+                   onCollapse(false);
+                 }
+               }
+    >{this.getMenuItemPath(item,current)}</li>;
   };
 
   /**
@@ -88,17 +101,9 @@ export default class BaseMenu extends PureComponent {
       <>
       <Link
         replace={itemPath === location.pathname}
-        onClick={
-          () => {
-              this.setState({
-                chooseMenuName:item.path
-              })
-              onCollapse(false);
-            }
-        }
       >
         {icon}
-        <span>{name.substring(0,2)}</span>
+        <span>{name.substring(0,4)}</span>
       </Link>
         <div className={`${styles.secondSidebar} ${isView?styles.view : ''}`}>
           {item.children?(
