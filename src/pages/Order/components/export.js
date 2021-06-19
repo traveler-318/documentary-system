@@ -211,7 +211,7 @@ class Export extends PureComponent {
   }
 
   // 导出
-  exportFilePopup =(cellBack) =>{
+  exportFilePopup = (cellBack) =>{
     // 验证是否获取短信验证码
     const {smsType,downloadExcelParam,params,verificationCode}=this.state;
     if(smsType){
