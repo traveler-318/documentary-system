@@ -40,7 +40,13 @@ class OrdersAdd extends PureComponent {
     this.state = {
       salesmanList:[],
       loading:false,
-      cityparam:{},
+      cityparam:{
+        province:'',
+        city:'',
+        area:'',
+      },
+      userPhone:'',
+      userName:'',
       productList:[],
       selectedOptions:[],
       payamount:null,
@@ -207,17 +213,24 @@ class OrdersAdd extends PureComponent {
 
   textAArea = ({ target: { value } }) => {
     console.log(value)
-  //addressParsing
-    addressParsing(value).then(res=>{
-      this.setState({
-        loading:false
+    const _this=this;
+    if(value){
+      addressParsing({text:value}).then(res=>{
+        console.log(res.data)
+        if(res.code === 200){
+          _this.setState({
+            userAddress:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
+            cityparam:{
+              province:res.data.province_code,
+              city:res.data.city_code,
+              area:res.data.county_code,
+            },
+            userPhone:res.data.phonenum,
+            userName:res.data.person,
+          })
+        }
       })
-      if(res.code === 200){
-        message.success(res.msg);
-        callback();
-      }
-    })
-
+    }
   }
 
   render() {
@@ -228,6 +241,10 @@ class OrdersAdd extends PureComponent {
     const {
       salesmanList,
       loading,
+      cityparam,
+      userPhone,
+      userName,
+      userAddress,
       productList
     } = this.state;
 
@@ -272,6 +289,7 @@ class OrdersAdd extends PureComponent {
                 />
                 <FormItem {...formAllItemLayout} label="客户姓名">
                   {getFieldDecorator('userName', {
+                    initialValue: userName,
                     rules: [
                       {
                         required: true,
@@ -282,6 +300,7 @@ class OrdersAdd extends PureComponent {
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="手机号">
                   {getFieldDecorator('userPhone', {
+                    initialValue: userPhone,
                     rules: [
                       { required: true, validator: this.validatePhone },
                     ],
@@ -302,8 +321,8 @@ class OrdersAdd extends PureComponent {
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="所在地区">
                   {getFieldDecorator('region', {
-                      // initialValue: {['zhejiang', 'hangzhou', 'xihu']},
-                      rules: [
+                    initialValue: [cityparam.province, cityparam.city, cityparam.area],
+                    rules: [
                         {
                           required: true,
                           message: '请选择所在地区',
@@ -319,6 +338,7 @@ class OrdersAdd extends PureComponent {
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="收货地址">
                   {getFieldDecorator('userAddress', {
+                    initialValue: userAddress,
                     rules: [
                       {
                         required: true,
@@ -327,9 +347,9 @@ class OrdersAdd extends PureComponent {
                     ],
                   })(<Input placeholder="请输入收货地址" />)}
                 </FormItem>
-                {/*<FormItem {...formAllItemLayout} label="地址解析">*/}
-                  {/*<TextArea rows={4} onChange={this.textAArea} />*/}
-                {/*</FormItem>*/}
+                <FormItem {...formAllItemLayout} label="地址解析">
+                  <TextArea rows={4} onChange={this.textAArea} />
+                </FormItem>
               </Col>
               <Col span={12}>
                 <FormTitle
