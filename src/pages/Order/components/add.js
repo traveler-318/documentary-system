@@ -214,6 +214,7 @@ class OrdersAdd extends PureComponent {
   };
 
   textAArea = ({ target: { value } }) => {
+    console.log(value)
     if(value){
       this.setState({
         textAAreaValue:value
@@ -223,12 +224,19 @@ class OrdersAdd extends PureComponent {
 
   addressParsing =()=>{
     const {textAAreaValue,value,userAddress}=this.state;
+    console.log(textAAreaValue)
     const _this=this;
     if(textAAreaValue !== value){
+      this.setState({
+        value:textAAreaValue
+      })
       addressParsing({text:textAAreaValue}).then(res=>{
         console.log(res.data)
         if(res.code === 200){
           if(userAddress){
+            _this.setState({
+              value:textAAreaValue
+            })
             _this.props.form.setFieldsValue({
               userAddress:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
               userPhone:res.data.phonenum,
