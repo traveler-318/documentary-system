@@ -376,9 +376,9 @@ class OrdersAdd extends PureComponent {
                   })(<Input placeholder="请输入收货地址" />)}
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="地址解析">
-                  <TextArea rows={4} onChange={this.textAArea} />
+                  <TextArea placeholder="粘贴地址信息，自动拆分姓名、电话和地址" rows={4} onChange={this.textAArea} />
                   <Button type="" style={{float:"right"}} onClick={()=>this.addressParsing()}>
-                    确认
+                    解析
                   </Button>
                 </FormItem>
               </Col>
