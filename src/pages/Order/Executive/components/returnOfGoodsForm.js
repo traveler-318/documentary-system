@@ -27,13 +27,45 @@ class ReturnOfGoodsForm extends PureComponent {
       loading: false,
       capacitys:[],
       payment:null,
-      dayTime:new Date(+new Date() +8*3600*1000).toISOString().split("T")[1].split(".")[0],//获取当前时间
-      startTime:null
+      dateVals:[
+        { value: '今天', label: '今天' },
+        { value: '明天', label: '明天' },
+        { value: '后天', label: '后天' }
+      ],
+      dataTimeVals:[
+        { name:10,value: '08:00-10:00', label: '08:00 - 10:00' },
+        { name:12,value: '10:00-12:00', label: '10:00 - 12:00' },
+        { name:14,value: '12:00-14:00', label: '12:00 - 14:00' },
+        { name:16,value: '14:00-16:00', label: '14:00 - 16:00' },
+        { name:18,value: '16:00-18:00', label: '16:00 - 18:00' },
+        { name:19,value: '18:00-19:00', label: '18:00 - 19:00' },
+      ],
+      dateOptions:[],
+      // dayTime:new Date(+new Date() +8*3600*1000).toISOString().split("T")[1].split(".")[0],//获取当前时间
+      // startTime:null,
     };
   }
 
   componentWillMount() {
     this.getCapacityDataInfo();
+
+    //计算时间范围
+    let {dateVals,dataTimeVals} = this.state;
+    let s = dateVals.map(item=>{
+      if(item.value =='今天'){
+        let d = new Date();
+        let h = moment(d).format('HH');
+        let ds =dataTimeVals.filter(v => v.name>h)
+        item.children = ds;
+      }else{
+        item.children = dataTimeVals;
+      }
+      return item;
+    });
+
+    this.setState({
+      dateOptions:s
+    });
   }
 
   getCapacityDataInfo =(v) =>{
@@ -69,12 +101,16 @@ class ReturnOfGoodsForm extends PureComponent {
     const { form,returnOfGoodsDataList } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       if (err) return;
-      values.pickupStartTime = moment(values.pickupStartTime).format('HH:mm')
-      values.pickupEndTime = moment(values.pickupEndTime).format('HH:mm')
+      let d = values.date;
       const params = {
         ...values,
         orderId:returnOfGoodsDataList[0].id
       };
+      params.dayType = d[0];
+      let ds = d[1].split('-');
+      params.pickupStartTime = ds[0];
+      params.pickupEndTime = ds[1];
+      delete params.date;
       returnOfGoodsSave(params).then(resp => {
         if (resp.success) {
           message.success(resp.msg);
@@ -105,75 +141,80 @@ class ReturnOfGoodsForm extends PureComponent {
     });
   };
 
-  disabledHours = ()=>{
-    const { form } = this.props;
-    let dayType = form.getFieldValue('dayType');
-    let hours=[];
-    if(dayType == '今天'){
-      let time = this.state.dayTime;
-      let timeArr = time.split(":");
-      for(var i=0;i<parseInt(timeArr[0]);i++){
-        hours.push(i)
-      }
-    }
-    return hours;
-  };
-  //限制分钟
-  disabledMinutes = (selectedHour)=>{
-      const { form } = this.props;
-      let dayType = form.getFieldValue('dayType');
-      let minutes =[];
-      if(dayType == '今天'){
-        let time = this.state.dayTime;
-        let timeArr  =time.split(":");
-        if(selectedHour == parseInt(timeArr[0])){
-          for(let i=0;i<parseInt(timeArr[1]);i++){
-            minutes.push(i);
-          }
-        }
-      }
-      return minutes;
-  };
-
-  changeTime =(time, timeString) => {
-    this.setState({
-      startTime: timeString,
-    });
-  };
-  getDisabledHours =()=> {
-    const { form } = this.props;
-    let dayType = form.getFieldValue('dayType');
-    let hours = []
-    let time = this.state.startTime
-    if(dayType == '今天' && !time) {
-      time = this.state.dayTime;
-    }
-    if(time){
-      let timeArr = time.split(':')
-      for (var i = 0; i < parseInt(timeArr[0]); i++) {
-        hours.push(i)
-      }
-    }
-    return hours
-  };
-  getDisabledMinutes =(selectedHour)=> {
-    const { form } = this.props;
-    let dayType = form.getFieldValue('dayType');
-    let time = this.state.startTime
-    if(dayType == '今天' && !time) {
-      time = this.state.dayTime;
-    }
-    let minutes = []
-    if(time) {
-      let timeArr = time.split(':')
-      if (selectedHour == parseInt(timeArr[0])) {
-        for (var i = 0; i < parseInt(timeArr[1]); i++) {
-          minutes.push(i)
-        }
-      }
-    }
-    return minutes
-  }
+  // disabledHours = ()=>{
+  //   const { form } = this.props;
+  //   let dayType = form.getFieldValue('dayType');
+  //   let hours=[];
+  //   if(dayType == '今天'){
+  //     let time = this.state.dayTime;
+  //     let timeArr = time.split(":");
+  //     for(var i=0;i<parseInt(timeArr[0]);i++){
+  //       hours.push(i)
+  //     }
+  //   }
+  //   return hours;
+  // };
+  // //限制分钟
+  // disabledMinutes = (selectedHour)=>{
+  //     const { form } = this.props;
+  //     let dayType = form.getFieldValue('dayType');
+  //     let minutes =[];
+  //     if(dayType == '今天'){
+  //       let time = this.state.dayTime;
+  //       let timeArr  =time.split(":");
+  //       if(selectedHour == parseInt(timeArr[0])){
+  //         for(let i=0;i<parseInt(timeArr[1]);i++){
+  //           minutes.push(i);
+  //         }
+  //       }
+  //     }
+  //     return minutes;
+  // };
+  //
+  // changeTime =(time, timeString) => {
+  //   let {_d} = {...time};
+  //   console.log(_d.setTime(_d.getTime() + 30 + 60000))
+  //   console.log(timeString)
+  //   this.setState({
+  //     startTime: timeString,
+  //     startData:_d.setTime(_d.getTime() + 30 + 60000)
+  //   });
+  // };
+  // getDisabledHours =()=> {
+  //   const { form } = this.props;
+  //   let dayType = form.getFieldValue('dayType');
+  //   let hours = []
+  //   let time = this.state.startTime
+  //   if(dayType == '今天' && !time) {
+  //     time = this.state.dayTime;
+  //   }
+  //   console.log(moment(this.state.startData).format('HH:mm'))
+  //   if(time){
+  //     let timeArr = time.split(':')
+  //     for (var i = 0; i < parseInt(timeArr[0]); i++) {
+  //       hours.push(i)
+  //     }
+  //   }
+  //   return hours
+  // };
+  // getDisabledMinutes =(selectedHour)=> {
+  //   const { form } = this.props;
+  //   let dayType = form.getFieldValue('dayType');
+  //   let time = this.state.startTime
+  //   if(dayType == '今天' && !time) {
+  //     time = this.state.dayTime;
+  //   }
+  //   let minutes = []
+  //   if(time) {
+  //     let timeArr = time.split(':')
+  //     if (selectedHour == parseInt(timeArr[0])) {
+  //       for (var i = 0; i < parseInt(timeArr[1]); i++) {
+  //         minutes.push(i)
+  //       }
+  //     }
+  //   }
+  //   return minutes
+  // }
 
   render() {
     const {
@@ -183,7 +224,7 @@ class ReturnOfGoodsForm extends PureComponent {
       handleCancel
     } = this.props;
 
-    const {loading,capacitys,payment} = this.state;
+    const {loading,capacitys,payment,dateOptions} = this.state;
 
     const formAllItemLayout = {
       labelCol: {
@@ -254,68 +295,55 @@ class ReturnOfGoodsForm extends PureComponent {
                       </Select>
                     )}
                   </FormItem>
-                  <FormItem {...formAllItemLayout} label="预约日期">
-                    {getFieldDecorator('dayType', {
+                  <FormItem {...formAllItemLayout} label="预约时间">
+                    {getFieldDecorator('date', {
                       rules: [
                         {
                           required: true,
-                          message: '请选择预约日期',
+                          message: '请选择预约时间',
                         },
                       ],
                     })(
-
-                      <Select placeholder={"请选择预约日期"}
-                              onChange={() => {
-                                  const { form } = this.props;
-                                  form.setFieldsValue({
-                                    pickupStartTime: '',
-                                    pickupEndTime:''
-                                  });
-                                  this.setState({
-                                    startTime: null,
-                                  });
-                              }}>
-                        <Select.Option value='今天'>今天</Select.Option>
-                        <Select.Option value='明天'>明天</Select.Option>
-                        <Select.Option value='后天'>后天</Select.Option>
-                      </Select>
+                      <Cascader
+                        options={dateOptions}
+                      ></Cascader>
                     )}
                   </FormItem>
-                  <FormItem {...formAllItemLayout} label="预约时间">
-                    <FormItem
-                      style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}>
-                      {getFieldDecorator('pickupStartTime', {
-                        rules: [
-                          {
-                            required: true,
-                            message: '请选择预约时间',
-                          },
-                        ],
-                      })(
-                        <TimePicker  format='HH:mm'
-                                     disabledHours = {this.disabledHours}
-                                     disabledMinutes = {this.disabledMinutes}
-                                     onChange={this.changeTime} />
-                      )}
-                    </FormItem>
-                    <span style={{ display: 'inline-block', width: '24px', textAlign: 'center' }}>-</span>
+                  {/*<FormItem {...formAllItemLayout} label="预约时间">*/}
+                    {/*<FormItem*/}
+                      {/*style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}>*/}
+                      {/*{getFieldDecorator('pickupStartTime', {*/}
+                        {/*rules: [*/}
+                          {/*{*/}
+                            {/*required: true,*/}
+                            {/*message: '请选择预约时间',*/}
+                          {/*},*/}
+                        {/*],*/}
+                      {/*})(*/}
+                        {/*<TimePicker  format='HH:mm'*/}
+                                     {/*disabledHours = {this.disabledHours}*/}
+                                     {/*disabledMinutes = {this.disabledMinutes}*/}
+                                     {/*onChange={this.changeTime} />*/}
+                      {/*)}*/}
+                    {/*</FormItem>*/}
+                    {/*<span style={{ display: 'inline-block', width: '24px', textAlign: 'center' }}>-</span>*/}
 
-                    <FormItem
-                      style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}>
-                      {getFieldDecorator('pickupEndTime', {
-                        rules: [
-                          {
-                            required: true,
-                            message: '请选择预约时间',
-                          },
-                        ],
-                      })(
-                        <TimePicker  format='HH:mm'
-                                     disabledHours = {this.getDisabledHours}
-                                     disabledMinutes = {this.getDisabledMinutes}/>
-                      )}
-                    </FormItem>
-                  </FormItem>
+                    {/*<FormItem*/}
+                      {/*style={{ display: 'inline-block', width: 'calc(50% - 12px)' }}>*/}
+                      {/*{getFieldDecorator('pickupEndTime', {*/}
+                        {/*rules: [*/}
+                          {/*{*/}
+                            {/*required: true,*/}
+                            {/*message: '请选择预约时间',*/}
+                          {/*},*/}
+                        {/*],*/}
+                      {/*})(*/}
+                        {/*<TimePicker  format='HH:mm'*/}
+                                     {/*disabledHours = {this.getDisabledHours}*/}
+                                     {/*disabledMinutes = {this.getDisabledMinutes}/>*/}
+                      {/*)}*/}
+                    {/*</FormItem>*/}
+                  {/*</FormItem>*/}
                   {/*<FormItem {...formAllItemLayout} label="所在地区">*/}
                   {/*  {getFieldDecorator('region', {*/}
                   {/*  })(*/}
