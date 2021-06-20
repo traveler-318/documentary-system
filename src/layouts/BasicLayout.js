@@ -10,7 +10,7 @@ import Footer from './Footer';
 import Header from './Header';
 import Context from './MenuContext';
 import PageTab from './PageTab'
-import SiderMenu from '@/components/SiderMenuYz';
+import SiderMenu from '@/components/SiderMenu';
 import getPageTitle from '@/utils/getPageTitle';
 import styles from './BasicLayout.less';
 import RealTimeInformation from '@/components/RealTimeInformation/index';
@@ -140,13 +140,13 @@ class BasicLayout extends React.Component {
     }
 
 
-    sessionStorage.removeItem('MENUCHANGE')
+    // sessionStorage.removeItem('MENUCHANGE')
   }
 
   // 组件即将销毁
   componentWillUnmount() {
     this.handleMenuCollapse(true);
-    sessionStorage.removeItem('MENUCHANGE')
+    // sessionStorage.removeItem('MENUCHANGE')
   }
 
   getContext() {
@@ -161,8 +161,8 @@ class BasicLayout extends React.Component {
     const { fixSiderbar, isMobile, collapsed, layout } = this.props;
     if (fixSiderbar && layout !== 'topmenu' && !isMobile) {
       return {
-        // paddingLeft: collapsed ? '80px' : '180px',
-        paddingLeft: collapsed ? '92px' : '223px',
+        paddingLeft: collapsed ? '80px' : '180px',
+        // paddingLeft: collapsed ? '92px' : '223px',
       };
     }
     return null;
