@@ -377,7 +377,9 @@ class OrdersAdd extends PureComponent {
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="地址解析">
                   <TextArea rows={4} onChange={this.textAArea} />
-                  <a style={{float:"right"}} onClick={()=>this.addressParsing()}>确认</a>
+                  <Button type="" style={{float:"right"}} onClick={()=>this.addressParsing()}>
+                    确认
+                  </Button>
                 </FormItem>
               </Col>
               <Col span={12}>
