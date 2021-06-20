@@ -63,7 +63,7 @@ class ReturnOfGoodsList extends PureComponent {
     const columns = [
       {
         title: '物流名称',
-        dataIndex: 'kuaidicom',
+        dataIndex: 'kuaidiname',
       },
       {
         title: '物流单号',
