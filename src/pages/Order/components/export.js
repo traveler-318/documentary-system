@@ -211,21 +211,21 @@ class Export extends PureComponent {
   }
 
   // 导出
-  exportFilePopup =(cellBack) =>{
+  exportFilePopup = (cellBack) =>{
     // 验证是否获取短信验证码
     const {smsType,downloadExcelParam,params,verificationCode}=this.state;
-    // if(smsType){
-    //   message.error('导出数据需要短信验证，请先获取短信验证码！');
-    //   return false;
-    // }
-    // if(verificationCode.length < 6){
-    //   message.error('验证码不能小于6位数');
-    //   return false;
-    // }
-    // if(verificationCode.length > 6){
-    //   message.error('验证码不能大于6位数');
-    //   return false;
-    // }
+    if(smsType){
+      message.error('导出数据需要短信验证，请先获取短信验证码！');
+      return false;
+    }
+    if(verificationCode.length < 6){
+      message.error('验证码不能小于6位数');
+      return false;
+    }
+    if(verificationCode.length > 6){
+      message.error('验证码不能大于6位数');
+      return false;
+    }
 
 
     let param={
