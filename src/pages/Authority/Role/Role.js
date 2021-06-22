@@ -12,6 +12,7 @@ import {
 } from '../../../actions/role';
 import { MENU_REFRESH_DATA } from '../../../actions/menu';
 import { tenantMode } from '../../../defaultSettings';
+import { grants } from '../../../services/role';
 
 const FormItem = Form.Item;
 const { TreeNode } = Tree;
@@ -25,6 +26,7 @@ const { TabPane } = Tabs;
 class Role extends PureComponent {
   state = {
     visible: false,
+    visible1: false,
     confirmLoading: false,
     selectedRows: [],
   };
@@ -62,7 +64,6 @@ class Role extends PureComponent {
     this.setState({
       confirmLoading: true,
     });
-
     const { dispatch } = this.props;
     dispatch(
       ROLE_GRANT(
@@ -102,11 +103,47 @@ class Role extends PureComponent {
     });
   };
 
+
+  handleGrant1 =(key) =>{
+    const {
+      role: { menuTreeKeys},
+    } = this.props;
+    const { dispatch } = this.props;
+    const params={
+      menuIds:menuTreeKeys,
+      operationType:key
+    }
+
+    grants(params).then(res=>{
+      console.log(res.data)
+      if(res.data.code === 200){
+        this.setState({
+          visible: false,
+          confirmLoading: false,
+        });
+        message.success('配置成功');
+        dispatch(MENU_REFRESH_DATA());
+      }
+    })
+  }
+
+  showModal1 = () => {
+    this.setState({
+      visible1: true,
+    });
+  };
+
   handleCancel = () => {
     const { dispatch } = this.props;
     dispatch(ROLE_SET_TREE_KEYS({ menuTreeKeys: [], dataScopeTreeKeys: [], apiScopeTreeKeys: [] }));
     this.setState({
       visible: false,
+    });
+  };
+
+  handleCancel1 = () => {
+    this.setState({
+      visible1: false,
     });
   };
 
@@ -177,9 +214,14 @@ class Role extends PureComponent {
   };
 
   renderLeftButton = () => (
-    <Button icon="user-add" onClick={this.showModal}>
-      权限设置
-    </Button>
+    <>
+      <Button icon="user-add" onClick={this.showModal}>
+        权限设置
+      </Button>
+      <Button icon="user-add" onClick={this.showModal1}>
+        批量设置
+      </Button>
+    </>
   );
 
   renderTreeNodes = data =>
@@ -194,10 +236,23 @@ class Role extends PureComponent {
       return <TreeNode {...item} />;
     });
 
+  renderTreeNodes1 = data =>
+    data.map(item => {
+    if (item.children) {
+      return (
+        <TreeNode title={item.title} key={item.key} dataRef={item}>
+          {this.renderTreeNodes1(item.children)}
+        </TreeNode>
+      );
+    }
+    return <TreeNode {...item} />;
+  });
+
+
   render() {
     const code = 'role';
 
-    const { visible, confirmLoading } = this.state;
+    const { visible, confirmLoading,visible1 } = this.state;
 
     const {
       form,
@@ -276,6 +331,43 @@ class Role extends PureComponent {
                 {this.renderTreeNodes(apiScopeGrantTree)}
               </Tree>
             </TabPane>
+          </Tabs>
+        </Modal>
+
+        <Modal
+          title="批量配置"
+          width={380}
+          visible={visible1}
+          confirmLoading={confirmLoading}
+          maskClosable={false}
+          footer={[
+            <Button key="back" onClick={this.handleCancel1}>
+              取消
+            </Button>,
+            <Button key="back" type="primary" onClick={()=>this.handleGrant1(1)}>
+              批量删除
+            </Button>,
+            <Button key="submit" type="primary" onClick={()=>this.handleGrant1(0)}>
+              批量新增
+            </Button>,
+          ]}
+        >
+          <Tabs defaultActiveKey="1" size="small">
+            <TabPane tab="菜单权限" key="1">
+              <Tree checkable onCheck={this.onMenuCheck}>
+                {this.renderTreeNodes1(menuGrantTree)}
+              </Tree>
+            </TabPane>
+            {/*<TabPane tab="数据权限" key="2">*/}
+              {/*<Tree checkable checkedKeys={dataScopeTreeKeys} onCheck={this.onDataScopeCheck}>*/}
+                {/*{this.renderTreeNodes(dataScopeGrantTree)}*/}
+              {/*</Tree>*/}
+            {/*</TabPane>*/}
+            {/*<TabPane tab="接口权限" key="3">*/}
+              {/*<Tree checkable checkedKeys={apiScopeTreeKeys} onCheck={this.onApiScopeCheck}>*/}
+                {/*{this.renderTreeNodes(apiScopeGrantTree)}*/}
+              {/*</Tree>*/}
+            {/*</TabPane>*/}
           </Tabs>
         </Modal>
       </Panel>

@@ -33,6 +33,14 @@ export async function submit(params) {
   });
 }
 
+//批量配置
+export async function grants(params) {
+  return request('/api/blade-system/role/grants', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function detail(params) {
   return request(`/api/blade-system/role/detail?${stringify(params)}`);
 }
