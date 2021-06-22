@@ -115,8 +115,7 @@ class Role extends PureComponent {
     }
 
     grants(params).then(res=>{
-      console.log(res.data)
-      if(res.data.code === 200){
+      if(res.code === 200){
         this.setState({
           visible: false,
           confirmLoading: false,
@@ -339,6 +338,7 @@ class Role extends PureComponent {
           width={380}
           visible={visible1}
           confirmLoading={confirmLoading}
+          destroyOnClose
           maskClosable={false}
           footer={[
             <Button key="back" onClick={this.handleCancel1}>
