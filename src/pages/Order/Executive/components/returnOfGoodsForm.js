@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import {
   Modal,
   Form,
-  Button, Card, Row, Col, Input, Cascader, Select, DatePicker, message,Radio,TimePicker
+  Button, Card, Row, Col, Input, Cascader, Select, DatePicker, message, Radio, TimePicker, Checkbox,
 } from 'antd';
 import { connect } from 'dva';
 import styles from '@/layouts/Sword.less';
@@ -11,6 +11,7 @@ import moment from 'moment';
 import {
   returnOfGoodsCapacity,
   returnOfGoodsSave,
+  realDetails
 } from '../../../../services/newServices/order';
 
 const FormItem = Form.Item;
@@ -41,6 +42,8 @@ class ReturnOfGoodsForm extends PureComponent {
         { name:19,value: '18:00-19:00', label: '18:00 - 19:00' },
       ],
       dateOptions:[],
+      realDetail:{},//获取默认姓名、手机等
+      isUpdate:true,
       // dayTime:new Date(+new Date() +8*3600*1000).toISOString().split("T")[1].split(".")[0],//获取当前时间
       // startTime:null,
     };
@@ -48,6 +51,7 @@ class ReturnOfGoodsForm extends PureComponent {
 
   componentWillMount() {
     this.getCapacityDataInfo();
+    this.getRealDetails();
 
     //计算时间范围
     let {dateVals,dataTimeVals} = this.state;
@@ -66,6 +70,19 @@ class ReturnOfGoodsForm extends PureComponent {
     this.setState({
       dateOptions:s
     });
+  }
+
+  getRealDetails = ()=>{
+    let {returnOfGoodsDataList} = this.props;
+    realDetails({
+      id:returnOfGoodsDataList[0].id
+    }).then(res=>{
+      if(res.code==200){
+        this.setState({realDetail:res.data})
+      }else{
+        message.error(res.msg);
+      }
+    })
   }
 
   getCapacityDataInfo =(v) =>{
@@ -141,6 +158,11 @@ class ReturnOfGoodsForm extends PureComponent {
     });
   };
 
+  changeIsUpdate = (e) =>{
+      this.setState({
+        isUpdate:!e.target.checked
+      })
+  }
   // disabledHours = ()=>{
   //   const { form } = this.props;
   //   let dayType = form.getFieldValue('dayType');
@@ -224,7 +246,7 @@ class ReturnOfGoodsForm extends PureComponent {
       handleCancel
     } = this.props;
 
-    const {loading,capacitys,payment,dateOptions} = this.state;
+    const {loading,capacitys,payment,dateOptions,isUpdate,realDetail} = this.state;
 
     const formAllItemLayout = {
       labelCol: {
@@ -250,10 +272,7 @@ class ReturnOfGoodsForm extends PureComponent {
               取消
             </Button>,
             <Button type="primary" onClick={this.handleSubmit}>
-              保存
-            </Button>,
-            <Button type="primary" onClick={handleCancel}>
-              取消下单
+              立即下单
             </Button>
           ]}
         >
@@ -261,20 +280,26 @@ class ReturnOfGoodsForm extends PureComponent {
 
                   <FormItem {...formAllItemLayout} label="姓名">
                     {getFieldDecorator('recManName', {
-                    })(<Input placeholder="请输入姓名" />)}
+                      initialValue: realDetail.userName || '',
+                    })(<Input disabled={isUpdate} placeholder="请输入姓名" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="手机号">
                     {getFieldDecorator('recManMobile', {
+                      initialValue: realDetail.userPhone || '',
                       rules: [
                         { validator: this.validatePhone },
                       ],
-                    })(<Input placeholder="请输入手机号" />)}
+                    })(<Input disabled={isUpdate} placeholder="请输入手机号" />)}
                   </FormItem>
                   <FormItem {...formAllItemLayout} label="寄件地址">
                     {getFieldDecorator('sendManPrintAddr', {
-                    })(<Input placeholder="请输入寄件地址" onBlur={(e)=>this.getCapacityDataInfo(e.target.value)}/>)}
+                      initialValue: realDetail.userAddress || '',
+                    })(<Input disabled={isUpdate} placeholder="请输入寄件地址" onBlur={(e)=>this.getCapacityDataInfo(e.target.value)}/>)}
                   </FormItem>
-                  <div style={{color:'#ccc',padding:'0px 0px 10px 60px'}}>用户退货地址不是收货地址,以上可以更改</div>
+                  <FormItem {...formAllItemLayout} label="地址修改">
+                    <Checkbox onChange={this.changeIsUpdate}></Checkbox>
+                  </FormItem>
+                  {/*<div style={{color:'#ccc',padding:'0px 0px 10px 60px'}}>用户退货地址不是收货地址,以上可以更改</div>*/}
                   <FormItem {...formAllItemLayout} label="快递公司">
                     {getFieldDecorator('com', {
                       rules: [

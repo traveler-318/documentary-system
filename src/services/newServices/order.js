@@ -401,4 +401,20 @@ export async function addressParsing(params){
   });
 }
 
+//取消下单接口
+export async function cancelCourier(params){
+  return request('/api/logistics/placeorder/cancelCourier', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+//退货获取信息
+export async function realDetails(params){
+  return request('/api/logistics/placeorder/realDetails', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 
