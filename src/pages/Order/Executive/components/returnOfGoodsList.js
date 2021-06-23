@@ -2,14 +2,16 @@ import React, { PureComponent } from 'react';
 import {
   Modal,
   Form,
-  Upload, Table, Divider, Button,
+  Upload, Table, Divider, Button, message,
 } from 'antd';
 import { connect } from 'dva';
 import {
-  returnGoodsList
+  returnGoodsList,
+  cancelCourier
 } from '../../../../services/newServices/order';
 
 import ReturnOfGoodsForm from './returnOfGoodsForm';
+import { remove } from '@/services/region';
 
 @connect(({ globalParameters}) => ({
   globalParameters,
@@ -49,6 +51,26 @@ class ReturnOfGoodsList extends PureComponent {
     this.setState({fromVisible:false})
   }
 
+  handleCancelOrder = (row)=>{
+    Modal.confirm({
+      title: '取消下单确认',
+      content: '确定取消下单该条记录?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        cancelCourier({
+          id:row.id
+        }).then(res=>{
+          if(res.code==200) {
+            this.getDataInfo();
+          }
+        })
+      },
+      onCancel() {},
+    });
+
+  }
   render() {
     const {
       form: { getFieldDecorator },
@@ -104,13 +126,34 @@ class ReturnOfGoodsList extends PureComponent {
         dataIndex: 'weight',
         width:100
       },
+      {
+        title: '下单时间',
+        dataIndex: 'createTime',
+        width:100
+      },
+      {
+        title: '下单人',
+        dataIndex: 'createBy',
+        width:100
+      },
+      {
+        title: '操作',
+        key: 'operation',
+        fixed: 'right',
+        width: 100,
+        render: (text,row) => {
+          return(
+              <a onClick={()=>this.handleCancelOrder(row)}>取消下单</a>
+          )
+        },
+      },
     ];
 
     return (
       <>
         <Modal
           title="退货"
-          width={950}
+          width={1150}
           visible={visible}
           confirmLoading={confirmLoading}
           onCancel={handleCancel}
