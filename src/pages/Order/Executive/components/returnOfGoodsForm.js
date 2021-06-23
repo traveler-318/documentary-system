@@ -296,8 +296,8 @@ class ReturnOfGoodsForm extends PureComponent {
                       initialValue: realDetail.userAddress || '',
                     })(<Input disabled={isUpdate} placeholder="请输入寄件地址" onBlur={(e)=>this.getCapacityDataInfo(e.target.value)}/>)}
                   </FormItem>
-                  <FormItem {...formAllItemLayout} label="寄件地址">
-                    <Checkbox onChange={this.changeIsUpdate}>是否修改地址</Checkbox>
+                  <FormItem {...formAllItemLayout} label="地址修改">
+                    <Checkbox onChange={this.changeIsUpdate}></Checkbox>
                   </FormItem>
                   {/*<div style={{color:'#ccc',padding:'0px 0px 10px 60px'}}>用户退货地址不是收货地址,以上可以更改</div>*/}
                   <FormItem {...formAllItemLayout} label="快递公司">

@@ -138,8 +138,6 @@ class ReturnOfGoodsList extends PureComponent {
       },
       {
         title: '操作',
-        key: 'operation',
-        fixed: 'right',
         width: 100,
         render: (text,row) => {
           return(
