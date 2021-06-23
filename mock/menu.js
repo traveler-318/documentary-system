@@ -411,7 +411,7 @@ function getFakeButtons(req, res) {
             source: 'file-text',
             action: 2,
             alias: 'view',
-          },
+          }
         ],
       },
       {

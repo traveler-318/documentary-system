@@ -38,6 +38,7 @@ export default class GlobalHeaderRight extends PureComponent {
       console.log(resp,"resprespresp")
       if (resp.code === 200) {
         this.setState({ currentQuota: resp.data.currentQuota});
+        sessionStorage.setItem("tenantId", resp.data.tenantId)
       } else {
         message.error(resp.msg || '获取数据失败');
       }

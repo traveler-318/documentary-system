@@ -13,7 +13,6 @@ import {
 import { MENU_REFRESH_DATA } from '../../../actions/menu';
 import { tenantMode } from '../../../defaultSettings';
 import { grants } from '../../../services/role';
-
 const FormItem = Form.Item;
 const { TreeNode } = Tree;
 const { TabPane } = Tabs;
@@ -29,6 +28,7 @@ class Role extends PureComponent {
     visible1: false,
     confirmLoading: false,
     selectedRows: [],
+    id:sessionStorage.getItem("tenantId")
   };
 
   componentWillMount() {
@@ -212,16 +212,21 @@ class Role extends PureComponent {
     );
   };
 
-  renderLeftButton = () => (
-    <>
-      <Button icon="user-add" onClick={this.showModal}>
-        权限设置
-      </Button>
-      <Button icon="user-add" onClick={this.showModal1}>
-        批量设置
-      </Button>
-    </>
-  );
+  renderLeftButton = () => {
+    console.log(this.state.id)
+    return (
+      <>
+        <Button icon="user-add" onClick={this.showModal}>
+          权限设置
+        </Button>
+        {this.state.id === "000000" ? (
+          <Button icon="user-add" onClick={this.showModal1}>
+            批量设置
+          </Button>
+        ):""}
+      </>
+    )
+  };
 
   renderTreeNodes = data =>
     data.map(item => {
@@ -339,6 +344,7 @@ class Role extends PureComponent {
           visible={visible1}
           confirmLoading={confirmLoading}
           destroyOnClose
+          onCancel={this.handleCancel1}
           maskClosable={false}
           footer={[
             <Button key="back" onClick={this.handleCancel1}>
