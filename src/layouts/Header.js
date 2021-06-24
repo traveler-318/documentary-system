@@ -74,6 +74,7 @@ class HeaderView extends React.Component {
     }
     if (key === 'clearCache') {
       clearCache().then(() => {
+        window.location.reload(true);
         message.success('清除成功');
       });
       return;
