@@ -13,6 +13,7 @@ import {
 import { MENU_REFRESH_DATA } from '../../../actions/menu';
 import { tenantMode } from '../../../defaultSettings';
 import { grants } from '../../../services/role';
+import { getCookie } from '../../../utils/support';
 const FormItem = Form.Item;
 const { TreeNode } = Tree;
 const { TabPane } = Tabs;
@@ -28,7 +29,7 @@ class Role extends PureComponent {
     visible1: false,
     confirmLoading: false,
     selectedRows: [],
-    id:sessionStorage.getItem("tenantId")
+    id:getCookie("tenantId")
   };
 
   componentWillMount() {
