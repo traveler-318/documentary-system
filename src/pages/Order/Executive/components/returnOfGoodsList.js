@@ -11,6 +11,8 @@ import {
 } from '../../../../services/newServices/order';
 
 import ReturnOfGoodsForm from './returnOfGoodsForm';
+import ReturnOfGoodsDetail from './returnOfGoodsDetail'
+
 import { remove } from '@/services/region';
 
 @connect(({ globalParameters}) => ({
@@ -24,7 +26,9 @@ class ReturnOfGoodsList extends PureComponent {
     this.state = {
       loading: false,
       dataSource:[],
-      fromVisible:false
+      fromVisible:false,
+      detailVisible:false,
+      datailDataInfo:{}
     };
   }
 
@@ -71,6 +75,19 @@ class ReturnOfGoodsList extends PureComponent {
     });
 
   }
+  handleDetailOrder = (row) =>{
+
+    this.setState({
+      detailVisible:true,
+      datailDataInfo:JSON.parse(row.requstJson)
+    })
+  }
+
+  handleDetailCancel = ()=>{
+    this.setState({
+      detailVisible:false
+    })
+  }
   render() {
     const {
       form: { getFieldDecorator },
@@ -80,7 +97,7 @@ class ReturnOfGoodsList extends PureComponent {
       returnOfGoodsDataList
     } = this.props;
 
-    const {loading,dataSource,fromVisible} = this.state;
+    const {loading,dataSource,fromVisible,detailVisible,datailDataInfo} = this.state;
 
     const columns = [
       {
@@ -94,7 +111,7 @@ class ReturnOfGoodsList extends PureComponent {
       },
       {
         title: '下单状态',
-        dataIndex: 'status',
+        dataIndex: 'placeOrderStatus',
         width:100
         // render: (text,row) => {
         //   return(<>
@@ -108,12 +125,12 @@ class ReturnOfGoodsList extends PureComponent {
       },
       {
         title: '快递员名字',
-        dataIndex: 'courier_name',
+        dataIndex: 'courierName',
         width:130
       },
       {
         title: '快递员电话',
-        dataIndex: 'courier_mobile',
+        dataIndex: 'courierMobile',
         width:150
       },
       {
@@ -121,11 +138,11 @@ class ReturnOfGoodsList extends PureComponent {
         dataIndex: 'freight',
         width:100
       },
-      {
-        title: '订单重量',
-        dataIndex: 'weight',
-        width:100
-      },
+      // {
+      //   title: '订单重量',
+      //   dataIndex: 'weight',
+      //   width:100
+      // },
       {
         title: '下单时间',
         dataIndex: 'createTime',
@@ -138,10 +155,14 @@ class ReturnOfGoodsList extends PureComponent {
       },
       {
         title: '操作',
-        width: 100,
+        width: 140,
         render: (text,row) => {
           return(
+            <div>
               <a onClick={()=>this.handleCancelOrder(row)}>取消下单</a>
+              <Divider type="vertical" />
+              <a onClick={()=>this.handleDetailOrder(row)}>详情</a>
+            </div>
           )
         },
       },
@@ -182,6 +203,13 @@ class ReturnOfGoodsList extends PureComponent {
           ></ReturnOfGoodsForm>
         ):''}
 
+        {/*详情*/}
+        {detailVisible?(
+          <ReturnOfGoodsDetail
+            visible={detailVisible}
+            datailDataInfo={datailDataInfo}
+            handleCancel={this.handleDetailCancel}></ReturnOfGoodsDetail>
+        ):''}
       </>
     );
   }
