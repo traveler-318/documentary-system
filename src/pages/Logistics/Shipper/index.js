@@ -229,21 +229,6 @@ class SenderList extends PureComponent {
         ellipsis: true,
       },
       {
-        title: '下单时间',
-        dataIndex: 'createTime',
-        width: 150,
-        render:(res)=>{
-          return (
-            moment(res).format('YYYY-MM-DD HH:mm:ss')
-          )
-        }
-      },
-      {
-        title: '下单人',
-        dataIndex: 'createBy',
-        width: 100,
-      },
-      {
         title: '默认开关',
         dataIndex: 'status',
         width:100,
@@ -265,8 +250,8 @@ class SenderList extends PureComponent {
               <a onClick={()=>this.handleEdit(row)}>编辑</a>
               <Divider type="vertical" />
               <a onClick={() => this.handleClick(res)}>删除</a>
-              <Divider type="vertical" />
-              <a onClick={() => this.CancelOrder(row)}>取消下单</a>
+              {/*<Divider type="vertical" />*/}
+              {/*<a onClick={() => this.CancelOrder(row)}>取消下单</a>*/}
             </div>
           )
         },
