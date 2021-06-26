@@ -122,28 +122,6 @@ class SenderList extends PureComponent {
     }
   };
 
-  CancelOrder =(row)=>{
-    const params={
-      id:row.id
-    }
-    const refresh = this.getDataList;
-    Modal.confirm({
-      title: '取消下单',
-      content: '确定取消下单?',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      onOk() {
-        cancelCourier(params).then(resp => {
-          message.success(resp.msg);
-          refresh()
-        });
-      },
-      onCancel() {},
-    });
-
-  }
-
   // ============ 修改默认开关 =========
   onStatus = (value,key) => {
     const refresh = this.getDataList;
@@ -203,7 +181,7 @@ class SenderList extends PureComponent {
       {
         title: '退货人姓名',
         dataIndex: 'name',
-        width: 100,
+        width: 120,
       },
       {
         title: '退货人手机号',
@@ -213,7 +191,7 @@ class SenderList extends PureComponent {
       {
         title: '退货人地址',
         dataIndex: 'printAddr',
-        width: 350,
+        width: 380,
         render: (res,key) => {
           let Areas =res + key.printAddr;
           return(
@@ -225,7 +203,7 @@ class SenderList extends PureComponent {
       {
         title: '退货人公司名称',
         dataIndex: 'company',
-        width: 200,
+        width: 220,
         ellipsis: true,
       },
       {

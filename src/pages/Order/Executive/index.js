@@ -2224,7 +2224,7 @@ class AllOrdersList extends PureComponent {
               const options = this.state.logisticsCompanyList.map(i => <Option value={i.value}>{i.value}</Option>);
               return (
                 <div className={styles.logisticsCompany}>
-                  {row.logisticsStatus === "0" && (row.confirmTag === "2" || row.confirmTag === "3") ? (
+                  {row.logisticsPrintType === "0" ? (
                     <>
                       <span>{key}</span>
                       <Select
@@ -2255,7 +2255,7 @@ class AllOrdersList extends PureComponent {
               return (
                 <>
                   <div className={styles.logisticsNumber}>
-                    {row.logisticsStatus === "0" && (row.confirmTag === "2" || row.confirmTag === "3") ? (
+                    {row.logisticsPrintType === "0" ? (
                       <>
                         <span>{key}</span>
                         <Input style={{width:"91%"}} className={styles.input} defaultValue={key} onBlur={(e)=>this.Update1(e,row)}/>
