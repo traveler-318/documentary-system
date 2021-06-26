@@ -24,7 +24,9 @@ import {
   shipperList,
   shipperRemove,
   shipperUpdateDefaultStatus,
+  cancelCourier
 } from '../../../services/newServices/logistics';
+import moment from 'moment';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -48,7 +50,7 @@ class SenderList extends PureComponent {
   // ============ 初始化数据 ===============
 
   componentWillMount() {
-    this.getDataList();
+    // this.getDataList();
   }
 
   getDataList = () => {
@@ -118,8 +120,29 @@ class SenderList extends PureComponent {
         onCancel() {},
       });
     }
-
   };
+
+  CancelOrder =(row)=>{
+    const params={
+      id:row.id
+    }
+    const refresh = this.getDataList;
+    Modal.confirm({
+      title: '取消下单',
+      content: '确定取消下单?',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        cancelCourier(params).then(resp => {
+          message.success(resp.msg);
+          refresh()
+        });
+      },
+      onCancel() {},
+    });
+
+  }
 
   // ============ 修改默认开关 =========
   onStatus = (value,key) => {
@@ -180,7 +203,7 @@ class SenderList extends PureComponent {
       {
         title: '退货人姓名',
         dataIndex: 'name',
-        width: 150,
+        width: 100,
       },
       {
         title: '退货人手机号',
@@ -206,9 +229,24 @@ class SenderList extends PureComponent {
         ellipsis: true,
       },
       {
+        title: '下单时间',
+        dataIndex: 'createTime',
+        width: 150,
+        render:(res)=>{
+          return (
+            moment(res).format('YYYY-MM-DD HH:mm:ss')
+          )
+        }
+      },
+      {
+        title: '下单人',
+        dataIndex: 'createBy',
+        width: 100,
+      },
+      {
         title: '默认开关',
         dataIndex: 'status',
-        width:150,
+        width:100,
         render: (res,key) => {
           return(
             <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key)} />
@@ -227,6 +265,8 @@ class SenderList extends PureComponent {
               <a onClick={()=>this.handleEdit(row)}>编辑</a>
               <Divider type="vertical" />
               <a onClick={() => this.handleClick(res)}>删除</a>
+              <Divider type="vertical" />
+              <a onClick={() => this.CancelOrder(row)}>取消下单</a>
             </div>
           )
         },

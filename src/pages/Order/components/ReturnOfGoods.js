@@ -1,58 +1,47 @@
 import React, { PureComponent } from 'react';
-import {
-  Modal,
-  Form,
-  Upload, Table, Divider, Button, message,
-} from 'antd';
 import { connect } from 'dva';
-import {
-  returnGoodsList,
-  cancelCourier
-} from '../../../../services/newServices/order';
+import { Table, Form, Divider, Modal, message } from 'antd';
+import { formatMessage, FormattedMessage } from 'umi/locale';
+import router from 'umi/router';
 
-import ReturnOfGoodsForm from './returnOfGoodsForm';
-import ReturnOfGoodsDetail from './returnOfGoodsDetail'
+import { cancelCourier, orderDetail, returnGoodsList } from '../../../services/newServices/order';
+import ReturnOfGoodsDetail from '../Executive/components/returnOfGoodsDetail';
 
-import { remove } from '@/services/region';
+const FormItem = Form.Item;
 
-@connect(({ globalParameters}) => ({
+@connect(({ globalParameters }) => ({
   globalParameters,
 }))
 @Form.create()
-class ReturnOfGoodsList extends PureComponent {
+class ReturnOfGoods extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      dataSource:[],
-      fromVisible:false,
-      detailVisible:false,
+      data:{},
+      etailVisible:false,
       datailDataInfo:{}
     };
   }
 
+  // ============ 初始化数据 ===============
   componentWillMount() {
-    this.getDataInfo();
+    const { detail } = this.props;
+    this.getList(detail)
   }
 
-  getDataInfo =() =>{
-    let {returnOfGoodsDataList} = this.props;
+  getList = (detail) =>{
     returnGoodsList({
-      orderId:returnOfGoodsDataList[0].id
+      orderId:detail.id
     }).then(res=>{
-      if(res.code==200) {
-        this.setState({ dataSource: res.data.records })
+      if(res.code === 200) {
+        this.setState({
+          data:{
+            list:res.data.records
+          }
+        })
       }
     })
-  }
-
-  handleClick = ()=>{
-    this.setState({fromVisible:true})
-  }
-
-  handleFormCancel= ()=>{
-    this.setState({fromVisible:false})
   }
 
   handleCancelOrder = (row)=>{
@@ -92,16 +81,17 @@ class ReturnOfGoodsList extends PureComponent {
       detailVisible:false
     })
   }
+
   render() {
+
     const {
-      form: { getFieldDecorator },
-      visible,
-      confirmLoading,
-      handleCancel,
-      returnOfGoodsDataList
+      form,
     } = this.props;
 
-    const {loading,dataSource,fromVisible,detailVisible,datailDataInfo} = this.state;
+    const {
+      data,
+      detailVisible,datailDataInfo
+    } = this.state;
 
     const columns = [
       {
@@ -131,23 +121,18 @@ class ReturnOfGoodsList extends PureComponent {
       {
         title: '快递员名字',
         dataIndex: 'courierName',
-        width:110
+        width:100
       },
       {
         title: '快递员电话',
         dataIndex: 'courierMobile',
-        width:130
+        width:120
       },
       {
         title: '订单金额',
         dataIndex: 'freight',
-        width:100
+        width:90
       },
-      // {
-      //   title: '订单重量',
-      //   dataIndex: 'weight',
-      //   width:100
-      // },
       {
         title: '下单时间',
         dataIndex: 'createTime',
@@ -160,6 +145,7 @@ class ReturnOfGoodsList extends PureComponent {
       },
       {
         title: '操作',
+        fixed: 'right',
         width: 140,
         render: (text,row) => {
           return(
@@ -172,42 +158,11 @@ class ReturnOfGoodsList extends PureComponent {
         },
       },
     ];
-
     return (
       <>
-        <Modal
-          title="退货"
-          width={1250}
-          visible={visible}
-          confirmLoading={confirmLoading}
-          onCancel={handleCancel}
-          maskClosable={false}
-          loading={loading}
-          footer={null}
-        >
-          <Table
-            columns={columns}
-            dataSource={dataSource}
-            bordered
-            pagination={false}
-          />
-          <div style={{textAlign:'right',marginTop:'10px'}}>
-            <Button type='primary' onClick={()=>{
-              this.handleClick()
-            }}>退货</Button>
-          </div>
-
-        </Modal>
-
-        {/*退货*/}
-        {fromVisible?(
-          <ReturnOfGoodsForm
-            visible={fromVisible}
-            returnOfGoodsDataList={returnOfGoodsDataList}
-            handleCancel={this.handleFormCancel}
-          ></ReturnOfGoodsForm>
-        ):''}
-
+        <div style={{margin:"20px"}}>
+          <Table columns={columns} bordered={true} pagination={false} dataSource={data.list} scroll={{ x: 1080 }} />
+        </div>
         {/*详情*/}
         {detailVisible?(
           <ReturnOfGoodsDetail
@@ -216,8 +171,8 @@ class ReturnOfGoodsList extends PureComponent {
             handleCancel={this.handleDetailCancel}></ReturnOfGoodsDetail>
         ):''}
       </>
+
     );
   }
 }
-
-export default ReturnOfGoodsList;
+export default ReturnOfGoods;

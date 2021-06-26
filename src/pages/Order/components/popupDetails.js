@@ -27,6 +27,7 @@ import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import Survey from './Survey'
 import { setListData } from '../../../utils/publicMethod';
 import OrderListNew from './OrderListNew';
+import ReturnOfGoods from './ReturnOfGoods';
 import {
   LOGISTICSCOMPANY,
 } from './data.js';
@@ -231,6 +232,8 @@ class OrdersEdit extends PureComponent {
       }
       if (values.productCoding === ''){
         values.productCoding=null
+      }else {
+        values.productCoding =values.productCoding.trim().replace(/\s/g,"")
       }
 
       console.log(values)
@@ -723,6 +726,13 @@ class OrdersEdit extends PureComponent {
                     </TabPane>
                     <TabPane tab={`重复订单(${orderListLength})`} key="2">
                       <OrderListNew
+                        detail={detail}
+                        orderDetail={orderDetail}
+                        changeDetails={this.changeDetails}
+                      />
+                    </TabPane>
+                    <TabPane tab="退货记录" key="3">
+                      <ReturnOfGoods
                         detail={detail}
                         orderDetail={orderDetail}
                         changeDetails={this.changeDetails}

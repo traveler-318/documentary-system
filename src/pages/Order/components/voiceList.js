@@ -97,17 +97,17 @@ class Voice extends PureComponent {
       {
         title: '主叫号码',
         dataIndex: 'caller',
-        width: 200,
+        width: 150,
       },
       {
         title: '接听号码',
         dataIndex: 'callee',
-        width: 200,
+        width: 150,
       },
       {
         title: '语音呼叫结果',
         dataIndex: 'statusCode',
-        width: 200,
+        width: 100,
         render: (key)=>{
           return (
             <div>{this.getStatusCode(key)} </div>
@@ -117,22 +117,22 @@ class Voice extends PureComponent {
       {
         title: '语音类型',
         dataIndex: 'tollType',
-        width: 160,
+        width: 140,
       },
       {
         title: '语音时长',
         dataIndex: 'duration',
-        width: 150,
+        width: 100,
       },
       {
         title: '语音挂断方',
         dataIndex: 'hangupDirection',
-        width: 160,
+        width: 100,
       },
       {
         title: '开始时间',
         dataIndex: 'startTime',
-        width: 250,
+        width: 200,
         render: (res) => {
           return(
             moment(res).format('YYYY-MM-DD HH:mm:ss')
@@ -142,7 +142,7 @@ class Voice extends PureComponent {
       {
         title: '结束时间',
         dataIndex: 'endTime',
-        width: 250,
+        width: 200,
         render: (res) => {
           return(
             moment(res).format('YYYY-MM-DD HH:mm:ss')
@@ -157,7 +157,7 @@ class Voice extends PureComponent {
           title="语音"
           visible={VoiceVisible}
           maskClosable={false}
-          width={1100}
+          width={1200}
           onCancel={handleCancelVoice}
           footer={[
             <Button key="back" onClick={handleCancelVoice}>
