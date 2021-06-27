@@ -406,7 +406,7 @@ class ReturnOfGoodsForm extends PureComponent {
                         <Input disabled={isUpdate} placeholder="请输入寄件地址" onBlur={(e)=>this.getCapacityDataInfo(e.target.value)} />
                     )}
                   </FormItem>
-                  {!isUpdate ? (<p onClick={()=>this.addressParsing()} style={{textAlign: "right",width:'100%',cursor: "pointer"}}>地址优化</p>):(<p style={{marginBottom: "20px"}}></p>)}
+                  {!isUpdate ? (<p style={{textAlign: "right",width:'100%'}}><span onClick={()=>this.addressParsing()} style={{cursor: "pointer"}}>地址优化</span></p>):(<p style={{marginBottom: "20px"}}></p>)}
                   <FormItem {...formAllItemLayout} label="地址修改">
                     <Checkbox onChange={this.changeIsUpdate}></Checkbox>
                   </FormItem>
