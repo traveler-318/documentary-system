@@ -81,7 +81,8 @@ class ReturnOfGoodsForm extends PureComponent {
     }).then(res=>{
       if(res.code==200){
         this.setState({
-          realDetail:res.data
+          realDetail:res.data,
+          textAAreaValue:res.data.userAddress
         })
       }else{
         message.error(res.msg);
@@ -233,40 +234,32 @@ class ReturnOfGoodsForm extends PureComponent {
 
   addressParsing =()=>{
     const { form } = this.props;
-    const {textAAreaValue,value}=this.state;
-    console.log(textAAreaValue)
+    const {textAAreaValue}=this.state;
     const _this=this;
-    if(textAAreaValue !== value){
-      this.setState({
-        value:textAAreaValue
-      })
-      addressParsing({text:textAAreaValue}).then(res=>{
-        console.log(res.data)
-        if(res.code === 200){
-          if(res.data.province === null || res.data.province === undefined){
-            res.data.province=''
-          }
-          if(res.data.city === null || res.data.city === undefined){
-            res.data.city=''
-          }
-          if(res.data.county === null || res.data.county === undefined){
-            res.data.county=''
-          }
-          if(res.data.town === null || res.data.town === undefined){
-            res.data.town=''
-          }
-          if(res.data.detail === null || res.data.detail === undefined){
-            res.data.detail=''
-          }
-          _this.setState({
-            value:textAAreaValue,
-          })
-          form.setFieldsValue({
-            sendManPrintAddr:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
-          });
+    addressParsing({text:textAAreaValue}).then(res=>{
+      console.log(res.data)
+      if(res.code === 200){
+        if(res.data.province === null || res.data.province === undefined){
+          res.data.province=''
         }
-      })
-    }
+        if(res.data.city === null || res.data.city === undefined){
+          res.data.city=''
+        }
+        if(res.data.county === null || res.data.county === undefined){
+          res.data.county=''
+        }
+        if(res.data.town === null || res.data.town === undefined){
+          res.data.town=''
+        }
+        if(res.data.detail === null || res.data.detail === undefined){
+          res.data.detail=''
+        }
+        form.setFieldsValue({
+          sendManPrintAddr:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
+        });
+      }
+    })
+
   }
 
 
