@@ -883,6 +883,9 @@ class AllOrdersList extends PureComponent {
         message.success(res.msg);
         this.getDataList();
         modal.destroy();
+        this.setState({
+          selectedRows:[]
+        })
       }else {
         message.error(res.msg);
       }
@@ -2029,9 +2032,8 @@ class AllOrdersList extends PureComponent {
     if(e.target.value && e.target.value !== row.productCoding){
       const params={
         id:row.id,
-        productCoding : e.target.value !=="" ? e.target.value : null,
+        productCoding : e.target.value.trim().replace(/\s/g,"") !=="" ? e.target.value.trim().replace(/\s/g,"") : null,
       }
-      console.log(params)
       const _this=this;
       updateData(params).then(res=>{
         if(res.code === 200){
@@ -2162,7 +2164,7 @@ class AllOrdersList extends PureComponent {
           }
           // 物流状态
           if(item.dataIndex === "logisticsStatus"){
-            item.render=(key)=>{
+            item.render=(key,row)=>{
               return (
                 <div>{this.getLogisticsStatusValue(key)} </div>
               )
@@ -2222,7 +2224,7 @@ class AllOrdersList extends PureComponent {
               const options = this.state.logisticsCompanyList.map(i => <Option value={i.value}>{i.value}</Option>);
               return (
                 <div className={styles.logisticsCompany}>
-                  {row.logisticsStatus === "" && row.confirmTag === "2" || row.confirmTag === "3" ? (
+                  {row.logisticsPrintType === "0" ? (
                     <>
                       <span>{key}</span>
                       <Select
@@ -2253,7 +2255,7 @@ class AllOrdersList extends PureComponent {
               return (
                 <>
                   <div className={styles.logisticsNumber}>
-                    {row.logisticsStatus === "" && row.confirmTag === "2" || row.confirmTag === "3" ? (
+                    {row.logisticsPrintType === "0" ? (
                       <>
                         <span>{key}</span>
                         <Input style={{width:"91%"}} className={styles.input} defaultValue={key} onBlur={(e)=>this.Update1(e,row)}/>

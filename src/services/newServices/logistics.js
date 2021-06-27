@@ -228,3 +228,10 @@ export async function shipperRemove(params) {
     body: func.toFormData(params),
   });
 }
+
+export async function cancelCourier(params) {
+  return request('/api/logistics/placeorder/cancelCourier', {
+    method: 'POST',
+    body: params,
+  });
+}

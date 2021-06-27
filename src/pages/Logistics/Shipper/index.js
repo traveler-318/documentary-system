@@ -24,7 +24,9 @@ import {
   shipperList,
   shipperRemove,
   shipperUpdateDefaultStatus,
+  cancelCourier
 } from '../../../services/newServices/logistics';
+import moment from 'moment';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -48,7 +50,7 @@ class SenderList extends PureComponent {
   // ============ 初始化数据 ===============
 
   componentWillMount() {
-    this.getDataList();
+    // this.getDataList();
   }
 
   getDataList = () => {
@@ -118,7 +120,6 @@ class SenderList extends PureComponent {
         onCancel() {},
       });
     }
-
   };
 
   // ============ 修改默认开关 =========
@@ -180,7 +181,7 @@ class SenderList extends PureComponent {
       {
         title: '退货人姓名',
         dataIndex: 'name',
-        width: 150,
+        width: 120,
       },
       {
         title: '退货人手机号',
@@ -190,7 +191,7 @@ class SenderList extends PureComponent {
       {
         title: '退货人地址',
         dataIndex: 'printAddr',
-        width: 350,
+        width: 380,
         render: (res,key) => {
           let Areas =res + key.printAddr;
           return(
@@ -202,13 +203,13 @@ class SenderList extends PureComponent {
       {
         title: '退货人公司名称',
         dataIndex: 'company',
-        width: 200,
+        width: 220,
         ellipsis: true,
       },
       {
         title: '默认开关',
         dataIndex: 'status',
-        width:150,
+        width:100,
         render: (res,key) => {
           return(
             <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key)} />
@@ -227,6 +228,8 @@ class SenderList extends PureComponent {
               <a onClick={()=>this.handleEdit(row)}>编辑</a>
               <Divider type="vertical" />
               <a onClick={() => this.handleClick(res)}>删除</a>
+              {/*<Divider type="vertical" />*/}
+              {/*<a onClick={() => this.CancelOrder(row)}>取消下单</a>*/}
             </div>
           )
         },

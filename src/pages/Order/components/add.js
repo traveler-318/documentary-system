@@ -159,6 +159,10 @@ class OrdersAdd extends PureComponent {
           values.productId = productId;
         }
         values.userAddress = `${selectedOptions}${values.userAddress}`;
+        if(values.productCoding){
+          values.productCoding =values.productCoding.trim().replace(/\s/g,"")
+        }
+
         createData(values).then(res=>{
           this.setState({
             loading:false
