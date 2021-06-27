@@ -160,9 +160,9 @@ class ReturnOfGoodsForm extends PureComponent {
 
   onChange = e => {
     const { form } = this.props;
-
     this.setState({
-      capacityType:e.target.value
+      capacityType:e.target.value,
+      capacitys:[]
     })
     let {returnOfGoodsDataList} = this.props;
     if(e.target.value === '1'){
@@ -257,6 +257,8 @@ class ReturnOfGoodsForm extends PureComponent {
         form.setFieldsValue({
           sendManPrintAddr:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
         });
+        const userAddress=res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail
+        _this.getCapacityDataInfo(userAddress)
       }
     })
 
