@@ -151,7 +151,7 @@ class ReturnOfGoodsList extends PureComponent {
       {
         title: '下单时间',
         dataIndex: 'createTime',
-        width:160
+        width:150
       },
       {
         title: '下单人',
@@ -160,13 +160,15 @@ class ReturnOfGoodsList extends PureComponent {
       },
       {
         title: '操作',
-        width: 140,
+        width: 200,
         render: (text,row) => {
           return(
             <div>
-              <a onClick={()=>this.handleCancelOrder(row)}>取消下单</a>
-              <Divider type="vertical" />
               <a onClick={()=>this.handleDetailOrder(row)}>详情</a>
+              {/*<Divider type="vertical" />*/}
+              {/*<a onClick={()=>this.handleDetailOrder(row)}>查询物流</a>*/}
+              <Divider type="vertical" />
+              <a onClick={()=>this.handleCancelOrder(row)}>取消下单</a>
             </div>
           )
         },

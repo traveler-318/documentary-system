@@ -150,9 +150,9 @@ class ReturnOfGoods extends PureComponent {
         render: (text,row) => {
           return(
             <div>
-              <a onClick={()=>this.handleCancelOrder(row)}>取消下单</a>
-              <Divider type="vertical" />
               <a onClick={()=>this.handleDetailOrder(row)}>详情</a>
+              <Divider type="vertical" />
+              <a onClick={()=>this.handleCancelOrder(row)}>取消下单</a>
             </div>
           )
         },

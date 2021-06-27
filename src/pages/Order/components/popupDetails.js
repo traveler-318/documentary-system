@@ -20,7 +20,7 @@ import {
   subscription,
   deleteLogisticsSuber,
   localPrinting,
-  logisticsRepeatPrint,
+  logisticsRepeatPrint, returnGoodsList,
 } from '../../../services/newServices/order';
 import {ORDERSTATUS,ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
@@ -148,7 +148,6 @@ class OrdersEdit extends PureComponent {
   }
 
   getList = (detail) =>{
-    console.log(detail)
     const params={
       userAddress:detail.userAddress,
       userPhone:detail.userPhone,
@@ -169,6 +168,13 @@ class OrdersEdit extends PureComponent {
       this.setState({
         orderDetail:list,
         orderListLength:list.length
+      })
+    })
+    returnGoodsList({
+      orderId:detail.id
+    }).then(res=>{
+      this.setState({
+        ReturnOfGoodsLength:res.data.records.length,
       })
     })
   }
@@ -491,6 +497,7 @@ class OrdersEdit extends PureComponent {
       detail,
       edit,
       orderListLength,
+      ReturnOfGoodsLength,
       primary,
       primary1,
       productList
@@ -509,7 +516,7 @@ class OrdersEdit extends PureComponent {
         <Modal
         title="详情"
           visible={this.props.detailsVisible}
-          width={1290}
+          width={1350}
           onCancel={this.props.handleCancelDetails}
           footer={null}
           bodyStyle={{paddingTop:0}}
@@ -731,7 +738,7 @@ class OrdersEdit extends PureComponent {
                         changeDetails={this.changeDetails}
                       />
                     </TabPane>
-                    <TabPane tab="退货记录" key="3">
+                    <TabPane tab={`退货记录(${ReturnOfGoodsLength})`} key="3">
                       <ReturnOfGoods
                         detail={detail}
                         orderDetail={orderDetail}

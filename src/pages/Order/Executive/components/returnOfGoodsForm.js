@@ -11,7 +11,7 @@ import moment from 'moment';
 import {
   returnOfGoodsCapacity,
   returnOfGoodsSave,
-  realDetails
+  realDetails, addressParsing,
 } from '../../../../services/newServices/order';
 
 const FormItem = Form.Item;
@@ -44,6 +44,7 @@ class ReturnOfGoodsForm extends PureComponent {
       dateOptions:[],
       realDetail:{},//获取默认姓名、手机等
       isUpdate:true,
+      textAAreaValue:'',
       // dayTime:new Date(+new Date() +8*3600*1000).toISOString().split("T")[1].split(".")[0],//获取当前时间
       // startTime:null,
     };
@@ -78,7 +79,9 @@ class ReturnOfGoodsForm extends PureComponent {
       id:returnOfGoodsDataList[0].id
     }).then(res=>{
       if(res.code==200){
-        this.setState({realDetail:res.data})
+        this.setState({
+          realDetail:res.data
+        })
       }else{
         message.error(res.msg);
       }
@@ -89,11 +92,13 @@ class ReturnOfGoodsForm extends PureComponent {
     let {returnOfGoodsDataList} = this.props;
     let json = {
       orderId:returnOfGoodsDataList[0].id,
-      productId:returnOfGoodsDataList[0].productId
+      productId:returnOfGoodsDataList[0].productId,
+      capacityType:0
     };
     if(v){
       json.sendManPrintAddr = v;
     }
+    this.setState({textAAreaValue:v})
     returnOfGoodsCapacity(json).then(res=>{
       if(res.code==200){
         const { form } = this.props;
@@ -128,6 +133,8 @@ class ReturnOfGoodsForm extends PureComponent {
       params.pickupStartTime = ds[0];
       params.pickupEndTime = ds[1];
       delete params.date;
+
+      console.log(params)
       returnOfGoodsSave(params).then(resp => {
         if (resp.success) {
           message.success(resp.msg);
@@ -150,6 +157,61 @@ class ReturnOfGoodsForm extends PureComponent {
 
   onChange = e => {
     const { form } = this.props;
+
+    let {returnOfGoodsDataList} = this.props;
+    if(e.target.value === '1'){
+      let json = {
+        orderId:returnOfGoodsDataList[0].id,
+        productId:returnOfGoodsDataList[0].productId,
+        capacityType:1
+      };
+      returnOfGoodsCapacity(json).then(res=>{
+        if(res.code ===200){
+          const { form } = this.props;
+          form.setFieldsValue({
+            com: ''
+          });
+          this.setState({capacitys:res.data})
+        }else{
+          message.error(res.msg);
+        }
+      })
+    }if(e.target.value === '2'){
+      let json = {
+        orderId:returnOfGoodsDataList[0].id,
+        productId:returnOfGoodsDataList[0].productId,
+        capacityType:2
+      };
+      returnOfGoodsCapacity(json).then(res=>{
+        if(res.code ===200){
+          const { form } = this.props;
+          form.setFieldsValue({
+            com: ''
+          });
+          this.setState({capacitys:res.data})
+        }else{
+          message.error(res.msg);
+        }
+      })
+    }else if(e.target.value === '3'){
+      let json = {
+        orderId:returnOfGoodsDataList[0].id,
+        productId:returnOfGoodsDataList[0].productId,
+        capacityType:3
+      };
+      returnOfGoodsCapacity(json).then(res=>{
+        if(res.code ===200){
+          const { form } = this.props;
+          form.setFieldsValue({
+            com: ''
+          });
+          this.setState({capacitys:res.data})
+        }else{
+          message.error(res.msg);
+        }
+      })
+    }
+
     form.setFieldsValue({
       com: ''
     });
@@ -163,6 +225,46 @@ class ReturnOfGoodsForm extends PureComponent {
         isUpdate:!e.target.checked
       })
   }
+
+  addressParsing =()=>{
+    const { form } = this.props;
+    const {textAAreaValue,value}=this.state;
+    console.log(textAAreaValue)
+    const _this=this;
+    if(textAAreaValue !== value){
+      this.setState({
+        value:textAAreaValue
+      })
+      addressParsing({text:textAAreaValue}).then(res=>{
+        console.log(res.data)
+        if(res.code === 200){
+          if(res.data.province === null || res.data.province === undefined){
+            res.data.province=''
+          }
+          if(res.data.city === null || res.data.city === undefined){
+            res.data.city=''
+          }
+          if(res.data.county === null || res.data.county === undefined){
+            res.data.county=''
+          }
+          if(res.data.town === null || res.data.town === undefined){
+            res.data.town=''
+          }
+          if(res.data.detail === null || res.data.detail === undefined){
+            res.data.detail=''
+          }
+          _this.setState({
+            value:textAAreaValue,
+          })
+          form.setFieldsValue({
+            sendManPrintAddr:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
+          });
+        }
+      })
+    }
+  }
+
+
   // disabledHours = ()=>{
   //   const { form } = this.props;
   //   let dayType = form.getFieldValue('dayType');
@@ -248,6 +350,7 @@ class ReturnOfGoodsForm extends PureComponent {
 
     const {loading,capacitys,payment,dateOptions,isUpdate,realDetail} = this.state;
 
+
     const formAllItemLayout = {
       labelCol: {
         span: 6,
@@ -291,11 +394,14 @@ class ReturnOfGoodsForm extends PureComponent {
                       ],
                     })(<Input disabled={isUpdate} placeholder="请输入手机号" />)}
                   </FormItem>
-                  <FormItem {...formAllItemLayout} label="寄件地址">
+                  <FormItem {...formAllItemLayout} style={{marginBottom: "0"}} label="寄件地址">
                     {getFieldDecorator('sendManPrintAddr', {
                       initialValue: realDetail.userAddress || '',
-                    })(<Input disabled={isUpdate} placeholder="请输入寄件地址" onBlur={(e)=>this.getCapacityDataInfo(e.target.value)}/>)}
+                    })(
+                        <Input disabled={isUpdate} placeholder="请输入寄件地址" onBlur={(e)=>this.getCapacityDataInfo(e.target.value)} />
+                    )}
                   </FormItem>
+                  {!isUpdate ? (<p onClick={()=>this.addressParsing()} style={{textAlign: "right",width:'100%',cursor: "pointer"}}>地址优化</p>):(<p style={{marginBottom: "20px"}}></p>)}
                   <FormItem {...formAllItemLayout} label="地址修改">
                     <Checkbox onChange={this.changeIsUpdate}></Checkbox>
                   </FormItem>
@@ -312,10 +418,11 @@ class ReturnOfGoodsForm extends PureComponent {
                       <Select placeholder={"请选择快递公司"}>
                         <Select.Option value=''>请选择</Select.Option>
                         {capacitys.map(item=>{
-                          if(payment == '2' && item.type == 2){
-                          }else{
-                            return (<Select.Option value={item.com}>{item.value}</Select.Option>)
-                          }
+                          return (<Select.Option value={item.com}>{item.value}</Select.Option>)
+                          // if(payment === '2' && item.type === "2"){
+                          // }else{
+                          //   return (<Select.Option value={item.com+item.type}>{item.value}</Select.Option>)
+                          // }
                         })}
                       </Select>
                     )}
@@ -391,6 +498,7 @@ class ReturnOfGoodsForm extends PureComponent {
                       <Radio.Group onChange={this.onChange}>
                         <Radio value='1'>寄付</Radio>
                         <Radio value='2'>到付</Radio>
+                        <Radio value='3'>平台结算</Radio>
                       </Radio.Group>
                     )}
                   </FormItem>
