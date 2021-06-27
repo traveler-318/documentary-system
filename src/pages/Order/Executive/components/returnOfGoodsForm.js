@@ -93,7 +93,7 @@ class ReturnOfGoodsForm extends PureComponent {
     let json = {
       orderId:returnOfGoodsDataList[0].id,
       productId:returnOfGoodsDataList[0].productId,
-      capacityType:0
+      capacityType:1
     };
     if(v){
       json.sendManPrintAddr = v;
