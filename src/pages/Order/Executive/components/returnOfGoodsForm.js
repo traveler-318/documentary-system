@@ -45,6 +45,7 @@ class ReturnOfGoodsForm extends PureComponent {
       realDetail:{},//获取默认姓名、手机等
       isUpdate:true,
       textAAreaValue:'',
+      capacityType:'1',
       // dayTime:new Date(+new Date() +8*3600*1000).toISOString().split("T")[1].split(".")[0],//获取当前时间
       // startTime:null,
     };
@@ -90,10 +91,11 @@ class ReturnOfGoodsForm extends PureComponent {
 
   getCapacityDataInfo =(v) =>{
     let {returnOfGoodsDataList} = this.props;
+    const {capacityType}=this.state
     let json = {
       orderId:returnOfGoodsDataList[0].id,
       productId:returnOfGoodsDataList[0].productId,
-      capacityType:1
+      capacityType:capacityType
     };
     if(v){
       json.sendManPrintAddr = v;
@@ -158,6 +160,9 @@ class ReturnOfGoodsForm extends PureComponent {
   onChange = e => {
     const { form } = this.props;
 
+    this.setState({
+      capacityType:e.target.value
+    })
     let {returnOfGoodsDataList} = this.props;
     if(e.target.value === '1'){
       let json = {
