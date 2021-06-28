@@ -372,7 +372,7 @@ export async function importOrder(params) {
 
 //退货列表
 export async function returnGoodsList(params){
-  return request('/api/logistics/placeorder/list?orderId='+params.orderId, {
+  return request('/api/logistics/placeorder/list?orderId='+params.orderId+'&current='+params.current+'&size='+params.size, {
     method: 'get'
   });
 }
@@ -412,6 +412,14 @@ export async function cancelCourier(params){
 //退货获取信息
 export async function realDetails(params){
   return request('/api/logistics/placeorder/realDetails', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+//退货物流信息
+export async function returnLogisticsQuery(params){
+  return request('/api/logistics/placeorder/returnLogisticsQuery', {
     method: 'POST',
     body: params,
   });

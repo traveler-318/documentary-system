@@ -192,12 +192,6 @@ class SenderList extends PureComponent {
         title: '退货人地址',
         dataIndex: 'printAddr',
         width: 380,
-        render: (res,key) => {
-          let Areas =res + key.printAddr;
-          return(
-            Areas
-          )
-        },
         ellipsis: true,
       },
       {
