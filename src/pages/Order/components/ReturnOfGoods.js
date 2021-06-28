@@ -98,7 +98,18 @@ class ReturnOfGoods extends PureComponent {
     })
   }
 
-
+  handleTableChange = (pagination) => {
+    let {detail} = this.props;
+    const pager = { ...this.state.pagination };
+    pager.current = pagination.current;
+    this.setState({
+      pagination: pager,
+    });
+    const {params}=this.state;
+    params.current=pagination.current;
+    params.orderId=detail[0].id
+    this.getList(params)
+  };
 
   handleDetailOrder = (row) =>{
     this.setState({
