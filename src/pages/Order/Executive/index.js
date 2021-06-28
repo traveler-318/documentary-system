@@ -234,7 +234,8 @@ class AllOrdersList extends PureComponent {
       organizationTree:[],
       beginTime:'',
       display:false,
-      logisticsCompanyList:[]
+      logisticsCompanyList:[],
+      orderSourceList:[],
     };
   }
 
@@ -252,8 +253,12 @@ class AllOrdersList extends PureComponent {
         value: LOGISTICSCOMPANY[key],
       });
     }
+
+    let orderSourceList = [...ORDERSOURCE,{name:"移动端",key:9}]
+
     this.setState({
-      logisticsCompanyList:logisticsCompanyList
+      logisticsCompanyList:logisticsCompanyList,
+      orderSourceList
     })
     this.forceUpdate();//页面重新渲染数据
   }
@@ -402,7 +407,7 @@ class AllOrdersList extends PureComponent {
     } = this.props;
     const { getFieldDecorator } = form;
 
-    const { salesmanList, salesmangroup, params, productList,organizationTree } = this.state;
+    const { salesmanList, salesmangroup, params, productList,organizationTree, orderSourceList } = this.state;
 
     return (
       <div className={"default_search_form"}>
@@ -471,7 +476,7 @@ class AllOrdersList extends PureComponent {
           {getFieldDecorator('orderSource', {
           })(
             <Select placeholder={"请选择订单来源"} style={{ width: 120 }}>
-              {ORDERSOURCE.map(item=>{
+              {orderSourceList.map(item=>{
                 return (<Option value={item.key}>{item.name}</Option>)
               })}
             </Select>
