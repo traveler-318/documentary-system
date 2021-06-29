@@ -242,8 +242,12 @@ class ReturnOfGoodsList extends PureComponent {
           return(
             <div>
               <a onClick={()=>this.handleDetailOrder(row)}>详情</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleDetails(row)}>查询物流</a>
+              {row.kuaidinum !=="" ? (
+                <>
+                  <Divider type="vertical" />
+                  <a onClick={()=>this.handleDetails(row)}>查询物流</a>
+                </>
+              ):""}
               <Divider type="vertical" />
               <a onClick={()=>this.handleCancelOrder(row)}>取消下单</a>
             </div>

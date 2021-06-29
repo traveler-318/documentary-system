@@ -191,7 +191,7 @@ class ReturnOfGoods extends PureComponent {
       {
         title: '快递员名字',
         dataIndex: 'courierName',
-        width:100
+        width:110
       },
       {
         title: '快递员电话',
@@ -221,8 +221,12 @@ class ReturnOfGoods extends PureComponent {
           return(
             <div>
               <a onClick={()=>this.handleDetailOrder(row)}>详情</a>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleDetails(row)}>查询物流</a>
+              {row.kuaidinum !=="" ? (
+                <>
+                  <Divider type="vertical" />
+                  <a onClick={()=>this.handleDetails(row)}>查询物流</a>
+                </>
+              ):""}
               <Divider type="vertical" />
               <a onClick={()=>this.handleCancelOrder(row)}>取消下单</a>
             </div>
