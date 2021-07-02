@@ -171,7 +171,9 @@ class OrdersEdit extends PureComponent {
       })
     })
     returnGoodsList({
-      orderId:detail.id
+      orderId:detail.id,
+      size:10,
+      current:1
     }).then(res=>{
       this.setState({
         ReturnOfGoodsLength:res.data.records.length,
