@@ -423,6 +423,23 @@ class ReturnOfGoodsForm extends PureComponent {
                     <Checkbox onChange={this.changeIsUpdate}></Checkbox>
                   </FormItem>
                   {/*<div style={{color:'#ccc',padding:'0px 0px 10px 60px'}}>用户退货地址不是收货地址,以上可以更改</div>*/}
+                  <FormItem {...formAllItemLayout} label="付款方式">
+                    {getFieldDecorator('paymentMode', {
+                      initialValue: '1',
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择付款方式',
+                        },
+                      ],
+                    })(
+                      <Radio.Group onChange={this.onChange}>
+                        <Radio value='1'>寄付</Radio>
+                        <Radio value='2'>到付</Radio>
+                        <Radio value='3'>平台结算</Radio>
+                      </Radio.Group>
+                    )}
+                  </FormItem>
                   <FormItem {...formAllItemLayout} label="快递公司">
                     {getFieldDecorator('com', {
                       rules: [
@@ -502,23 +519,7 @@ class ReturnOfGoodsForm extends PureComponent {
                   {/*    />*/}
                   {/*  )}*/}
                   {/*</FormItem>*/}
-                  <FormItem {...formAllItemLayout} label="付款方式">
-                    {getFieldDecorator('paymentMode', {
-                      initialValue: '1',
-                      rules: [
-                        {
-                          required: true,
-                          message: '请选择付款方式',
-                        },
-                      ],
-                    })(
-                      <Radio.Group onChange={this.onChange}>
-                        <Radio value='1'>寄付</Radio>
-                        <Radio value='2'>到付</Radio>
-                        <Radio value='3'>平台结算</Radio>
-                      </Radio.Group>
-                    )}
-                  </FormItem>
+
 
                   {/*<FormItem {...formAllItemLayout} label="退货原因">*/}
                   {/*  {getFieldDecorator('productType', {*/}
