@@ -22,12 +22,18 @@ class QueryParamPage extends PureComponent {
       productList:[],
       salesmanList:[],
       buttons:[],
+      orderSourceList:[]
     };
   }
 
   componentWillMount() {
     this.getTreeList();
     this.getBranchTree();
+    let orderSourceList = [...ORDERSOURCE,{name:"移动端",key:9}]
+
+    this.setState({
+      orderSourceList
+    })
   }
 
 
@@ -77,7 +83,7 @@ class QueryParamPage extends PureComponent {
   }
 
   render() {
-    const { branchDatas,productList,salesmanList } = this.state;
+    const { branchDatas,productList,salesmanList,orderSourceList } = this.state;
     const { getFieldDecorator,params,onReset } = this.props;
     return (
       <div className={"default_search_form"}>
@@ -128,7 +134,7 @@ class QueryParamPage extends PureComponent {
           {getFieldDecorator('orderSource', {
           })(
             <Select placeholder={"请选择订单来源"} style={{ width: 120 }}>
-              {ORDERSOURCE.map(item=>{
+              {orderSourceList.map(item=>{
                 return (<Select.Option value={item.key}>{item.name}</Select.Option>)
               })}
             </Select>

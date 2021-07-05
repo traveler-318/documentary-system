@@ -1,64 +1,55 @@
 import React, { PureComponent } from 'react';
-import {
-  Modal,
-  Form,
-  Upload, Table, Divider, Button, message, Empty, Timeline, Input,
-} from 'antd';
 import { connect } from 'dva';
-import {
-  returnGoodsList,
-  cancelCourier,
-  returnLogisticsQuery
-} from '../../../../services/newServices/order';
+import { Table, Form, Divider, Modal, Timeline, Empty, Button, Input, message } from 'antd';
+import { formatMessage, FormattedMessage } from 'umi/locale';
+import router from 'umi/router';
 
-import ReturnOfGoodsForm from './returnOfGoodsForm';
-import ReturnOfGoodsDetail from './returnOfGoodsDetail'
+import { cancelCourier, orderDetail, returnGoodsList, returnLogisticsQuery } from '../../../services/newServices/order';
+import ReturnOfGoodsDetail from '../Executive/components/returnOfGoodsDetail';
+import styles from './edit.less';
 
-import { remove } from '@/services/region';
-import styles from '../../components/edit.less';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
-@connect(({ globalParameters}) => ({
+@connect(({ globalParameters }) => ({
   globalParameters,
 }))
 @Form.create()
-class ReturnOfGoodsList extends PureComponent {
+class ReturnOfGoods extends PureComponent {
 
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      dataSource:[],
+      data:{},
+      pagination:{},
       params:{
         size:10,
         current:1
       },
-      fromVisible:false,
-      detailVisible:false,
+      etailVisible:false,
+      datailDataInfo:{},
+      list:{},
+      LogisticsList:[],
       logisticsDetailsVisible:false,
       ReturnReasonVisible:false,
-      datailDataInfo:{},
-      pagination:{},
-      LogisticsList:[],
-      list:{},
-      cancelMessage:''
     };
   }
 
+  // ============ 初始化数据 ===============
   componentWillMount() {
-    let {returnOfGoodsDataList} = this.props;
+    const { detail } = this.props;
     const {params}=this.state;
-    params.orderId=returnOfGoodsDataList[0].id;
-    console.log(params)
-    this.getDataInfo(params);
+    params.orderId=detail.id
+    this.getList(params)
   }
 
-  getDataInfo =(params) =>{
+  getList = (params) =>{
     returnGoodsList(params).then(res=>{
       if(res.code ===200) {
         this.setState({
-          dataSource: res.data.records,
+          data:{
+            list:res.data.records
+          },
           pagination:{
             current: res.data.current,
             pageSize: res.data.size,
@@ -69,26 +60,6 @@ class ReturnOfGoodsList extends PureComponent {
     })
   }
 
-  handleTableChange = (pagination) => {
-    let {returnOfGoodsDataList} = this.props;
-    const pager = { ...this.state.pagination };
-    pager.current = pagination.current;
-    this.setState({
-      pagination: pager,
-    });
-    const {params}=this.state;
-    params.current=pagination.current;
-    params.orderId=returnOfGoodsDataList[0].id
-    this.getDataInfo(params)
-  };
-
-  handleClick = ()=>{
-    this.setState({fromVisible:true})
-  }
-
-  handleFormCancel= ()=>{
-    this.setState({fromVisible:false})
-  }
 
   handleCancelOrder = (row)=>{
     this.setState({
@@ -127,11 +98,29 @@ class ReturnOfGoodsList extends PureComponent {
     })
   }
 
+  handleTableChange = (pagination) => {
+    let {detail} = this.props;
+    const pager = { ...this.state.pagination };
+    pager.current = pagination.current;
+    this.setState({
+      pagination: pager,
+    });
+    const {params}=this.state;
+    params.current=pagination.current;
+    params.orderId=detail[0].id
+    this.getList(params)
+  };
 
   handleDetailOrder = (row) =>{
     this.setState({
       detailVisible:true,
       datailDataInfo:JSON.parse(row.requstJson)
+    })
+  }
+
+  handleDetailCancel = ()=>{
+    this.setState({
+      detailVisible:false
     })
   }
 
@@ -154,19 +143,16 @@ class ReturnOfGoodsList extends PureComponent {
     })
   };
 
-  handleDetailCancel = ()=>{
-    this.setState({
-      detailVisible:false
-    })
-  }
   render() {
+
     const {
-      form: { getFieldDecorator },
-      visible,
-      confirmLoading,
-      handleCancel,
-      returnOfGoodsDataList
+      form:{getFieldDecorator },
     } = this.props;
+
+    const {
+      data,
+      detailVisible,datailDataInfo,pagination,logisticsDetailsVisible,LogisticsList,ReturnReasonVisible
+    } = this.state;
 
     const formAllItemLayout = {
       labelCol: {
@@ -176,9 +162,6 @@ class ReturnOfGoodsList extends PureComponent {
         span: 20,
       },
     };
-
-    const {loading,dataSource,fromVisible,detailVisible,datailDataInfo,
-      pagination,logisticsDetailsVisible,LogisticsList,ReturnReasonVisible} = this.state;
 
     const columns = [
       {
@@ -213,22 +196,17 @@ class ReturnOfGoodsList extends PureComponent {
       {
         title: '快递员电话',
         dataIndex: 'courierMobile',
-        width:130
+        width:120
       },
       {
         title: '订单金额',
         dataIndex: 'freight',
-        width:100
+        width:90
       },
-      // {
-      //   title: '订单重量',
-      //   dataIndex: 'weight',
-      //   width:100
-      // },
       {
         title: '下单时间',
         dataIndex: 'createTime',
-        width:150
+        width:160
       },
       {
         title: '下单人',
@@ -237,7 +215,8 @@ class ReturnOfGoodsList extends PureComponent {
       },
       {
         title: '操作',
-        width: 200,
+        fixed: 'right',
+        width: 210,
         render: (text,row) => {
           return(
             <div>
@@ -255,33 +234,18 @@ class ReturnOfGoodsList extends PureComponent {
         },
       },
     ];
-
     return (
       <>
-        <Modal
-          title="退货"
-          width={1250}
-          visible={visible}
-          confirmLoading={confirmLoading}
-          onCancel={handleCancel}
-          maskClosable={false}
-          loading={loading}
-          footer={null}
-        >
-          <Table
-            columns={columns}
-            dataSource={dataSource}
-            bordered
-            pagination={pagination}
-            onChange={this.handleTableChange}
-          />
-          <div style={{textAlign:'right',marginTop:'10px'}}>
-            <Button type='primary' onClick={()=>{
-              this.handleClick()
-            }}>退货</Button>
-          </div>
-
-        </Modal>
+        <div style={{margin:"20px"}}>
+          <Table columns={columns} bordered={true} pagination={pagination} onChange={this.handleTableChange} dataSource={data.list} scroll={{ x: 1080 }} />
+        </div>
+        {/*详情*/}
+        {detailVisible?(
+          <ReturnOfGoodsDetail
+            visible={detailVisible}
+            datailDataInfo={datailDataInfo}
+            handleCancel={this.handleDetailCancel}></ReturnOfGoodsDetail>
+        ):''}
 
         <Modal
           title="物流详情"
@@ -342,25 +306,11 @@ class ReturnOfGoodsList extends PureComponent {
           </Form>
         </Modal>
 
-        {/*退货*/}
-        {fromVisible?(
-          <ReturnOfGoodsForm
-            visible={fromVisible}
-            returnOfGoodsDataList={returnOfGoodsDataList}
-            handleCancel={this.handleFormCancel}
-          ></ReturnOfGoodsForm>
-        ):''}
 
-        {/*详情*/}
-        {detailVisible?(
-          <ReturnOfGoodsDetail
-            visible={detailVisible}
-            datailDataInfo={datailDataInfo}
-            handleCancel={this.handleDetailCancel}></ReturnOfGoodsDetail>
-        ):''}
+
       </>
+
     );
   }
 }
-
-export default ReturnOfGoodsList;
+export default ReturnOfGoods;

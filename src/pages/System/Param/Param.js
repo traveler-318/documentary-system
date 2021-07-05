@@ -68,14 +68,17 @@ class Param extends PureComponent {
       {
         title: '参数名称',
         dataIndex: 'paramName',
+        width: 200,
       },
       {
         title: '参数键名',
         dataIndex: 'paramKey',
+        width: 300,
       },
       {
         title: '参数键值',
         dataIndex: 'paramValue',
+        width: 550,
       },
     ];
 

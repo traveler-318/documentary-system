@@ -20,13 +20,14 @@ import {
   subscription,
   deleteLogisticsSuber,
   localPrinting,
-  logisticsRepeatPrint,
+  logisticsRepeatPrint, returnGoodsList,
 } from '../../../services/newServices/order';
 import {ORDERSTATUS,ORDERSOURCE} from './data.js';
 import FormDetailsTitle from '../../../components/FormDetailsTitle';
 import Survey from './Survey'
 import { setListData } from '../../../utils/publicMethod';
 import OrderListNew from './OrderListNew';
+import ReturnOfGoods from './ReturnOfGoods';
 import {
   LOGISTICSCOMPANY,
 } from './data.js';
@@ -147,7 +148,6 @@ class OrdersEdit extends PureComponent {
   }
 
   getList = (detail) =>{
-    console.log(detail)
     const params={
       userAddress:detail.userAddress,
       userPhone:detail.userPhone,
@@ -168,6 +168,15 @@ class OrdersEdit extends PureComponent {
       this.setState({
         orderDetail:list,
         orderListLength:list.length
+      })
+    })
+    returnGoodsList({
+      orderId:detail.id,
+      size:10,
+      current:1
+    }).then(res=>{
+      this.setState({
+        ReturnOfGoodsLength:res.data.records.length,
       })
     })
   }
@@ -231,6 +240,8 @@ class OrdersEdit extends PureComponent {
       }
       if (values.productCoding === ''){
         values.productCoding=null
+      }else {
+        values.productCoding =values.productCoding.trim().replace(/\s/g,"")
       }
 
       console.log(values)
@@ -488,6 +499,7 @@ class OrdersEdit extends PureComponent {
       detail,
       edit,
       orderListLength,
+      ReturnOfGoodsLength,
       primary,
       primary1,
       productList
@@ -506,7 +518,7 @@ class OrdersEdit extends PureComponent {
         <Modal
         title="详情"
           visible={this.props.detailsVisible}
-          width={1290}
+          width={1350}
           onCancel={this.props.handleCancelDetails}
           footer={null}
           bodyStyle={{paddingTop:0}}
@@ -723,6 +735,13 @@ class OrdersEdit extends PureComponent {
                     </TabPane>
                     <TabPane tab={`重复订单(${orderListLength})`} key="2">
                       <OrderListNew
+                        detail={detail}
+                        orderDetail={orderDetail}
+                        changeDetails={this.changeDetails}
+                      />
+                    </TabPane>
+                    <TabPane tab={`退货记录(${ReturnOfGoodsLength})`} key="3">
+                      <ReturnOfGoods
                         detail={detail}
                         orderDetail={orderDetail}
                         changeDetails={this.changeDetails}
