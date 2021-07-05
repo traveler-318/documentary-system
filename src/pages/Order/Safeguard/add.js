@@ -303,7 +303,7 @@ class OrdersAdd extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '请选择订单来源',
+                        message: '请选择任务类型',
                       },
                     ],
                   })(
