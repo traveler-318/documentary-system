@@ -1541,7 +1541,8 @@ class AllOrdersList extends PureComponent {
     if(key === 5 || key === '5'){ text = "电销" }
     if(key === 6 || key === '6'){ text = "网销" }
     if(key === 7 || key === '7'){ text = "地推" }
-    if(key === 7 || key === '8'){ text = "免押宝" }
+    if(key === 8 || key === '8'){ text = "免押宝" }
+    if(key === 9 || key === '9'){ text = "移动端" }
     return text;
   }
 

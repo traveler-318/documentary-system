@@ -8,24 +8,14 @@ import {
   Row,
   Select,
   DatePicker,
-  Divider,
-  Dropdown,
-  Menu,
-  Icon,
-  Radio,
-  Switch,
-  Modal,
-  message,
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import {
-  getDeliveryList,
-  getDeliveryRemove,
-  getDeliveryStatus,
-} from '../../../services/newServices/logistics';
+  snmanagerList,
+} from '../../../services/newServices/inventory';
 import { ORDERSTATUS, TYPESTATUS } from '../../WorkOrder/WorkOrderList/data';
 
 const FormItem = Form.Item;
@@ -47,11 +37,14 @@ class SnManagementList extends PureComponent {
       },
       warehouseStatus:[
         {
+          id:0,
+          name:'在库'
+        },{
           id:1,
-          name:'在线'
+          name:'占用'
         },{
           id:2,
-          name:'不在线'
+          name:'出库'
         }
       ],
     };
@@ -59,7 +52,7 @@ class SnManagementList extends PureComponent {
   // ============ 初始化数据 ===============
 
   componentWillMount() {
-    this.getDataList();
+
   }
 
   getDataList = () => {
@@ -67,12 +60,11 @@ class SnManagementList extends PureComponent {
     this.setState({
       loading:true
     })
-    getDeliveryList(params).then(res=>{
+    snmanagerList(params).then(res=>{
       this.setState({
         loading:false
       })
       const data = res.data.records;
-      // JSON.parse(row.addr_coding)
       this.setState({
         data:{
           list:data,
@@ -191,17 +183,17 @@ class SnManagementList extends PureComponent {
     const columns = [
       {
         title: 'SN',
-        dataIndex: 'name',
+        dataIndex: 'sn',
         width: 150,
       },
       {
         title: '批次单据号',
-        dataIndex: 'mobile',
+        dataIndex: 'batchOrderNo',
         width: 200,
       },
       {
         title: '所属仓库',
-        dataIndex: 'mobile',
+        dataIndex: 'warehouseId',
         width: 100,
       },
       {
@@ -211,71 +203,104 @@ class SnManagementList extends PureComponent {
       },
       {
         title: '库存年龄',
-        dataIndex: 'mobile',
+        dataIndex: 'stockAge',
         width: 100,
       },
       {
         title: 'SN状态',
-        dataIndex: 'mobile',
+        dataIndex: 'snStauts',
         width: 100,
+        render: (res) => {
+          let status=''
+          if(res === 0){
+            status="在库"
+          }
+          if(res === 1){
+            status="占用"
+          }
+          if(res === 2){
+            status="出库"
+          }
+          return(
+            status
+          )
+        },
       },
       {
         title: '是否代理',
-        dataIndex: 'mobile',
+        dataIndex: 'isAgent',
         width: 100,
+        render: (res) => {
+          let status=''
+          if(res === 0){
+            status="否"
+          }
+          if(res === 1){
+            status="是"
+          }
+          return(
+            status
+          )
+        },
       },
       {
         title: '数据来源',
-        dataIndex: 'administrativeAreas',
+        dataIndex: 'dataSource',
         width: 150,
-        render: (res,key) => {
-          let Areas =res + key.printAddr;
-          return(
-            Areas
-          )
-        },
         ellipsis: true,
       },
       {
         title: '冻结状态',
-        dataIndex: 'company',
-        width: 200,
+        dataIndex: 'frozenStatus',
+        width: 100,
         ellipsis: true,
+        render: (res) => {
+          let status=''
+          if(res === 0){
+            status="否"
+          }
+          if(res === 1){
+            status="是"
+          }
+          return(
+            status
+          )
+        },
       },
       {
         title: '制单人',
-        dataIndex: 'company',
+        dataIndex: 'updateBy',
         width: 200,
         ellipsis: true,
       },
       {
         title: '创建时间 ',
-        dataIndex: 'company',
+        dataIndex: 'createTime',
         width: 200,
         ellipsis: true,
       },
       {
         title: '更新时间 ',
-        dataIndex: 'company',
+        dataIndex: 'updateTime',
         width: 200,
         ellipsis: true,
       },
-      {
-        title: '操作',
-        key: 'operation',
-        fixed: 'right',
-        width: 200,
-        render: (res,row) => {
-          return(
-            <div>
-              <Divider type="vertical" />
-              <a>日志</a>
-              <Divider type="vertical" />
-              <a>详情</a>
-            </div>
-          )
-        },
-      },
+      // {
+      //   title: '操作',
+      //   key: 'operation',
+      //   fixed: 'right',
+      //   width: 200,
+      //   render: (res,row) => {
+      //     return(
+      //       <div>
+      //         <Divider type="vertical" />
+      //         <a>日志</a>
+      //         <Divider type="vertical" />
+      //         <a>详情</a>
+      //       </div>
+      //     )
+      //   },
+      // },
     ];
     return (
       <Panel>
