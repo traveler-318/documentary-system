@@ -58,14 +58,15 @@ class ReturnOfGoodsForm extends PureComponent {
     //计算时间范围
     let {dateVals,dataTimeVals} = this.state;
     let s = dateVals.map(item=>{
-      if(item.value =='今天'){
-        let d = new Date();
-        let h = moment(d).format('HH');
-        let ds =dataTimeVals.filter(v => v.name>h)
-        item.children = ds;
-      }else{
-        item.children = dataTimeVals;
-      }
+      // if(item.value =='今天'){
+      //   let d = new Date();
+      //   let h = moment(d).format('HH');
+      //   let ds =dataTimeVals.filter(v => v.name>h)
+      //   item.children = ds;
+      // }else{
+      //   item.children = dataTimeVals;
+      // }
+      item.children = dataTimeVals;
       return item;
     });
 
