@@ -155,7 +155,6 @@ class ReturnOfGoodsForm extends PureComponent {
       delete params.date;
 
       console.log(params)
-      return false;
       returnOfGoodsSave(params).then(resp => {
         if (resp.success) {
           message.success(resp.msg);
