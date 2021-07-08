@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Icon, Tooltip, Row, Col, Button, message} from 'antd';
+import { Modal, Icon, Tooltip, Row, Col, Button, message, Tag } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import router from 'umi/router';
@@ -80,14 +80,14 @@ class Assessment extends PureComponent {
                     </Col>
                     <Col span={6}>收获地址:</Col><Col span={18}>{AssessmentDetails.userAddress}</Col>
                     <Col span={6}>风险评估:</Col><Col span={18}>
-                    {details.riskControlDescribe || '无'}
-                    {/* {
-                        details.riskControlDescribe == '0' ?(<span style={{color:'green'}}>通过</span>):
-                        details.riskControlDescribe == '1' ?(<span style={{color:'gold'}}>人工</span>):
-                        details.riskControlDescribe == '2' ?(<span style={{color:'red'}}>风险</span>):
-                        details.riskControlDescribe == '3' ?(<span>老黑</span>):
-                        details.riskControlDescribe == '4' ?(<span>网黑</span>): '无'
-                     } */}
+                    {/* {details.riskControlDescribe || '无'} */}
+                    {
+                        details.riskControlLevel == 0 ?(<Tag color="green">通过</Tag>):
+                        details.riskControlLevel == 1 ?(<Tag color="gold">人工</Tag>):
+                        details.riskControlLevel == 2 ?(<Tag color="red">风险</Tag>):
+                        details.riskControlLevel == 3 ?(<Tag>老黑</Tag>):
+                        details.riskControlLevel == 4 ?(<Tag>网黑</Tag>): '无'
+                     }
                         <Tooltip placement="right" title={this.getRiskControlResults}>
                             <Icon style={{marginLeft:10}} type='question-circle-o' />
                         </Tooltip>
