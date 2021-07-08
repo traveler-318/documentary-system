@@ -84,12 +84,15 @@ class Assessment extends PureComponent {
                 <Row gutter={24}>
                     <Col span={6}>IP地址:</Col><Col span={18}>{details.afterIp || '暂无'}</Col>
                     <Col span={6}>IP归属:</Col><Col span={18}>
-                    {details.provinceName}{details.cityName}
                     {
-                        (!details.provinceName && !details.cityName) ? '暂无' : ''
+                        (!details.provinceName && !details.cityName) ? '暂无' : `${details.provinceName}${details.cityName}`
                     }
                     </Col>
-                    <Col span={6}>收货地址:</Col><Col span={18}>{AssessmentDetails.userAddress}</Col>
+                    <Col span={6}>收货地址:</Col><Col span={18}>
+                    {
+                        (!AssessmentDetails.province && !AssessmentDetails.city) ? '暂无' : `${AssessmentDetails.province}${AssessmentDetails.city}`
+                    }
+                    </Col>
                     <Col span={6}>风险评估:</Col><Col span={18}>
                     {/* {details.riskControlDescribe || '无'} */}
                     {
