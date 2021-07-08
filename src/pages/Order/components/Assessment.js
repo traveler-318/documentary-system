@@ -38,9 +38,20 @@ class Assessment extends PureComponent {
   }
 
   getRiskControlResults = () => {
-    return(
-        <div>{this.state.details.riskControlResults}</div>
-    )
+      if(this.state.details.riskControlResults){
+        console.log(this.state.details.riskControlResults)
+        let riskControlResults = this.state.details.riskControlResults.split('\n');
+        console.log(riskControlResults)
+        return(
+            <div>
+                {riskControlResults.map(item=>{
+                    return <span>{item}</span>
+                })}
+            </div>
+        )
+      }else{
+          return ''
+      }
   }
 
   render() {
