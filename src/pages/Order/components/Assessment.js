@@ -108,8 +108,11 @@ class Assessment extends PureComponent {
             <div className={styles.rowList}>
               <Row gutter={24}>
                 <Col span={6}>终端类型:</Col><Col span={18}>
-                    {details.accessDeviceType || '暂无'}
-
+                    {
+                        details.accessDeviceType==='COMPUTER'?'电脑':
+                        details.accessDeviceType==='MOBILE'?'手机':
+                        details.accessDeviceType==='TABLET'?'平板':'暂无'
+                    }
                     {
                         details.accessDeviceType==='COMPUTER'?(
                             <Icon style={{marginLeft:10}} type="desktop" />
