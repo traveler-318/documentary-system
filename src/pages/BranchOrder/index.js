@@ -67,7 +67,7 @@ import Export from './components/export'
 // import LogisticsConfig from './components/LogisticsConfig'
 import PopupDetails from './components/popupDetails'
 import ReturnGoods from './components/returnGoods'
-import Assessment from './order/components/Assessment';
+import Assessment from '../Order/components/Assessment';
 //
 // import ImportData from '../components/ImportData';
 // import Excel from '../components/excel';
