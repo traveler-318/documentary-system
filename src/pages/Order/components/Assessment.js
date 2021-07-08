@@ -74,15 +74,15 @@ class Assessment extends PureComponent {
                     </Col>
                     <Col span={6}>收获地址:</Col><Col span={18}>{AssessmentDetails.userAddress}</Col>
                     <Col span={6}>风险评估:</Col><Col span={18}>
-                    {details.riskControlResults || '无'}
+                    {details.riskControlDescribe || '无'}
                     {/* {
-                        details.riskControlResults == '0' ?(<span style={{color:'green'}}>通过</span>):
-                        details.riskControlResults == '1' ?(<span style={{color:'gold'}}>人工</span>):
-                        details.riskControlResults == '2' ?(<span style={{color:'red'}}>风险</span>):
-                        details.riskControlResults == '3' ?(<span>老黑</span>):
-                        details.riskControlResults == '4' ?(<span>网黑</span>): '无'
+                        details.riskControlDescribe == '0' ?(<span style={{color:'green'}}>通过</span>):
+                        details.riskControlDescribe == '1' ?(<span style={{color:'gold'}}>人工</span>):
+                        details.riskControlDescribe == '2' ?(<span style={{color:'red'}}>风险</span>):
+                        details.riskControlDescribe == '3' ?(<span>老黑</span>):
+                        details.riskControlDescribe == '4' ?(<span>网黑</span>): '无'
                      } */}
-                        <Tooltip placement="right" title={details.riskControlDescribe}>
+                        <Tooltip placement="right" title={details.riskControlResults}>
                             <Icon style={{marginLeft:10}} type='question-circle-o' />
                         </Tooltip>
                     </Col>
