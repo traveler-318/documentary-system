@@ -424,5 +424,10 @@ export async function returnLogisticsQuery(params){
     body: params,
   });
 }
-
+// 风险评估
+export async function getMobileDetail(params){
+  return request(`/api/terminal/mobile/detail?orderId=${params.orderId}`, {
+    method: 'get',
+  });
+}
 
