@@ -107,12 +107,26 @@ class Assessment extends PureComponent {
             </div>
             <div className={styles.rowList}>
               <Row gutter={24}>
-                <Col span={6}>终端类型:</Col><Col span={18}>{details.accessDeviceType || '暂无'}</Col>
+                <Col span={6}>终端类型:</Col><Col span={18}>
+                    {details.accessDeviceType || '暂无'}
+
+                    {
+                        details.accessDeviceType==='COMPUTER'?(
+                            <Icon style={{marginLeft:10}} type="desktop" />
+                        ):
+                        details.accessDeviceType==='MOBILE'?(
+                            <Icon style={{marginLeft:10}} type="mobile" />
+                        ):
+                        details.accessDeviceType==='TABLET'?(
+                            <Icon style={{marginLeft:10}} type="tablet" />
+                        ):''
+                    }
+                </Col>
                 <Col span={6}>终端型号:</Col>
                 <Col span={18}>
                     {details.mobileName ? (
                         <>
-                            <a target="view_window" href={`https://www.baidu.com/s?ie=UTF-8&wd=${details.mobileName}`}>{details.mobileName}</a>
+                            <a target="view_window" href={`https://www.baidu.com/s?ie=UTF-8&wd=${details.mobileName.toUpperCase()}`}>{details.mobileName.toUpperCase()}</a>
                             <Tooltip placement="right" title='点击型号搜索终端价格'>
                                 <Icon style={{marginLeft:10}} type='question-circle-o' />
                             </Tooltip>
