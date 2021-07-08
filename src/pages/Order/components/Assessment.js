@@ -37,6 +37,12 @@ class Assessment extends PureComponent {
     })
   }
 
+  getRiskControlResults = () => {
+    return(
+        <div>{this.state.details.riskControlResults}</div>
+    )
+  }
+
   render() {
     const {
       AssessmentVisible,
@@ -82,7 +88,7 @@ class Assessment extends PureComponent {
                         details.riskControlDescribe == '3' ?(<span>老黑</span>):
                         details.riskControlDescribe == '4' ?(<span>网黑</span>): '无'
                      } */}
-                        <Tooltip placement="right" title={details.riskControlResults}>
+                        <Tooltip placement="right" title={this.getRiskControlResults}>
                             <Icon style={{marginLeft:10}} type='question-circle-o' />
                         </Tooltip>
                     </Col>
