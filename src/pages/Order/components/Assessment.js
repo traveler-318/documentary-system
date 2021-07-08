@@ -147,7 +147,7 @@ class Assessment extends PureComponent {
                 </Col>
                 <Col span={6}>浏览器:</Col><Col span={18}>{details.browserInternetType || '暂无'}</Col>
                 <Col span={6}>版本号:</Col><Col span={18}>
-                    {(details.browserVersion === "null" || !details.browserVersion) ? '暂无' : details.browserVersion}
+                    {(details.browserVersion === "null" || !details.browserVersion) ? '暂无' : details.browserVersion.replace(/"/g, "")}
                 </Col>
                 <Col span={6}>操作系统:</Col><Col span={18}>{details.operatingSystemName || '暂无'}</Col>
               </Row>
