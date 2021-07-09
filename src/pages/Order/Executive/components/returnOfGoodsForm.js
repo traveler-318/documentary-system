@@ -23,6 +23,7 @@ const { TextArea } = Input;
 class ReturnOfGoodsForm extends PureComponent {
 
   constructor(props) {
+
     super(props);
     this.state = {
       loading: false,
