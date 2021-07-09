@@ -35,12 +35,28 @@ class ReturnOfGoodsForm extends PureComponent {
         { value: '后天', label: '后天' }
       ],
       dataTimeVals:[
-        { name:10,value: '08:00-10:00', label: '08:00 - 10:00' },
-        { name:12,value: '10:00-12:00', label: '10:00 - 12:00' },
-        { name:14,value: '12:00-14:00', label: '12:00 - 14:00' },
-        { name:16,value: '14:00-16:00', label: '14:00 - 16:00' },
-        { name:18,value: '16:00-18:00', label: '16:00 - 18:00' },
-        { name:19,value: '18:00-19:00', label: '18:00 - 19:00' },
+        { name:1,value: '08:00-08:30', label: '08:00 - 08:30' },
+        { name:2,value: '08:30-09:00', label: '08:30 - 09:00' },
+        { name:3,value: '09:00-09:30', label: '09:00 - 09:30' },
+        { name:4,value: '09:30-10:00', label: '09:30 - 10:00' },
+        { name:5,value: '10:00-10:30', label: '10:00 - 10:30' },
+        { name:6,value: '10:30-11:00', label: '10:30 - 11:00' },
+        { name:6,value: '11:00-11:30', label: '11:00 - 11:30' },
+        { name:7,value: '11:30-12:00', label: '11:30 - 12:00' },
+        { name:8,value: '12:00-12:30', label: '12:00 - 12:30' },
+        { name:9,value: '12:30-13:00', label: '12:30 - 13:00' },
+        { name:10,value: '13:00-13:30', label: '13:00 - 13:30' },
+        { name:11,value: '13:30-14:00', label: '13:30 - 14:00' },
+        { name:12,value: '14:00-14:30', label: '14:00 - 14:30' },
+        { name:13,value: '14:30-15:00', label: '14:30 - 15:00' },
+        { name:14,value: '15:00-15:30', label: '15:00 - 15:30' },
+        { name:15,value: '15:30-16:00', label: '15:30 - 16:00' },
+        { name:16,value: '16:00-16:30', label: '16:00 - 16:30' },
+        { name:17,value: '16:30-17:00', label: '16:30 - 17:00' },
+        { name:18,value: '17:00-17:30', label: '17:00 - 17:30' },
+        { name:19,value: '17:30-18:00', label: '17:30 - 18:00' },
+        { name:20,value: '18:00-18:30', label: '18:00 - 18:30' },
+        { name:21,value: '18:30-19:00', label: '18:30 - 19:00' },
       ],
       dateOptions:[],
       realDetail:{},//获取默认姓名、手机等
@@ -408,6 +424,23 @@ class ReturnOfGoodsForm extends PureComponent {
                     <Checkbox onChange={this.changeIsUpdate}></Checkbox>
                   </FormItem>
                   {/*<div style={{color:'#ccc',padding:'0px 0px 10px 60px'}}>用户退货地址不是收货地址,以上可以更改</div>*/}
+                  <FormItem {...formAllItemLayout} label="付款方式">
+                    {getFieldDecorator('paymentMode', {
+                      initialValue: '1',
+                      rules: [
+                        {
+                          required: true,
+                          message: '请选择付款方式',
+                        },
+                      ],
+                    })(
+                      <Radio.Group onChange={this.onChange}>
+                        <Radio value='1'>寄付</Radio>
+                        <Radio value='2'>到付</Radio>
+                        <Radio value='3'>平台结算</Radio>
+                      </Radio.Group>
+                    )}
+                  </FormItem>
                   <FormItem {...formAllItemLayout} label="快递公司">
                     {getFieldDecorator('com', {
                       rules: [
@@ -487,23 +520,7 @@ class ReturnOfGoodsForm extends PureComponent {
                   {/*    />*/}
                   {/*  )}*/}
                   {/*</FormItem>*/}
-                  <FormItem {...formAllItemLayout} label="付款方式">
-                    {getFieldDecorator('paymentMode', {
-                      initialValue: '1',
-                      rules: [
-                        {
-                          required: true,
-                          message: '请选择付款方式',
-                        },
-                      ],
-                    })(
-                      <Radio.Group onChange={this.onChange}>
-                        <Radio value='1'>寄付</Radio>
-                        <Radio value='2'>到付</Radio>
-                        <Radio value='3'>平台结算</Radio>
-                      </Radio.Group>
-                    )}
-                  </FormItem>
+
 
                   {/*<FormItem {...formAllItemLayout} label="退货原因">*/}
                   {/*  {getFieldDecorator('productType', {*/}

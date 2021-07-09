@@ -5,15 +5,11 @@ import {
   Col,
   Form,
   Input,
-  Row,
   Select,
   DatePicker,
   Divider,
-  Dropdown,
-  Menu,
   Icon,
   Radio,
-  Switch,
   Modal,
   message,
 } from 'antd';
@@ -22,14 +18,13 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import {
-  getDeliveryList,
-  getDeliveryRemove,
-  getDeliveryStatus,
-} from '../../../services/newServices/logistics';
-import { ORDERSTATUS, TYPESTATUS } from '../../WorkOrder/WorkOrderList/data';
+  warehouseList,
+  warehouseSave
+} from '../../../services/newServices/inventory';
+import { getCookie } from '../../../utils/support';
+import Add from './add';
 
 const FormItem = Form.Item;
-const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 @connect(({ globalParameters }) => ({
   globalParameters,
@@ -47,11 +42,11 @@ class WarehouseList extends PureComponent {
       },
       warehouseStatus:[
         {
-          id:1,
-          name:'在线'
+          id:0,
+          name:'禁用'
         },{
-          id:2,
-          name:'不在线'
+          id:1,
+          name:'启用'
         }
       ],
       warehouseVisible:false
@@ -60,7 +55,7 @@ class WarehouseList extends PureComponent {
   // ============ 初始化数据 ===============
 
   componentWillMount() {
-    this.getDataList();
+
   }
 
   getDataList = () => {
@@ -68,12 +63,11 @@ class WarehouseList extends PureComponent {
     this.setState({
       loading:true
     })
-    getDeliveryList(params).then(res=>{
+    warehouseList(params).then(res=>{
       this.setState({
         loading:false
       })
       const data = res.data.records;
-      // JSON.parse(row.addr_coding)
       this.setState({
         data:{
           list:data,
@@ -87,6 +81,8 @@ class WarehouseList extends PureComponent {
     })
   }
 
+
+
   // ============ 查询 ===============
   handleSearch = params => {
     this.setState({
@@ -94,6 +90,24 @@ class WarehouseList extends PureComponent {
     },()=>{
       this.getDataList();
     })
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const {  form } = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      values.deptId = getCookie("dept_id");
+      if (!err) {
+        const params = {
+          ...values
+        };
+        warehouseSave(params).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+          }
+        })
+      }
+    });
   };
 
   // ============ 查询表单 ===============
@@ -151,34 +165,6 @@ class WarehouseList extends PureComponent {
   };
 
 
-  // ============ 修改默认开关 =========
-  onStatus = (value,key) => {
-    const refresh = this.getDataList;
-    const data= value === 0 ? 1 : 0;
-    const params = {
-      id:key.id,
-      status:data
-    };
-    Modal.confirm({
-      title: '修改确认',
-      content: '是否要修改该状态??',
-      okText: '确定',
-      okType: 'danger',
-      cancelText: '取消',
-      async onOk() {
-        getDeliveryStatus(params).then(resp=>{
-          if (resp.success) {
-            message.success(resp.msg);
-            refresh()
-          } else {
-            message.error(resp.msg || '修改失败');
-          }
-        })
-      },
-      onCancel() {},
-    });
-  };
-
   // 修改数据
   handleEdit = (row) => {
 
@@ -215,31 +201,37 @@ class WarehouseList extends PureComponent {
     const columns = [
       {
         title: '仓库名称',
-        dataIndex: 'name',
+        dataIndex: 'warehouseName',
         width: 250,
       },
       {
         title: '仓库位置',
-        dataIndex: 'mobile',
+        dataIndex: 'warehousePosition',
         width: 200,
       },
       {
         title: '创建人',
-        dataIndex: 'administrativeAreas',
+        dataIndex: 'createBy',
         width: 150,
-        render: (res,key) => {
-          let Areas =res + key.printAddr;
-          return(
-            Areas
-          )
-        },
         ellipsis: true,
       },
       {
         title: '状态',
-        dataIndex: 'company',
+        dataIndex: 'warehouseStauts',
         width: 200,
         ellipsis: true,
+        render: (res) => {
+          let status=''
+          if(res === 0){
+            status="禁用"
+          }
+          if(res === 1){
+            status="启用"
+          }
+          return(
+            status
+          )
+        },
       },
       {
         title: '操作',
@@ -274,66 +266,13 @@ class WarehouseList extends PureComponent {
           renderRightButton={this.renderRightButton}
         />
 
-        <Modal
-          title="新建仓库"
-          visible={warehouseVisible}
-          maskClosable={false}
-          destroyOnClose
-          width={600}
-          onCancel={this.handleCancelWarehouse}
-          footer={[
-            <Button key="back" onClick={this.handleCancelWarehouse}>
-              取消
-            </Button>,
-            <Button key="submit" type="primary" onClick={()=>this.addDeliveryTime()}>
-              确定
-            </Button>,
-          ]}
-        >
-          <Form>
-            <FormItem {...formAllItemLayout} label="仓库名称">
-              {getFieldDecorator('deliveryTime', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入仓库名称',
-                  },
-                ],
-              })(
-                <Input placeholder="请输入仓库名称" />
-              )}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="仓库位置">
-              {getFieldDecorator('deliveryTime', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入仓库位置',
-                  },
-                ],
-              })(
-                <Input placeholder="请输入仓库位置" />
-              )}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="状态">
-              {getFieldDecorator('deliveryTime')(
-                <Radio.Group onChange={this.onChangeRadio}>
-                  <Radio value={1}>启用</Radio>
-                  <Radio value={2}> 禁用</Radio>
-                </Radio.Group>
-              )}
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="备注">
-              {getFieldDecorator('deliveryTime')(
-                <TextArea
-                  rows={3}
-                  onChange={this.TextAreaChange}
-                  placeholder='请输入描述信息'
-                />
-              )}
-            </FormItem>
-          </Form>
-        </Modal>
+        {/* 新增 */}
+        {warehouseVisible?(
+          <Add
+            warehouseVisible={warehouseVisible}
+            handleCancelWarehouse={this.handleCancelWarehouse}
+          />
+        ):""}
       </Panel>
     );
   }

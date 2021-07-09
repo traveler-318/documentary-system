@@ -67,6 +67,7 @@ import Export from './components/export'
 // import LogisticsConfig from './components/LogisticsConfig'
 import PopupDetails from './components/popupDetails'
 import ReturnGoods from './components/returnGoods'
+import Assessment from '../Order/components/Assessment';
 //
 // import ImportData from '../components/ImportData';
 // import Excel from '../components/excel';
@@ -129,6 +130,9 @@ class BranchOffice extends PureComponent {
       OrderImportVisible:false,
       // 首次打印提示弹框
       LogisticsAlertVisible:false,
+      // 风险评估弹窗
+      AssessmentVisible: false,
+      AssessmentDetails:{},
       tips:[],
       salesmangroup:[],
       countSice:0,
@@ -739,6 +743,17 @@ class BranchOffice extends PureComponent {
               }
             }
           }
+          // 风险评估
+          if(item.dataIndex === "riskControlLevel"){
+            item.ellipsis=true;
+            item.render=(key,row)=>{
+              return key == 0 ? <Tag color="green">通过</Tag> : 
+              key == 1 ? <Tag color="gold">人工</Tag> : 
+              key == 2 ? <Tag color="red">风险</Tag> : 
+              key == 3 ? <Tag>老黑</Tag> : 
+              key == 4 ? <Tag>网黑</Tag> : '无'
+            }
+          }
           // 订单状态(免押宝)
           if(item.dataIndex === "mianyaStatus"){
             item.render=(key,row)=>{
@@ -857,6 +872,21 @@ class BranchOffice extends PureComponent {
     })
   }
 
+  // 打开风险评估弹窗
+handleAssessment = (row) => {
+  this.setState({
+    AssessmentVisible:true,
+    AssessmentDetails:row
+  })
+}
+// 关闭风险评估弹窗
+handleCancelAssessment = () => {
+  console.log(false)
+  this.setState({
+    AssessmentVisible:false
+  })
+}
+
   render() {
     const code = 'allOrdersList';
 
@@ -876,7 +906,9 @@ class BranchOffice extends PureComponent {
       checkedOptions,
       columns,
       params,
-      isViewReturnGoods
+      isViewReturnGoods,
+      AssessmentDetails,
+      AssessmentVisible
     } = this.state;
 
     const loop = data =>
@@ -954,7 +986,10 @@ class BranchOffice extends PureComponent {
           return(
             <div>
               <a onClick={()=>this.handleDetails(row)}>详情</a>
-
+              <Divider type="vertical" />
+              {(row.riskControlLevel != 0 && row.riskControlLevel != -1) ? (
+                <a onClick={()=>this.handleAssessment(row)}>评估</a>
+              ) :'' }
             </div>
           )
         },
@@ -1047,6 +1082,16 @@ class BranchOffice extends PureComponent {
             cancelReturnGoods={this.cancelReturnGoods}
           />
         ):''}
+
+        {/* 风险评估 */}
+        {AssessmentVisible?(
+          <Assessment
+            AssessmentVisible={AssessmentVisible}
+            AssessmentDetails={AssessmentDetails}
+            handleCancelAssessment={this.handleCancelAssessment}
+          >
+          </Assessment>
+        ):""}
       </Panel>
     );
   }

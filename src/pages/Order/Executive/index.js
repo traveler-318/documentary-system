@@ -76,6 +76,7 @@ import OrderImport from '../components/orderImport';
 import ReturnOfGoodsList from './components/returnOfGoodsList';
 import SearchButton from '../components/button';
 import { getCookie } from '../../../utils/support';
+import Assessment from '../components/Assessment';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
@@ -218,6 +219,9 @@ class AllOrdersList extends PureComponent {
       OrderImportVisible:false,
       // 首次打印提示弹框
       LogisticsAlertVisible:false,
+      // 风险评估弹窗
+      AssessmentVisible: false,
+      AssessmentDetails:{},
       tips:[],
       salesmangroup:[],
       countSice:0,
@@ -1541,7 +1545,8 @@ class AllOrdersList extends PureComponent {
     if(key === 5 || key === '5'){ text = "电销" }
     if(key === 6 || key === '6'){ text = "网销" }
     if(key === 7 || key === '7'){ text = "地推" }
-    if(key === 7 || key === '8'){ text = "免押宝" }
+    if(key === 8 || key === '8'){ text = "免押宝" }
+    if(key === 9 || key === '9'){ text = "移动端" }
     return text;
   }
 
@@ -1758,6 +1763,22 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+// 打开风险评估弹窗
+handleAssessment = (row) => {
+  this.setState({
+    AssessmentVisible:true,
+    AssessmentDetails:row
+  })
+}
+// 关闭风险评估弹窗
+handleCancelAssessment = () => {
+  console.log(false)
+  this.setState({
+    AssessmentVisible:false
+  })
+}
+
+  
 
   // 打开物流弹窗
   handleShowLogistics = (data) => {
@@ -2218,6 +2239,18 @@ class AllOrdersList extends PureComponent {
           if(item.dataIndex === "userAddress"){
             item.ellipsis=true
           }
+
+          // 风险评估
+          if(item.dataIndex === "riskControlLevel"){
+            item.ellipsis=true;
+            item.render=(key,row)=>{
+              return key == 0 ? <Tag color="green">通过</Tag> : 
+              key == 1 ? <Tag color="gold">人工</Tag> : 
+              key == 2 ? <Tag color="red">风险</Tag> : 
+              key == 3 ? <Tag>老黑</Tag> : 
+              key == 4 ? <Tag>网黑</Tag> : '无'
+            }
+          }
           // 销售
           if(item.dataIndex === "salesman"){
             item.ellipsis=true
@@ -2358,6 +2391,8 @@ class AllOrdersList extends PureComponent {
       params,
       returnOfGoodsVisible,
       returnOfGoodsDataList,
+      AssessmentDetails,
+      AssessmentVisible
     } = this.state;
 
     const loop = data =>
@@ -2448,6 +2483,11 @@ class AllOrdersList extends PureComponent {
                 <Divider type="vertical" />
                 <a onClick={()=>this.bulkClaim(row)}>认领</a>
               </>) : ''}
+              <Divider type="vertical" />
+              {(row.riskControlLevel != 0 && row.riskControlLevel != -1) ? (
+                <a onClick={()=>this.handleAssessment(row)}>评估</a>
+              ) :'' }
+              
               {/*<a onClick={()=>this.handleDelect(row)}>删除</a>*/}
 
               {/* <a>跟进</a>
@@ -2497,6 +2537,19 @@ class AllOrdersList extends PureComponent {
         dataIndex: 'userAddress',
         width: 160,
         ellipsis: true,
+      },
+      {
+        title: '风险等级',
+        dataIndex: 'riskControlLevel',
+        width: 100,
+        ellipsis: true,
+        render: (key,row)=>{
+          return key == 0 ? <Tag color="green">通过</Tag> : 
+          key == 1 ? <Tag color="gold">人工</Tag> : 
+          key == 2 ? <Tag color="red">风险</Tag> : 
+          key == 3 ? <Tag>老黑</Tag> : 
+          key == 4 ? <Tag>网黑</Tag> : '无'
+        }
       },
       {
         title: '订单状态',
@@ -2897,6 +2950,18 @@ class AllOrdersList extends PureComponent {
             handleCancel={this.handleOrderReturnOfGoodsCancel}
           ></ReturnOfGoodsList>
         ):''}
+
+        {/* 风险评估 */}
+        {AssessmentVisible?(
+          <Assessment
+            AssessmentVisible={AssessmentVisible}
+            AssessmentDetails={AssessmentDetails}
+            handleCancelAssessment={this.handleCancelAssessment}
+          >
+          </Assessment>
+        ):""}
+        
+
         <Modal
           title="提示"
           visible={LogisticsAlertVisible}
