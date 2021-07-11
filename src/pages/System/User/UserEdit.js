@@ -106,6 +106,7 @@ class UserEdit extends PureComponent {
     }
   }
 
+
   reactNode = () => {
     return(
       <div>
@@ -210,6 +211,10 @@ class UserEdit extends PureComponent {
                         required: true,
                         message: '请输入用户姓名',
                       },
+                      {
+                        pattern: /^[^\s]*$/,
+                        message: '用户姓名禁止输入空格',
+                      }
                     ],
                     initialValue: detail.name,
                   })(<Input placeholder="请输入用户姓名" />)}
