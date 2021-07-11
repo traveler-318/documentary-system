@@ -2240,7 +2240,7 @@ handleCancelAssessment = () => {
               return (
                 <>
                   <div className={styles.productCoding}>
-                    {row.confirmTag === "2" ? (
+                    {(row.logisticsPrintType === "0" || row.logisticsPrintType === null ) && row.confirmTag === "2" ? (
                       <>
                         <span>{key}</span>
                         <Input style={{width:"91%"}} className={styles.input} defaultValue={key} onBlur={(e)=>this.Update2(e,row)}/>
