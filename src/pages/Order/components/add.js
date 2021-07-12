@@ -57,6 +57,7 @@ class OrdersAdd extends PureComponent {
       productId:null,
       textAAreaValue:'',
       value:'',
+      addressState:false
     };
   }
 
@@ -142,7 +143,11 @@ class OrdersAdd extends PureComponent {
 
   submit = (callback)=>{
     const { form } = this.props;
-    const { cityparam, selectedOptions, payamount, payPanyId, productTypeId, productId, productType,productName} = this.state;
+    const { cityparam, selectedOptions, payamount, payPanyId, productTypeId, productId, productType,productName,addressState} = this.state;
+    if (!addressState) {
+      message.error("请复制全部地址到解析位置进行一键识别解析并核对");
+      return false;
+    }
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         this.setState({
@@ -175,7 +180,9 @@ class OrdersAdd extends PureComponent {
       }
     });
   }
+
   handleChange = value => {
+
   };
 
   disabledDate = (current) => {
@@ -232,7 +239,8 @@ class OrdersAdd extends PureComponent {
     const _this=this;
     if(textAAreaValue !== value){
       this.setState({
-        value:textAAreaValue
+        value:textAAreaValue,
+        addressState:true
       })
       addressParsing({text:textAAreaValue}).then(res=>{
         console.log(res.data)
@@ -241,11 +249,21 @@ class OrdersAdd extends PureComponent {
             _this.setState({
               value:textAAreaValue
             })
+            if(res.data.phonenum){
+              _this.props.form.setFieldsValue({
+                userPhone:res.data.phonenum,
+              });
+            }
+            if(res.data.person){
+              _this.props.form.setFieldsValue({
+                userName:res.data.person,
+              });
+            }
             _this.props.form.setFieldsValue({
               userAddress:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
+              region:[res.data.province_code,res.data.city_code,res.data.county_code],
               userPhone:res.data.phonenum,
               userName:res.data.person,
-              region:[res.data.province_code,res.data.city_code,res.data.county_code]
             });
           }else {
             _this.setState({
@@ -259,6 +277,12 @@ class OrdersAdd extends PureComponent {
               userName:res.data.person,
               value:textAAreaValue
             })
+            _this.props.form.setFieldsValue({
+              userAddress:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
+              region:[res.data.province_code,res.data.city_code,res.data.county_code],
+              userPhone:res.data.phonenum,
+              userName:res.data.person,
+            });
           }
         }
       })

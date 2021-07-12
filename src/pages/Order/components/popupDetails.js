@@ -487,6 +487,24 @@ class OrdersEdit extends PureComponent {
     }
   }
 
+  changeEventSN=(rule, value, callback)=>{
+    const reg = /.*[\u4e00-\u9fa5]+.*$/;
+    if (!reg.test(value)) {
+      callback();
+    }else{
+      callback(new Error('SN不能输入中文'));
+    }
+  }
+
+  changeEvent=(rule, value, callback)=>{
+    const reg = /.*[\u4e00-\u9fa5]+.*$/;
+    if (!reg.test(value)) {
+      callback();
+    }else{
+      callback(new Error('物流单号不能输入中文'));
+    }
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -633,6 +651,9 @@ class OrdersEdit extends PureComponent {
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="SN">
                       {getFieldDecorator('productCoding', {
+                        rules: [
+                          {validator: this.changeEventSN },
+                        ],
                         initialValue: detail.productCoding,
                       })(<Input disabled={edit} placeholder="" />)}
                     </FormItem>
@@ -679,6 +700,9 @@ class OrdersEdit extends PureComponent {
                     </FormItem>
                     <FormItem {...formAllItemLayout} label="物流单号" className={styles.salesman}>
                       {getFieldDecorator('logisticsNumber', {
+                        rules: [
+                          {validator: this.changeEvent },
+                        ],
                         initialValue: detail.logisticsNumber,
                       })(<Input
                         disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}

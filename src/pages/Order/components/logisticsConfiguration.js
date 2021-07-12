@@ -681,6 +681,29 @@ class LogisticsConfiguration extends PureComponent {
     console.log(value, selectedOptions,"123");
   }
 
+  changeEventSN=(rule, value, callback)=>{
+    const reg = /.*[\u4e00-\u9fa5]+.*$/;
+    if(value){
+      if (!reg.test(value)) {
+        callback();
+      }else{
+        callback(new Error('SN不能输入中文'));
+      }
+    }else {
+      callback(new Error('请输入SN'));
+    }
+
+  }
+
+  changeEvent=(rule, value, callback)=>{
+    const reg = /.*[\u4e00-\u9fa5]+.*$/;
+    if (!reg.test(value)) {
+      callback();
+    }else{
+      callback(new Error('物流单号不能输入中文'));
+    }
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -827,7 +850,7 @@ class LogisticsConfiguration extends PureComponent {
                     rules: [
                       {
                         required: true,
-                        message: '请输入SN',
+                        validator: this.changeEventSN
                       },
                     ],
                   })(
@@ -869,6 +892,9 @@ class LogisticsConfiguration extends PureComponent {
                     //     message: '请输入物流单号',
                     //   },
                     // ],
+                    rules: [
+                      {validator: this.changeEvent },
+                    ],
                   })(<Input
                     disabled={disabledType}
                   placeholder="请输入物流单号" />)}

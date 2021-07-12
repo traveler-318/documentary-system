@@ -240,6 +240,8 @@ class AllOrdersList extends PureComponent {
       display:false,
       logisticsCompanyList:[],
       orderSourceList:[],
+      checkCodeKD:'',
+      checkCodeSN:'',
     };
   }
 
@@ -2036,40 +2038,54 @@ handleCancelAssessment = () => {
   }
 
   Update1 =(e,row)=>{
-    if(e.target.value && e.target.value !== row.logisticsNumber){
-      const params={
-        id:row.id,
-        logisticsNumber : e.target.value !=="" ? e.target.value : null,
-      }
-      console.log(params)
-      const _this=this;
-      updateData(params).then(res=>{
-        if(res.code === 200){
-          message.success(res.msg);
-          _this.getDataList();
-        }else {
-          message.error(res.msg);
+    const v = e.target.value;
+    const reg = /.*[\u4e00-\u9fa5]+.*$/;
+    if (!reg.test(v)) {
+      if(e.target.value && e.target.value !== row.logisticsNumber){
+        const params={
+          id:row.id,
+          logisticsNumber : e.target.value !=="" ? e.target.value : null,
         }
-      })
+        const _this=this;
+        updateData(params).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+            _this.getDataList();
+          }else {
+            message.error(res.msg);
+          }
+        })
+      }
+    }else{
+      this.setState({ checkCodeKD: row.logisticsNumber })
+      this.forceUpdate();//页面重新渲染数据
+      message.error('快递单号不能输入中文')
     }
   }
 
   Update2 =(e,row)=>{
-    if(e.target.value && e.target.value !== row.productCoding){
-      const params={
-        id:row.id,
-        productCoding : e.target.value.trim().replace(/\s/g,"") !=="" ? e.target.value.trim().replace(/\s/g,"") : null,
-      }
-      const _this=this;
-      updateData(params).then(res=>{
-        if(res.code === 200){
-          message.success(res.msg);
-          _this.getDataList();
-        }else {
-          message.error(res.msg);
+    const v = e.target.value;
+    const reg = /.*[\u4e00-\u9fa5]+.*$/;
+    if(!reg.test(v)){
+      if(e.target.value && e.target.value !== row.productCoding){
+        const params={
+          id:row.id,
+          productCoding : e.target.value.trim().replace(/\s/g,"") !=="" ? e.target.value.trim().replace(/\s/g,"") : null,
         }
-      })
+        const _this=this;
+        updateData(params).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+            _this.getDataList();
+          }else {
+            message.error(res.msg);
+          }
+        })
+      }
+    }else {
+      message.error('SN不能输入中文')
     }
+
   }
 
   handleLogisticsCompanySearch =(value)=>{
@@ -2094,7 +2110,7 @@ handleCancelAssessment = () => {
 
   // 菜单列表头获取
   getOrderMenuHead = () => {
-    const {tabKey}=this.state;
+    const {tabKey,checkCodeKD,checkCodeSN}=this.state;
     orderMenuHead(0).then(resp=>{
       if(resp.code === 200){
         const list=resp.data.menuJson.filter(item=>item.dataIndex !== 'oderCompanyName');
@@ -2262,7 +2278,7 @@ handleCancelAssessment = () => {
               const options = this.state.logisticsCompanyList.map(i => <Option value={i.value}>{i.value}</Option>);
               return (
                 <div className={styles.logisticsCompany}>
-                  {row.logisticsPrintType === "0" ? (
+                  {(row.logisticsPrintType === "0" || row.logisticsPrintType === null ) && row.confirmTag === "2" ? (
                     <>
                       <span>{key}</span>
                       <Select
@@ -2290,13 +2306,14 @@ handleCancelAssessment = () => {
           if(item.dataIndex === "logisticsNumber"){
             item.ellipsis=true;
             item.render=(key,row)=>{
+              this.state.checkCodeKD=key
               return (
                 <>
                   <div className={styles.logisticsNumber}>
-                    {row.logisticsPrintType === "0" ? (
+                    {row.logisticsPrintType === "0" && row.confirmTag === "2" ? (
                       <>
                         <span>{key}</span>
-                        <Input style={{width:"91%"}} className={styles.input} defaultValue={key} onBlur={(e)=>this.Update1(e,row)}/>
+                        <Input style={{width:"91%"}} className={styles.input} defaultValue={this.state.checkCodeKD} onBlur={(e)=>this.Update1(e,row)} />
                       </>
                     ) :key}
                     </div>
@@ -2316,6 +2333,7 @@ handleCancelAssessment = () => {
       }
     })
   }
+
 
   getOrderMenuTemplate = () => {
     orderMenuTemplate(0).then(res=>{
