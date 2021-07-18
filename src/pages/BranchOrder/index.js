@@ -338,7 +338,6 @@ class BranchOffice extends PureComponent {
     this.setState({
       resetVisible:false,
       resetRadioChecked:'',
-      selectedRows:[]
     })
   }
 

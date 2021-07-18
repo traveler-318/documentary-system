@@ -966,7 +966,6 @@ class AllOrdersList extends PureComponent {
     this.setState({
       resetVisible:false,
       resetRadioChecked:'',
-      selectedRows:[]
     })
   }
 
