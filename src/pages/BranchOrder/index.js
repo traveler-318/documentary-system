@@ -51,7 +51,7 @@ import {
   updateVoiceStatus,
   orderMenuHead,
   orderMenuTemplate,
-  updateOrderHead
+  updateOrderHead, reset,
 } from '../../services/newServices/order';
 import {
   branchTree,
@@ -148,6 +148,9 @@ class BranchOffice extends PureComponent {
       _listArr:[],
       organizationTree:[],
       isViewReturnGoods:false,//退货弹窗
+      resetList:[],
+      resetVisible:false,
+      resetRadioChecked:2,
     };
   }
 
@@ -284,24 +287,106 @@ class BranchOffice extends PureComponent {
   }
   // 批量发货
   bulkDelivery = () => {
-    const {selectedRows} = this.state;
-    if(selectedRows.length <= 0){
-      return message.info('请至少选择一条数据');
+    const {selectedRows,tabKey} = this.state;
+    if(tabKey === "2"){
+      if(selectedRows.length <= 0){
+        return message.info('请至少选择一条数据');
+      }
+      this.handleShowLogistics(selectedRows)
+    }else {
+      return message.info('只能在终审里面操作');
     }
-    this.handleShowLogistics(selectedRows)
+
   }
 
   //打开退货
   openReturnGoods =() =>{
-    this.setState({
-      isViewReturnGoods:true
-    })
+    const {tabKey} = this.state;
+    if(tabKey === "4" || tabKey === "5" || tabKey === "6"){
+      this.setState({
+        isViewReturnGoods:true
+      })
+    }else {
+      return message.info('只能在在途中、已签收、跟进中里面操作');
+    }
+
   }
   //关闭退货
   cancelReturnGoods =() =>{
     this.setState({
       isViewReturnGoods:false
     })
+  }
+
+  resetBtn =()=>{
+    const {selectedRows,tabKey} = this.state;
+    if(tabKey === "3" || tabKey === "4" || tabKey === "5"){
+      if(selectedRows.length <= 0){
+        return message.info('请至少选择一条数据');
+      }
+      this.setState({
+        resetList:selectedRows,
+        resetVisible:true,
+      })
+    }else {
+      return message.info('只能在已发货、在途中、已签收里面操作');
+    }
+
+  }
+
+  handleCancelResetBtn = () => {
+    this.setState({
+      resetVisible:false,
+      resetRadioChecked:'',
+      selectedRows:[]
+    })
+  }
+
+  onChangeResetRadio = (e) => {
+    this.setState({
+      resetRadioChecked: e.target.value
+    })
+  }
+
+  handleSubmitUpdateReset = (e) => {
+    const { resetRadioChecked, resetList } = this.state;
+    if(!resetRadioChecked){
+      return message.error("请选择需要重置的类型");
+    }
+    Modal.confirm({
+      title: '提醒',
+      content: "此次操作无法再次变更,确认操作!",
+      okText: '确定',
+      okType: 'primary',
+      cancelText: '取消',
+      keyboard:false,
+      onOk:() => {
+        return new Promise((resolve, reject) => {
+          reset({
+            type:resetRadioChecked,
+            list:resetList
+          }).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              this.setState({
+                resetVisible:false,
+                selectedRows:[]
+              });
+              this.getDataList();
+              resolve();
+            }else{
+              message.error(res.msg);
+              reject();
+            }
+          })
+
+        }).catch(() => console.log('Oops errors!'));
+
+      },
+      onCancel() {},
+    });
+
+
   }
 
   btnButtonBack = (code) => {
@@ -314,6 +399,9 @@ class BranchOffice extends PureComponent {
     }else if(code ==='return'){
       //退货
       this.openReturnGoods();
+    }else if(code === 'qdResetLogistics'){
+      //物流重置
+      this.resetBtn();
     }
   }
   // 左侧操作按钮
@@ -908,7 +996,9 @@ handleCancelAssessment = () => {
       params,
       isViewReturnGoods,
       AssessmentDetails,
-      AssessmentVisible
+      AssessmentVisible,
+      resetVisible,
+      resetRadioChecked
     } = this.state;
 
     const loop = data =>
@@ -1004,6 +1094,15 @@ handleCancelAssessment = () => {
       }),
     }));
 
+    const formAllItemLayout1 = {
+      labelCol: {
+        span: 2,
+      },
+      wrapperCol: {
+        span: 20,
+      },
+    };
+
     return (
       <Panel>
         <div className={styles.ordersTabs}>
@@ -1092,6 +1191,34 @@ handleCancelAssessment = () => {
           >
           </Assessment>
         ):""}
+
+        <Modal
+          title="重置物流"
+          visible={resetVisible}
+          maskClosable={false}
+          destroyOnClose
+          width={500}
+          onCancel={this.handleCancelResetBtn}
+          footer={[
+            <Button key="back" onClick={this.handleCancelResetBtn}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" onClick={()=>this.handleSubmitUpdateReset()}>
+              确定
+            </Button>,
+          ]}
+        >
+          <Form>
+            <FormItem {...formAllItemLayout1} label="重置">
+              <Radio.Group defaultValue={resetRadioChecked} onChange={this.onChangeResetRadio}>
+                <Radio value={1}>订阅</Radio>
+                <Radio value={2}>物流单号、订阅</Radio>
+              </Radio.Group>
+            </FormItem>
+          </Form>
+          <p style={{color:"red"}}>提示：重置后不可恢复，请谨慎操作</p>
+        </Modal>
+
       </Panel>
     );
   }

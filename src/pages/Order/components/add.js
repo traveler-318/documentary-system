@@ -262,10 +262,18 @@ class OrdersAdd extends PureComponent {
             _this.props.form.setFieldsValue({
               userAddress:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
               region:[res.data.province_code,res.data.city_code,res.data.county_code],
-              userPhone:res.data.phonenum,
-              userName:res.data.person,
             });
           }else {
+            if(res.data.phonenum){
+              _this.props.form.setFieldsValue({
+                userPhone:res.data.phonenum,
+              });
+            }
+            if(res.data.person){
+              _this.props.form.setFieldsValue({
+                userName:res.data.person,
+              });
+            }
             _this.setState({
               userAddress:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
               cityparam:{
@@ -280,8 +288,6 @@ class OrdersAdd extends PureComponent {
             _this.props.form.setFieldsValue({
               userAddress:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
               region:[res.data.province_code,res.data.city_code,res.data.county_code],
-              userPhone:res.data.phonenum,
-              userName:res.data.person,
             });
           }
         }

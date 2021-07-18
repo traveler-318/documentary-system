@@ -966,7 +966,7 @@ class AllOrdersList extends PureComponent {
     this.setState({
       resetVisible:false,
       resetRadioChecked:'',
-      resetList:[]
+      selectedRows:[]
     })
   }
 
@@ -997,7 +997,8 @@ class AllOrdersList extends PureComponent {
             if(res.code === 200){
               message.success(res.msg);
               this.setState({
-                resetVisible:false
+                resetVisible:false,
+                selectedRows:[]
               });
               this.getDataList();
               resolve();

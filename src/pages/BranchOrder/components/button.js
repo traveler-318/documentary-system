@@ -56,7 +56,7 @@ class SearchButton extends PureComponent {
     const actionButtons = buttons.filter(button => button.action === 2 || button.action === 3);
 
     const { tabKey } = this.props;
-
+    let i = -1;
     let moreList = [];
     if(tabKey === 'null'){
         actionButtons.map(item=>{
@@ -73,13 +73,12 @@ class SearchButton extends PureComponent {
       <>
         {
           tabActionButtons.map((item,index)=>{
-                return (
-                  <Button type={index<1?'primary':''} icon={item.source} onClick={()=>{
-                    this.handleClick(item.code)
-                  }}>{item.name}</Button>
-                )
-
-            })
+            return (
+              <Button type={index<1?'primary':''} icon={item.source} onClick={()=>{
+                this.handleClick(item.code)
+              }}>{item.name}</Button>
+            )
+          })
         }
       </>
     );
