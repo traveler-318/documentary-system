@@ -965,7 +965,8 @@ class AllOrdersList extends PureComponent {
   handleCancelResetBtn = () => {
     this.setState({
       resetVisible:false,
-      resetRadioChecked:''
+      resetRadioChecked:'',
+      resetList:[]
     })
   }
 
@@ -3152,7 +3153,7 @@ handleCancelAssessment = () => {
               </Radio.Group>
             </FormItem>
           </Form>
-          <p>提示：重置后不可恢复，请谨慎操作</p>
+          <p style="color:red">提示：重置后不可恢复，请谨慎操作</p>
         </Modal>
 
 
