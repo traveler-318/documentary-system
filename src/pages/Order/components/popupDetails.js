@@ -224,9 +224,8 @@ class OrdersEdit extends PureComponent {
           values.orderSource = item.key
         }
       })
-      console.log(productType)
       values.id = detail.id;
-      values.userAddress=`${selectedOptions}${values.userAddress}`;
+      // values.userAddress=`${selectedOptions}${values.userAddress}`;
       if(values.productType && values.productType != ""){
         values.productName = !productName ? detail.productName : productName;
         values.productType = !productType?detail.productType : productType;

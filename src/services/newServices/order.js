@@ -60,6 +60,18 @@ export async function updateData(params) {
   });
 }
 
+//列表物流公司和快递单号变更
+export async function updateLogistic(params) {
+  return request('/api/order/order/updateLogistic', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+
+
+
+
 export async function orderFollowing(params) {
   return request('/api/order/order/orderFollowing', {
     method: 'POST',
@@ -117,6 +129,13 @@ export async function logisticsSubscription(params) {
 // 状态变更
 export async function updateConfirmTag(params) {
   return request('/api/order/order/updateConfirmTag', {
+    method: 'POST',
+    body: params,
+  });
+}
+// 重置
+export async function reset(params) {
+  return request('/api/logistics_template/template/reset', {
     method: 'POST',
     body: params,
   });
