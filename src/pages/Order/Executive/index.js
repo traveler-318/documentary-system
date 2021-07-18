@@ -965,7 +965,7 @@ class AllOrdersList extends PureComponent {
   handleCancelResetBtn = () => {
     this.setState({
       resetVisible:false,
-      resetRadioChecked:'',
+      resetRadioChecked:2,
     })
   }
 
