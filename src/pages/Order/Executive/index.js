@@ -293,6 +293,7 @@ class AllOrdersList extends PureComponent {
     const {params} = this.state;
     this.setState({
       loading:true,
+      // data:[],
     })
     getPermissions(params).then(res=>{
       this.setState({
@@ -2112,10 +2113,15 @@ handleCancelAssessment = () => {
     const v = e.target.value;
     const reg = /.*[\u4e00-\u9fa5]+.*$/;
     if (!reg.test(v)) {
-      if(e.target.value && e.target.value !== row.logisticsNumber){
+      if(e.target.value && e.target.value.length <= 5){
+        message.error("物流编码应大于5位以上");
+        this.getDataList();
+        return false
+      }
+      if(e.target.value !== row.logisticsNumber){
         const params={
           id:row.id,
-          logisticsNumber : e.target.value !=="" ? e.target.value : null,
+          logisticsNumber : e.target.value !=="" ? e.target.value : "",
         }
         const _this=this;
         updateLogistic(params).then(res=>{
@@ -2377,14 +2383,17 @@ handleCancelAssessment = () => {
           if(item.dataIndex === "logisticsNumber"){
             item.ellipsis=true;
             item.render=(key,row)=>{
-              this.state.checkCodeKD=key
+              this.state.checkCodeKD=key;
               return (
                 <>
                   <div className={styles.logisticsNumber}>
                     {row.logisticsPrintType === "0" && row.confirmTag === "2" ? (
                       <>
                         <span>{key}</span>
-                        <Input style={{width:"91%"}} className={styles.input} defaultValue={this.state.checkCodeKD} onBlur={(e)=>this.Update1(e,row)} />
+                        <Input style={{width:"91%"}} 
+                        className={styles.input} 
+                        defaultValue={key} 
+                        onBlur={(e)=>this.Update1(e,row)} />
                       </>
                     ) :key}
                     </div>
@@ -2397,7 +2406,8 @@ handleCancelAssessment = () => {
         this.setState({
           checkedOptions:checked,
           columns:list,
-          editCheckedOptions:checked
+          editCheckedOptions:checked,
+          dataTime:new Date().getTime()
         })
       }else {
         message.error(resp.msg)
@@ -2863,7 +2873,7 @@ handleCancelAssessment = () => {
     },
     },
   ]
-
+  
     list = list.map((col, index) => ({
       ...col,
       onHeaderCell: column => ({
