@@ -289,11 +289,25 @@ class AllOrdersList extends PureComponent {
     })
   }
 
-  getDataList = () => {
-    const {params} = this.state;
+  getDataList = (row) => {
+    const {params,data} = this.state;
+    // let _data = {...data};
+    // if(row){
+    //   let _list = [];
+    //   _data.list.map(item=>{
+    //     if(row.id != item.id){
+    //       // delete item.logisticsNumber
+    //       // _list.push({})
+    //     }else{
+    //       _list.push(item)
+    //     }
+    //   })
+    //   _data.list = _list
+    // }
+
     this.setState({
       loading:true,
-      // data:[],
+      // data:_data,
     })
     getPermissions(params).then(res=>{
       this.setState({
@@ -2115,7 +2129,7 @@ handleCancelAssessment = () => {
     if (!reg.test(v)) {
       if(e.target.value && e.target.value.length <= 5){
         message.error("物流编码应大于5位以上");
-        this.getDataList();
+        // this.getDataList(row);
         return false
       }
       if(e.target.value !== row.logisticsNumber){
