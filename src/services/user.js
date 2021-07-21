@@ -89,6 +89,12 @@ export async function update(params) {
   });
 }
 
+export async function deptCompanyName() {
+  return request('/api/blade-system/dept/companyName', {
+    method: 'get',
+  });
+}
+
 export async function updateInfo(params) {
   return request('/api/blade-user/update-info', {
     method: 'POST',

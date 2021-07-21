@@ -21,6 +21,7 @@ import func from '../../../utils/Func';
 import styles from '../../../layouts/Sword.less';
 import { USER_CHANGE_INIT, USER_DETAIL, USER_UPDATE } from '../../../actions/user';
 import { tenantMode } from '../../../defaultSettings';
+import { deptCompanyName } from '../../../services/user';
 
 const FormItem = Form.Item;
 
@@ -31,6 +32,13 @@ const FormItem = Form.Item;
 }))
 @Form.create()
 class UserEdit extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      deptTree:{}
+    }
+  }
+
   componentWillMount() {
     const {
       dispatch,
@@ -44,6 +52,14 @@ class UserEdit extends PureComponent {
       } = this.props;
       dispatch(USER_CHANGE_INIT({ tenantId: detail.tenantId }));
     });
+
+    deptCompanyName().then(resp => {
+      console.log(resp)
+      this.setState({
+        deptTree:resp.data
+      })
+    });
+
   }
 
   handleSubmit = e => {
@@ -55,7 +71,9 @@ class UserEdit extends PureComponent {
       },
       form,
     } = this.props;
+    const {deptTree}=this.state
     form.validateFieldsAndScroll((err, values) => {
+      values.deptId=deptTree.id
       console.log(values)
       if (!err) {
         Modal.confirm({
@@ -122,10 +140,11 @@ class UserEdit extends PureComponent {
       form: { getFieldDecorator },
       user: {
         detail,
-        init: { roleTree, organizationTree, deptTree, postList, tenantList },
+        init: { roleTree, organizationTree, postList, tenantList },
       },
       submitting,
     } = this.props;
+    const {deptTree}=this.state
 
     const formItemLayout = {
       labelCol: {
@@ -370,18 +389,9 @@ class UserEdit extends PureComponent {
                         message: '请选择所属公司',
                       },
                     ],
-                    initialValue: func.split(detail.deptId),
+                    initialValue: deptTree.deptName,
                   })(
-                    <TreeSelect
-                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                      treeData={deptTree}
-                      allowClear
-                      showSearch
-                      treeNodeFilterProp="title"
-                      multiple
-                      placeholder="请选择所属公司"
-                      disabled
-                    />
+                    <Input disabled placeholder="" />
                   )}
                 </FormItem>
               </Col>
