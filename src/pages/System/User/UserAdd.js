@@ -64,7 +64,6 @@ class UserAdd extends PureComponent {
         } else {
           values.deptId=deptTree.id
           console.log(values)
-
           Modal.confirm({
             title: '提醒',
             content: "如果用户所属角色为销售人员，那么系统会自动扣减一个业务员余额，并自动新增一个业务员用户，确认是否新增人员！",
