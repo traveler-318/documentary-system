@@ -74,7 +74,7 @@ class UserAdd extends PureComponent {
             onOk:() => {
               const params = {
                 ...values,
-                deptId: values.deptId,
+                // deptId: values.deptId,
                 // roleId: func.join(values.roleId),
                 // postId: func.join(values.postId),
                 // birthday: func.format(values.birthday),
