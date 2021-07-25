@@ -8,15 +8,14 @@ import {
   DatePicker,
   Divider,
   Modal,
+  Radio,
   message, Checkbox,
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-
-import { getRemove, getSuthorizationStatus,getUrl } from '../../../services/newServices/logistics';
-import { getList,save} from '../../../services/newServices/blacklist';
+import { getList,save,remove} from '../../../services/newServices/blacklist';
 import moment from 'moment';
 
 
@@ -45,9 +44,9 @@ class Blacklist extends PureComponent {
         {name:"其它黑名单",key:4},
       ],
       shieldingChannel:[
-        {name:"订单",key:1},
-        {name:"导入",key:2},
-        {name:"平台",key:3},
+        {name:"订单",key:0},
+        {name:"导入",key:1},
+        {name:"平台",key:2},
       ],
       checkedList:[],
       inputValue:'',
@@ -155,8 +154,8 @@ class Blacklist extends PureComponent {
   renderLeftButton = () => (
     <>
       <Button type="primary" onClick={()=>this.handleAdd()}>新增</Button>
-      <Button type="primary" onClick={()=>{router.push(`/logistics/authority/add`);}}>导入</Button>
-      <Button onClick={()=>{router.push(`/logistics/authority/add`);}}>导出</Button>
+      <Button type="primary">导入</Button>
+      <Button >导出</Button>
     </>
   );
 
@@ -174,13 +173,11 @@ class Blacklist extends PureComponent {
     }
     const param={}
     const list=[];
-    for (let i in checkedList){
-      const params={}
-      params.blacklistValue=inputValue
-      params.shieldingReason=shieldingReason
-      params.dataType=checkedList[i]
-      list.push(params)
-    }
+    const params={}
+    params.blacklistValue=inputValue
+    params.shieldingReason=shieldingReason
+    params.dataType=checkedList
+    list.push(params)
     param.blacklists=list;
     param.orderId=null;
     param.platformMark=0;
@@ -225,10 +222,49 @@ class Blacklist extends PureComponent {
     })
   }
 
-  onChangeChecked = checkedList => {
+  onChangeChecked = (e) => {
     this.setState({
-      checkedList: checkedList
+      checkedList: e.target.value
     })
+  }
+
+  // 类型
+  getTYPE = (key) => {
+    let text = ""
+    if(key === 0 || key === '0'){
+      text = "订单"
+    }
+    if(key === 1 || key === '1'){
+      text = "导入"
+    }
+    if(key === 2 || key === '2'){
+      text = "平台"
+    }
+    return text;
+  }
+
+  handleRemove=(row)=>{
+
+    const _this=this;
+    Modal.confirm({
+      title: '提醒',
+      content: "此次操作无法再次变更,确认操作!",
+      okText: '确定',
+      okType: 'primary',
+      cancelText: '取消',
+      keyboard:false,
+      onOk:() => {
+        remove(row.id).then(res=>{
+          if (res.code === 200){
+            message.success(res.msg)
+            _this.getDataList()
+          } else {
+            message.error(res.msg)
+          }
+        })
+      },
+      onCancel(){},
+    });
   }
 
   render() {
@@ -270,6 +306,11 @@ class Blacklist extends PureComponent {
         title: '来源',
         dataIndex: 'shieldingChannel',
         width: 200,
+        render: (key) => {
+          return (
+            <div>{this.getTYPE(key)} </div>
+          )
+        },
       },
       {
         title: '拉黑原因',
@@ -289,8 +330,7 @@ class Blacklist extends PureComponent {
         render: (res,row) => {
           return(
             <div>
-              <Divider type="vertical" />
-              <a onClick={()=>this.handleEdit(row)}>解除</a>
+              <a onClick={()=>this.handleRemove(row)}>解除</a>
             </div>
 
           )
@@ -336,12 +376,12 @@ class Blacklist extends PureComponent {
               <Input onChange={this.onChange1} placeholder="请输入拉黑原因" />
             </FormItem>
             <FormItem {...formAllItemLayout} label="拉黑类型">
-              <Checkbox.Group onChange={this.onChangeChecked}>
-                <Checkbox value={1}>IP黑名单</Checkbox>
-                <Checkbox value={2}>手机黑名单</Checkbox>
-                <Checkbox value={3}>地址黑名单</Checkbox>
-                <Checkbox value={4}>其它黑名单</Checkbox>
-              </Checkbox.Group>
+              <Radio.Group onChange={this.onChangeChecked}>
+                <Radio value={1}>IP黑名单</Radio>
+                <Radio value={2}>手机黑名单</Radio>
+                <Radio value={3}>地址黑名单</Radio>
+                <Radio value={4}>其它黑名单</Radio>
+              </Radio.Group>
             </FormItem>
           </Form>
         </Modal>

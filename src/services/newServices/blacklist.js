@@ -19,3 +19,9 @@ export async function save(params) {
     body: params,
   });
 }
+export async function remove(params) {
+  return request(`/api/blacklist/remove`, {
+    method: 'POST',
+    body: params,
+  });
+}
