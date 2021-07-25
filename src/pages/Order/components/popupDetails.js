@@ -528,8 +528,6 @@ class OrdersEdit extends PureComponent {
 
   handleBlackListSubmit =()=>{
     const {checkedList,inputValue,shieldingReason,detail}=this.state;
-
-    console.log(detail)
     if(!checkedList){
       return message.error("请选择拉黑类型");
     }
@@ -585,6 +583,26 @@ class OrdersEdit extends PureComponent {
   }
 
   onChangeChecked = checkedList => {
+    const {detail}=this.state;
+    console.log(detail)
+    let value=''
+    for(let i in checkedList){
+      if(checkedList[i] === 1){
+        console.log()
+        value+=detail.ipAddress
+      }
+      if(checkedList[i] === 2){
+        console.log()
+        value+=detail.userPhone
+      }
+      if(checkedList[i] === 3){
+        console.log()
+        value+=detail.userAddress
+      }
+    }
+    console.log(value)
+
+
     this.setState({
       checkedList: checkedList
     })
