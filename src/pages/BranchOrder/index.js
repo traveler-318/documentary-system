@@ -21,6 +21,7 @@ import {
   Tag,
   Cascader,
   TreeSelect,
+  Tooltip
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
@@ -441,6 +442,18 @@ class BranchOffice extends PureComponent {
     this.getDataList();
   }
 
+  reactNode = () => {
+    return(
+      <div>
+        <p>通过:收货地址跟下单IP归属地一致</p>
+        <p>人工:收货地址和下单IP不在同一个市区建议人工审核</p>
+        <p>风险:收货所在省份和下单IP地址不一致，涉嫌欺诈行为，建议拒绝</p>
+        <p>老黑:公司内部黑名单用户</p>
+        <p>网黑:平台全网黑名单用户</p>
+      </div>
+    )
+  }
+
   // 物流订阅
   logisticsSubscribe =(row) =>{
     const list=this.getDataList;
@@ -832,6 +845,10 @@ class BranchOffice extends PureComponent {
           }
           // 风险评估
           if(item.dataIndex === "riskControlLevel"){
+            let title = item.title
+            item.title = (key,row)=>{
+              return <Tooltip title={this.reactNode}>{title}<Icon type='question-circle-o' /></Tooltip>
+            } 
             item.ellipsis=true;
             item.render=(key,row)=>{
               return key == 0 ? <Tag color="green">通过</Tag> : 

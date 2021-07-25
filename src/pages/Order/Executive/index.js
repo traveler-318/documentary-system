@@ -20,7 +20,9 @@ import {
   Radio,
   Tag,
   Cascader,
-  TreeSelect, Table,
+  TreeSelect, 
+  Table,
+  Tooltip
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
@@ -1559,6 +1561,18 @@ class AllOrdersList extends PureComponent {
     });
   }
 
+  reactNode = () => {
+    return(
+      <div>
+        <p>通过:收货地址跟下单IP归属地一致</p>
+        <p>人工:收货地址和下单IP不在同一个市区建议人工审核</p>
+        <p>风险:收货所在省份和下单IP地址不一致，涉嫌欺诈行为，建议拒绝</p>
+        <p>老黑:公司内部黑名单用户</p>
+        <p>网黑:平台全网黑名单用户</p>
+      </div>
+    )
+  }
+
   getText = (key, type) => {
     let text = ""
     type.map(item=>{
@@ -2349,6 +2363,11 @@ handleCancelAssessment = () => {
 
           // 风险评估
           if(item.dataIndex === "riskControlLevel"){
+            console.log(item,"riskControlLevel")
+            let title = item.title
+            item.title = (key,row)=>{
+              return <Tooltip title={this.reactNode}>{title}<Icon type='question-circle-o' /></Tooltip>
+            } 
             item.ellipsis=true;
             item.render=(key,row)=>{
               return key == 0 ? <Tag color="green">通过</Tag> : 
