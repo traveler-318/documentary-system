@@ -533,9 +533,21 @@ class OrdersEdit extends PureComponent {
     }
     const param={}
     const list=[];
+
     for (let i in checkedList){
       const params={}
-      params.blacklistValue=inputValue
+      if(checkedList[i] === 1){
+        params.blacklistValue=detail.ipAddress
+      }
+      if(checkedList[i] === 2){
+        params.blacklistValue=detail.userPhone
+      }
+      if(checkedList[i] === 3){
+        params.blacklistValue=detail.userAddress
+      }
+      if(checkedList[i] === 4){
+        params.blacklistValue=inputValue
+      }
       params.shieldingReason=shieldingReason
       params.dataType=checkedList[i]
       list.push(params)
@@ -583,26 +595,6 @@ class OrdersEdit extends PureComponent {
   }
 
   onChangeChecked = checkedList => {
-    const {detail}=this.state;
-    console.log(detail)
-    let value=''
-    for(let i in checkedList){
-      if(checkedList[i] === 1){
-        console.log()
-        value+=detail.ipAddress
-      }
-      if(checkedList[i] === 2){
-        console.log()
-        value+=detail.userPhone
-      }
-      if(checkedList[i] === 3){
-        console.log()
-        value+=detail.userAddress
-      }
-    }
-    console.log(value)
-
-
     this.setState({
       checkedList: checkedList
     })
