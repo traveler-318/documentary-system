@@ -18,7 +18,7 @@ import Grid from '../../../components/Sword/Grid';
 import { getList,save,remove} from '../../../services/newServices/blacklist';
 import moment from 'moment';
 
-
+const { TextArea } = Input;
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
@@ -48,10 +48,14 @@ class Blacklist extends PureComponent {
         {name:"导入",key:1},
         {name:"平台",key:2},
       ],
-      checkedList:[],
+      checkedList:'',
+      checkedList1:'',
       inputValue:'',
       shieldingReason:'',
-      updateAddVisible:false
+      updateAddVisible:false,
+      updateImportVisible:false,
+      textAreaValue:'',
+      tips:''
     };
   }
   // ============ 初始化数据 ===============
@@ -84,7 +88,28 @@ class Blacklist extends PureComponent {
 
   // ============ 查询 ===============
   handleSearch = params => {
+    let payload = {
+      ...params,
+    };
 
+    if(payload.blacklistValue === undefined){
+      payload.blacklistValue = null;
+    }
+    // if(payload.dateRange === undefined){
+    //   payload.dateRange = null;
+    // }
+    if(payload.orderSource === undefined){
+      payload.orderSource = null;
+    }
+    if(payload.shieldingChannel === undefined){
+      payload.shieldingChannel = null;
+    }
+    delete payload.sorts
+    this.setState({
+      params:payload
+    },()=>{
+      this.getDataList();
+    })
   };
 
   // ============ 查询表单 ===============
@@ -100,12 +125,12 @@ class Blacklist extends PureComponent {
           {getFieldDecorator('blacklistValue',{
           })(<Input placeholder="请输入黑名单值" />)}
         </Form.Item>
-        <Form.Item label="下单时间">
-          {getFieldDecorator('dateRange', {
-          })(
-            <RangePicker showTime size={"default"} onCalendarChange={this.DateOnChange} />
-          )}
-        </Form.Item>
+        {/*<Form.Item label="拉黑时间">*/}
+          {/*{getFieldDecorator('dateRange', {*/}
+          {/*})(*/}
+            {/*<RangePicker showTime size={"default"} onCalendarChange={this.DateOnChange} />*/}
+          {/*)}*/}
+        {/*</Form.Item>*/}
         <Form.Item label="类型">
           {getFieldDecorator('orderSource', {
           })(
@@ -121,17 +146,20 @@ class Blacklist extends PureComponent {
           })(
             <Select placeholder={"请选择来源"} style={{ width: 120 }}>
               {shieldingChannel.map(item=>{
-                return (<Option value={item.name}>{item.name}</Option>)
+                return (<Option value={item.key}>{item.name}</Option>)
               })}
             </Select>
           )}
         </Form.Item>
         <div style={{ float: 'right' }}>
           <Button type="primary" htmlType="submit">
-            查询
+            <FormattedMessage id="button.search.name" />
           </Button>
-          <Button style={{ marginLeft: 8 }} onClick={onReset}>
-            重置
+          <Button style={{ marginLeft: 8 }} onClick={()=>{
+            // this.getSalesman();
+            onReset()
+          }}>
+            <FormattedMessage id="button.reset.name" />
           </Button>
         </div>
       </div>
@@ -154,8 +182,7 @@ class Blacklist extends PureComponent {
   renderLeftButton = () => (
     <>
       <Button type="primary" onClick={()=>this.handleAdd()}>新增</Button>
-      <Button type="primary">导入</Button>
-      <Button >导出</Button>
+      <Button onClick={()=>this.handleImport()}>导入</Button>
     </>
   );
 
@@ -210,6 +237,18 @@ class Blacklist extends PureComponent {
     })
   }
 
+  handleCancelImport =()=>{
+    this.setState({
+      updateImportVisible:false
+    })
+  }
+
+  handleImport =()=>{
+    this.setState({
+      updateImportVisible:true
+    })
+  }
+
   onChange = (e) => {
     this.setState({
       inputValue: e.target.value
@@ -222,13 +261,99 @@ class Blacklist extends PureComponent {
     })
   }
 
+  onTextArea = (e) => {
+    this.setState({
+      textAreaValue: e.target.value
+    })
+  }
+
+  handleImportSubmit = () => {
+    const {textAreaValue,checkedList1}=this.state;
+    if(!textAreaValue){
+      return message.error("请填写拉黑内容")
+    }
+    if(!checkedList1){
+      return message.error("请选择拉黑类型")
+    }
+
+    let arr=[]
+    arr=textAreaValue.split(/[(\r\n)\r\n]+/);
+
+    let length=''
+    if(checkedList1 === 2){
+      for(let i=0; i<arr.length; i++){
+        if (!(/^1[3456789]\d{9}$/.test(arr[i]))) {
+          console.log(i)
+          length+=i+1+","
+        }
+      }
+    }
+    if(checkedList1 === 1){
+      let ip=/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/;
+      for(let i=0; i<arr.length; i++){
+        if (!ip.test(arr[i])) {
+          console.log(i)
+          length+=i+1+","
+        }
+      }
+    }
+    let a=''
+    if(length){
+      a="请检查"+length.substring(0,length.length-1)+"行，存在错误";
+    }else {
+      a=''
+    }
+    this.setState({
+      tips:a
+    })
+
+    if(a !== ''){
+      return false;
+    }
+
+    const params={};
+    const item=[]
+    for (let i in arr){
+      const param={}
+      param.blacklistValue=arr[i];
+      param.dataType=checkedList1
+      item.push(param)
+    }
+    params.blacklists=item;
+    params.orderId=null;
+    params.platformMark=0;
+    params.shieldingChannel=1
+
+    const _this=this;
+    save(params).then(res=>{
+      if(res.code === 200){
+        message.success(res.msg)
+        _this.getDataList()
+        _this.setState({
+          updateImportVisible:false
+        })
+      }else {
+        message.error(res.msg)
+      }
+    })
+
+  }
+
+
+
   onChangeChecked = (e) => {
     this.setState({
       checkedList: e.target.value
     })
   }
 
-  // 类型
+  onChangeChecked1 = (e) => {
+    this.setState({
+      checkedList1: e.target.value
+    })
+  }
+
+  // 来源渠道
   getTYPE = (key) => {
     let text = ""
     if(key === 0 || key === '0'){
@@ -239,6 +364,24 @@ class Blacklist extends PureComponent {
     }
     if(key === 2 || key === '2'){
       text = "平台"
+    }
+    return text;
+  }
+
+  // 类型
+  dataType = (key) => {
+    let text = ""
+    if(key === 1 || key === '1'){
+      text = "IP黑名单"
+    }
+    if(key === 2 || key === '2'){
+      text = "手机黑名单"
+    }
+    if(key === 3 || key === '3'){
+      text = "地址黑名单"
+    }
+    if(key === 4 || key === '4'){
+      text = "其它黑名单"
     }
     return text;
   }
@@ -272,7 +415,7 @@ class Blacklist extends PureComponent {
       form,
     } = this.props;
 
-    const {data,loading,updateAddVisible} = this.state;
+    const {data,loading,updateAddVisible,updateImportVisible,tips} = this.state;
     const { getFieldDecorator } = form;
 
     const formAllItemLayout = {
@@ -296,11 +439,11 @@ class Blacklist extends PureComponent {
         dataIndex: 'dataType',
         width: 200,
         ellipsis: true,
-        // render: (res,key) => {
-        //   return(
-        //     <Switch checked={res===1?true:false} onChange={() => this.onStatus(res,key)} />
-        //   )
-        // },
+        render: (key) => {
+          return(
+            <div>{this.dataType(key)} </div>
+          )
+        },
       },
       {
         title: '来源',
@@ -381,6 +524,35 @@ class Blacklist extends PureComponent {
                 <Radio value={2}>手机黑名单</Radio>
                 <Radio value={3}>地址黑名单</Radio>
                 <Radio value={4}>其它黑名单</Radio>
+              </Radio.Group>
+            </FormItem>
+          </Form>
+        </Modal>
+        <Modal
+          title="导入"
+          visible={updateImportVisible}
+          maskClosable={false}
+          destroyOnClose
+          width={600}
+          onCancel={this.handleCancelImport}
+          footer={[
+            <Button key="back" onClick={this.handleCancelImport}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" onClick={()=>this.handleImportSubmit()}>
+              确定
+            </Button>,
+          ]}
+        >
+          <Form>
+            <FormItem {...formAllItemLayout} label="拉黑内容">
+              <TextArea onChange={this.onTextArea} rows={4} />
+              <p style={{color:"red",marginBottom:'0'}}>{tips}</p>
+            </FormItem>
+            <FormItem {...formAllItemLayout} label="拉黑类型">
+              <Radio.Group onChange={this.onChangeChecked1}>
+                <Radio value={1}>IP</Radio>
+                <Radio value={2}>手机号</Radio>
               </Radio.Group>
             </FormItem>
           </Form>
