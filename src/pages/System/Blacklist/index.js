@@ -372,16 +372,16 @@ class Blacklist extends PureComponent {
   dataType = (key) => {
     let text = ""
     if(key === 1 || key === '1'){
-      text = "IP黑名单"
+      text = "IP"
     }
     if(key === 2 || key === '2'){
-      text = "手机黑名单"
+      text = "手机"
     }
     if(key === 3 || key === '3'){
-      text = "地址黑名单"
+      text = "地址"
     }
     if(key === 4 || key === '4'){
-      text = "其它黑名单"
+      text = "其它"
     }
     return text;
   }
@@ -545,14 +545,14 @@ class Blacklist extends PureComponent {
           ]}
         >
           <Form>
-            <FormItem {...formAllItemLayout} label="拉黑内容">
-              <TextArea onChange={this.onTextArea} rows={4} />
+            <FormItem {...formAllItemLayout} label="导入内容">
+              <TextArea onChange={this.onTextArea} placeholder='每次只能选择一种类型手机号或IP地址，每行一个' rows={4} />
               <p style={{color:"red",marginBottom:'0'}}>{tips}</p>
             </FormItem>
-            <FormItem {...formAllItemLayout} label="拉黑类型">
+            <FormItem {...formAllItemLayout} label="导入类型">
               <Radio.Group onChange={this.onChangeChecked1}>
-                <Radio value={1}>IP</Radio>
                 <Radio value={2}>手机号</Radio>
+                <Radio value={1}>IP</Radio>
               </Radio.Group>
             </FormItem>
           </Form>

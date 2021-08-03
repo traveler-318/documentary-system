@@ -45,7 +45,11 @@ export const EXPRESSTYPE = [
   {
     key:"电商标快",
     value:"电商标快"
-  }
+  },
+  {
+    key:"函速达",
+    value:"函速达"
+  },
 ]
 export const SONSHEET = [
   {

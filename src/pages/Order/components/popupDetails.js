@@ -917,12 +917,9 @@ class OrdersEdit extends PureComponent {
           ]}
         >
           <Form>
-            <FormItem {...formAllItemLayout1} label="黑名单值">
-              <Input onChange={this.onChangeInput} placeholder="请输入黑名单值" />
-            </FormItem>
-            <FormItem {...formAllItemLayout1} label="拉黑原因">
-              <Input onChange={this.onChangeInput1} placeholder="请输入拉黑原因" />
-            </FormItem>
+            {/*<FormItem {...formAllItemLayout1} label="黑名单值">*/}
+              {/*<Input onChange={this.onChangeInput} placeholder="请输入黑名单值" />*/}
+            {/*</FormItem>*/}
             <FormItem {...formAllItemLayout1} label="拉黑类型">
               <Checkbox.Group onChange={this.onChangeChecked}>
                 <Checkbox value={1}>IP黑名单</Checkbox>
@@ -931,6 +928,10 @@ class OrdersEdit extends PureComponent {
                 <Checkbox value={4}>其它黑名单</Checkbox>
               </Checkbox.Group>
             </FormItem>
+            <FormItem {...formAllItemLayout1} label="拉黑原因">
+              <Input onChange={this.onChangeInput1} placeholder="请输入拉黑原因" />
+            </FormItem>
+
           </Form>
         </Modal>
       </>
