@@ -12,19 +12,21 @@ import {
   message,
   Modal,
   Row,
-  Tree,
+  Tree, Divider,
 } from 'antd';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { USER_INIT, USER_LIST, USER_ROLE_GRANT, USER_UPDATE } from '../../../actions/user';
-import { resetPassword } from '../../../services/user';
+import { resetPassword,unbundling, binding } from '../../../services/user';
 import { tenantMode } from '../../../defaultSettings';
 import { getAccessToken, getToken } from '../../../utils/authority';
 import { randomLetters, randomNumber, copyToClipboard } from '../../../utils/publicMethod';
+import BindingQRCode from '../../Customer/Sales/components/bindingQRCode';
 
 const FormItem = Form.Item;
 const { TreeNode } = Tree;
 const { Dragger } = Upload;
+let timers = null;
 
 @connect(({ user, loading }) => ({
   user,
@@ -43,7 +45,9 @@ class User extends PureComponent {
     isCovered: 0,
     onReset: () => {},
     passwordVisible: false,
-    newPassword:""
+    newPassword:"",
+    bindingQRCodeVisible:false,
+    countDownTimer:30
   };
 
   componentWillMount() {
@@ -322,6 +326,70 @@ class User extends PureComponent {
     }
   };
 
+  handleBinding = (row,type) => {
+    const { params } = this.state;
+    const { dispatch } = this.props;
+    if(type ==="0"){
+      Modal.confirm({
+        title: '提醒',
+        content: '是否确认解绑?',
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk() {
+          unbundling(row.account,row.openid).then(res=>{
+            dispatch(USER_LIST(params));
+            message.success(res.msg);
+          })
+        },
+        onCancel() {},
+      });
+    }else {
+      binding(row.account).then(res=>{
+        console.log(res)
+        const imgUrl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+res.data;
+        this.setState({
+          bindingQRCodeVisible:true,
+          bindingQRCode:imgUrl
+        })
+        this.countDown();
+      })
+    }
+  }
+
+  countDown = () => {
+    timers = setTimeout(()=>{
+      let {countDownTimer} = this.state;
+      countDownTimer = countDownTimer-1
+      this.setState({
+        countDownTimer:countDownTimer,
+      },()=>{
+        if(this.state.countDownTimer <= 0 || !this.state.bindingQRCode){
+          this.setState({
+            countDownTimer:30,
+            bindingQRCode:false,
+          })
+          clearTimeout(timers)
+        }else{
+          this.countDown();
+        }
+      })
+    },1000)
+  };
+
+  // =========关闭二维码弹窗========
+  handleCancelBindingQRCode = () => {
+    const { dispatch } = this.props;
+    const { params } = this.state;
+    dispatch(USER_LIST(params));
+    this.setState({
+      bindingQRCodeVisible:false,
+      countDownTimer:30
+    })
+    dispatch(USER_LIST(params));
+  }
+
+
   renderRightButton = () => (
     <div>
       <Button icon="vertical-align-bottom" onClick={this.handleImport}>
@@ -343,7 +411,8 @@ class User extends PureComponent {
       checkedTreeKeys, 
       isCovered,
       passwordVisible,
-      newPassword
+      newPassword,
+      bindingQRCodeVisible,bindingQRCode,countDownTimer
     } = this.state;
 
     const {
@@ -450,6 +519,22 @@ class User extends PureComponent {
         render: (key, row) => {
           return(
             <Switch checked={key===1?true:false} onChange={(e)=>{this.onChange(e, row,'status')}} />
+          )
+        },
+      },
+      {
+        title: '公众号绑定',
+        dataIndex: 'openid',
+        width: 100,
+        render: (res,row) => {
+          return(
+            <div>
+              {
+                res === '' ?
+                  (<a onClick={()=>this.handleBinding(row,"1")}>绑定</a>)
+                  :(<><a onClick={()=>this.handleBinding(row,"0")}>解绑</a></>)
+              }
+            </div>
           )
         },
       },
@@ -610,6 +695,17 @@ class User extends PureComponent {
             </FormItem>
           </Form>
         </Modal>
+
+        {/* 二维码 */}
+        {bindingQRCodeVisible?(
+          <BindingQRCode
+            bindingQRCodeVisible={bindingQRCodeVisible}
+            bindingQRCode={bindingQRCode}
+            countDownTimer={countDownTimer}
+            handleCancelBindingQRCode={this.handleCancelBindingQRCode}
+          />
+        ):""}
+
       </Panel>
     );
   }
