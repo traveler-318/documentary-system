@@ -17,7 +17,7 @@ import {
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
 import { USER_INIT, USER_LIST, USER_ROLE_GRANT, USER_UPDATE } from '../../../actions/user';
-import { resetPassword,unbundling, binding } from '../../../services/user';
+import { resetPassword, unbundling, binding, testOpenid } from '../../../services/user';
 import { tenantMode } from '../../../defaultSettings';
 import { getAccessToken, getToken } from '../../../utils/authority';
 import { randomLetters, randomNumber, copyToClipboard } from '../../../utils/publicMethod';
@@ -337,7 +337,7 @@ class User extends PureComponent {
         okType: 'danger',
         cancelText: '取消',
         onOk() {
-          unbundling(row.account,row.openid).then(res=>{
+          unbundling(row.id,row.openid).then(res=>{
             dispatch(USER_LIST(params));
             message.success(res.msg);
           })
@@ -345,7 +345,7 @@ class User extends PureComponent {
         onCancel() {},
       });
     }else {
-      binding(row.account).then(res=>{
+      binding(row.id).then(res=>{
         console.log(res)
         const imgUrl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+res.data;
         this.setState({
@@ -388,6 +388,19 @@ class User extends PureComponent {
     })
     dispatch(USER_LIST(params));
   }
+
+  handleTest(row){
+    if(row.openid === ""){
+      return message.error('请点击绑定按钮进行二维码绑定操作!如已绑定请点击刷新页面后点击测试消息发送!')
+    }
+    testOpenid(row.openid).then(response=>{
+      if(response.code === 200){
+        message.success(response.msg)
+      }else{
+        message.error(response.msg)
+      }
+    })
+  };
 
 
   renderRightButton = () => (
@@ -532,7 +545,7 @@ class User extends PureComponent {
               {
                 res === '' ?
                   (<a onClick={()=>this.handleBinding(row,"1")}>绑定</a>)
-                  :(<><a onClick={()=>this.handleBinding(row,"0")}>解绑</a></>)
+                  :(<><a onClick={()=>this.handleBinding(row,"0")}>解绑</a><Divider type="vertical" /><a onClick={()=>this.handleTest(row)}>测试</a></>)
               }
             </div>
           )
