@@ -272,12 +272,17 @@ class AuthorityList extends PureComponent {
     }else {
       getWeChatBinding(row.userAccount).then(res=>{
         console.log(res)
-        const imgUrl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+res.data;
-        this.setState({
-          bindingQRCodeVisible:true,
-          bindingQRCode:imgUrl
-        })
-        this.countDown();
+        if(res.code === 200){
+          const imgUrl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+res.data;
+          this.setState({
+            bindingQRCodeVisible:true,
+            bindingQRCode:imgUrl
+          })
+          this.countDown();
+        }else {
+          message.error(res.msg);
+        }
+
       })
     }
   }
