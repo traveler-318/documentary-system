@@ -337,7 +337,7 @@ class User extends PureComponent {
         okType: 'danger',
         cancelText: '取消',
         onOk() {
-          unbundling(row.id,row.openid).then(res=>{
+          unbundling(row.account,row.openid).then(res=>{
             dispatch(USER_LIST(params));
             message.success(res.msg);
           })
