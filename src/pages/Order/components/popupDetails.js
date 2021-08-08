@@ -664,7 +664,7 @@ class OrdersEdit extends PureComponent {
                       onClick={this.handleReminds}
                     >提醒</Button>
                     <Button icon="copy" onClick={this.repeat}>复打</Button>
-                    <Button onClick={this.handleAdd}>黑名单</Button>
+                    <Button style={{paddingRight: 0}} icon="exception" onClick={this.handleAdd}>黑名单</Button>
                     {/* <Button  icon="folder">归档</Button> */}
                   </div>
                   <div className={styles.editList} style={{ padding: '20px' }}>

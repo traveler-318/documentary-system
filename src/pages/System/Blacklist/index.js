@@ -9,7 +9,7 @@ import {
   Divider,
   Modal,
   Radio,
-  message, Checkbox,
+  message, Checkbox, Tag,
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
@@ -437,18 +437,39 @@ class Blacklist extends PureComponent {
       {
         title: '类型',
         dataIndex: 'dataType',
-        width: 200,
+        width: 150,
         ellipsis: true,
         render: (key) => {
+          let version='';
+          let color='';
+          if(key === 1 || key === '1'){
+            version = "IP"
+            color='geekblue'
+          }
+          if(key === 2 || key === '2'){
+            version = "手机"
+            color="gold"
+          }
+          if(key === 3 || key === '3'){
+            version = "地址"
+            color="green"
+          }
+          if(key === 4 || key === '4'){
+            version = "其他"
+            color='yellow'
+          }
+
           return(
-            <div>{this.dataType(key)} </div>
+            <Tag color={color}>
+              {version}
+            </Tag>
           )
         },
       },
       {
         title: '来源',
         dataIndex: 'shieldingChannel',
-        width: 200,
+        width: 100,
         render: (key) => {
           return (
             <div>{this.getTYPE(key)} </div>
@@ -512,12 +533,6 @@ class Blacklist extends PureComponent {
           ]}
         >
           <Form>
-            <FormItem {...formAllItemLayout} label="黑名单值">
-              <Input onChange={this.onChange} placeholder="请输入黑名单值" />
-            </FormItem>
-            <FormItem {...formAllItemLayout} label="拉黑原因">
-              <Input onChange={this.onChange1} placeholder="请输入拉黑原因" />
-            </FormItem>
             <FormItem {...formAllItemLayout} label="拉黑类型">
               <Radio.Group onChange={this.onChangeChecked}>
                 <Radio value={1}>IP黑名单</Radio>
@@ -525,6 +540,12 @@ class Blacklist extends PureComponent {
                 <Radio value={3}>地址黑名单</Radio>
                 <Radio value={4}>其它黑名单</Radio>
               </Radio.Group>
+            </FormItem>
+            <FormItem {...formAllItemLayout} label="黑名单值">
+              <Input onChange={this.onChange} placeholder="请输入黑名单值" />
+            </FormItem>
+            <FormItem {...formAllItemLayout} label="拉黑原因">
+              <Input onChange={this.onChange1} placeholder="请输入拉黑原因" />
             </FormItem>
           </Form>
         </Modal>
