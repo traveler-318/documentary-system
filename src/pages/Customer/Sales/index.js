@@ -473,22 +473,22 @@ class AuthorityList extends PureComponent {
           )
         },
       },
-      {
-        title: '公众号通知',
-        dataIndex: 'openid',
-        width: 100,
-        render: (res,row) => {
-          return(
-            <div>
-              {
-                res === '' ?
-                  (<a onClick={()=>this.handleBinding(row,"1")}>绑定</a>)
-                  :(<><a onClick={()=>this.handleBinding(row,"0")}>解绑</a><Divider type="vertical" /><a onClick={()=>this.handleTest(row)}>测试</a></>)
-              }
-            </div>
-          )
-        },
-      },
+      // {
+      //   title: '公众号通知',
+      //   dataIndex: 'openid',
+      //   width: 100,
+      //   render: (res,row) => {
+      //     return(
+      //       <div>
+      //         {
+      //           res === '' ?
+      //             (<a onClick={()=>this.handleBinding(row,"1")}>绑定</a>)
+      //             :(<><a onClick={()=>this.handleBinding(row,"0")}>解绑</a><Divider type="vertical" /><a onClick={()=>this.handleTest(row)}>测试</a></>)
+      //         }
+      //       </div>
+      //     )
+      //   },
+      // },
       {
         title: '操作',
         key: 'operation',

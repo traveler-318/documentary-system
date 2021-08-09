@@ -302,24 +302,24 @@ class BaseView extends Component {
                     ],
                   })(<Input />)}
                 </FormItem>
-                <FormItem {...formItemLayout} label={"微信绑定"}>
-                  
-                  {(openid && openid != '' && openid != null) ? 
-                    (<>
-                      <a onClick={()=>this.handleBinding('0')}>解绑</a>
-                      <Divider type="vertical" />
-                    </>):""
-                  }
-                  {(openid === '' || openid === null || !openid) ? 
-                    (<>
-                      <a onClick={()=>this.handleBinding('1')}>绑定</a>
-                      <Divider type="vertical" />
-                    </>):""
-                  }
-                  {(openid && openid != '' && openid != null) ? 
-                    (<a onClick={()=>this.handleTest()}>测试</a>):""
-                  }
-                </FormItem>
+                {/*<FormItem {...formItemLayout} label={"微信绑定"}>*/}
+                  {/**/}
+                  {/*{(openid && openid != '' && openid != null) ? */}
+                    {/*(<>*/}
+                      {/*<a onClick={()=>this.handleBinding('0')}>解绑</a>*/}
+                      {/*<Divider type="vertical" />*/}
+                    {/*</>):""*/}
+                  {/*}*/}
+                  {/*{(openid === '' || openid === null || !openid) ? */}
+                    {/*(<>*/}
+                      {/*<a onClick={()=>this.handleBinding('1')}>绑定</a>*/}
+                      {/*<Divider type="vertical" />*/}
+                    {/*</>):""*/}
+                  {/*}*/}
+                  {/*{(openid && openid != '' && openid != null) ? */}
+                    {/*(<a onClick={()=>this.handleTest()}>测试</a>):""*/}
+                  {/*}*/}
+                {/*</FormItem>*/}
                 <FormItem style={{display:"none"}}>
                   {getFieldDecorator('id')(
                     <Input />
