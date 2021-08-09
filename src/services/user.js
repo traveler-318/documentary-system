@@ -242,3 +242,7 @@ export async function getLabelList(params) {
     body: params,
   });
 }
+
+export async function getCity() {
+  return request('/api/blade-system/region/listall');
+}

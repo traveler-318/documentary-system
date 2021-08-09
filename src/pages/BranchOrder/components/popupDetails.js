@@ -5,7 +5,7 @@ import moment from 'moment';
 import localforage from 'localforage';
 
 import styles from './edit.less';
-import { CITY } from '../../../utils/city';
+import { getCityData } from '../../../utils/authority';
 import {
   orderDetail,
   updateReminds,
@@ -66,11 +66,17 @@ class OrdersEdit extends PureComponent {
       productId:null,
       detailsId:null,
       tenantId:null,
-
+      cityData:[]
     };
   }
 
   componentWillMount() {
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
 
     const { globalParameters } = this.props;
     // 获取详情数据
@@ -430,7 +436,8 @@ class OrdersEdit extends PureComponent {
       orderListLength,
       primary,
       primary1,
-      productList
+      productList,
+      cityData
     } = this.state;
 
     const formAllItemLayout = {
@@ -496,8 +503,8 @@ class OrdersEdit extends PureComponent {
                         initialValue: [detail.province, detail.city, detail.area],
                       })(
                         <Cascader
-                          // defaultValue={[detail.province, detail.city, detail.area]}
-                          options={CITY}
+                          fieldNames={{ label: 'text'}}
+                          options={cityData}
                           disabled={isUpdate ? edit : true}
                           onChange={this.onChange}
                         />

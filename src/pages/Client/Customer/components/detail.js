@@ -11,7 +11,7 @@ import {
 import { connect } from 'dva';
 import moment from 'moment';
 import styles from './edit.less';
-import { CITY } from '../../../../utils/city';
+import { getCityData } from '../../../../utils/authority';
 import {
   localPrinting,
   logisticsRepeatPrint,
@@ -52,10 +52,19 @@ class CustomerDetail extends PureComponent {
 
       clientLevels:[],//客户级别数组
       clientStatus:[],//客户等级数组
+
+      cityData:[],
     };
   }
 
   componentWillMount() {
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
+
     const { globalParameters } = this.props;
     console.log(globalParameters)
     const propData = globalParameters.detailData;
@@ -123,7 +132,8 @@ class CustomerDetail extends PureComponent {
     const {
       detail,
       clientStatus,
-      clientLevels
+      clientLevels,
+      cityData
     } = this.state;
     const formAllItemLayout = {
       labelCol: {
@@ -170,7 +180,8 @@ class CustomerDetail extends PureComponent {
                 initialValue: [detail.province, detail.city, detail.area],
               })(
                 <Cascader
-                  options={CITY}
+                  fieldNames={{ label: 'text'}}
+                  options={cityData}
                   disabled={edit}
                   onChange={this.onChange}
                 />

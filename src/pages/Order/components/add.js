@@ -11,7 +11,7 @@ import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user'
 import func from '../../../utils/Func';
 import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
-import { CITY } from '../../../utils/city';
+import { getCityData } from '@/utils/authority';
 import { getCookie } from '../../../utils/support';
 import { createData, getRegion, productTreelist,addressParsing } from '../../../services/newServices/order'
 import { getList as getSalesmanLists,salesmanList } from '../../../services/newServices/sales';
@@ -57,7 +57,8 @@ class OrdersAdd extends PureComponent {
       productId:null,
       textAAreaValue:'',
       value:'',
-      addressState:false
+      addressState:false,
+      cityData:[]
     };
   }
 
@@ -66,6 +67,12 @@ class OrdersAdd extends PureComponent {
     this.getSalesmanList();
     // this.assemblingData();
     this.getTreeList();
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
 
     if(window.location.hash.indexOf("allOrders") != -1){
       backUrl = "/order/allOrders"
@@ -307,7 +314,8 @@ class OrdersAdd extends PureComponent {
       userPhone,
       userName,
       userAddress,
-      productList
+      productList,
+      cityData
     } = this.state;
 
     const formItemLayout = {
@@ -392,8 +400,8 @@ class OrdersAdd extends PureComponent {
                       ],
                     })(
                     <Cascader
-                      // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
-                      options={CITY}
+                      fieldNames={{ label: 'text'}}
+                      options={cityData}
                       onChange={this.onChange}
                     />
                   )}

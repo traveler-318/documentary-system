@@ -7,7 +7,7 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import FormTitle from '../../../components/FormTitle';
 import styles from './edit.less';
-import { CITY } from '../../../utils/city';
+import { getCityData } from '@/utils/authority';
 import { getQueryString } from '../../../utils/utils';
 import { getCookie } from '../../../utils/support';
 import {
@@ -53,6 +53,7 @@ class OrdersEdit extends PureComponent {
       primary:'primary',
       primary1:'',
       productList:[],
+      cityData:[]
     };
   }
 
@@ -60,13 +61,19 @@ class OrdersEdit extends PureComponent {
   componentWillMount() {
 
     const { globalParameters } = this.props;
+    
     console.log(globalParameters)
     // 获取详情数据
     this.setState({
       detail:globalParameters.detailData,
     })
     this.getTreeList();
-    this.getEditDetails()
+    this.getEditDetails();
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
   }
 
   getTreeList = () => {
@@ -297,7 +304,8 @@ class OrdersEdit extends PureComponent {
       orderListLength,
       primary,
       primary1,
-      productList
+      productList,
+      cityData
     } = this.state;
 
     const formAllItemLayout = {
@@ -361,8 +369,8 @@ class OrdersEdit extends PureComponent {
                       initialValue: [detail.province, detail.city, detail.area],
                     })(
                       <Cascader
-                        // defaultValue={[detail.province, detail.city, detail.area]}
-                        options={CITY}
+                      fieldNames={{ label: 'text'}}
+                      options={cityData}
                         disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1') ? edit : true}
                         onChange={this.onChange}
                       />

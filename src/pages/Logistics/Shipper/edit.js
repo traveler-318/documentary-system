@@ -8,7 +8,6 @@ import { getCookie } from '../../../utils/support';
 import { shipperUpdate } from '../../../services/newServices/logistics';
 import router from 'umi/router';
 import styles from '../../../layouts/Sword.less';
-import { CITY } from '../../../utils/city';
 
 const FormItem = Form.Item;
 const { Option } = Select;

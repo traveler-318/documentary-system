@@ -12,7 +12,6 @@ import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user'
 import { getSalesmanInfo } from '../../../services/user';
 import func from '../../../utils/Func';
 import { tenantMode } from '../../../defaultSettings';
-import { CITY } from '../../../utils/city';
 import { getCookie } from '../../../utils/support';
 
 
