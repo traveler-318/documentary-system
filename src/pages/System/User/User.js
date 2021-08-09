@@ -363,23 +363,23 @@ class User extends PureComponent {
   }
 
   countDown = () => {
-    timers = setTimeout(()=>{
-      let {countDownTimer} = this.state;
-      countDownTimer = countDownTimer-1
+    const { params } = this.state;
+    const { dispatch } = this.props;
+    setTimeout(()=>{
       this.setState({
-        countDownTimer:countDownTimer,
-      },()=>{
-        if(this.state.countDownTimer <= 0 || !this.state.bindingQRCode){
-          this.setState({
-            countDownTimer:30,
-            bindingQRCode:false,
-          })
-          clearTimeout(timers)
-        }else{
-          this.countDown();
-        }
+        countDownTimer: this.state.countDownTimer - 1,
       })
+      if(this.state.countDownTimer === 0){
+        dispatch(USER_LIST(params));
+        this.setState({
+          bindingQRCodeVisible:false,
+          countDownTimer:30
+        })
+      }else{
+        this.countDown();
+      }
     },1000)
+
   };
 
   // =========关闭二维码弹窗========
