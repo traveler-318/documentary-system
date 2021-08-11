@@ -20,7 +20,7 @@ import {
 import { connect } from 'dva';
 import moment from 'moment';
 import styles from './edit.less';
-import { CITY } from '../../../../utils/city';
+import { getCityData } from '@/utils/authority';
 import localforage from 'localforage';
 import {
   orderDetail,
@@ -73,7 +73,8 @@ class OrdersEdit extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productId:null,
-      detailsId:null
+      detailsId:null,
+      cityData:[]
     };
   }
 
@@ -101,6 +102,12 @@ class OrdersEdit extends PureComponent {
       this.getTreeList();
       this.getEditDetails();
     });
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
 
   }
 
@@ -452,7 +459,8 @@ class OrdersEdit extends PureComponent {
       orderListLength,
       primary,
       primary1,
-      productList
+      productList,
+      cityData
     } = this.state;
 
     const formAllItemLayout = {
@@ -524,8 +532,8 @@ class OrdersEdit extends PureComponent {
                         initialValue: [detail.province, detail.city, detail.area],
                       })(
                         <Cascader
-                          // defaultValue={[detail.province, detail.city, detail.area]}
-                          options={CITY}
+                          fieldNames={{ label: 'text'}}
+                          options={cityData}
                           disabled={true}
                           onChange={this.onChange}
                         />

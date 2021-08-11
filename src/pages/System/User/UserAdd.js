@@ -18,11 +18,11 @@ import { connect } from 'dva';
 import moment from 'moment';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
+import { deptCompanyName } from '../../../services/user';
 import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT, USER_UPDATE } from '../../../actions/user';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
 import { tenantMode } from '../../../defaultSettings';
-
 const FormItem = Form.Item;
 
 @connect(({ user, loading }) => ({
@@ -31,14 +31,30 @@ const FormItem = Form.Item;
 }))
 @Form.create()
 class UserAdd extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      deptTree:{}
+    }
+  }
+
   componentWillMount() {
     const { dispatch } = this.props;
     dispatch(USER_INIT());
+
+    deptCompanyName().then(resp => {
+      console.log(resp)
+      this.setState({
+        deptTree:resp.data
+      })
+    });
+
   }
 
   handleSubmit = e => {
     e.preventDefault();
-    const { dispatch, form } = this.props;
+    const { dispatch, form, } = this.props;
+    const {deptTree}=this.state
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const password = form.getFieldValue('password');
@@ -46,6 +62,7 @@ class UserAdd extends PureComponent {
         if (password !== password2) {
           message.warning('两次密码输入不一致');
         } else {
+          values.deptId=deptTree.id
           console.log(values)
           Modal.confirm({
             title: '提醒',
@@ -57,16 +74,15 @@ class UserAdd extends PureComponent {
             onOk:() => {
               const params = {
                 ...values,
-                deptId: values.deptId,
+                // deptId: values.deptId,
                 // roleId: func.join(values.roleId),
                 // postId: func.join(values.postId),
-                birthday: func.format(values.birthday),
+                // birthday: func.format(values.birthday),
               };
               dispatch(USER_SUBMIT(params));
             },
             onCancel() {},
           });
-
         }
       }
     });
@@ -110,10 +126,12 @@ class UserAdd extends PureComponent {
     const {
       form: { getFieldDecorator },
       user: {
-        init: { roleTree,organizationTree, deptTree, postList, tenantList },
+        init: { roleTree,organizationTree, postList, tenantList },
       },
       submitting,
     } = this.props;
+
+    const {deptTree}=this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -138,12 +156,12 @@ class UserAdd extends PureComponent {
         提交
       </Button>
     );
-    let _deptTree = []
-    deptTree.map(item=>{
-      if(item.id === getCookie("dept_id")){
-        _deptTree.push(item)
-      }
-    })
+    // let _deptTree = [];
+    // deptTree.map(item=>{
+    //   if(item.id === getCookie("dept_id")){
+    //     _deptTree.push(item)
+    //   }
+    // })
 
     let _organizationTree = [];
     organizationTree.map(item=>{
@@ -179,7 +197,7 @@ class UserAdd extends PureComponent {
                     })(
                       <Select
                         showSearch
-                        onChange={this.handleChange}
+                        // onChange={this.handleChange}
                         filterOption={(input, option) =>
                           option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
@@ -380,15 +398,9 @@ class UserAdd extends PureComponent {
                         message: '请选择所属公司',
                       },
                     ],
+                    initialValue: deptTree.deptName,
                   })(
-                    <TreeSelect
-                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                      treeData={_deptTree}
-                      allowClear
-                      showSearch
-                      treeNodeFilterProp="title"
-                      placeholder="请选择所属公司"
-                    />
+                    <Input disabled placeholder="" />
                   )}
                 </FormItem>
               </Col>

@@ -71,7 +71,7 @@ import VoiceList from '../../Order/components/voiceList';
 import OrderImport from './components/import';
 import { getCookie } from '../../../utils/support';
 import { getLabelList } from '@/services/user';
-import { CITY } from '@/utils/city';
+import { getCityData } from '@/utils/authority';
 import SearchButton from './components/button';
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
@@ -178,12 +178,20 @@ class AllOrdersList extends PureComponent {
       organizationTree:[],
       createUsers:[],
       sameLevelUser:[],
-      userName:getCookie("userName")
+      userName:getCookie("userName"),
+      cityData:[]
     };
   }
 
   // ============ 初始化数据 ===============
   componentWillMount() {
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
+
     let key = this.props.route.key;
     let type = null;
     const currentUser = getCurrentUser();
@@ -500,16 +508,6 @@ class AllOrdersList extends PureComponent {
           {/*)}*/}
         {/*</Form.Item>*/}
 
-
-        {/*<Form.Item label="省市区">*/}
-          {/*{getFieldDecorator('cityparam', {*/}
-          {/*})(*/}
-            {/*<Cascader style={{ width: 200 }}*/}
-              {/*options={CITY}*/}
-              {/*onChange={this.onChange}*/}
-            {/*/>*/}
-          {/*)}*/}
-        {/*</Form.Item>*/}
         <div>
           <Form.Item label="创建时间">
             {getFieldDecorator('createTime', {
@@ -1276,28 +1274,6 @@ class AllOrdersList extends PureComponent {
   }
 
 
-
-
-  // setCityVal = (row) =>{
-  //   let v = "";
-  //   CITY.map(c=>{
-  //       if(c.value == row.province){
-  //         v = c.label+'/';
-  //         c.children.map(p=>{
-  //           if(p.value == row.city) {
-  //             v += p.label+'/';
-  //             p.children.map(a=>{
-  //               if(a.value == row.area) {
-  //                 v += a.label;
-  //               }
-  //             })
-  //           }
-  //         })
-  //       }
-  //   })
-  //   return v
-  // }
-
   getOrderMenuTemplate = () => {
     orderMenuTemplate(2).then(res=>{
       res.data.menuJson.map(item => {
@@ -1387,7 +1363,7 @@ class AllOrdersList extends PureComponent {
 
   setCityVal = (row) =>{
     let v = "";
-    CITY.map(c=>{
+    this.state.cityData.map(c=>{
         if(c.value == row.province){
           v = c.label+'/';
           c.children.map(p=>{

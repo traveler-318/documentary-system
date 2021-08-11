@@ -20,7 +20,9 @@ import {
   Radio,
   Tag,
   Cascader,
-  TreeSelect, Table,
+  TreeSelect, 
+  Table,
+  Tooltip
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
@@ -45,11 +47,13 @@ import {
   syndata,
   subscription,
   updateData,
+  updateLogistic,
   productTreelist,
   batchLogisticsSubscription,
   getCurrenttree,
   getCurrentsalesman,
   updateConfirmTag,
+  reset,
   updateVoiceStatus,
   orderMenuHead,
   orderMenuTemplate,
@@ -234,6 +238,9 @@ class AllOrdersList extends PureComponent {
       updateConfirmTagVisible:false,
       voiceStatusVisible:false,
       confirmTagList:[],
+      resetList:[],
+      resetVisible:false,
+      resetRadioChecked:2,
       _listArr:[],
       organizationTree:[],
       beginTime:'',
@@ -284,10 +291,25 @@ class AllOrdersList extends PureComponent {
     })
   }
 
-  getDataList = () => {
-    const {params} = this.state;
+  getDataList = (row) => {
+    const {params,data} = this.state;
+    // let _data = {...data};
+    // if(row){
+    //   let _list = [];
+    //   _data.list.map(item=>{
+    //     if(row.id != item.id){
+    //       // delete item.logisticsNumber
+    //       // _list.push({})
+    //     }else{
+    //       _list.push(item)
+    //     }
+    //   })
+    //   _data.list = _list
+    // }
+
     this.setState({
       loading:true,
+      // data:_data,
     })
     getPermissions(params).then(res=>{
       this.setState({
@@ -848,9 +870,6 @@ class AllOrdersList extends PureComponent {
     });
   }
 
-
-
-
   toExamines = (confirmTag) => {
     const {selectedRows} = this.state;
     let type = false, _data = [];
@@ -948,6 +967,72 @@ class AllOrdersList extends PureComponent {
       this.changeUpdateConfirmTag(selectedRows);
     }
   }
+
+  resetBtn =()=>{
+    const {selectedRows} = this.state;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+    this.setState({
+      resetList:selectedRows,
+      resetVisible:true,
+    })
+  }
+
+  handleCancelResetBtn = () => {
+    this.setState({
+      resetVisible:false,
+      resetRadioChecked:2,
+    })
+  }
+
+  onChangeResetRadio = (e) => {
+    this.setState({
+      resetRadioChecked: e.target.value
+    })
+  }
+
+  handleSubmitUpdateReset = (e) => {
+    const { resetRadioChecked, resetList } = this.state;
+    if(!resetRadioChecked){
+      return message.error("请选择需要重置的类型");
+    }
+    Modal.confirm({
+      title: '提醒',
+      content: "此次操作无法再次变更,确认操作!",
+      okText: '确定',
+      okType: 'primary',
+      cancelText: '取消',
+      keyboard:false,
+      onOk:() => {
+        return new Promise((resolve, reject) => {
+          reset({
+            type:resetRadioChecked,
+            list:resetList
+          }).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              this.setState({
+                resetVisible:false,
+                selectedRows:[]
+              });
+              this.getDataList();
+              resolve();
+            }else{
+              message.error(res.msg);
+              reject();
+            }
+          })
+
+        }).catch(() => console.log('Oops errors!'));
+
+      },
+      onCancel() {},
+    });
+
+
+  }
+
 
   // 认领
   bulkClaim = (row) => {
@@ -1259,6 +1344,9 @@ class AllOrdersList extends PureComponent {
     }else if(code === 'returnOfGoods'){
       //退货
       this.returnOfGoods();
+    }else if(code === 'resetLogistics'){
+      //物流重置
+      this.resetBtn();
     }
 
   }
@@ -1471,6 +1559,18 @@ class AllOrdersList extends PureComponent {
       },
       onCancel() {},
     });
+  }
+
+  reactNode = () => {
+    return(
+      <div>
+        <p>通过:收货地址跟下单IP归属地一致</p>
+        <p>人工:收货地址和下单IP不在同一个市区建议人工审核</p>
+        <p>风险:收货所在省份和下单IP地址不一致，涉嫌欺诈行为，建议拒绝</p>
+        <p>老黑:公司内部黑名单用户</p>
+        <p>网黑:平台全网黑名单用户</p>
+      </div>
+    )
   }
 
   getText = (key, type) => {
@@ -2023,7 +2123,7 @@ handleCancelAssessment = () => {
           logisticsCompany : value !=="" ? value : null,
         }
         const _this=this;
-        updateData(params).then(res=>{
+        updateLogistic(params).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
             _this.getDataList();
@@ -2041,13 +2141,18 @@ handleCancelAssessment = () => {
     const v = e.target.value;
     const reg = /.*[\u4e00-\u9fa5]+.*$/;
     if (!reg.test(v)) {
-      if(e.target.value && e.target.value !== row.logisticsNumber){
+      if(e.target.value && e.target.value.length <= 5){
+        message.error("物流编码应大于5位以上");
+        // this.getDataList(row);
+        return false
+      }
+      if(e.target.value !== row.logisticsNumber){
         const params={
           id:row.id,
-          logisticsNumber : e.target.value !=="" ? e.target.value : null,
+          logisticsNumber : e.target.value !=="" ? e.target.value : "",
         }
         const _this=this;
-        updateData(params).then(res=>{
+        updateLogistic(params).then(res=>{
           if(res.code === 200){
             message.success(res.msg);
             _this.getDataList();
@@ -2240,7 +2345,7 @@ handleCancelAssessment = () => {
               return (
                 <>
                   <div className={styles.productCoding}>
-                    {row.confirmTag === "2" || row.confirmTag === "3" ? (
+                    {(row.logisticsPrintType === "0" || row.logisticsPrintType === null ) && row.confirmTag === "2" ? (
                       <>
                         <span>{key}</span>
                         <Input style={{width:"91%"}} className={styles.input} defaultValue={key} onBlur={(e)=>this.Update2(e,row)}/>
@@ -2258,6 +2363,11 @@ handleCancelAssessment = () => {
 
           // 风险评估
           if(item.dataIndex === "riskControlLevel"){
+            console.log(item,"riskControlLevel")
+            let title = item.title
+            item.title = (key,row)=>{
+              return <Tooltip title={this.reactNode}>{title}<Icon type='question-circle-o' /></Tooltip>
+            } 
             item.ellipsis=true;
             item.render=(key,row)=>{
               return key == 0 ? <Tag color="green">通过</Tag> : 
@@ -2306,14 +2416,17 @@ handleCancelAssessment = () => {
           if(item.dataIndex === "logisticsNumber"){
             item.ellipsis=true;
             item.render=(key,row)=>{
-              this.state.checkCodeKD=key
+              this.state.checkCodeKD=key;
               return (
                 <>
                   <div className={styles.logisticsNumber}>
                     {row.logisticsPrintType === "0" && row.confirmTag === "2" ? (
                       <>
                         <span>{key}</span>
-                        <Input style={{width:"91%"}} className={styles.input} defaultValue={this.state.checkCodeKD} onBlur={(e)=>this.Update1(e,row)} />
+                        <Input style={{width:"91%"}} 
+                        className={styles.input} 
+                        defaultValue={key} 
+                        onBlur={(e)=>this.Update1(e,row)} />
                       </>
                     ) :key}
                     </div>
@@ -2326,7 +2439,8 @@ handleCancelAssessment = () => {
         this.setState({
           checkedOptions:checked,
           columns:list,
-          editCheckedOptions:checked
+          editCheckedOptions:checked,
+          dataTime:new Date().getTime()
         })
       }else {
         message.error(resp.msg)
@@ -2372,6 +2486,14 @@ handleCancelAssessment = () => {
         span: 20,
       },
     };
+    const formAllItemLayout1 = {
+      labelCol: {
+        span: 2,
+      },
+      wrapperCol: {
+        span: 20,
+      },
+    };
 
     const {
       data,
@@ -2410,7 +2532,9 @@ handleCancelAssessment = () => {
       returnOfGoodsVisible,
       returnOfGoodsDataList,
       AssessmentDetails,
-      AssessmentVisible
+      AssessmentVisible,
+      resetVisible,
+      resetRadioChecked
     } = this.state;
 
     const loop = data =>
@@ -2782,7 +2906,7 @@ handleCancelAssessment = () => {
     },
     },
   ]
-
+  
     list = list.map((col, index) => ({
       ...col,
       onHeaderCell: column => ({
@@ -3047,6 +3171,35 @@ handleCancelAssessment = () => {
             </FormItem>
           </Form>
         </Modal>
+
+        <Modal
+          title="重置物流"
+          visible={resetVisible}
+          maskClosable={false}
+          destroyOnClose
+          width={500}
+          onCancel={this.handleCancelResetBtn}
+          footer={[
+            <Button key="back" onClick={this.handleCancelResetBtn}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" onClick={()=>this.handleSubmitUpdateReset()}>
+              确定
+            </Button>,
+          ]}
+        >
+          <Form>
+            <FormItem {...formAllItemLayout1} label="重置">
+              <Radio.Group defaultValue={resetRadioChecked} onChange={this.onChangeResetRadio}>
+                <Radio value={1}>订阅</Radio>
+                <Radio value={2}>物流单号、订阅</Radio>
+              </Radio.Group>
+            </FormItem>
+          </Form>
+          <p style={{color:"red"}}>提示：重置后不可恢复，请谨慎操作</p>
+        </Modal>
+
+
 
         <Modal
           title="逾期开关"

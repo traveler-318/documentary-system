@@ -381,6 +381,11 @@ export default [
             routes: [
               { path: '/system/labelManagement', component: './System/labelManagement/index' },
             ],
+          },{
+            path: '/system/blacklist',
+            routes: [
+              { path: '/system/blacklist', component: './System/Blacklist/index' },
+            ],
           },
         ],
       },

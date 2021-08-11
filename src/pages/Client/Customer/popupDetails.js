@@ -15,7 +15,6 @@ import CustomerDetail from '@/pages/Client/Customer/components/detail';
 
 import func from '@/utils/Func';
 import FormTitle from '../../../components/FormTitle';
-import { CITY } from '../../../utils/city';
 import { ORDERSOURCE, ORDERTYPE } from '../../Order/components/data';
 import { salesmanList } from '../../../services/newServices/sales';
 import Panel from '../../../components/Panel';
@@ -56,7 +55,7 @@ class OrdersEdit extends PureComponent {
       productList:[],
       salesmanList:[],
       cityparam:[],
-      selectedOptions:[],
+      selectedOptions:[]
     };
   }
 

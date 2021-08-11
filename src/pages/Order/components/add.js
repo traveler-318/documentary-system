@@ -11,7 +11,7 @@ import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user'
 import func from '../../../utils/Func';
 import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
-import { CITY } from '../../../utils/city';
+import { getCityData } from '@/utils/authority';
 import { getCookie } from '../../../utils/support';
 import { createData, getRegion, productTreelist,addressParsing } from '../../../services/newServices/order'
 import { getList as getSalesmanLists,salesmanList } from '../../../services/newServices/sales';
@@ -57,7 +57,8 @@ class OrdersAdd extends PureComponent {
       productId:null,
       textAAreaValue:'',
       value:'',
-      addressState:false
+      addressState:false,
+      cityData:[]
     };
   }
 
@@ -66,6 +67,12 @@ class OrdersAdd extends PureComponent {
     this.getSalesmanList();
     // this.assemblingData();
     this.getTreeList();
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
 
     if(window.location.hash.indexOf("allOrders") != -1){
       backUrl = "/order/allOrders"
@@ -163,7 +170,7 @@ class OrdersAdd extends PureComponent {
           values.productTypeId = productTypeId;
           values.productId = productId;
         }
-        values.userAddress = `${selectedOptions}${values.userAddress}`;
+        // values.userAddress = `${selectedOptions}${values.userAddress}`;
         if(values.productCoding){
           values.productCoding =values.productCoding.trim().replace(/\s/g,"")
         }
@@ -262,10 +269,18 @@ class OrdersAdd extends PureComponent {
             _this.props.form.setFieldsValue({
               userAddress:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
               region:[res.data.province_code,res.data.city_code,res.data.county_code],
-              userPhone:res.data.phonenum,
-              userName:res.data.person,
             });
           }else {
+            if(res.data.phonenum){
+              _this.props.form.setFieldsValue({
+                userPhone:res.data.phonenum,
+              });
+            }
+            if(res.data.person){
+              _this.props.form.setFieldsValue({
+                userName:res.data.person,
+              });
+            }
             _this.setState({
               userAddress:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
               cityparam:{
@@ -280,8 +295,6 @@ class OrdersAdd extends PureComponent {
             _this.props.form.setFieldsValue({
               userAddress:res.data.province+res.data.city+res.data.county+res.data.town+res.data.detail,
               region:[res.data.province_code,res.data.city_code,res.data.county_code],
-              userPhone:res.data.phonenum,
-              userName:res.data.person,
             });
           }
         }
@@ -301,7 +314,8 @@ class OrdersAdd extends PureComponent {
       userPhone,
       userName,
       userAddress,
-      productList
+      productList,
+      cityData
     } = this.state;
 
     const formItemLayout = {
@@ -386,8 +400,8 @@ class OrdersAdd extends PureComponent {
                       ],
                     })(
                     <Cascader
-                      // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
-                      options={CITY}
+                      fieldNames={{ label: 'text'}}
+                      options={cityData}
                       onChange={this.onChange}
                     />
                   )}

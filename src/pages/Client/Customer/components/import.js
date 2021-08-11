@@ -29,7 +29,7 @@ import {
 import { importClient,getSameLevelUser } from '../../../../services/order/customer';
 import { getAccessToken, getToken } from '../../../../utils/authority';
 import { getLabelList } from '@/services/user';
-import { CITY } from '@/utils/city';
+import { getCityData } from '@/utils/authority';
 import { CLIENTTYPE } from '../data';
 import { getCookie } from '../../../../utils/support';
 import styles from '../index.less';
@@ -58,10 +58,18 @@ class Import extends PureComponent {
       clientStatus:[],//客户等级数组
       clientSources:[],//客戶來源
       sameLevelUser:[],//客戶來源
+      cityData:[],
     };
   }
 
   componentWillMount() {
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
+
     const { globalParameters } = this.props;
     const propData = globalParameters.detailData;
     // 获取详情数据
@@ -281,7 +289,8 @@ class Import extends PureComponent {
       clientStatus,
       clientLevels,
       clientSources,
-      userName
+      userName,
+      cityData
     } = this.state;
 
     const {isCovered,salesmanList,fileList,loading,sameLevelUser} = this.state;
@@ -394,7 +403,8 @@ class Import extends PureComponent {
               <Form.Item {...formItemLayout} label="所在地区：">
                 {getFieldDecorator('addrCoding')(
                   <Cascader
-                    options={CITY}
+                    fieldNames={{ label: 'text'}}
+                    options={cityData}
                   />
                 )}
               </Form.Item>

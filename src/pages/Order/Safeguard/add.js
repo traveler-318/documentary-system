@@ -11,7 +11,7 @@ import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user'
 import func from '../../../utils/Func';
 import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
-import { CITY } from '../../../utils/city';
+import { getCityData } from '@/utils/authority';
 import { getCookie } from '../../../utils/support';
 import { createData, getRegion, productTreelist } from '../../../services/newServices/order'
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
@@ -49,7 +49,7 @@ class OrdersAdd extends PureComponent {
       payPanyId:null,
       productTypeId:null,
       productId:null,
-
+      cityData:[]
 
     };
   }
@@ -59,7 +59,13 @@ class OrdersAdd extends PureComponent {
     this.getSalesmanList();
     // this.assemblingData();
     this.getTreeList();
-    backUrl = "/order/safeguard"
+    backUrl = "/order/safeguard";
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
   }
 
   getTreeList = () => {
@@ -210,7 +216,8 @@ class OrdersAdd extends PureComponent {
       isTaskTypeBox,
       salesmanList,
       loading,
-      productList
+      productList,
+      cityData
     } = this.state;
 
     const formItemLayout = {
@@ -281,7 +288,8 @@ class OrdersAdd extends PureComponent {
                 <FormItem {...formAllItemLayout} label="详情图">
                   {getFieldDecorator('region')(
                     <Cascader
-                      options={CITY}
+                    fieldNames={{ label: 'text'}}
+                    options={cityData}
                       onChange={this.onChange}
                     />
                   )}

@@ -7,7 +7,7 @@ import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import FormTitle from '../../../components/FormTitle';
 import styles from '../../../layouts/Sword.less';
-import { CITY } from '../../../utils/city';
+import { getCityData } from '../../../utils/authority';
 import { getCookie } from '../../../utils/support';
 import { getLabelList } from '../../../services/user';
 import SalesSelect from './components/salesSelect';
@@ -43,11 +43,19 @@ class CustomerAdd extends PureComponent {
       cityparam:{},
       selectedOptions:[],
       addType:1,
+      cityData:[]
     };
   }
 
 
   componentWillMount() {
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
+
     const type = this.props.match.params.type;
     switch (type) {
       case '1':backUrl = '/client/allcustomer';break;
@@ -169,7 +177,12 @@ class CustomerAdd extends PureComponent {
     } = this.props;
 
     const {
-      loading,clientStatus,clientLevels,salesmanList,addType
+      loading,
+      clientStatus,
+      clientLevels,
+      salesmanList,
+      addType,
+      cityData
     } = this.state;
 
     const formLeftItemLayout = {
@@ -231,7 +244,8 @@ class CustomerAdd extends PureComponent {
                 <FormItem {...formLeftItemLayout} label="所在地区：">
                   {getFieldDecorator('addrCoding')(
                     <Cascader
-                      options={CITY}
+                      fieldNames={{ label: 'text'}}
+                      options={cityData}
                       onChange={this.onChange}
                     />
                   )}

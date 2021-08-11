@@ -86,6 +86,7 @@ export default {
   'menu.authority.authorized':'授权管理',
   'menu.system': '系统管理',
 
+  'menu.system.blacklist': '黑名单',
   'menu.system.user': '用户管理',
   'menu.system.dept': '公司管理',
   'menu.system.organization': '组织管理',

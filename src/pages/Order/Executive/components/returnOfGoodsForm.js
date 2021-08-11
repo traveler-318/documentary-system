@@ -510,16 +510,6 @@ class ReturnOfGoodsForm extends PureComponent {
                                      {/*disabledMinutes = {this.getDisabledMinutes}/>*/}
                       {/*)}*/}
                     {/*</FormItem>*/}
-                  {/*</FormItem>*/}
-                  {/*<FormItem {...formAllItemLayout} label="所在地区">*/}
-                  {/*  {getFieldDecorator('region', {*/}
-                  {/*  })(*/}
-                  {/*    <Cascader*/}
-                  {/*      options={CITY}*/}
-                  {/*      onChange={this.onChange}*/}
-                  {/*    />*/}
-                  {/*  )}*/}
-                  {/*</FormItem>*/}
 
 
                   {/*<FormItem {...formAllItemLayout} label="退货原因">*/}

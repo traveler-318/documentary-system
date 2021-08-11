@@ -132,6 +132,8 @@ class SearchButton extends PureComponent {
           tabActionButtons[0] =item
         }else if(item.code === 'export'){
           tabActionButtons[1] =item
+        }else if(item.code === 'resetLogistics'){
+          tabActionButtons[2] =item
         }
       })
     }else if(tabKey === '2'){
@@ -152,7 +154,8 @@ class SearchButton extends PureComponent {
       <>
         {
           tabActionButtons.map((item,index)=>{
-                // console.log(item,tabKey,"item")
+
+            // console.log(item,tabKey,"item")
                 // if(tabKey === 'null' && (item.code === "place-an-order" || item.code === "transfer")){
 
                 //     moreList.push(item);
@@ -184,7 +187,7 @@ class SearchButton extends PureComponent {
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
-                }else if(tabKey === '3' && item.code === "subscribe"){
+                }else if(tabKey === '3' && (item.code === "subscribe" || item.code === 'resetLogistics')){
                   i++;
                     // 已发货
                     return (
@@ -192,7 +195,7 @@ class SearchButton extends PureComponent {
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
-                }else if(tabKey === '4' && item.code === 'returnOfGoods'){
+                }else if(tabKey === '4' && (item.code === 'returnOfGoods' || item.code === 'resetLogistics')){
                   i++;
                   // 在途中
                   return (
@@ -200,7 +203,7 @@ class SearchButton extends PureComponent {
                       this.handleClick(item.code)
                     }}>{item.name}</Button>
                   )
-                }else if(tabKey === '5' && (item.code === "bell" || item.code === 'returnOfGoods')){
+                }else if(tabKey === '5' && (item.code === "bell" || item.code === 'returnOfGoods' || item.code === 'resetLogistics')){
                   i++;
                     // 已签收
                     return (
