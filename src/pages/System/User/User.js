@@ -544,6 +544,7 @@ class User extends PureComponent {
         title: '公众号绑定',
         dataIndex: 'openid',
         width: 100,
+        fixed: 'right',
         render: (res,row) => {
           return(
             <div>
@@ -607,7 +608,6 @@ class User extends PureComponent {
       //   },
       // },
     ];
-
 
     if (!tenantMode) {
       columns.splice(0, 1);
