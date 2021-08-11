@@ -201,6 +201,7 @@ class UserEdit extends PureComponent {
               </Row>
             ) : null}
           </Card>
+
           <Card title="详细信息" className={styles.card} bordered={false}>
             <Row gutter={24}>
               <Col span={10}>
