@@ -8,8 +8,7 @@ import { getCookie } from '../../../utils/support';
 import { getDeliverySubmit } from '../../../services/newServices/logistics';
 import router from 'umi/router';
 import styles from '../../../layouts/Sword.less';
-import { CITY } from '../../../utils/city';
-
+import { getCityData } from '@/utils/authority';
 const FormItem = Form.Item;
 const { Option } = Select;
 
@@ -23,12 +22,17 @@ class SenderEdit extends PureComponent {
     super(props);
     this.state = {
       data:[],
+      cityData:[]
     };
   }
 
   componentWillMount() {
     const { globalParameters } = this.props;
-
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
     // 获取详情数据
     this.setState({
       data:globalParameters.detailData
@@ -89,7 +93,7 @@ class SenderEdit extends PureComponent {
     const {
       form: { getFieldDecorator },
     } = this.props;
-    const {data} = this.state;
+    const {data,cityData} = this.state;
     console.log(data)
     const formItemLayout = {
       labelCol: {
@@ -148,8 +152,8 @@ class SenderEdit extends PureComponent {
                     initialValue: JSON.parse(data.addrCoding),
                   })(
                     <Cascader
-                      // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
-                      options={CITY}
+                      fieldNames={{ label: 'text'}}
+                      options={cityData}
                       onChange={this.onChange}
                     />
                   )}

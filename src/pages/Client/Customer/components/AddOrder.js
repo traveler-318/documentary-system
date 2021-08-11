@@ -17,7 +17,7 @@ import {
 
 import func from '@/utils/Func';
 import FormTitle from '../../../../components/FormTitle';
-import { CITY } from '../../../../utils/city';
+import { getCityData } from '../../../../utils/authority';
 import { ORDERSOURCE, ORDERTYPE } from '../../../Order/components/data';
 import { salesmanList } from '../../../../services/newServices/sales';
 
@@ -57,6 +57,7 @@ class AddOrders extends PureComponent {
       salesmanList:[],
       cityparam:[],
       selectedOptions:[],
+      cityData: [],
     };
   }
 
@@ -64,6 +65,13 @@ class AddOrders extends PureComponent {
 
     const { globalParameters } = this.props;
     const propData = globalParameters.detailData;
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
+
     // 获取详情数据
     this.setState({
       detailsId:propData.detail.id,
@@ -300,7 +308,8 @@ class AddOrders extends PureComponent {
       orderPagination,
       detail,
       productList,
-      salesmanList
+      salesmanList,
+      cityData
     } = this.state;
 
     const formAllItemLayout = {
@@ -385,8 +394,8 @@ class AddOrders extends PureComponent {
                       ],
                     })(
                       <Cascader
-                        // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
-                        options={CITY}
+                        fieldNames={{ label: 'text'}}
+                        options={cityData}
                         onChange={this.onChange}
                       />
                     )}

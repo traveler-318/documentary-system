@@ -1,6 +1,7 @@
 // use localStorage to store the authority info, which might be sent from server in actual project.
 
 import { setCookie, getCookie } from '../utils/support';
+import localforage from 'localforage';
 
 export function getAuthority(str) {
   // return localStorage.getItem('antd-pro-authority') || ['admin', 'user'];
@@ -61,6 +62,14 @@ export function getRoutes() {
 export function setRoutes(routes) {
   localStorage.removeItem('sword-routes');
   localStorage.setItem('sword-routes', JSON.stringify(routes));
+}
+
+export async function getCityData() {
+  return localforage.getItem('cityData')
+}
+
+export function setCityData(data) {
+  localforage.setItem('cityData', data);
 }
 
 export function getButtons() {

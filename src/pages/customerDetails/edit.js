@@ -10,7 +10,7 @@ import styles from './edit.less';
 import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user';
 import func from '../../../utils/Func';
 import { tenantMode } from '../../../defaultSettings';
-import { CITY } from '../../../utils/city';
+import { getCityData } from '@/utils/authority';
 import { getCookie } from '../../../utils/support';
 import {updateData,getRegion} from '../../../services/newServices/order'
 import {ORDERSTATUS} from './data.js';
@@ -38,13 +38,20 @@ class OrdersAdd extends PureComponent {
         service0rder:'6',
         product:"9",
         ownership:"3"
-      }
+      },
+      cityData:[]
     };
   }
 
 
   componentWillMount() {
     const { globalParameters } = this.props;
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
 
     // 获取详情数据
     this.setState({
@@ -134,6 +141,7 @@ class OrdersAdd extends PureComponent {
       loading,
       detail,
       edit,
+      cityData
     } = this.state;
     console.log(detail)
 
@@ -194,7 +202,8 @@ class OrdersAdd extends PureComponent {
                     })(
                       <Cascader
                         defaultValue={[detail.province, detail.city, detail.area]}
-                        options={CITY}
+                        fieldNames={{ label: 'text'}}
+                        options={cityData}
                         disabled={edit}
                         onChange={this.onChange}
                       />

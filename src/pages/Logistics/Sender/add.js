@@ -3,7 +3,7 @@ import { Form, Input, Card, Row, Col, Button, Radio, Cascader, Select, DatePicke
 import { connect } from 'dva';
 import Panel from '../../../components/Panel';
 import styles from '../../../layouts/Sword.less';
-import { CITY } from '../../../utils/city';
+import { getCityData } from '@/utils/authority';
 import func from '../../../utils/Func';
 import { getCookie } from '../../../utils/support';
 
@@ -22,12 +22,17 @@ class SenderAdd extends PureComponent {
       data:{
 
       },
-      cityparam:{}
+      cityparam:{},
+      cityData:[]
     };
   }
 
   componentWillMount() {
-
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
   }
 
   // ============ 提交 ===============
@@ -87,7 +92,7 @@ class SenderAdd extends PureComponent {
       },
     };
 
-    const {data}=this.state
+    const {data, cityData}=this.state
 
     const action = (
       <Button type="primary" onClick={this.handleSubmit}>
@@ -135,7 +140,8 @@ class SenderAdd extends PureComponent {
                   })(
                     <Cascader
                       // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
-                      options={CITY}
+                      fieldNames={{ label: 'text'}}
+                      options={cityData}
                       onChange={this.onChange}
                     />
                   )}

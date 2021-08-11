@@ -11,7 +11,7 @@ import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../actions/user'
 import func from '../../../utils/Func';
 import { tenantMode } from '../../../defaultSettings';
 import {GENDER,ORDERTYPE,ORDERSOURCE} from './data.js'
-import { CITY } from '../../../utils/city';
+import { getCityData } from '@/utils/authority';
 import { getCookie } from '../../../utils/support';
 import { createData, getRegion, productTreelist } from '../../../services/newServices/order'
 import { getList as getSalesmanLists } from '../../../services/newServices/sales';
@@ -42,7 +42,8 @@ class OrdersAdd extends PureComponent {
       cityparam:{},
       productList:[],
       selectedOptions:[],
-      payamount:null
+      payamount:null,
+      cityData:[]
     };
   }
 
@@ -51,6 +52,12 @@ class OrdersAdd extends PureComponent {
     this.getSalesmanList();
     // this.assemblingData();
     this.getTreeList();
+
+    getCityData().then(res=>{
+      this.setState({
+        cityData:res
+      })
+    })
   }
 
   getTreeList = () => {
@@ -167,7 +174,8 @@ class OrdersAdd extends PureComponent {
     const {
       salesmanList,
       loading,
-      productList
+      productList,
+      cityData
     } = this.state;
 
     const formItemLayout = {
@@ -245,8 +253,8 @@ class OrdersAdd extends PureComponent {
                       ],
                     })(
                     <Cascader
-                      // defaultValue={['zhejiang', 'hangzhou', 'xihu']}
-                      options={CITY}
+                    fieldNames={{ label: 'text'}}
+                    options={cityData}
                       onChange={this.onChange}
                     />
                   )}

@@ -12,10 +12,7 @@ import { USER_INIT, USER_CHANGE_INIT, USER_SUBMIT } from '../../../../actions/us
 import { getUserInfo } from '../../../../services/user';
 import func from '../../../../utils/Func';
 import { tenantMode } from '../../../../defaultSettings';
-import { CITY } from '../../../../utils/city';
 import { getCookie } from '../../../../utils/support';
-
-
 
 import {
   updateData,

@@ -2,7 +2,7 @@ import { routerRedux } from 'dva/router';
 import { notification } from 'antd';
 import { stringify } from 'qs';
 import { getFakeCaptcha } from '../services/api';
-import { accountLogin, socialLogin } from '../services/user';
+import { accountLogin, socialLogin, getCity } from '../services/user';
 import { dynamicRoutes, dynamicButtons } from '../services/menu';
 import {
   setAuthority,
@@ -12,6 +12,7 @@ import {
   setRoutes,
   setButtons,
   removeAll,
+  setCityData,
 } from '../utils/authority';
 import { getPageQuery, formatRoutes, formatButtons, getTopUrl } from '../utils/utils';
 import { reloadAuthorized } from '../utils/Authorized';
@@ -47,16 +48,25 @@ export default {
         }
         // 缓存全局使用数据
         // dept_id->部门id  跟当前人帐号挂钩
-        setCookie("dept_id",response.dept_id)
+        setCookie("dept_id",response.dept_id);
         // 网关地址
-        setCookie("serverAddress",response.serverAddress)
+        setCookie("serverAddress",response.serverAddress);
         // 租户id
-        setCookie("tenantId",response.tenant_id)
+        setCookie("tenantId",response.tenant_id);
         //账户名字
-        setCookie("userName",response.user_name)
+        setCookie("userName",response.user_name);
         //角色名字
-        setCookie("ROLENAME",response.role_name)
+        setCookie("ROLENAME",response.role_name);
         // --------结束
+
+        const responseCity = yield call(getCity);
+        yield put({
+          type: 'saveCityData',
+          payload: {
+            CityData: responseCity.data,
+          },
+        });
+
         const responseRoutes = yield call(dynamicRoutes);
         const responseButtons = yield call(dynamicButtons);
         yield put({
@@ -173,6 +183,13 @@ export default {
       const { routes, buttons } = payload;
       setRoutes(formatRoutes(routes));
       setButtons(formatButtons(buttons));
+      return {
+        ...state,
+      };
+    },
+    saveCityData(state, { payload }) {
+      const { CityData } = payload;
+      setCityData(CityData);
       return {
         ...state,
       };
