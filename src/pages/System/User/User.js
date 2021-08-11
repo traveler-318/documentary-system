@@ -515,6 +515,16 @@ class User extends PureComponent {
         dataIndex: 'email',
         width:160,
       },
+      {
+        title: '移动登录',
+        dataIndex: 'moveSwitch',
+        width:120,
+        render: (key, row) => {
+          return(
+            <Switch checked={key===1?true:false} />
+          )
+        },
+      },
       // {
       //   title: '剩余金额',
       //   dataIndex: 'remainingMoney',
