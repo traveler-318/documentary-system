@@ -30,8 +30,6 @@ import { setListData } from '../../../utils/publicMethod';
 import { ORDERSTATUS, LOGISTICSCOMPANY} from './data.js';
 import { getCurrentUser } from '@/utils/authority';
 import {
-  localPrinting,
-  logisticsRepeatPrint,
   updateReminds,
   synCheck,
   syndata,

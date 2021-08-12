@@ -74,10 +74,13 @@ export default {
   routes: pageRoutes,
   // Theme for antd
   // https://ant.design/docs/react/customize-theme-cn
+
+  // 测试环境http://121.37.251.134:9010
+  // 线上环境http://120.79.198.243:9010
   theme: './src/theme.js',
   proxy: {
     '/api': {
-      target: 'http://121.37.251.134:9010',
+      target: 'http://120.79.198.243:9010',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },

@@ -401,11 +401,17 @@ class OrdersEdit extends PureComponent {
           repeatLoading:false
         });
         if(res.code === 200){
-          sessionStorage.setItem('printingType', 'Repeat');
-          localforage.setItem('imgBase64', res.data).then((res)=>{
-            console.log(res,"resresresres")
-            window.open(`#/order/allOrders/img`);
-          });
+          
+          if(detail.logisticsPrintType === "1"){
+            sessionStorage.setItem('printingType', 'Repeat');
+            localforage.setItem('imgBase64', res.data).then((res)=>{
+              console.log(res,"resresresres")
+              window.open(`#/order/allOrders/img`);
+            });
+          }else{
+            window.open(res.data);
+          }
+         
         }else{
           message.error(res.msg);
         }

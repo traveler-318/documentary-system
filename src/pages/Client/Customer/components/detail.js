@@ -12,10 +12,6 @@ import { connect } from 'dva';
 import moment from 'moment';
 import styles from './edit.less';
 import { getCityData } from '../../../../utils/authority';
-import {
-  localPrinting,
-  logisticsRepeatPrint,
-} from '../../../../services/newServices/order';
 import FormDetailsTitle from '../../../../components/FormDetailsTitle';
 import { CLIENTTYPE } from '@/pages/Client/Customer/data';
 import SalesSelect from '@/pages/Client/Customer/components/salesSelect';

@@ -544,8 +544,34 @@ class LogisticsConfiguration extends PureComponent {
                    });
                  }
                })
-             }else {
-               param.localPrintStatus=0;
+             }else if(localPrintStatus === 2){
+              param.localPrintStatus=2;
+              const { dispatch } = this.props;
+              console.log(param)
+              logisticsPrintRequest(param).then(response=>{
+                this.setState({
+                  loading:false
+                })
+                if(response.code === 200){
+                  window.open(response.data);
+
+                  // 刷新详情数据
+                  if(currentIndex<listID.length-1){
+                    this.setState({
+                      currentIndex:currentIndex+1
+                    },()=>{
+                      this.getDetailsData(listID[currentIndex+1].id);
+                    });
+                  }
+                }else{
+                  message.error(response.msg);
+                  this.setState({
+                    disabledType:false
+                  });
+                }
+              })
+            }else {
+               param.localPrintStatus=3;
                console.log(param)
                logisticsPrintRequest(param).then(response=>{
                  this.setState({
@@ -602,11 +628,17 @@ class LogisticsConfiguration extends PureComponent {
               loading:false
             })
             if(res.code === 200){
-              sessionStorage.setItem('printingType', 'first');
-              localforage.setItem('imgBase64', res.data).then((res)=>{
-                console.log(res,"resresresres")
-                window.open(`#/order/allOrders/img`);
-              });
+              
+              if(listID[currentIndex].logisticsPrintType === "1"){
+                sessionStorage.setItem('printingType', 'first');
+                localforage.setItem('imgBase64', res.data).then((res)=>{
+                  console.log(res,"resresresres")
+                  window.open(`#/order/allOrders/img`);
+                });
+              }else{
+                window.open(res.data);
+              }
+              
             }else{
               message.error(res.msg);
               this.setState({

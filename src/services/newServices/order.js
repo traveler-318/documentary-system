@@ -156,7 +156,7 @@ export async function logisticsPrintRequest(params) {
     body: params,
   });
 }
-// 首次打印
+// 重复打印
 export async function logisticsRepeatPrint(params) {
   return request('/api/order/order/repeatPrint', {
     method: 'POST',

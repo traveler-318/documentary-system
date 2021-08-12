@@ -36,8 +36,6 @@ import { ORDERSTATUS, ORDERTYPPE, GENDER, ORDERTYPE, ORDERSOURCE, TIMETYPE, LOGI
 import {
   getPermissions,
   deleteData,
-  localPrinting,
-  logisticsRepeatPrint,
   updateReminds,
   toExamine,
   synCheck,
