@@ -197,7 +197,7 @@ class User extends PureComponent {
     const {dispatch} = this.props;
     const data= value === 0 ? 1 : 0;
     const param = {
-      id:row.id,
+      ...row,
       moveSwitch:data
     };
 
