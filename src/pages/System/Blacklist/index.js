@@ -15,8 +15,9 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Panel from '../../../components/Panel';
 import Grid from '../../../components/Sword/Grid';
-import { getList,save,remove} from '../../../services/newServices/blacklist';
+import { getList,save,remove,update} from '../../../services/newServices/blacklist';
 import moment from 'moment';
+import { getCookie } from '../../../utils/support';
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
@@ -48,6 +49,10 @@ class Blacklist extends PureComponent {
         {name:"导入",key:1},
         {name:"平台",key:2},
       ],
+      platformMark:[
+        {name:"否",key:0},
+        {name:"是",key:1},
+      ],
       checkedList:'',
       checkedList1:'',
       inputValue:'',
@@ -55,7 +60,8 @@ class Blacklist extends PureComponent {
       updateAddVisible:false,
       updateImportVisible:false,
       textAreaValue:'',
-      tips:''
+      tips:'',
+      tenantId:getCookie("tenantId"),
     };
   }
   // ============ 初始化数据 ===============
@@ -104,6 +110,9 @@ class Blacklist extends PureComponent {
     if(payload.shieldingChannel === undefined){
       payload.shieldingChannel = null;
     }
+    if(payload.platformMark === undefined){
+      payload.platformMark = null;
+    }
     delete payload.sorts
     this.setState({
       params:payload
@@ -117,7 +126,7 @@ class Blacklist extends PureComponent {
   renderSearchForm = onReset => {
     const { form } = this.props;
     const { getFieldDecorator } = form;
-    const {dataType,shieldingChannel}=this.state;
+    const {dataType,shieldingChannel,platformMark}=this.state;
 
     return (
       <div className={"default_search_form"}>
@@ -146,6 +155,16 @@ class Blacklist extends PureComponent {
           })(
             <Select placeholder={"请选择来源"} style={{ width: 120 }}>
               {shieldingChannel.map(item=>{
+                return (<Option value={item.key}>{item.name}</Option>)
+              })}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="平台黑名单">
+          {getFieldDecorator('platformMark', {
+          })(
+            <Select placeholder={"请选择平台黑名单"} style={{ width: 120 }}>
+              {platformMark.map(item=>{
                 return (<Option value={item.key}>{item.name}</Option>)
               })}
             </Select>
@@ -387,7 +406,6 @@ class Blacklist extends PureComponent {
   }
 
   handleRemove=(row)=>{
-
     const _this=this;
     Modal.confirm({
       title: '提醒',
@@ -410,12 +428,39 @@ class Blacklist extends PureComponent {
     });
   }
 
+  handleUpdate=(row)=>{
+    const _this=this;
+    Modal.confirm({
+      title: '提醒',
+      content: "此次操作无法再次变更,确认操作!",
+      okText: '确定',
+      okType: 'primary',
+      cancelText: '取消',
+      keyboard:false,
+      onOk:() => {
+        const params={
+          platformMark:1,
+          id:row.id
+        }
+        update(params).then(res=>{
+          if (res.code === 200){
+            message.success(res.msg)
+            _this.getDataList()
+          } else {
+            message.error(res.msg)
+          }
+        })
+      },
+      onCancel(){},
+    });
+  }
+
   render() {
     const {
       form,
     } = this.props;
 
-    const {data,loading,updateAddVisible,updateImportVisible,tips} = this.state;
+    const {data,loading,updateAddVisible,updateImportVisible,tips,tenantId} = this.state;
     const { getFieldDecorator } = form;
 
     const formAllItemLayout = {
@@ -431,13 +476,13 @@ class Blacklist extends PureComponent {
       {
         title: '黑名单值',
         dataIndex: 'blacklistValue',
-        width: 200,
+        width: 160,
         ellipsis: true,
       },
       {
         title: '类型',
         dataIndex: 'dataType',
-        width: 150,
+        width: 100,
         ellipsis: true,
         render: (key) => {
           let version='';
@@ -483,6 +528,24 @@ class Blacklist extends PureComponent {
         ellipsis: true,
       },
       {
+        title: '平台黑名单',
+        dataIndex: 'platformMark',
+        width: 100,
+        ellipsis: true,
+        render: (key) => {
+          let name=''
+          if(key === 0){
+            name="否"
+          }
+          if(key === 1){
+            name="是"
+          }
+          return (
+            <div>{name}</div>
+          )
+        },
+      },
+      {
         title: '拉黑时间',
         dataIndex: 'createTime',
       },
@@ -490,11 +553,15 @@ class Blacklist extends PureComponent {
         title: '操作',
         key: 'operation',
         fixed: 'right',
-        width: 150,
+        width: 170,
         render: (res,row) => {
           return(
             <div>
               <a onClick={()=>this.handleRemove(row)}>解除</a>
+              <Divider type="vertical" />
+              {tenantId === '000000'? (
+                <a onClick={()=>this.handleUpdate(row)}>转平台黑名单</a>
+              ):''}
             </div>
 
           )
