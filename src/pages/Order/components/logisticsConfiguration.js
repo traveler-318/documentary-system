@@ -901,7 +901,8 @@ class LogisticsConfiguration extends PureComponent {
                     // ],
                   })(
                   <Select
-                    disabled={disabledType}
+                    // disabled={disabledType}
+                    disabled={true}
                     placeholder={"请选择物流公司"}>
                     {/*{templates.map((item,index) =>{*/}
                       {/*return (<Option key={index || 0} value={item.templateId}>{item.templateName}</Option>)*/}
@@ -925,7 +926,8 @@ class LogisticsConfiguration extends PureComponent {
                       {validator: this.changeEvent },
                     ],
                   })(<Input
-                    disabled={disabledType}
+                    // disabled={disabledType}
+                    disabled={true}
                   placeholder="请输入物流单号" />)}
                 </FormItem>
               </Col>

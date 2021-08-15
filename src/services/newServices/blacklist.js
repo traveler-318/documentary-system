@@ -25,3 +25,9 @@ export async function remove(params) {
     body: params,
   });
 }
+export async function update(params) {
+  return request(`/api/blacklist/update`, {
+    method: 'POST',
+    body: params,
+  });
+}

@@ -809,9 +809,10 @@ class OrdersEdit extends PureComponent {
                         {getFieldDecorator('logisticsCompany', {
                           initialValue: detail.logisticsCompany,
                         })(
+                          // disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
                           <Select
                             style={{height:45,float:"right"}}
-                            disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
+                            disabled={true}
                             placeholder={"请选择物流公司"}>
                             {Object.keys(LOGISTICSCOMPANY).map(key=>{
                               return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
@@ -826,7 +827,8 @@ class OrdersEdit extends PureComponent {
                           ],
                           initialValue: detail.logisticsNumber,
                         })(<Input
-                          disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
+                          disabled={true}
+                          // disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
                           placeholder="请输入物流单号" />)}
                       </FormItem>
                       {/*<FormItem {...formAllItemLayout} label="开启提醒"  className={styles.salesman}>*/}

@@ -190,7 +190,29 @@ class User extends PureComponent {
       },
       onCancel() {},
     });
-    
+  }
+
+  onChangeH5 = (value,row) => {
+    const { params } = this.state;
+    const {dispatch} = this.props;
+    const data= value === 0 ? 1 : 0;
+    const param = {
+      ...row,
+      moveSwitch:data
+    };
+
+    Modal.confirm({
+      title: '修改确认',
+      content: '是否要修改该状态??',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        dispatch(USER_UPDATE(param));
+        dispatch(USER_LIST(params));
+      },
+      onCancel() {},
+    });
   }
 
   showModal = () => {
@@ -515,16 +537,6 @@ class User extends PureComponent {
         dataIndex: 'email',
         width:160,
       },
-      {
-        title: '移动登录',
-        dataIndex: 'moveSwitch',
-        width:120,
-        render: (key, row) => {
-          return(
-            <Switch checked={key===1?true:false} />
-          )
-        },
-      },
       // {
       //   title: '剩余金额',
       //   dataIndex: 'remainingMoney',
@@ -539,6 +551,16 @@ class User extends PureComponent {
         title: '添加时间',
         dataIndex: 'createTime',
         width:160,
+      },
+      {
+        title: '移动登录',
+        dataIndex: 'moveSwitch',
+        width:120,
+        render: (key, row) => {
+          return(
+            <Switch checked={key===1?true:false} onChange={()=>{this.onChangeH5(key, row)}}/>
+          )
+        },
       },
       {
         title: '是否启用',
