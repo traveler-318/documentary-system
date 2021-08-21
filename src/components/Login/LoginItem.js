@@ -7,6 +7,7 @@ import ItemMap from './map';
 import LoginContext from './loginContext';
 import { getCaptchaImage } from '../../services/user';
 import { setCaptchaKey } from '../../utils/authority';
+import pubsub from 'pubsub-js'
 
 const FormItem = Form.Item;
 
@@ -26,9 +27,18 @@ class WrapFormItem extends Component {
   }
 
   componentWillMount() {
-    const { mode, type } = this.props;
+    const { mode, type,name } = this.props;
+    const _this=this;
     if (type === 'Captcha' && mode === 'image') {
       this.refreshCaptcha();
+
+      pubsub.subscribe('Captcha',(msg,v)=>{
+        this.refreshCaptcha();
+        _this.props.form.setFieldsValue({
+          code:''
+        });
+
+      });
     }
   }
 
@@ -153,6 +163,7 @@ class WrapFormItem extends Component {
                 )(
                   <Input
                     {...customprops}
+                    maxLength={6}
                     placeholder={`请输入图形验证码`}
                   />
                 )}

@@ -94,8 +94,6 @@ class LoginPage extends Component {
     for(let i=0; i<2; i++){
       num = num +""+Math.ceil(Math.random()*10);
     }
-    console.log(num)
-    
     return (
       <div className={styles.main}>
         <Login
@@ -119,6 +117,7 @@ class LoginPage extends Component {
                 rules={[
                   {
                     required: true,
+                    pattern: new RegExp(/^[0-9]\d*$/),
                     message: formatMessage({ id: 'validation.tenantId.required' }),
                   },
                 ]}
