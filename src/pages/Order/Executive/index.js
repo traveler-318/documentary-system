@@ -22,6 +22,7 @@ import {
   Cascader,
   TreeSelect, 
   Table,
+  Alert,
   Tooltip
 } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
@@ -237,6 +238,7 @@ class AllOrdersList extends PureComponent {
       columns:[],
       updateConfirmTagVisible:false,
       voiceStatusVisible:false,
+      firstTrialVisible:false,
       confirmTagList:[],
       resetList:[],
       resetVisible:false,
@@ -249,6 +251,9 @@ class AllOrdersList extends PureComponent {
       orderSourceList:[],
       checkCodeKD:'',
       checkCodeSN:'',
+      collectingState:1,
+      postageStatus:1,
+      collectingAmount:'',
     };
   }
 
@@ -710,6 +715,24 @@ class AllOrdersList extends PureComponent {
     })
   }
 
+  onChangeCollectingState = (e) => {
+    this.setState({
+      collectingState: e.target.value
+    })
+  }
+
+  onChangePostageStatus = (e) => {
+    this.setState({
+      postageStatus: e.target.value
+    })
+  }
+
+  onChangeCollectingAmount = (e) => {
+    this.setState({
+      collectingAmount: e.target.value
+    })
+  }
+
   handleSubmitUpdateConfirmTag = (e) => {
     const { radioChecked, confirmTagList } = this.state;
     if(!radioChecked){
@@ -827,7 +850,91 @@ class AllOrdersList extends PureComponent {
         },
       });
     }
+  }
 
+  // 初审
+  firstTrial=(confirmTag)=>{
+    const {selectedRows,collectingState,postageStatus,collectingAmount} = this.state;
+    let type = false, _data = [];
+    selectedRows.map(item=>{
+      if(item.confirmTag === '0' || item.confirmTag === '1'){
+        const list={}
+        list.id=item.id;
+        list.outOrderNo=item.outOrderNo;
+        _data.push(list)
+      }else{
+        type = true;
+      }
+    })
+    let data={}
+    if(collectingState === 3){
+      data={
+        confirmTag,
+        orderIdAndNo:_data,
+        collectingState:collectingState,
+        postageStatus:postageStatus,
+        collectingAmount:collectingAmount,
+      }
+    }else {
+      data={
+        confirmTag,
+        orderIdAndNo:_data,
+        collectingState:collectingState,
+        postageStatus:postageStatus,
+      }
+    }
+
+    if(type){
+      Modal.confirm({
+        title: '提醒',
+        content: "您选择的数据中包含已审核的数据，我们将不会对这些数据操作",
+        okText: '确定',
+        okType: 'info',
+        cancelText: '取消',
+        keyboard:false,
+        onOk() {
+          toExamine(data).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              this.getDataList();
+              this.setState({
+                selectedRows:[],
+                firstTrialVisible:false
+              })
+            }else {
+              message.error(res.msg);
+            }
+          })
+        },
+        onCancel() {
+          toExamine(data).then(res=>{
+            if(res.code === 200){
+              message.success(res.msg);
+              this.getDataList();
+              this.setState({
+                selectedRows:[],
+                firstTrialVisible:false
+              })
+            }else {
+              message.error(res.msg);
+            }
+          })
+        },
+      });
+    }else {
+      toExamine(data).then(res=>{
+        if(res.code === 200){
+          message.success(res.msg);
+          this.getDataList();
+          this.setState({
+            selectedRows:[],
+            firstTrialVisible:false
+          })
+        }else {
+          message.error(res.msg);
+        }
+      })
+    }
 
   }
 
@@ -878,6 +985,7 @@ class AllOrdersList extends PureComponent {
 
   toExamines = (confirmTag) => {
     const {selectedRows} = this.state;
+
     let type = false, _data = [];
     const setAudit = this.setAudit;
     selectedRows.map(item=>{
@@ -910,6 +1018,7 @@ class AllOrdersList extends PureComponent {
       setAudit(_data,confirmTag)
     }
   }
+
   setAudit = (_data,confirmTag) => {
     toExamine({
       confirmTag,
@@ -927,6 +1036,35 @@ class AllOrdersList extends PureComponent {
       }
     })
   }
+
+  rollBACK =()=>{
+    const {selectedRows} = this.state;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
+    Modal.confirm({
+      title: '订单回滚操作',
+      content: "当前订单回滚后会重新进入待审核状态",
+      okText: '确定',
+      cancelText: '取消',
+      onOk() {
+        // toExamine(data).then(res=>{
+        //   if(res.code === 200){
+        //     message.success(res.msg);
+        //     this.getDataList();
+        //     this.setState({
+        //       selectedRows:[],
+        //       firstTrialVisible:false
+        //     })
+        //   }else {
+        //     message.error(res.msg);
+        //   }
+        // })
+      },
+      onCancel() {},
+    });
+  }
+
   // 导出
   exportFile = () => {
     const {params}=this.state;
@@ -1105,6 +1243,22 @@ class AllOrdersList extends PureComponent {
     this.setState({
       voiceStatusVisible:false,
       radioChecked:''
+    })
+  }
+
+  // 初审弹窗
+  firstTrialConfirmTag = (row) => {
+    this.setState({
+      firstTrialVisible:true
+    })
+  }
+
+  handlefirstTrial = () => {
+    this.setState({
+      firstTrialVisible:false,
+      postageStatus:1,
+      collectingState:1,
+      collectingAmount:''
     })
   }
 
@@ -1300,10 +1454,14 @@ class AllOrdersList extends PureComponent {
       router.push(`/order/executive/add`);
     }else if(code === "first-trial"){
       // 初审
-      this.batchAudit()
+      // this.batchAudit()
+      this.firstTrialConfirmTag()
     }else if(code === "last-trial"){
       // 终审
       this.lastBatchAudit()
+    }else if(code === "rollBACK"){
+      // 回滚
+      this.rollBACK()
     }else if(code === "synchronization"){
       // 免押同步
       this.importData()
@@ -1567,7 +1725,7 @@ class AllOrdersList extends PureComponent {
     });
   }
 
-  reactNode = () => {
+  tipsContent = () => {
     return(
       <div>
         <p>通过:收货地址跟下单IP归属地一致</p>
@@ -2468,6 +2626,16 @@ handleCancelAssessment = () => {
     })
   }
 
+  reactNode = () => {
+    return(
+      <div>
+        <p>1、复制本登录账号</p>
+        <p>2、粘贴到到，系统管理—新增用户—登录账号里面</p>
+        <p>3、角色配置成销售角色注意：</p>
+        <p>本登录账号必须要与用户管理里面的登录账号信息一致，否则会导致销售无法登录到自己后台</p>
+      </div>
+    )
+  }
 
   components = {
     header: {
@@ -2523,6 +2691,7 @@ handleCancelAssessment = () => {
       noDepositVisible,
       updateConfirmTagVisible,
       voiceStatusVisible,
+      firstTrialVisible,
       textVisible,
       excelVisible,
       OrderImportVisible,
@@ -2540,7 +2709,8 @@ handleCancelAssessment = () => {
       AssessmentDetails,
       AssessmentVisible,
       resetVisible,
-      resetRadioChecked
+      resetRadioChecked,
+      postageStatus,collectingState
     } = this.state;
 
     const loop = data =>
@@ -3256,6 +3426,58 @@ handleCancelAssessment = () => {
               )}
             </FormItem>
           </Form>
+        </Modal>
+
+        <Modal
+          title="初审"
+          visible={firstTrialVisible}
+          maskClosable={false}
+          destroyOnClose
+          width={500}
+          onCancel={this.handlefirstTrial}
+          footer={[
+            <Button key="back" onClick={this.handlefirstTrial}>
+              取消
+            </Button>,
+            <Button key="refuse" type="danger" onClick={()=>this.toExamines('9')}>
+              拒绝
+            </Button>,
+            <Button key="submit" type="primary" onClick={()=>this.firstTrial('1')}>
+              初审
+            </Button>,
+          ]}
+        >
+          <Form>
+            <FormItem {...formAllItemLayout} label="包邮模式">
+              <Radio.Group onChange={this.onChangePostageStatus} value={postageStatus}>
+                <Radio value={1}>月结</Radio>
+                <Radio value={2}>到付</Radio>
+                <Radio value={3}>季付</Radio>
+              </Radio.Group>
+            </FormItem>
+            <FormItem {...formAllItemLayout} label="代收货款">
+              <Radio.Group onChange={this.onChangeCollectingState} value={collectingState}>
+                <Radio value={1}>随订单</Radio>
+                <Radio value={2}>否</Radio>
+                <Radio value={3}>是</Radio>
+              </Radio.Group>
+            </FormItem>
+            {collectingState === 3 ? (
+              <>
+                <FormItem {...formAllItemLayout} label="代收金额">
+                  <Input placeholder="请输入代收金额" onChange={this.onChangeCollectingAmount} />
+                </FormItem>
+              </>
+            ):''}
+          </Form>
+          <Alert message={
+            <div>
+              <p>随订单：订单在创建和导入时，已经存在代收金额的就按照订单默认代收来决定代收不代收(推荐操作)</p>
+              <p>否：批量设置订单不代收(谨慎操作)</p>
+              <p>是：批量设置订单为指定代收金额(谨慎操作)</p>
+            </div>
+          } type="warning" showIcon />
+          {/*<Alert message={this.tipsContent} type="warning" showIcon />*/}
         </Modal>
 
       </Panel>
