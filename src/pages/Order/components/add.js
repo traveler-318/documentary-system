@@ -544,7 +544,7 @@ class OrdersAdd extends PureComponent {
                     <Radio.Group onChange={this.onChangeRadio}>
                       <Radio value={1}>月结</Radio>
                       <Radio value={2}>到付</Radio>
-                      <Radio value={3}>季付</Radio>
+                      <Radio value={3}>寄付</Radio>
                     </Radio.Group>
                   )}
                 </FormItem>

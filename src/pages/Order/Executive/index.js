@@ -1255,7 +1255,11 @@ class AllOrdersList extends PureComponent {
   }
 
   // 初审弹窗
-  firstTrialConfirmTag = (row) => {
+  firstTrialConfirmTag = () => {
+    const {selectedRows} = this.state;
+    if(selectedRows.length <= 0){
+      return message.info('请至少选择一条数据');
+    }
     this.setState({
       firstTrialVisible:true
     })
