@@ -1042,24 +1042,32 @@ class AllOrdersList extends PureComponent {
     if(selectedRows.length <= 0){
       return message.info('请至少选择一条数据');
     }
+    let type = false, _data = [];
+    selectedRows.map(item=>{
+      const list={}
+      list.id=item.id;
+      list.outOrderNo=item.outOrderNo;
+      _data.push(list)
+    })
+
+    const _this=this;
     Modal.confirm({
       title: '订单回滚操作',
       content: "当前订单回滚后会重新进入待审核状态",
       okText: '确定',
       cancelText: '取消',
       onOk() {
-        // toExamine(data).then(res=>{
-        //   if(res.code === 200){
-        //     message.success(res.msg);
-        //     this.getDataList();
-        //     this.setState({
-        //       selectedRows:[],
-        //       firstTrialVisible:false
-        //     })
-        //   }else {
-        //     message.error(res.msg);
-        //   }
-        // })
+        toExamine({
+          confirmTag:0,
+          orderIdAndNo:_data
+        }).then(res=>{
+          if(res.code === 200){
+            message.success(res.msg);
+            _this.getDataList();
+          }else {
+            message.error(res.msg);
+          }
+        })
       },
       onCancel() {},
     });
@@ -3452,7 +3460,7 @@ handleCancelAssessment = () => {
               <Radio.Group onChange={this.onChangePostageStatus} value={postageStatus}>
                 <Radio value={1}>月结</Radio>
                 <Radio value={2}>到付</Radio>
-                <Radio value={3}>季付</Radio>
+                <Radio value={3}>寄付</Radio>
               </Radio.Group>
             </FormItem>
             <FormItem {...formAllItemLayout} label="代收货款">

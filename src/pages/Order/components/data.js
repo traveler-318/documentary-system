@@ -43,8 +43,8 @@ export const GENDER = [
 // 订单类型
 export const ORDERTYPE = [
     {name:"免费",key:1},
-    {name:"到付",key:2},
-    {name:"收费",key:3},
+    {name:"代收货款",key:2},
+    {name:"线下押金",key:3},
     {name:"免押",key:4},
     {name:"其他",key:5},
 ]

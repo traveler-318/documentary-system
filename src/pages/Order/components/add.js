@@ -199,7 +199,7 @@ class OrdersAdd extends PureComponent {
 
   handleSelectChange = value => {
     const { form } = this.props;
-    if(value === 3){
+    if(value === 2){
       this.setState({
         collection:false
       })
@@ -550,7 +550,7 @@ class OrdersAdd extends PureComponent {
                 </FormItem>
                 <FormItem {...formAllItemLayout} label="代收金额">
                   {getFieldDecorator('collectingAmount')(
-                    <Input disabled={collection} placeholder="请输入代收金额，0为非代收" />
+                    <Input disabled={collection} placeholder="如需代收,订单类型必须为代收货款, 否则代收默认为0" />
                   )}
                 </FormItem>
 

@@ -446,7 +446,8 @@ class LogisticsConfiguration extends PureComponent {
       loading:true
     })
 
-    console.log(listID[currentIndex].id,"listID[currentIndex].idlistID[currentIndex].id")
+    console.log(listID[currentIndex],"listID[currentIndex].idlistID[currentIndex].id");
+
 
     if(!detail.taskId){
        form.validateFieldsAndScroll((err, values) => {
@@ -501,7 +502,10 @@ class LogisticsConfiguration extends PureComponent {
                  'salesman':listID[currentIndex].salesman,
                  'productCoding':values.productCoding,
                  'orderTenantId':detail.tenantId,
-                 'orderDeptId':detail.deptId
+                 'orderDeptId':detail.deptId,
+                 'orderType':listID[currentIndex].orderType,
+                 'postageStatus':listID[currentIndex].postageStatus,
+                 'collectingAmount':listID[currentIndex].collectingAmount ,
                }
              )
              // }
@@ -517,7 +521,6 @@ class LogisticsConfiguration extends PureComponent {
              if(localPrintStatus === 1){
                param.localPrintStatus=1;
                const { dispatch } = this.props;
-               console.log(param)
                logisticsPrintRequest(param).then(response=>{
                  this.setState({
                    loading:false
