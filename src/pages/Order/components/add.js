@@ -58,7 +58,9 @@ class OrdersAdd extends PureComponent {
       textAAreaValue:'',
       value:'',
       addressState:false,
-      cityData:[]
+      collection:true,
+      cityData:[],
+      RadioValue:1
     };
   }
 
@@ -85,6 +87,14 @@ class OrdersAdd extends PureComponent {
     }else if(window.location.hash.indexOf("executive") != -1){
       backUrl = "/order/executive"
     }
+  }
+
+  componentDidMount(){
+    const {form: { setFieldsValue,getFieldsValue }} = this.props;
+    const { RadioValue } = this.state
+    setFieldsValue({ "postageStatus": RadioValue });
+    getFieldsValue();
+
   }
 
   getTreeList = () => {
@@ -135,7 +145,7 @@ class OrdersAdd extends PureComponent {
     e.preventDefault();
     const { form } = this.props;
     this.submit(()=>{
-      form.resetFields([ 'userName','userPhone','backPhone','wechatId','region','userAddress']);
+      form.resetFields([ 'userName','userPhone','backPhone','wechatId','region','userAddress','collectingAmount']);
     })
   }
 
@@ -157,9 +167,9 @@ class OrdersAdd extends PureComponent {
     }
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.setState({
-          loading:true
-        })
+        // this.setState({
+        //   loading:true
+        // })
         values.deptId = getCookie("dept_id");
         values.tenantId = getCookie("tenantId");
         values = {...values,...cityparam};
@@ -174,7 +184,6 @@ class OrdersAdd extends PureComponent {
         if(values.productCoding){
           values.productCoding =values.productCoding.trim().replace(/\s/g,"")
         }
-
         createData(values).then(res=>{
           this.setState({
             loading:false
@@ -188,8 +197,18 @@ class OrdersAdd extends PureComponent {
     });
   }
 
-  handleChange = value => {
-
+  handleSelectChange = value => {
+    const { form } = this.props;
+    if(value === 2){
+      this.setState({
+        collection:false
+      })
+    }else {
+      this.setState({
+        collection:true
+      })
+      form.resetFields([ 'collectingAmount']);
+    }
   };
 
   disabledDate = (current) => {
@@ -232,7 +251,6 @@ class OrdersAdd extends PureComponent {
   };
 
   textAArea = ({ target: { value } }) => {
-    console.log(value)
     if(value){
       this.setState({
         textAAreaValue:value
@@ -242,7 +260,6 @@ class OrdersAdd extends PureComponent {
 
   addressParsing =()=>{
     const {textAAreaValue,value,userAddress}=this.state;
-    console.log(textAAreaValue)
     const _this=this;
     if(textAAreaValue !== value){
       this.setState({
@@ -302,6 +319,12 @@ class OrdersAdd extends PureComponent {
     }
   }
 
+  onChangeRadio = (e) => {
+    this.setState({
+      RadioValue: e.target.value
+    })
+  }
+
   render() {
     const {
       form: { getFieldDecorator },
@@ -315,7 +338,8 @@ class OrdersAdd extends PureComponent {
       userName,
       userAddress,
       productList,
-      cityData
+      cityData,
+      collection,
     } = this.state;
 
     const formItemLayout = {
@@ -455,7 +479,7 @@ class OrdersAdd extends PureComponent {
                       },
                     ],
                   })(
-                    <Select placeholder={"请选择订单类型"}>
+                    <Select onChange={this.handleSelectChange} placeholder={"请选择订单类型"}>
                       {ORDERTYPE.map(item=>{
                         return (<Option value={item.key}>{item.name}</Option>)
                       })}
@@ -512,11 +536,27 @@ class OrdersAdd extends PureComponent {
                 <FormItem {...formAllItemLayout} label="SN">
                   {getFieldDecorator('productCoding')(<Input placeholder="请输入SN" />)}
                 </FormItem>
+                <FormTitle
+                  title="物流信息"
+                />
+                <FormItem {...formAllItemLayout} label="邮费模式">
+                  {getFieldDecorator('postageStatus')(
+                    <Radio.Group onChange={this.onChangeRadio}>
+                      <Radio value={1}>月结</Radio>
+                      <Radio value={2}>到付</Radio>
+                      <Radio value={3}>寄付</Radio>
+                    </Radio.Group>
+                  )}
+                </FormItem>
+                <FormItem {...formAllItemLayout} label="代收金额">
+                  {getFieldDecorator('collectingAmount')(
+                    <Input disabled={collection} placeholder="如需代收,订单类型必须为代收货款, 否则代收默认为0" />
+                  )}
+                </FormItem>
 
                 <FormTitle
                   title="销售信息"
                 />
-
                 <FormItem {...formAllItemLayout} label="归属销售">
                   {getFieldDecorator('salesman', {
                       initialValue: null,
@@ -534,6 +574,7 @@ class OrdersAdd extends PureComponent {
                   </Select>
                   )}
                 </FormItem>
+
 
                 <FormItem {...formAllItemLayout} label="备注信息">
                   {getFieldDecorator('orderNote')(

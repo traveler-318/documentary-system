@@ -52,6 +52,7 @@ import bell from '../../../assets/bell.svg'
 import bellShut from '../../../assets/bellShut.svg'
 import loginchahua from '../../../assets/loginchahua.png';
 import { save } from '../../../services/newServices/blacklist';
+import { ORDERTYPE } from './data';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -757,8 +758,44 @@ class OrdersEdit extends PureComponent {
                       </FormItem>
                       <FormItem {...formAllItemLayout} label="订单来源">
                         {getFieldDecorator('orderSource', {
-                          initialValue: this.getText(parseInt(detail.orderSource),ORDERSOURCE),
-                        })(<Input disabled placeholder="" />)}
+                          initialValue: Number(detail.orderSource),
+                          // initialValue: this.getText(parseInt(detail.orderSource),ORDERSOURCE),
+                        })(
+                          <Select disabled={edit} placeholder={"请选择订单来源"}>
+                            {ORDERSOURCE.map(item=>{
+                              if(item.key != null){
+                                return (<Option value={item.key}>{item.name}</Option>)
+                              }
+                            })}
+                          </Select>
+                        )}
+                      </FormItem>
+                      <FormItem {...formAllItemLayout} label="订单类型">
+                        {getFieldDecorator('orderType', {
+                          initialValue: Number(detail.orderType),
+                        })(
+                          <Select disabled={edit} placeholder={"请选择订单类型"}>
+                            {ORDERTYPE.map(item=>{
+                              return (<Option value={item.key}>{item.name}</Option>)
+                            })}
+                          </Select>
+                        )}
+                      </FormItem>
+                      <FormItem {...formAllItemLayout} label="邮费模式">
+                        {getFieldDecorator('postageStatus', {
+                          initialValue: Number(detail.postageStatus),
+                        })(
+                          <Select disabled={edit} placeholder={"请选择邮费模式"}>
+                            <Option value={1}>月结</Option>
+                            <Option value={2}>到付</Option>
+                            <Option value={3}>寄付</Option>
+                          </Select>
+                        )}
+                      </FormItem>
+                      <FormItem {...formAllItemLayout} label="代收金额">
+                        {getFieldDecorator('collectingAmount', {
+                          initialValue: detail.collectingAmount,
+                        })(<Input disabled={edit} placeholder="" />)}
                       </FormItem>
                       <FormItem {...formAllItemLayout} label="订单归属">
                         {getFieldDecorator('salesmanName', {
