@@ -142,6 +142,8 @@ class SearchButton extends PureComponent {
           tabActionButtons[2] =item
         }else if(item.code === 'deliver-goods'){
           tabActionButtons[0] =item
+        }else if(item.code === 'rollBACK'){
+          tabActionButtons[3] =item
         }
       })
     }else{
@@ -152,8 +154,6 @@ class SearchButton extends PureComponent {
       <>
         {
           tabActionButtons.map((item,index)=>{
-
-            console.log(item)
             // console.log(item,tabKey,"item")
                 // if(tabKey === 'null' && (item.code === "place-an-order" || item.code === "transfer")){
 

@@ -52,6 +52,7 @@ import bell from '../../../assets/bell.svg'
 import bellShut from '../../../assets/bellShut.svg'
 import loginchahua from '../../../assets/loginchahua.png';
 import { save } from '../../../services/newServices/blacklist';
+import { ORDERTYPE } from './data';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -765,6 +766,17 @@ class OrdersEdit extends PureComponent {
                               if(item.key != null){
                                 return (<Option value={item.key}>{item.name}</Option>)
                               }
+                            })}
+                          </Select>
+                        )}
+                      </FormItem>
+                      <FormItem {...formAllItemLayout} label="订单类型">
+                        {getFieldDecorator('orderType', {
+                          initialValue: Number(detail.orderType),
+                        })(
+                          <Select disabled={edit} placeholder={"请选择订单类型"}>
+                            {ORDERTYPE.map(item=>{
+                              return (<Option value={item.key}>{item.name}</Option>)
                             })}
                           </Select>
                         )}
