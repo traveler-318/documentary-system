@@ -492,6 +492,17 @@ class LogisticsConfiguration extends PureComponent {
                ...res.authorizationItem
              };
              // for(let i=0; i<listID.length; i++){
+             if(listID[currentIndex].postageStatus === '月结'){
+               listID[currentIndex].postageStatus=1
+             }
+             if(listID[currentIndex].postageStatus === '到付'){
+               listID[currentIndex].postageStatus=2
+             }
+             if(listID[currentIndex].postageStatus === '寄付'){
+               listID[currentIndex].postageStatus=3
+             }
+
+
              param.recMans.push(
                {
                  "mobile": listID[currentIndex].userPhone,
