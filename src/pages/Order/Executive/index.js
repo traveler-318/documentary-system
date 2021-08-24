@@ -2542,7 +2542,7 @@ handleCancelAssessment = () => {
             console.log(item,"riskControlLevel")
             let title = item.title
             item.title = (key,row)=>{
-              return <Tooltip title={this.reactNode}>{title}<Icon type='question-circle-o' /></Tooltip>
+              return <Tooltip title={this.tipsContent}>{title}<Icon type='question-circle-o' /></Tooltip>
             } 
             item.ellipsis=true;
             item.render=(key,row)=>{
