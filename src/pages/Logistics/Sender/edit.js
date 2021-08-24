@@ -48,6 +48,7 @@ class SenderEdit extends PureComponent {
       values.deptId = getCookie("dept_id");
       values.addrCoding=JSON.stringify(values.addrCoding);
       const { cityparam } = this.state;
+
       const params = {
         ...values,
         id:data.id,
@@ -71,12 +72,13 @@ class SenderEdit extends PureComponent {
   };
 
   onChange = (value, selectedOptions) => {
+
     this.setState({
       cityparam:{
         province:value[0],
         city:value[1],
         area:value[2],
-        name:`${selectedOptions[0].label}${selectedOptions[1].label}${selectedOptions[2].label}`
+        name:`${selectedOptions[0].text}${selectedOptions[1].text}${selectedOptions[2].text}`
       }
     })
   };

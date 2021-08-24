@@ -17,6 +17,7 @@ import {
 import { getPageQuery, formatRoutes, formatButtons, getTopUrl } from '../utils/utils';
 import { reloadAuthorized } from '../utils/Authorized';
 import { setCookie, getCookie } from '../utils/support';
+import pubsub from 'pubsub-js'
 
 
 export default {
@@ -29,6 +30,7 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(accountLogin, payload);
+
       if (response.error_description) {
         notification.error({
           message: response.error_description,
@@ -42,7 +44,9 @@ export default {
             data: { ...response },
           },
         });
-        console.log(response,"response")
+        if(response.code == 400){
+          pubsub.publish('Captcha','refresh');
+        }
         if(response.code){
           return false;
         }

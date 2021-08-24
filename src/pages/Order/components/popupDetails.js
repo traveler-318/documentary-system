@@ -52,6 +52,7 @@ import bell from '../../../assets/bell.svg'
 import bellShut from '../../../assets/bellShut.svg'
 import loginchahua from '../../../assets/loginchahua.png';
 import { save } from '../../../services/newServices/blacklist';
+import { ORDERTYPE } from './data';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -473,11 +474,17 @@ class OrdersEdit extends PureComponent {
           repeatLoading:false
         });
         if(res.code === 200){
-          sessionStorage.setItem('printingType', 'Repeat');
-          localforage.setItem('imgBase64', res.data).then((res)=>{
-            console.log(res,"resresresres")
-            window.open(`#/order/allOrders/img`);
-          });
+          
+          if(detail.logisticsPrintType === "1"){
+            sessionStorage.setItem('printingType', 'Repeat');
+            localforage.setItem('imgBase64', res.data).then((res)=>{
+              console.log(res,"resresresres")
+              window.open(`#/order/allOrders/img`);
+            });
+          }else{
+            window.open(res.data);
+          }
+          
         }else{
           message.error(res.msg);
         }
@@ -751,8 +758,44 @@ class OrdersEdit extends PureComponent {
                       </FormItem>
                       <FormItem {...formAllItemLayout} label="订单来源">
                         {getFieldDecorator('orderSource', {
-                          initialValue: this.getText(parseInt(detail.orderSource),ORDERSOURCE),
-                        })(<Input disabled placeholder="" />)}
+                          initialValue: Number(detail.orderSource),
+                          // initialValue: this.getText(parseInt(detail.orderSource),ORDERSOURCE),
+                        })(
+                          <Select disabled={edit} placeholder={"请选择订单来源"}>
+                            {ORDERSOURCE.map(item=>{
+                              if(item.key != null){
+                                return (<Option value={item.key}>{item.name}</Option>)
+                              }
+                            })}
+                          </Select>
+                        )}
+                      </FormItem>
+                      <FormItem {...formAllItemLayout} label="订单类型">
+                        {getFieldDecorator('orderType', {
+                          initialValue: Number(detail.orderType),
+                        })(
+                          <Select disabled={edit} placeholder={"请选择订单类型"}>
+                            {ORDERTYPE.map(item=>{
+                              return (<Option value={item.key}>{item.name}</Option>)
+                            })}
+                          </Select>
+                        )}
+                      </FormItem>
+                      <FormItem {...formAllItemLayout} label="邮费模式">
+                        {getFieldDecorator('postageStatus', {
+                          initialValue: Number(detail.postageStatus),
+                        })(
+                          <Select disabled={edit} placeholder={"请选择邮费模式"}>
+                            <Option value={1}>月结</Option>
+                            <Option value={2}>到付</Option>
+                            <Option value={3}>寄付</Option>
+                          </Select>
+                        )}
+                      </FormItem>
+                      <FormItem {...formAllItemLayout} label="代收金额">
+                        {getFieldDecorator('collectingAmount', {
+                          initialValue: detail.collectingAmount,
+                        })(<Input disabled={edit} placeholder="" />)}
                       </FormItem>
                       <FormItem {...formAllItemLayout} label="订单归属">
                         {getFieldDecorator('salesmanName', {
@@ -803,9 +846,10 @@ class OrdersEdit extends PureComponent {
                         {getFieldDecorator('logisticsCompany', {
                           initialValue: detail.logisticsCompany,
                         })(
+                          // disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
                           <Select
                             style={{height:45,float:"right"}}
-                            disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
+                            disabled={true}
                             placeholder={"请选择物流公司"}>
                             {Object.keys(LOGISTICSCOMPANY).map(key=>{
                               return (<Option value={LOGISTICSCOMPANY[key]}>{LOGISTICSCOMPANY[key]}</Option>)
@@ -820,7 +864,8 @@ class OrdersEdit extends PureComponent {
                           ],
                           initialValue: detail.logisticsNumber,
                         })(<Input
-                          disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
+                          disabled={true}
+                          // disabled={(detail.confirmTag === 0 || detail.confirmTag === '0' || detail.confirmTag === 1 || detail.confirmTag === '1'|| detail.confirmTag === 2 || detail.confirmTag === '2'|| detail.confirmTag === 3 || detail.confirmTag === '3') ? edit : true}
                           placeholder="请输入物流单号" />)}
                       </FormItem>
                       {/*<FormItem {...formAllItemLayout} label="开启提醒"  className={styles.salesman}>*/}

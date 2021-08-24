@@ -21,10 +21,7 @@ import {
   getRegion,
   logisticsSubscription,
   getOrderdetail,
-  productTreelist,
-  logisticsPrintRequest,
-  localPrinting,
-  logisticsRepeatPrint,
+  productTreelist
 } from '../../../services/newServices/order'
 import {
   printRequest,
@@ -501,6 +498,17 @@ class LogisticsConfiguration extends PureComponent {
                shipmentRemind:values.smsConfirmation, //发货提醒
                ...res.authorizationItem
              };
+
+             if(listID[currentIndex].postageStatus === '月结'){
+               listID[currentIndex].postageStatus=1
+             }
+             if(listID[currentIndex].postageStatus === '到付'){
+               listID[currentIndex].postageStatus=2
+             }
+             if(listID[currentIndex].postageStatus === '寄付'){
+               listID[currentIndex].postageStatus=3
+             }
+
              // for(let i=0; i<listID.length; i++){
              param.recMans.push(
                {
@@ -512,7 +520,10 @@ class LogisticsConfiguration extends PureComponent {
                  'salesman':listID[currentIndex].salesman,
                  'productCoding':values.productCoding,
                  'orderTenantId':detail.tenantId,
-                 'orderDeptId':detail.deptId
+                 'orderDeptId':detail.deptId,
+                 'orderType':listID[currentIndex].orderType,
+                 'postageStatus':listID[currentIndex].postageStatus,
+                 'collectingAmount':listID[currentIndex].collectingAmount ,
                }
              )
              // }
@@ -555,8 +566,33 @@ class LogisticsConfiguration extends PureComponent {
                    });
                  }
                })
-             }else {
-               param.localPrintStatus=0;
+             }else if(localPrintStatus === 2){
+              param.localPrintStatus=2;
+              const { dispatch } = this.props;
+              console.log(param)
+              printRequest(param).then(response=>{
+                this.setState({
+                  loading:false
+                })
+                if(response.code === 200){
+                 window.open(response.data);
+                  // 刷新详情数据
+                  if(currentIndex<listID.length-1){
+                    this.setState({
+                      currentIndex:currentIndex+1
+                    },()=>{
+                      this.getDetailsData(listID[currentIndex+1].id,listID[currentIndex+1].tenantId);
+                    });
+                  }
+                }else{
+                  message.error(response.msg);
+                  this.setState({
+                    disabledType:false
+                  });
+                }
+              })
+            }else {
+               param.localPrintStatus=3;
                console.log(param)
                printRequest(param).then(response=>{
                  this.setState({
@@ -614,11 +650,15 @@ class LogisticsConfiguration extends PureComponent {
               loading:false
             })
             if(res.code === 200){
-              sessionStorage.setItem('printingType', 'first');
-              localforage.setItem('imgBase64', res.data).then((res)=>{
-                console.log(res,"resresresres")
-                window.open(`#/order/allOrders/img`);
-              });
+              if(listID[currentIndex].logisticsPrintType === "1"){
+                sessionStorage.setItem('printingType', 'first');
+                localforage.setItem('imgBase64', res.data).then((res)=>{
+                  console.log(res,"resresresres")
+                  window.open(`#/order/allOrders/img`);
+                });
+              }else{
+                window.open(res.data);
+              }
             }else{
               message.error(res.msg);
               this.setState({

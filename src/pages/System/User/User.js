@@ -190,7 +190,29 @@ class User extends PureComponent {
       },
       onCancel() {},
     });
-    
+  }
+
+  onChangeH5 = (value,row) => {
+    const { params } = this.state;
+    const {dispatch} = this.props;
+    const data= value === 0 ? 1 : 0;
+    const param = {
+      ...row,
+      moveSwitch:data
+    };
+
+    Modal.confirm({
+      title: '修改确认',
+      content: '是否要修改该状态??',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      async onOk() {
+        dispatch(USER_UPDATE(param));
+        dispatch(USER_LIST(params));
+      },
+      onCancel() {},
+    });
   }
 
   showModal = () => {
@@ -347,34 +369,39 @@ class User extends PureComponent {
     }else {
       binding(row.id).then(res=>{
         console.log(res)
-        const imgUrl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+res.data;
-        this.setState({
-          bindingQRCodeVisible:true,
-          bindingQRCode:imgUrl
-        })
-        this.countDown();
+        if(res.code === 200){
+          const imgUrl = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+res.data;
+          this.setState({
+            bindingQRCodeVisible:true,
+            bindingQRCode:imgUrl
+          })
+          this.countDown();
+        }else {
+          message.error(res.msg);
+        }
+
       })
     }
   }
 
   countDown = () => {
-    timers = setTimeout(()=>{
-      let {countDownTimer} = this.state;
-      countDownTimer = countDownTimer-1
+    const { params } = this.state;
+    const { dispatch } = this.props;
+    setTimeout(()=>{
       this.setState({
-        countDownTimer:countDownTimer,
-      },()=>{
-        if(this.state.countDownTimer <= 0 || !this.state.bindingQRCode){
-          this.setState({
-            countDownTimer:30,
-            bindingQRCode:false,
-          })
-          clearTimeout(timers)
-        }else{
-          this.countDown();
-        }
+        countDownTimer: this.state.countDownTimer - 1,
       })
+      if(this.state.countDownTimer === 0){
+        dispatch(USER_LIST(params));
+        this.setState({
+          bindingQRCodeVisible:false,
+          countDownTimer:30
+        })
+      }else{
+        this.countDown();
+      }
     },1000)
+
   };
 
   // =========关闭二维码弹窗========
@@ -526,6 +553,16 @@ class User extends PureComponent {
         width:160,
       },
       {
+        title: '移动登录',
+        dataIndex: 'moveSwitch',
+        width:120,
+        render: (key, row) => {
+          return(
+            <Switch checked={key===1?true:false} onChange={()=>{this.onChangeH5(key, row)}}/>
+          )
+        },
+      },
+      {
         title: '是否启用',
         dataIndex: 'status',
         width: 80,
@@ -539,6 +576,7 @@ class User extends PureComponent {
         title: '公众号绑定',
         dataIndex: 'openid',
         width: 100,
+        fixed: 'right',
         render: (res,row) => {
           return(
             <div>
@@ -602,7 +640,6 @@ class User extends PureComponent {
       //   },
       // },
     ];
-
 
     if (!tenantMode) {
       columns.splice(0, 1);

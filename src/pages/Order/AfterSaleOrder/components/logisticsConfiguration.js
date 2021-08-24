@@ -20,7 +20,9 @@ import {
   logisticsSubscription,
   getDetails,
   productTreelist,
-  logisticsPrintRequest
+  localPrinting,
+  logisticsPrintRequest,
+  logisticsRepeatPrint
 } from '../../../../services/newServices/order'
 import {
   LOGISTICSCOMPANY,
@@ -424,8 +426,21 @@ class LogisticsConfiguration extends PureComponent {
                     message.error(response.msg);
                   }
                 })
+              }else if(localPrintStatus === 2){
+                param.localPrintStatus=2;
+                const { dispatch } = this.props;
+                console.log(param)
+                logisticsPrintRequest(param).then(response=>{
+                  if(response.code === 200){
+                    window.open(response.data);
+                    // 刷新详情数据
+                    this.getDetailsData(listID[currentIndex].id);
+                  }else{
+                    message.error(response.msg);
+                  }
+                })
               }else {
-                param.localPrintStatus=0;
+                param.localPrintStatus=3;
                 console.log(param)
                 logisticsPrintRequest(param).then(response=>{
                   if(response.code === 200){
@@ -460,11 +475,15 @@ class LogisticsConfiguration extends PureComponent {
             logisticsPrintType:listID[currentIndex].logisticsPrintType
           }).then(res=>{
             if(res.code === 200){
-              sessionStorage.setItem('printingType', 'first');
-              localforage.setItem('imgBase64', res.data).then((res)=>{
-                console.log(res,"resresresres")
-                window.open(`#/order/allOrders/img`);
-              });
+              if(listID[currentIndex].logisticsPrintType === "1"){
+                sessionStorage.setItem('printingType', 'first');
+                localforage.setItem('imgBase64', res.data).then((res)=>{
+                  console.log(res,"resresresres")
+                  window.open(`#/order/allOrders/img`);
+                });
+              }else{
+                window.open(res.data);
+              }
             }else{
               message.error(res.msg);
             }

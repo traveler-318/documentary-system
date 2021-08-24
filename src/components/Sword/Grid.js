@@ -224,7 +224,8 @@ export default class Grid extends PureComponent {
         ...columns,
         {
           title: formatMessage({ id: 'table.columns.action' }),
-          width: actionColumnWidth || 200,
+          width: actionColumnWidth || 170,
+          fixed: 'right',
           render: (text, record) => (
             <Fragment>
               <div style={{ textAlign: 'center' }}>

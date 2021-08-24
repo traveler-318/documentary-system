@@ -102,8 +102,6 @@ class SearchButton extends PureComponent {
                 }
               })
           }
-
-
       </Menu>
     )
   };
@@ -144,6 +142,8 @@ class SearchButton extends PureComponent {
           tabActionButtons[2] =item
         }else if(item.code === 'deliver-goods'){
           tabActionButtons[0] =item
+        }else if(item.code === 'rollBACK'){
+          tabActionButtons[3] =item
         }
       })
     }else{
@@ -154,7 +154,6 @@ class SearchButton extends PureComponent {
       <>
         {
           tabActionButtons.map((item,index)=>{
-
             // console.log(item,tabKey,"item")
                 // if(tabKey === 'null' && (item.code === "place-an-order" || item.code === "transfer")){
 
@@ -171,7 +170,7 @@ class SearchButton extends PureComponent {
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
-                }else if(tabKey === '1' && (item.code === "last-trial")){
+                }else if(tabKey === '1' && (item.code === "last-trial" || item.code === "rollBACK")){
                   i++;
                     // 已初审
                     return (
@@ -179,7 +178,7 @@ class SearchButton extends PureComponent {
                             this.handleClick(item.code)
                         }}>{item.name}</Button>
                     )
-                }else if(tabKey === '2' && (item.code === "deliver-goods" || item.code === "subscribe" )){
+                }else if(tabKey === '2' && (item.code === "deliver-goods" || item.code === "subscribe" || item.code === "rollBACK")){
                   i++;
                     // 已终审
                     return (

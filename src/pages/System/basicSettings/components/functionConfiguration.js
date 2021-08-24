@@ -219,8 +219,9 @@ class BaseView extends Component {
                 <FormItem {...formItemLayout} label={'打印机类型'}>
                   {getFieldDecorator('localPrintStatus')(
                     <Radio.Group>
-                      <Radio key={1} value={1}>本地打印</Radio>
-                      <Radio key={0} value={0}>云打印</Radio>
+                      <Radio key={1} value={1}>图片打印</Radio>
+                      <Radio key={2} value={2}>html打印</Radio>
+                      <Radio key={3} value={3}>云打印</Radio>
                     </Radio.Group>
                   )}
                 </FormItem>

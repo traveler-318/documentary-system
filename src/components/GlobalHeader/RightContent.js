@@ -102,7 +102,6 @@ export default class GlobalHeaderRight extends PureComponent {
   };
 
   recharge =()=>{
-    console.log("1111")
     router.push(`/system/charging`);
   }
 

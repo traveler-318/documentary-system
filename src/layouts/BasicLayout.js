@@ -157,11 +157,12 @@ class BasicLayout extends React.Component {
     };
   }
 
-  getLayoutStyle = () => {
+  getLayoutStyle = (isPrintHTML) => {
     const { fixSiderbar, isMobile, collapsed, layout } = this.props;
     if (fixSiderbar && layout !== 'topmenu' && !isMobile) {
       return {
-        paddingLeft: collapsed ? '80px' : '180px',
+        paddingLeft: isPrintHTML ? 0 : collapsed ? '80px' : '180px',
+        // paddingLeft: collapsed ? '80px' : '180px',
         // paddingLeft: collapsed ? '92px' : '223px',
       };
     }
@@ -199,11 +200,14 @@ class BasicLayout extends React.Component {
 
     const isTop = PropsLayout === 'topmenu';
     const istab = localStorage.getItem('isAntTap')
-    const contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
+// 是否是打印页面
+    const isPrintHTML = window.location.hash === "#/order/allOrders/img";
+    
+    const contentStyle = isPrintHTML ? {padding:0,margin:0} : !fixedHeader ? { paddingTop: 0 } : {};
 
     const layout = (
       <Layout>
-        {isTop && !isMobile ? null : (
+        {((isTop && !isMobile) || isPrintHTML) ? null : (
           <SiderMenu
             logo={logo}
             theme={navTheme}
@@ -215,17 +219,19 @@ class BasicLayout extends React.Component {
         )}
         <Layout
           style={{
-            ...this.getLayoutStyle(),
+            ...this.getLayoutStyle(isPrintHTML),
             minHeight: '100vh',
           }}
         >
-          <Header
-            menuData={menuData}
-            handleMenuCollapse={this.handleMenuCollapse}
-            logo={logo}
-            isMobile={isMobile}
-            {...this.props}
-          />
+          {isPrintHTML?null:(
+            <Header
+              menuData={menuData}
+              handleMenuCollapse={this.handleMenuCollapse}
+              logo={logo}
+              isMobile={isMobile}
+              {...this.props}
+            />
+          )}
           <Content className={[styles.tabContent,istab === '1'?'':'word-style-hide']} style={contentStyle}>
             <PageTab>{children}</PageTab>
           </Content>
